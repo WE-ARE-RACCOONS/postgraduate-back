@@ -1,6 +1,6 @@
 package com.postgraduate.domain.auth.application.usecase.kakao;
 
-import com.postgraduate.domain.auth.presentation.dto.KakaoUserInfoResponse;
+import com.postgraduate.domain.auth.application.dto.KakaoUserInfoResponse;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.service.UserSaveService;
 import lombok.RequiredArgsConstructor;

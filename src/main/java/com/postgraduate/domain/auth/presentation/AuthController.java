@@ -1,7 +1,8 @@
 package com.postgraduate.domain.auth.presentation;
 
 import com.postgraduate.domain.auth.application.usecase.kakao.KakaoSignInUseCase;
-import com.postgraduate.domain.auth.presentation.dto.KakaoLoginRequest;
+import com.postgraduate.domain.auth.application.dto.JwtTokenResponse;
+import com.postgraduate.domain.auth.application.dto.KakaoLoginRequest;
 import com.postgraduate.domain.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

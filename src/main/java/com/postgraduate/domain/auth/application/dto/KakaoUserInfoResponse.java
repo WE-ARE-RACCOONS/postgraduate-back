@@ -1,4 +1,4 @@
-package com.postgraduate.domain.auth.presentation.dto;
+package com.postgraduate.domain.auth.application.dto;
 
 import lombok.*;
 

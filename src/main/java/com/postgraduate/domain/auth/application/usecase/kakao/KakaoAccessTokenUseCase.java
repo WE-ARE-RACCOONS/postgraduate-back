@@ -1,7 +1,7 @@
 package com.postgraduate.domain.auth.application.usecase.kakao;
 
-import com.postgraduate.domain.auth.presentation.dto.KakaoAccessTokenResponse;
-import com.postgraduate.domain.auth.presentation.dto.KakaoUserInfoResponse;
+import com.postgraduate.domain.auth.application.dto.KakaoAccessTokenResponse;
+import com.postgraduate.domain.auth.application.dto.KakaoUserInfoResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
