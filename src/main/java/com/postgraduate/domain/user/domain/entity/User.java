@@ -23,7 +23,7 @@ public class User {
     private Long userId;
 
     @Column(nullable = false, unique = true)
-    private Long socialId;
+    private String socialId;
 
     @Column(unique = true)
     private String email;
@@ -41,8 +41,8 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    @ColumnDefault("'USER'")
-    private Role role;
+    @Builder.Default
+    private Role role = Role.USER;
 
     @Column(nullable = false)
     @CreationTimestamp
