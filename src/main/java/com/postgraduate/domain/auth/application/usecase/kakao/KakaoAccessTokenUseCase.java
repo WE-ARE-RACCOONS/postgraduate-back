@@ -4,12 +4,10 @@ import com.postgraduate.domain.auth.presentation.dto.KakaoAccessTokenResponse;
 import com.postgraduate.domain.auth.presentation.dto.KakaoUserInfoResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @RequiredArgsConstructor
-@Component
 @Service
 public class KakaoAccessTokenUseCase {
 
