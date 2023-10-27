@@ -12,4 +12,10 @@ public class UserMapper {
                 .point(user.getPoint())
                 .build();
     }
+
+    public static User mapToUser(Long socialId) {
+        return User.builder()
+                .socialId(socialId)
+                .build();
+    }
 }

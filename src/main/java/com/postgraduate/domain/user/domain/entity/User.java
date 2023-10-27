@@ -12,9 +12,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 
-import static com.postgraduate.domain.user.domain.entity.constant.Role.USER;
-
-@Entity
+@Entity(name = "user")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,22 +21,33 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
+
     @Column(nullable = false, unique = true)
+    private String socialId;
+
+    @Column(unique = true)
     private String email;
+
     @Column(unique = true)
     private String nickName;
+
     @Column(nullable = false)
     @ColumnDefault("0")
     private int point;
+
     private String account;
+
     private String bank;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    @ColumnDefault("'USER'")
-    private Role role;
+    @Builder.Default
+    private Role role = Role.USER;
+
     @Column(nullable = false)
     @CreationTimestamp
     private LocalDate createdAt;
+
     @UpdateTimestamp
     private LocalDate updatedAt;
 }
