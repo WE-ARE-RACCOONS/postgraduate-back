@@ -16,7 +16,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public void getUserDetails(@RequestBody KakaoLoginRequest request) {
-        User user = kakaoSignInUseCase.getUser(request.getAccessToken());
+        AuthUserResponse authUser = kakaoSignInUseCase.getUser(request.getAccessToken());
         //TODO: JWT 발급 + 신규 여부
     }
 }

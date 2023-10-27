@@ -14,11 +14,7 @@ public class UserSaveService {
     private final UserRepository userRepository;
 
     public User saveUser(Long socialId) {
-        Optional<User> user = userRepository.findBySocialId(socialId);
-
-        if (user.isPresent()) {
-            return user.get();
-        }
-        return userRepository.save(UserMapper.mapToUser(socialId));
+        User user = UserMapper.mapToUser(socialId);
+        return userRepository.save(user);
     }
 }
