@@ -23,7 +23,7 @@ public class User {
     private Long userId;
 
     @Column(nullable = false, unique = true)
-    private String socialId;
+    private Long socialId;
 
     @Column(unique = true)
     private String email;

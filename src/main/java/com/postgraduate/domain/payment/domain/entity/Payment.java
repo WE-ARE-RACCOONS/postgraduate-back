@@ -29,6 +29,6 @@ public class Payment {
     private LocalDate deletedAt;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    @ColumnDefault("'IMPOSSIBLE'")
-    private Status status;
+    @Builder.Default
+    private Status status = Status.IMPOSSIBLE;
 }
