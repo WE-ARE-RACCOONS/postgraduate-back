@@ -60,14 +60,14 @@ jobs:
         
     - name: Build and Push Docker image
       run: |
-        docker build -t ywj9811/postgraduate_devlop:latest .
-        docker push ywj9811/postgraduate_devlop:latest
+        docker build -t ywj9811/postgraduate_develop:latest
+        docker push ywj9811/postgraduate_develop:latest
 
     - name: Deploy
       uses: appleboy/ssh-action@master
       with:
-          host: ${{ secrets.EC2_SERVER_HOST }}
-          username: ${{ secrets.EC2_SERVER_USERNAME }}
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.PRIVATE_KEY }}
           envs: GITHUB_SHA
           script: |
