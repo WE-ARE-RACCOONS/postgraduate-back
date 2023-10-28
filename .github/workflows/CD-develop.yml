@@ -60,7 +60,7 @@ jobs:
         
     - name: Build and Push Docker image
       run: |
-        docker build -t ywj9811/postgraduate_develop:latest
+        docker build -t ywj9811/postgraduate_develop:latest .
         docker push ywj9811/postgraduate_develop:latest
 
     - name: Deploy
