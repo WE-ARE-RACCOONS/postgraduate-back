@@ -14,8 +14,8 @@ public class JwtUseCase {
     private final JwtProvider jwtProvider;
 
     public JwtTokenResponse signIn(User user, boolean isNew) {
-        String accessToken = jwtProvider.generateToken(user.getUserId(), Role.USER, false);
-        String refreshToken = jwtProvider.generateToken(user.getUserId(), Role.USER, true);
+        String accessToken = jwtProvider.generateToken(user.getUserId(), user.getRole(), false);
+        String refreshToken = jwtProvider.generateToken(user.getUserId(), user.getRole(), true);
         return new JwtTokenResponse(accessToken, refreshToken, isNew);
     }
 
