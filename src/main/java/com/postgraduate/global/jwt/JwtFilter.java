@@ -18,16 +18,12 @@ public class JwtFilter extends OncePerRequestFilter {
     private final JwtProvider jwtProvider;
     private static final String AUTHORIZATION = "Authorization";
     private static final String BEARER = "Bearer";
-    private static final List<String> IGNORE_JWT_FILTER_API = List.of(
-            "/user/login",
-            "/user/refresh",
-            "/admin/login",
-            "/admin/refresh"
+    private static final List<String> JWT_FILTER_API = List.of(
     );
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if (IGNORE_JWT_FILTER_API.contains(request.getRequestURI())) {
+        if (!JWT_FILTER_API.contains(request.getRequestURI())) {
             filterChain.doFilter(request, response);
             return;
         }
