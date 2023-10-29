@@ -9,13 +9,14 @@ import java.util.List;
 @Getter
 @Builder
 @AllArgsConstructor
-public class MentoringInfo {
+public class AppliedMentoringInfo {
     Long mentoringId;
     Long seniorId;
     String nickName;
     String postgradu;
     String field;
     String lab;
+    String professor;
     List<String> dates;
     int term;
     String chatLink;

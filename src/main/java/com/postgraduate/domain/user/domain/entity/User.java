@@ -6,13 +6,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.*;
 
 import java.time.LocalDate;
 
-@Entity(name = "user")
+@Entity
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -32,11 +30,10 @@ public class User {
     private String nickName;
 
     @Column(nullable = false)
-    @ColumnDefault("default") //이후에 기본 이미지 생기면 수정이 필요할 듯
-    private String profile;
+    @Builder.Default //이후에 기본 이미지 생기면 수정이 필요할 듯
+    private String profile = "default";
 
     @Column(nullable = false)
-    @ColumnDefault("0")
     private int point;
 
     @Enumerated(EnumType.STRING)

@@ -10,5 +10,5 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 public class AppliedMentoringResponse {
-    List<MentoringInfo> mentoringInfos;
+    List<AppliedMentoringInfo> appliedMentoringInfos;
 }
