@@ -31,7 +31,7 @@ public class Mentoring {
     @Column(nullable = false)
     private String question;
     @Column(nullable = false)
-    private LocalDateTime date;
+    private String date;
     @Column(nullable = false)
     private int pay;
     @Enumerated(EnumType.STRING)

@@ -41,6 +41,10 @@ public class Senior {
     private String time;
     @Column(nullable = false)
     private int term;
+    @Column(nullable = false)
+    private String account;
+    @Column(nullable = false)
+    private String bank;
     private String certification;
     @Column(nullable = false)
     private boolean status;
