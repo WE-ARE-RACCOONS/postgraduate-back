@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Builder
@@ -21,16 +22,16 @@ public class Mentoring {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long mentoringId;
-    @OneToOne
+    @ManyToOne
     private User user;
-    @OneToOne
+    @ManyToOne
     private Senior senior;
     @Column(nullable = false)
     private String topic;
     @Column(nullable = false)
     private String question;
     @Column(nullable = false)
-    private String date;
+    private LocalDateTime date;
     @Column(nullable = false)
     private int pay;
     @Enumerated(EnumType.STRING)
