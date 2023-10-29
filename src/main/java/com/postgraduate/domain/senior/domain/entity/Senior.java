@@ -28,6 +28,8 @@ public class Senior {
     @Column(nullable = false)
     private String postgradu;
     @Column(nullable = false)
+    private String professor;
+    @Column(nullable = false)
     private String lab;
     @Column(nullable = false)
     private String field;
