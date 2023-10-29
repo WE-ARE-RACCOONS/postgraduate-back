@@ -32,12 +32,12 @@ public class User {
     private String nickName;
 
     @Column(nullable = false)
+    @ColumnDefault("default") //이후에 기본 이미지 생기면 수정이 필요할 듯
+    private String profile;
+
+    @Column(nullable = false)
     @ColumnDefault("0")
     private int point;
-
-    private String account;
-
-    private String bank;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

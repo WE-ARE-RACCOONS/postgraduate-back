@@ -9,7 +9,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public class UserInfoResponse {
     private String nickName;
-    private String bank;
-    private String account;
+    private String profile;
     private int point;
 }
