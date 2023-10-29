@@ -1,5 +1,8 @@
 package com.postgraduate.global.config.security;
 
+import com.postgraduate.global.jwt.JwtFilter;
+import com.postgraduate.global.jwt.JwtProvider;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -8,10 +11,13 @@ import org.springframework.security.config.annotation.web.configurers.HeadersCon
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
+    private final JwtProvider jwtProvider;
     private static final String[] PASS = {"/resource/**", "/css/**", "/js/**", "/img/**", "/lib/**"};
     @Bean
     public BCryptPasswordEncoder encodePassword() {
@@ -29,10 +35,23 @@ public class SecurityConfig {
                 .formLogin(formLogin->formLogin.disable())
                 .logout(logout->logout.disable());
         http
-                .authorizeHttpRequests(auth->auth
+                .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers(PASS).permitAll()
-                        .anyRequest().permitAll())
-                .sessionManagement(sessionManagement->sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                        .anyRequest().permitAll()
+                )
+                .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .exceptionHandling((exceptions) -> exceptions
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            //TODO: 인증되지 않은 유저 예외
+                            throw new IllegalAccessError("실패");
+                        })
+                        .accessDeniedHandler((request, response, authException) -> {
+                            //TODO: 엑세스 거부 예외
+                            throw new IllegalAccessError("실패");
+
+                        })
+                )
+                .addFilterBefore(new JwtFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
