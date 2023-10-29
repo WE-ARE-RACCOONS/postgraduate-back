@@ -23,7 +23,7 @@ public class User {
     @Column(nullable = false, unique = true)
     private Long socialId;
 
-    @Column(unique = true)
+//    @Column(unique = true) email은 여러 소셜을 사용하면 unique가 깨질 수 있음
     private String email;
 
     @Column(unique = true)
@@ -47,4 +47,8 @@ public class User {
 
     @UpdateTimestamp
     private LocalDate updatedAt;
+
+    public void updateNickName(String nickName) {
+        this.nickName = nickName;
+    }
 }
