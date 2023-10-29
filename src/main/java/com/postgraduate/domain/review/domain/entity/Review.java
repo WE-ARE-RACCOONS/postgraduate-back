@@ -28,9 +28,9 @@ public class Review {
     @Column(nullable = false)
     private String content;
     @Column(nullable = false)
-    @ColumnDefault("'REJECT'")
     @Enumerated(EnumType.STRING)
-    private Status status;
+    @Builder.Default
+    private Status status = Status.REJECT;
     @CreationTimestamp
     private LocalDate createdAt;
     @UpdateTimestamp
