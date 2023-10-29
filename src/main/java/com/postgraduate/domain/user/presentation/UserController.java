@@ -29,7 +29,7 @@ public class UserController {
         return ResponseDto.create(OK.value(), GET_USER_INFO.getMessage(), userInfo);
     }
 
-    @PostMapping("/nickname")
+    @PatchMapping("/nickname")
     @Operation(description = "사용자 닉네임 변경 및 업데이트")
     public ResponseDto updateNickName(@AuthenticationPrincipal AuthDetails authDetails, @RequestBody UserNickNameRequest userNickNameRequest) {
         myPageUseCase.updateUser(authDetails, userNickNameRequest.getNickName());
