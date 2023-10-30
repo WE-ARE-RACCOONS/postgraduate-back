@@ -1,7 +1,7 @@
 package com.postgraduate.domain.auth.application.usecase.kakao;
 
-import com.postgraduate.domain.auth.application.dto.AuthUserResponse;
-import com.postgraduate.domain.auth.application.dto.KakaoUserInfoResponse;
+import com.postgraduate.domain.auth.application.dto.res.AuthUserResponse;
+import com.postgraduate.domain.auth.application.dto.res.KakaoUserInfoResponse;
 import com.postgraduate.domain.auth.application.dto.req.SignUpRequest;
 import com.postgraduate.domain.auth.application.mapper.AuthMapper;
 import com.postgraduate.domain.user.application.usecase.UserCheckUseCase;

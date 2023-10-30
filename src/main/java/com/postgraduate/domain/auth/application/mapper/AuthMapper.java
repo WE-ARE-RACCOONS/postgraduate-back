@@ -1,6 +1,6 @@
 package com.postgraduate.domain.auth.application.mapper;
 
-import com.postgraduate.domain.auth.application.dto.AuthUserResponse;
+import com.postgraduate.domain.auth.application.dto.res.AuthUserResponse;
 import com.postgraduate.domain.user.domain.entity.User;
 
 public class AuthMapper {

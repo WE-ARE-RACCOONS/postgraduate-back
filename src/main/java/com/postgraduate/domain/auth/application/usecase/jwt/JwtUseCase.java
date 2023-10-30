@@ -1,6 +1,6 @@
 package com.postgraduate.domain.auth.application.usecase.jwt;
 
-import com.postgraduate.domain.auth.application.dto.JwtTokenResponse;
+import com.postgraduate.domain.auth.application.dto.res.JwtTokenResponse;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.entity.constant.Role;
 import com.postgraduate.global.jwt.JwtProvider;

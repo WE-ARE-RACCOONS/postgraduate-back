@@ -1,4 +1,4 @@
-package com.postgraduate.domain.auth.application.dto;
+package com.postgraduate.domain.auth.application.dto.res;
 
 import com.postgraduate.domain.user.domain.entity.User;
 import lombok.AllArgsConstructor;
