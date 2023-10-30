@@ -20,4 +20,8 @@ public class UserGetService {
     public Optional<User> bySocialId(Long socialId) {
         return userRepository.findBySocialId(socialId);
     }
+
+    public Optional<User> byNickName(String nickName) {
+        return userRepository.findByNickName(nickName);
+    }
 }
