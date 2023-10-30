@@ -1,6 +1,6 @@
 package com.postgraduate.domain.user.domain.service;
 
-import com.postgraduate.domain.auth.application.dto.SignUpRequest;
+import com.postgraduate.domain.auth.application.dto.req.SignUpRequest;
 import com.postgraduate.domain.user.application.mapper.UserMapper;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.repository.UserRepository;

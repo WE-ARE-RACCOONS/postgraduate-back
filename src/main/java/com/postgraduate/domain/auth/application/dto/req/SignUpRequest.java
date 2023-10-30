@@ -1,4 +1,4 @@
-package com.postgraduate.domain.auth.application.dto;
+package com.postgraduate.domain.auth.application.dto.req;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
