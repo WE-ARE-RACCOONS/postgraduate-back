@@ -1,6 +1,7 @@
 package com.postgraduate.domain.auth.presentation;
 
 import com.postgraduate.domain.auth.application.dto.AuthUserResponse;
+import com.postgraduate.domain.auth.application.dto.SignUpRequest;
 import com.postgraduate.domain.auth.application.usecase.jwt.JwtUseCase;
 import com.postgraduate.domain.auth.application.usecase.kakao.KakaoSignInUseCase;
 import com.postgraduate.domain.auth.application.dto.JwtTokenResponse;
@@ -31,6 +32,14 @@ public class AuthController {
         if (authUser.getSocialId() != null) {
             return ResponseDto.create(NOT_FOUND.value(), NOT_REGISTERED_USER_MESSAGE.getMessage(), authUser);
         }
+        JwtTokenResponse jwtToken = jwtUseCase.signIn(authUser.getUser());
+        return ResponseDto.create(OK.value(), SUCCESS_AUTH_MESSAGE.getMessage(), jwtToken);
+    }
+
+    @PostMapping("/signup")
+    @Operation(description = "회원가입입니다. 로그인 API에서 반환한 socialId와 닉네임을 함께 보내주세요.")
+    public ResponseDto<JwtTokenResponse> getUserDetails(@RequestBody SignUpRequest request) {
+        AuthUserResponse authUser = kakaoSignInUseCase.signUp(request);
         JwtTokenResponse jwtToken = jwtUseCase.signIn(authUser.getUser());
         return ResponseDto.create(OK.value(), SUCCESS_AUTH_MESSAGE.getMessage(), jwtToken);
     }
