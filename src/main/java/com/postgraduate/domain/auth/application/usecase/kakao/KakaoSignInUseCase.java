@@ -24,11 +24,9 @@ public class KakaoSignInUseCase {
         KakaoUserInfoResponse userInfo = kakaoTokenUseCase.getUserInfo(token);
         Long socialId = userInfo.getId();
         Optional<User> user = userGetService.bySocialId(socialId);
-        if (user.isPresent()) {
-            return AuthMapper.mapToAuthUser(user.get(), false);
+        if (user.isEmpty()) {
+            return AuthMapper.mapToAuthUser(null, socialId);
         }
-
-        User newUser = userSaveService.saveUser(socialId);
-        return AuthMapper.mapToAuthUser(newUser, true);
+        return AuthMapper.mapToAuthUser(user.get(), null);
     }
 }

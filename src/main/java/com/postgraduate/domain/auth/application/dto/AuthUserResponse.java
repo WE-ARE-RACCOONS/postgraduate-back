@@ -12,5 +12,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AuthUserResponse {
     private User user;
-    private boolean isNew;
+    private Long socialId;
 }
