@@ -2,7 +2,9 @@ package com.postgraduate.domain.auth.application.usecase.kakao;
 
 import com.postgraduate.domain.auth.application.dto.AuthUserResponse;
 import com.postgraduate.domain.auth.application.dto.KakaoUserInfoResponse;
+import com.postgraduate.domain.auth.application.dto.SignUpRequest;
 import com.postgraduate.domain.auth.application.mapper.AuthMapper;
+import com.postgraduate.domain.user.application.usecase.UserCheckUseCase;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.service.UserGetService;
 import com.postgraduate.domain.user.domain.service.UserSaveService;
@@ -16,6 +18,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class KakaoSignInUseCase {
     private final KakaoAccessTokenUseCase kakaoTokenUseCase;
+    private final UserCheckUseCase userCheckUseCase;
     private final UserSaveService userSaveService;
     private final UserGetService userGetService;
 
@@ -28,5 +31,13 @@ public class KakaoSignInUseCase {
             return AuthMapper.mapToAuthUser(null, socialId);
         }
         return AuthMapper.mapToAuthUser(user.get(), null);
+    }
+
+    public AuthUserResponse signUp(SignUpRequest request) {
+        if (userCheckUseCase.isDuplicatedNickName(request.getNickName())) {
+            throw new RuntimeException("중복예외");
+        }
+        User user = userSaveService.saveUser(request);
+        return AuthMapper.mapToAuthUser(user, null);
     }
 }
