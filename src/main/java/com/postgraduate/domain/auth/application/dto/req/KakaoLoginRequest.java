@@ -1,5 +1,6 @@
-package com.postgraduate.domain.auth.application.dto;
+package com.postgraduate.domain.auth.application.dto.req;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,5 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class KakaoLoginRequest {
+    @NotNull
     private String accessToken;
 }

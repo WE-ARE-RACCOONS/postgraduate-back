@@ -1,4 +1,4 @@
-package com.postgraduate.domain.auth.application.dto;
+package com.postgraduate.domain.auth.application.dto.res;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,5 +12,4 @@ import lombok.NoArgsConstructor;
 public class JwtTokenResponse {
     private String accessToken;
     private String refreshToken;
-    private boolean isNew;
 }

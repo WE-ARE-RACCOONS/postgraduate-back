@@ -1,4 +1,4 @@
-package com.postgraduate.domain.auth.application.dto;
+package com.postgraduate.domain.auth.application.dto.res;
 
 import com.postgraduate.domain.user.domain.entity.User;
 import lombok.AllArgsConstructor;
@@ -12,5 +12,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AuthUserResponse {
     private User user;
-    private boolean isNew;
+    private Long socialId;
 }

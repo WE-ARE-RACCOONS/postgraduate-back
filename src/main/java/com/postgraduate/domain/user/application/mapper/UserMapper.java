@@ -1,5 +1,6 @@
 package com.postgraduate.domain.user.application.mapper;
 
+import com.postgraduate.domain.auth.application.dto.req.SignUpRequest;
 import com.postgraduate.domain.user.application.dto.res.UserInfoResponse;
 import com.postgraduate.domain.user.domain.entity.User;
 
@@ -13,9 +14,10 @@ public class UserMapper {
                 .build();
     }
 
-    public static User mapToUser(Long socialId) {
+    public static User mapToUser(SignUpRequest request) {
         return User.builder()
-                .socialId(socialId)
+                .socialId(request.getSocialId())
+                .nickName(request.getNickName())
                 .build();
     }
 }
