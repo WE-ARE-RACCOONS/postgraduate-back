@@ -66,6 +66,11 @@ public class Senior {
     @Column(nullable = false)
     private int hit;
 
+    @Builder.Default
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Role role = Role.SENIOR;
+
     public void updateProfile(String info, String target, String chatLink, String time, int term) {
         this.info = info;
         this.target = target;
