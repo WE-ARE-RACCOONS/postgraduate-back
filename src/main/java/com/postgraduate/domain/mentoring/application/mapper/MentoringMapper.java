@@ -11,8 +11,7 @@ import java.util.stream.Stream;
 public class MentoringMapper {
     public static AppliedMentoringInfo mapToExpectedAppliedInfo(Mentoring mentoring) {
         Senior senior = mentoring.getSenior();
-        List<String> dates = Stream.of(mentoring.getDate())
-                .toList();
+        String[] dates = mentoring.getDate().split(",");
         return AppliedMentoringInfo.builder()
                 .mentoringId(mentoring.getMentoringId())
                 .dates(dates)
@@ -27,8 +26,7 @@ public class MentoringMapper {
     }
     public static AppliedMentoringInfo mapToWaitingOrDoneAppliedInfo(Mentoring mentoring) {
         Senior senior = mentoring.getSenior();
-        List<String> dates = Stream.of(mentoring.getDate())
-                .toList();
+        String[] dates = mentoring.getDate().split(",");
         return AppliedMentoringInfo.builder()
                 .mentoringId(mentoring.getMentoringId())
                 .dates(dates)

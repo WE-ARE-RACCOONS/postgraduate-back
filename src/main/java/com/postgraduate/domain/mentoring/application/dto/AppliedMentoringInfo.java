@@ -17,7 +17,7 @@ public class AppliedMentoringInfo {
     String field;
     String lab;
     String professor;
-    List<String> dates;
+    String[] dates;
     int term;
     String chatLink;
 }
