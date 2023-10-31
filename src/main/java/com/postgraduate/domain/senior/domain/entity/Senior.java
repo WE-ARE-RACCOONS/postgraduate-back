@@ -18,7 +18,6 @@ public class Senior {
     private Long seniorId;
     @OneToOne
     private User user;
-    private String name;
     @Column(nullable = false)
     private String college;
     @Column(nullable = false)
