@@ -8,8 +8,7 @@ public class UserMapper {
     public static UserInfoResponse mapToInfo(User user) {
         return UserInfoResponse.builder()
                 .nickName(user.getNickName())
-                .account(user.getAccount())
-                .bank(user.getBank())
+                .profile(user.getProfile())
                 .point(user.getPoint())
                 .build();
     }

@@ -6,13 +6,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.*;
 
 import java.time.LocalDate;
 
-@Entity(name = "user")
+@Entity
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,19 +23,18 @@ public class User {
     @Column(nullable = false, unique = true)
     private Long socialId;
 
-    @Column(unique = true)
+//    @Column(unique = true) email은 여러 소셜을 사용하면 unique가 깨질 수 있음
     private String email;
 
     @Column(unique = true)
     private String nickName;
 
     @Column(nullable = false)
-    @ColumnDefault("0")
+    @Builder.Default //이후에 기본 이미지 생기면 수정이 필요할 듯
+    private String profile = "default";
+
+    @Column(nullable = false)
     private int point;
-
-    private String account;
-
-    private String bank;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -50,4 +47,8 @@ public class User {
 
     @UpdateTimestamp
     private LocalDate updatedAt;
+
+    public void updateNickName(String nickName) {
+        this.nickName = nickName;
+    }
 }
