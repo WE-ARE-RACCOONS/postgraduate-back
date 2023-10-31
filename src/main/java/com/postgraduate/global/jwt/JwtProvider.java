@@ -29,11 +29,15 @@ public class JwtProvider {
     private final RedisRepository redisRepository;
     @Value("${jwt.secret-key}")
     private String secret;
+    @Value("${jwt.refreshExpiration}")
+    private int refreshExpiration;
+    @Value("${jwt.accessExpiration}")
+    private int accessExpiration;
     private final String REFRESH = "refresh";
     private final String AUTHORIZATION = "Authorization";
 
     public String generateAccessToken(Long id, Role role) {
-        Instant accessDate = LocalDateTime.now().plusHours(6).atZone(ZoneId.systemDefault()).toInstant();
+        Instant accessDate = LocalDateTime.now().plusSeconds(accessExpiration).atZone(ZoneId.systemDefault()).toInstant();
         return Jwts.builder()
                 .claim("role", role)
                 .setSubject(String.valueOf(id))
@@ -43,7 +47,7 @@ public class JwtProvider {
     }
 
     public String generateRefreshToken(Long id, Role role) {
-        Instant refreshDate = LocalDateTime.now().plusDays(30).atZone(ZoneId.systemDefault()).toInstant();
+        Instant refreshDate = LocalDateTime.now().plusSeconds(refreshExpiration).atZone(ZoneId.systemDefault()).toInstant();
         String refreshToken = Jwts.builder()
                 .claim("role", role)
                 .setSubject(String.valueOf(id))
