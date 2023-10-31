@@ -42,6 +42,8 @@ public class Senior {
     private String bank;
     private String certification;
     @Column(nullable = false)
+    private String rrn;
+    @Column(nullable = false)
     private boolean status;
     @Column(nullable = false)
     private int hit;
