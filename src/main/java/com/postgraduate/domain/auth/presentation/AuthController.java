@@ -30,11 +30,11 @@ public class AuthController {
     private final JwtUseCase jwtUseCase;
 
     @PostMapping("/login")
-    @Operation(description = "카카오 로그인입니다. 회원인 경우 JWT를, 회원이 아닌 경우 socialId를 반환합니다(회원가입은 진행하지 않습니다).")
+    @Operation(summary = "카카오 로그인", description = "회원인 경우 JWT를, 회원이 아닌 경우 socialId를 반환합니다(회원가입은 진행하지 않습니다).")
     public ResponseDto<?> getUserDetails(@RequestBody KakaoLoginRequest request) {
         AuthUserResponse authUser = kakaoSignInUseCase.getUser(request.getAccessToken());
         if (authUser.getSocialId() != null) {
-            return ResponseDto.create(NOT_FOUND.value(), NOT_REGISTERED_USER_MESSAGE.getMessage(), authUser);
+            return ResponseDto.create(OK.value(), NOT_REGISTERED_USER_MESSAGE.getMessage(), authUser);
         }
         JwtTokenResponse jwtToken = jwtUseCase.signIn(authUser.getUser());
         return ResponseDto.create(OK.value(), SUCCESS_AUTH_MESSAGE.getMessage(), jwtToken);
