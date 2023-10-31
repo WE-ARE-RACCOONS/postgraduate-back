@@ -42,7 +42,7 @@ public class AuthController {
 
     @PostMapping("/signup")
     @Operation(summary = "회원가입", description = "로그인 API에서 반환한 socialId와 닉네임을 함께 보내주세요.")
-    public ResponseDto<JwtTokenResponse> getUserDetails(@RequestBody SignUpRequest request) {
+    public ResponseDto<JwtTokenResponse> signUpUser(@RequestBody SignUpRequest request) {
         AuthUserResponse authUser = kakaoSignInUseCase.signUp(request);
         JwtTokenResponse jwtToken = jwtUseCase.signIn(authUser.getUser());
         return ResponseDto.create(OK.value(), SUCCESS_AUTH_MESSAGE.getMessage(), jwtToken);

@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Builder
@@ -27,6 +26,8 @@ public class Senior {
     @Column(nullable = false)
     private String postgradu;
     @Column(nullable = false)
+    private String professor;
+    @Column(nullable = false)
     private String lab;
     @Column(nullable = false)
     private String field;
@@ -35,11 +36,14 @@ public class Senior {
     private String chatLink;
     private String time;
     private int term;
+    @Column(nullable = false)
+    private String account;
+    @Column(nullable = false)
+    private String bank;
     private String certification;
     @Column(nullable = false)
     private boolean status;
     @Column(nullable = false)
-    @ColumnDefault("0")
     private int hit;
 
     public void updateProfile(String info, String target, String chatLink, String time, int term) {

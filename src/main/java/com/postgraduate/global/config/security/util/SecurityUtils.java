@@ -1,16 +1,17 @@
 package com.postgraduate.global.config.security.util;
 
 import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.user.domain.repository.UserRepository;
+import com.postgraduate.global.auth.AuthDetails;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-
 @Component
+@RequiredArgsConstructor
 public class SecurityUtils {
-
-//    public Optional<User> getLoggedInUser() {
-//        return Optional.ofNullable(
-//                ((PrincipalDetails) (SecurityContextHolder.getContext().getAuthentication()).getPrincipal()).getUser());
-//    }
+    private final UserRepository userRepository;
+    public User getLoggedInUser(AuthDetails authDetails) {
+        return userRepository.findById(authDetails.getUserId()).orElseThrow();
+    }
 
 }
