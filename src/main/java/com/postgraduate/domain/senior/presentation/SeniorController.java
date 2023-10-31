@@ -37,7 +37,7 @@ public class SeniorController {
     @Operation(summary = "대학원생 프로필 등록", description = "소개글, 추천대상, 오픈채팅방 링크, 가능 시간대, 소통시간")
     public ResponseDto singUpSenior(@AuthenticationPrincipal AuthDetails authDetails,
                                        @RequestBody SeniorProfileRequest request) {
-        updateUseCase.updateProfile(authDetails.getUserId(), request);
+        updateUseCase.updateProfile(authDetails, request);
         return ResponseDto.create(OK.value(), SUCCESS_UPDATE_PROFILE_MESSAGE.getMessage());
     }
 }

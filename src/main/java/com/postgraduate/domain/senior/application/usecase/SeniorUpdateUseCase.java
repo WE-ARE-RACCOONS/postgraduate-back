@@ -6,6 +6,8 @@ import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.domain.senior.domain.service.SeniorSaveService;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.service.UserGetService;
+import com.postgraduate.global.auth.AuthDetails;
+import com.postgraduate.global.config.security.util.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,10 +18,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class SeniorUpdateUseCase {
     private final SeniorSaveService seniorSaveService;
     private final SeniorGetService seniorGetService;
-    private final UserGetService userGetService;
+    private final SecurityUtils securityUtils;
 
-    public void updateProfile(Long userId, SeniorProfileRequest request) {
-        User user = userGetService.getUser(userId);
+    public void updateProfile(AuthDetails authDetails, SeniorProfileRequest request) {
+        User user = securityUtils.getLoggedInUser(authDetails);
         Senior senior = seniorGetService.byUser(user);
         seniorSaveService.saveSenior(senior, request);
     }
