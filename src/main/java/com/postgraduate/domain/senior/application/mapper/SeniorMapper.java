@@ -12,13 +12,13 @@ public class SeniorMapper {
                 .college(request.getCollege())
                 .major(request.getMajor())
                 .postgradu(request.getPostgradu())
-                //professor
+                .professor(request.getProfessor())
                 .lab(request.getLab())
                 .field(request.getField())
                 .certification(request.getCertification())
-                //account
-                //bank
-                //rrn
+                .account(request.getAccount())
+                .bank(request.getBank())
+                .rrn(request.getRrn())
                 .build();
     }
 }
