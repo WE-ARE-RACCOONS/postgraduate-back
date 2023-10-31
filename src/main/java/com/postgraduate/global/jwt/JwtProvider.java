@@ -3,7 +3,9 @@ package com.postgraduate.global.jwt;
 import com.postgraduate.domain.user.domain.entity.constant.Role;
 import com.postgraduate.global.auth.AuthDetails;
 import com.postgraduate.global.auth.AuthDetailsService;
+import com.postgraduate.global.config.redis.RedisRepository;
 import io.jsonwebtoken.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -12,6 +14,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -20,26 +23,34 @@ import java.util.Collections;
 import java.util.Date;
 
 @Component
+@RequiredArgsConstructor
 public class JwtProvider {
-    private final String secret;
     private final AuthDetailsService authDetailsService;
+    private final RedisRepository redisRepository;
+    @Value("${jwt.secret-key}")
+    private String secret;
+    private final String REFRESH = "refresh";
 
-    @Autowired
-    public JwtProvider(@Value("${jwt.secret-key}") String secret, AuthDetailsService authDetailsService) {
-        this.secret = secret;
-        this.authDetailsService = authDetailsService;
-    }
-
-    public String generateToken(Long id, Role role, boolean isRefreshToken) {
+    public String generateAccessToken(Long id, Role role) {
         Instant accessDate = LocalDateTime.now().plusHours(6).atZone(ZoneId.systemDefault()).toInstant();
-        Instant refreshDate = LocalDateTime.now().plusDays(30).atZone(ZoneId.systemDefault()).toInstant();
-
         return Jwts.builder()
                 .claim("role", role)
                 .setSubject(String.valueOf(id))
-                .setExpiration(isRefreshToken ? Date.from(refreshDate) : Date.from(accessDate))
+                .setExpiration(Date.from(accessDate))
                 .signWith(SignatureAlgorithm.HS256, secret)
                 .compact();
+    }
+
+    public String generateRefreshToken(Long id, Role role) {
+        Instant refreshDate = LocalDateTime.now().plusDays(30).atZone(ZoneId.systemDefault()).toInstant();
+        String refreshToken = Jwts.builder()
+                .claim("role", role)
+                .setSubject(String.valueOf(id))
+                .setExpiration(Date.from(refreshDate))
+                .signWith(SignatureAlgorithm.HS256, secret)
+                .compact();
+        redisRepository.setValues(REFRESH + id, refreshToken, Duration.ofDays(30));
+        return refreshToken;
     }
 
     public Authentication getAuthentication(String token) {
@@ -63,6 +74,10 @@ public class JwtProvider {
         } catch (ExpiredJwtException e) {
             //TODO: 만료된 토큰 예외
         }
+    }
+
+    public void checkRedis(Long id) {
+        redisRepository.getValues(REFRESH + id).orElseThrow(); //TODO: 예외처리
     }
 
     public Claims parseClaims(String token) {
