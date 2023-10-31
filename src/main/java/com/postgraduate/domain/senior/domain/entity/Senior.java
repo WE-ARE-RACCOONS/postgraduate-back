@@ -19,7 +19,6 @@ public class Senior {
     private Long seniorId;
     @OneToOne
     private User user;
-    @Column(nullable = false)
     private String name;
     @Column(nullable = false)
     private String college;
@@ -31,15 +30,10 @@ public class Senior {
     private String lab;
     @Column(nullable = false)
     private String field;
-    @Column(nullable = false, length = 500)
     private String info;
-    @Column(nullable = false)
     private String target;
-    @Column(nullable = false)
     private String chatLink;
-    @Column(nullable = false)
     private String time;
-    @Column(nullable = false)
     private int term;
     private String certification;
     @Column(nullable = false)
