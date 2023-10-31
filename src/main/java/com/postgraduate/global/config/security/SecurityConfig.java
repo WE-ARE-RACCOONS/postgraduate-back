@@ -31,6 +31,9 @@ public class SecurityConfig {
     protected SecurityFilterChain config(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf->csrf.disable())
+                .cors(corsConfigurer ->
+                        corsConfigurer.configurationSource(source())
+                )
                 .httpBasic(httpBasic->httpBasic.disable())
                 .headers((headers) -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable));
         http
@@ -59,7 +62,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
+    public CorsConfigurationSource source() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addExposedHeader("Authorization");
         configuration.addAllowedOriginPattern("*");
