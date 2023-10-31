@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserMyPageUseCase {
     private final SecurityUtils securityUtils;
     private final UserUpdateService userUpdateService;
+    private final UserGetService userGetService;
 
     public UserInfoResponse getUserInfo(AuthDetails authDetails) {
         User user = securityUtils.getLoggedInUser(authDetails);
@@ -26,5 +27,9 @@ public class UserMyPageUseCase {
     public void updateUser(AuthDetails authDetails, String nickName) {
         User user = securityUtils.getLoggedInUser(authDetails);
         userUpdateService.updateNickName(user.getUserId(), nickName);
+    }
+
+    public boolean duplicatedNickName(String nickName) {
+        return userGetService.byNickName(nickName).isEmpty();
     }
 }

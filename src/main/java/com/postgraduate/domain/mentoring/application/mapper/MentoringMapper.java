@@ -18,7 +18,6 @@ public class MentoringMapper {
                 .seniorId(senior.getSeniorId())
                 .nickName(senior.getUser().getNickName())
                 .postgradu(senior.getPostgradu())
-                .lab(senior.getLab())
                 .professor(senior.getProfessor())
                 .field(senior.getField())
                 .chatLink(senior.getChatLink())
@@ -34,7 +33,6 @@ public class MentoringMapper {
                 .seniorId(senior.getSeniorId())
                 .nickName(senior.getUser().getNickName())
                 .postgradu(senior.getPostgradu())
-                .lab(senior.getLab())
                 .professor(senior.getProfessor())
                 .field(senior.getField())
                 .build();
@@ -47,7 +45,6 @@ public class MentoringMapper {
                 .seniorId(senior.getSeniorId())
                 .nickName(senior.getUser().getNickName())
                 .field(senior.getField())
-                .lab(senior.getLab())
                 .professor(senior.getProfessor())
                 .topic(mentoring.getTopic())
                 .question(mentoring.getQuestion())

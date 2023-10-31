@@ -13,7 +13,6 @@ public class AppliedMentoringDetailResponse {
         Long seniorId;
         String nickName;
         String field;
-        String lab;
         String professor;
         String topic;
         String question;
