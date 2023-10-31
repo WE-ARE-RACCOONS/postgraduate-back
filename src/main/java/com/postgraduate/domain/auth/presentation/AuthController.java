@@ -34,7 +34,7 @@ public class AuthController {
     public ResponseDto<?> getUserDetails(@RequestBody KakaoLoginRequest request) {
         AuthUserResponse authUser = kakaoSignInUseCase.getUser(request.getAccessToken());
         if (authUser.getSocialId() != null) {
-            return ResponseDto.create(NOT_FOUND.value(), NOT_REGISTERED_USER_MESSAGE.getMessage(), authUser);
+            return ResponseDto.create(OK.value(), NOT_REGISTERED_USER_MESSAGE.getMessage(), authUser);
         }
         JwtTokenResponse jwtToken = jwtUseCase.signIn(authUser.getUser());
         return ResponseDto.create(OK.value(), SUCCESS_AUTH_MESSAGE.getMessage(), jwtToken);
@@ -49,11 +49,9 @@ public class AuthController {
     }
 
     @PostMapping("/refresh")
-    @Operation(summary = "accessToken 재발급", description = "refreshToken 으로 accessToken 재발급")
+    @Operation(summary = "토큰 재발급", description = "refreshToken 으로 토큰 재발급")
     public ResponseDto<JwtTokenResponse> refresh(@AuthenticationPrincipal AuthDetails authDetails) {
-        Long userId = authDetails.getUserId();
-        String refreshToken = "";/*Redis에서 userId로 refreshToken 확인*/
-        JwtTokenResponse jwtToken = jwtUseCase.regenerateToken(refreshToken);
+        JwtTokenResponse jwtToken = jwtUseCase.regenerateToken(authDetails);
         return ResponseDto.create(OK.value(), SUCCESS_REGENERATE_TOKEN_MESSAGE.getMessage(), jwtToken);
     }
 }
