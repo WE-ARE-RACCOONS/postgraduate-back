@@ -10,6 +10,7 @@ import com.postgraduate.global.auth.AuthDetails;
 import com.postgraduate.global.dto.ResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import static com.postgraduate.domain.auth.presentation.contant.AuthResponseMessage.*;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
@@ -50,8 +50,8 @@ public class AuthController {
 
     @PostMapping("/refresh")
     @Operation(summary = "토큰 재발급", description = "refreshToken 으로 토큰 재발급")
-    public ResponseDto<JwtTokenResponse> refresh(@AuthenticationPrincipal AuthDetails authDetails) {
-        JwtTokenResponse jwtToken = jwtUseCase.regenerateToken(authDetails);
+    public ResponseDto<JwtTokenResponse> refresh(@AuthenticationPrincipal AuthDetails authDetails, HttpServletRequest request) {
+        JwtTokenResponse jwtToken = jwtUseCase.regenerateToken(authDetails, request);
         return ResponseDto.create(OK.value(), SUCCESS_REGENERATE_TOKEN_MESSAGE.getMessage(), jwtToken);
     }
 }

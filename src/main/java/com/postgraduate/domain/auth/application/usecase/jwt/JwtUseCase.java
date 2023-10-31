@@ -5,6 +5,7 @@ import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.global.auth.AuthDetails;
 import com.postgraduate.global.config.security.util.SecurityUtils;
 import com.postgraduate.global.jwt.JwtProvider;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,9 +19,9 @@ public class JwtUseCase {
         return generateToken(user);
     }
 
-    public JwtTokenResponse regenerateToken(AuthDetails authDetails) {
+    public JwtTokenResponse regenerateToken(AuthDetails authDetails, HttpServletRequest request) {
         User user = securityUtils.getLoggedInUser(authDetails);
-        jwtProvider.checkRedis(user.getUserId());
+        jwtProvider.checkRedis(user.getUserId(), request);
         return generateToken(user);
     }
 

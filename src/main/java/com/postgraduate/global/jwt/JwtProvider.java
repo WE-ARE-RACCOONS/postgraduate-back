@@ -5,8 +5,8 @@ import com.postgraduate.global.auth.AuthDetails;
 import com.postgraduate.global.auth.AuthDetailsService;
 import com.postgraduate.global.config.redis.RedisRepository;
 import io.jsonwebtoken.*;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -30,6 +30,7 @@ public class JwtProvider {
     @Value("${jwt.secret-key}")
     private String secret;
     private final String REFRESH = "refresh";
+    private final String AUTHORIZATION = "Authorization";
 
     public String generateAccessToken(Long id, Role role) {
         Instant accessDate = LocalDateTime.now().plusHours(6).atZone(ZoneId.systemDefault()).toInstant();
@@ -60,9 +61,6 @@ public class JwtProvider {
     }
 
     private AuthDetails getDetails(Claims claims) {
-        if (claims.get("role").equals(Role.USER)) {
-            return this.authDetailsService.loadUserByUsername(claims.getSubject());
-        }
         return this.authDetailsService.loadUserByUsername(claims.getSubject());
     }
 
@@ -76,8 +74,11 @@ public class JwtProvider {
         }
     }
 
-    public void checkRedis(Long id) {
-        redisRepository.getValues(REFRESH + id).orElseThrow(); //TODO: 예외처리
+    public void checkRedis(Long id, HttpServletRequest request) {
+        String refreshToken = request.getHeader(AUTHORIZATION).split(" ")[1];
+        String redisToken = redisRepository.getValues(REFRESH + id).orElseThrow();//TODO: 예외처리
+        if (!redisToken.equals(refreshToken))
+            throw new IllegalArgumentException(); //TODO: 예외처리
     }
 
     public Claims parseClaims(String token) {
