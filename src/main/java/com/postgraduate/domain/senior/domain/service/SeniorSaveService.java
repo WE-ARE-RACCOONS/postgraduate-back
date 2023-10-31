@@ -1,5 +1,6 @@
 package com.postgraduate.domain.senior.domain.service;
 
+import com.postgraduate.domain.senior.application.dto.req.SeniorProfileRequest;
 import com.postgraduate.domain.senior.application.dto.req.SeniorSignUpRequest;
 import com.postgraduate.domain.senior.application.mapper.SeniorMapper;
 import com.postgraduate.domain.senior.domain.entity.Senior;
@@ -15,6 +16,11 @@ public class SeniorSaveService {
 
     public Senior saveSenior(User user, SeniorSignUpRequest request) {
         Senior senior = SeniorMapper.mapToSenior(user, request);
+        return seniorRepository.save(senior);
+    }
+
+    public Senior saveSenior(Senior senior, SeniorProfileRequest request) {
+        senior.updateProfile(request.getInfo(), request.getTarget(), request.getChatLink(), request.getTime(), request.getTerm());
         return seniorRepository.save(senior);
     }
 }

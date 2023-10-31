@@ -41,4 +41,12 @@ public class Senior {
     @Column(nullable = false)
     @ColumnDefault("0")
     private int hit;
+
+    public void updateProfile(String info, String target, String chatLink, String time, int term) {
+        this.info = info;
+        this.target = target;
+        this.chatLink = chatLink;
+        this.time = time;
+        this.term = term;
+    }
 }
