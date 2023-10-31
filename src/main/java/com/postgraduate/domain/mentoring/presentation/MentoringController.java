@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import static com.postgraduate.domain.mentoring.presentation.constant.MentoringResponseMessage.GET_MENTORING_DETAIL_INFO;
 import static com.postgraduate.domain.mentoring.presentation.constant.MentoringResponseMessage.GET_MENTORING_LIST_INFO;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -31,8 +32,8 @@ public class MentoringController {
 
     @GetMapping("/me/{mentoringId}")
     @Operation(description = "대학생 신청 멘토링 상세조회")
-    public ResponseDto<AppliedMentoringDetailResponse> getMentoringDetails(@PathVariable Long mentoringId) {
+    public ResponseDto<AppliedMentoringDetailResponse> getMentoringDetail(@PathVariable Long mentoringId) {
         AppliedMentoringDetailResponse mentoringDetail = infoUsecase.getMentoringDetail(mentoringId);
-        return ResponseDto.create(OK.value(), GET_MENTORING_LIST_INFO.getMessage(), mentoringDetail);
+        return ResponseDto.create(OK.value(), GET_MENTORING_DETAIL_INFO.getMessage(), mentoringDetail);
     }
 }
