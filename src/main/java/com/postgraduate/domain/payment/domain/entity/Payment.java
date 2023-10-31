@@ -21,12 +21,17 @@ public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long paymentId;
+
     @OneToOne
     private Mentoring mentoring;
+
     @CreationTimestamp
     private LocalDate createdAt;
+
     private LocalDate paidAt;
+
     private LocalDate deletedAt;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     @Builder.Default

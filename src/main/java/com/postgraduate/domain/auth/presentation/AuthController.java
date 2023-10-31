@@ -34,7 +34,7 @@ public class AuthController {
     public ResponseDto<?> getUserDetails(@RequestBody KakaoLoginRequest request) {
         AuthUserResponse authUser = kakaoSignInUseCase.getUser(request.getAccessToken());
         if (authUser.getSocialId() != null) {
-            return ResponseDto.create(NOT_FOUND.value(), NOT_REGISTERED_USER_MESSAGE.getMessage(), authUser);
+            return ResponseDto.create(OK.value(), NOT_REGISTERED_USER_MESSAGE.getMessage(), authUser);
         }
         JwtTokenResponse jwtToken = jwtUseCase.signIn(authUser.getUser());
         return ResponseDto.create(OK.value(), SUCCESS_AUTH_MESSAGE.getMessage(), jwtToken);

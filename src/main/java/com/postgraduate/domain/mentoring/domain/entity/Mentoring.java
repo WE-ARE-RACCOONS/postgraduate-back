@@ -21,21 +21,30 @@ public class Mentoring {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long mentoringId;
+
     @ManyToOne
     private User user;
+
     @ManyToOne
     private Senior senior;
+
     @Column(nullable = false)
     private String topic;
+
     @Column(nullable = false)
     private String question;
+
     @Column(nullable = false)
     private String date;
+
     @Column(nullable = false)
     private int pay;
+
     @Enumerated(EnumType.STRING)
     private Status status;
+
     @CreationTimestamp
     private LocalDate createdAt;
+
     private LocalDate deletedAt;
 }

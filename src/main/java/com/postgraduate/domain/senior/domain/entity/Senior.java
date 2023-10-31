@@ -16,39 +16,60 @@ public class Senior {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long seniorId;
+
     @OneToOne
     private User user;
-    @Column(nullable = false)
-    private String name;
+
     @Column(nullable = false)
     private String college;
+
     @Column(nullable = false)
     private String major;
+
     @Column(nullable = false)
     private String postgradu;
+
     @Column(nullable = false)
     private String professor;
+
     @Column(nullable = false)
     private String lab;
+
     @Column(nullable = false)
     private String field;
-    @Column(nullable = false, length = 500)
+
     private String info;
-    @Column(nullable = false)
+
     private String target;
-    @Column(nullable = false)
+
     private String chatLink;
-    @Column(nullable = false)
+
     private String time;
-    @Column(nullable = false)
+
     private int term;
+
     @Column(nullable = false)
     private String account;
+
     @Column(nullable = false)
     private String bank;
+
     private String certification;
+
+    @Column(nullable = false)
+    private String rrn;
+
     @Column(nullable = false)
     private boolean status;
+
     @Column(nullable = false)
     private int hit;
+
+    public void updateProfile(String info, String target, String chatLink, String time, int term) {
+        this.info = info;
+        this.target = target;
+        this.chatLink = chatLink;
+        this.time = time;
+        this.term = term;
+    }
 }
