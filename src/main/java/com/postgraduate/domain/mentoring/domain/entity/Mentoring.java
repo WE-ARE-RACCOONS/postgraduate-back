@@ -21,9 +21,9 @@ public class Mentoring {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long mentoringId;
-    @OneToOne
+    @ManyToOne
     private User user;
-    @OneToOne
+    @ManyToOne
     private Senior senior;
     @Column(nullable = false)
     private String topic;
