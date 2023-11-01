@@ -4,6 +4,7 @@ import com.postgraduate.domain.mentoring.application.dto.AppliedMentoringDetailR
 import com.postgraduate.domain.mentoring.application.dto.AppliedMentoringResponse;
 import com.postgraduate.domain.mentoring.application.usecase.MentoringInfoUseCase;
 import com.postgraduate.domain.mentoring.domain.entity.constant.Status;
+import com.postgraduate.domain.mentoring.presentation.constant.MentoringResponseCode;
 import com.postgraduate.global.auth.AuthDetails;
 import com.postgraduate.global.dto.ResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import static com.postgraduate.domain.mentoring.presentation.constant.MentoringResponseCode.MENTORING_FIND;
 import static com.postgraduate.domain.mentoring.presentation.constant.MentoringResponseMessage.GET_MENTORING_DETAIL_INFO;
 import static com.postgraduate.domain.mentoring.presentation.constant.MentoringResponseMessage.GET_MENTORING_LIST_INFO;
 import static org.springframework.http.HttpStatus.OK;
@@ -27,13 +29,13 @@ public class MentoringController {
     @Operation(description = "대학생 신청 멘토링 조회")
     public ResponseDto<AppliedMentoringResponse> getMentoringInfos(@RequestParam Status status, @AuthenticationPrincipal AuthDetails authDetails) {
         AppliedMentoringResponse mentoringResponse = infoUsecase.getMentorings(status, authDetails);
-        return ResponseDto.create(OK.value(), GET_MENTORING_LIST_INFO.getMessage(), mentoringResponse);
+        return ResponseDto.create(MENTORING_FIND.getCode(), GET_MENTORING_LIST_INFO.getMessage(), mentoringResponse);
     }
 
     @GetMapping("/me/{mentoringId}")
     @Operation(description = "대학생 신청 멘토링 상세조회")
     public ResponseDto<AppliedMentoringDetailResponse> getMentoringDetail(@PathVariable Long mentoringId) {
         AppliedMentoringDetailResponse mentoringDetail = infoUsecase.getMentoringDetail(mentoringId);
-        return ResponseDto.create(OK.value(), GET_MENTORING_DETAIL_INFO.getMessage(), mentoringDetail);
+        return ResponseDto.create(MENTORING_FIND.getCode(), GET_MENTORING_DETAIL_INFO.getMessage(), mentoringDetail);
     }
 }
