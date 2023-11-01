@@ -54,7 +54,7 @@ public class JwtProvider {
                 .setExpiration(Date.from(refreshDate))
                 .signWith(SignatureAlgorithm.HS256, secret)
                 .compact();
-        redisRepository.setValues(REFRESH + id, refreshToken, Duration.ofDays(30));
+        redisRepository.setValues(REFRESH + id, refreshToken, Duration.ofSeconds(refreshExpiration));
         return refreshToken;
     }
 
@@ -73,8 +73,10 @@ public class JwtProvider {
             parseClaims(token);
         } catch (SignatureException | UnsupportedJwtException | IllegalArgumentException | MalformedJwtException e) {
             //TODO: 유효하지 않은 토큰 예외
+            throw new IllegalArgumentException();
         } catch (ExpiredJwtException e) {
             //TODO: 만료된 토큰 예외
+            throw new IllegalArgumentException();
         }
     }
 
@@ -86,11 +88,7 @@ public class JwtProvider {
     }
 
     public Claims parseClaims(String token) {
-        try {
-            JwtParser parser = Jwts.parser().setSigningKey(secret);
-            return parser.parseClaimsJws(token).getBody();
-        } catch (ExpiredJwtException e) {
-            return e.getClaims();
-        }
+        JwtParser parser = Jwts.parser().setSigningKey(secret);
+        return parser.parseClaimsJws(token).getBody();
     }
 }
