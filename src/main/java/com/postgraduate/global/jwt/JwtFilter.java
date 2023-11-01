@@ -15,8 +15,8 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
     private final JwtProvider jwtProvider;
-    private static final String AUTHORIZATION = "Authorization";
-    private static final String BEARER = "Bearer";
+    private final String AUTHORIZATION = "Authorization";
+    private final String BEARER = "Bearer";
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {

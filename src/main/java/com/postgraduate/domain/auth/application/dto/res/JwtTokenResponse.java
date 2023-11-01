@@ -1,10 +1,7 @@
 package com.postgraduate.domain.auth.application.dto.res;
 
 import com.postgraduate.domain.user.domain.entity.constant.Role;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Builder
 @Getter
@@ -12,6 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class JwtTokenResponse {
     private String accessToken;
+    private int accessExpiration;
     private String refreshToken;
+    private int refreshExpiration;
     private Role role;
 }
