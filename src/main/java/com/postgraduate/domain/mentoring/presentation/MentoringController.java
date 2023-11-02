@@ -1,7 +1,7 @@
 package com.postgraduate.domain.mentoring.presentation;
 
-import com.postgraduate.domain.mentoring.application.dto.AppliedMentoringDetailResponse;
-import com.postgraduate.domain.mentoring.application.dto.AppliedMentoringResponse;
+import com.postgraduate.domain.mentoring.application.dto.req.MentoringApplyRequest;
+import com.postgraduate.domain.mentoring.application.dto.res.AppliedMentoringDetailResponse;
 import com.postgraduate.domain.mentoring.application.usecase.MentoringInfoUseCase;
 import com.postgraduate.domain.mentoring.domain.entity.constant.Status;
 import com.postgraduate.domain.mentoring.presentation.constant.MentoringResponseCode;

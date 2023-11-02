@@ -1,5 +1,6 @@
-package com.postgraduate.domain.mentoring.application.dto;
+package com.postgraduate.domain.mentoring.application.dto.res;
 
+import com.postgraduate.domain.mentoring.application.dto.AppliedMentoringInfo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

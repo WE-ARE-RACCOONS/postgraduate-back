@@ -2,6 +2,7 @@ package com.postgraduate.domain.mentoring.application.mapper;
 
 import com.postgraduate.domain.mentoring.application.dto.AppliedMentoringDetailResponse;
 import com.postgraduate.domain.mentoring.application.dto.AppliedMentoringInfo;
+import com.postgraduate.domain.mentoring.application.dto.res.AppliedMentoringDetailResponse;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 
