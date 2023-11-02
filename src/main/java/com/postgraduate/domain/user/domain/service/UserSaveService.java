@@ -12,8 +12,7 @@ import org.springframework.stereotype.Service;
 public class UserSaveService {
     private final UserRepository userRepository;
 
-    public User saveUser(SignUpRequest request) {
-        User user = UserMapper.mapToUser(request);
+    public User saveUser(User user) {
         return userRepository.save(user);
     }
 }

@@ -4,6 +4,7 @@ import com.postgraduate.domain.auth.application.dto.res.AuthUserResponse;
 import com.postgraduate.domain.auth.application.dto.res.KakaoUserInfoResponse;
 import com.postgraduate.domain.auth.application.dto.req.SignUpRequest;
 import com.postgraduate.domain.auth.application.mapper.AuthMapper;
+import com.postgraduate.domain.user.application.mapper.UserMapper;
 import com.postgraduate.domain.user.application.usecase.UserCheckUseCase;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.service.UserGetService;
@@ -37,7 +38,8 @@ public class KakaoSignInUseCase {
         if (userCheckUseCase.isDuplicatedNickName(request.getNickName())) {
             throw new RuntimeException("중복예외");
         }
-        User user = userSaveService.saveUser(request);
+        User requestUser = UserMapper.mapToUser(request);
+        User user = userSaveService.saveUser(requestUser);
         return AuthMapper.mapToAuthUser(user, null);
     }
 }
