@@ -10,14 +10,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL) //Json 결과에서 Null은 빼고 나타남
 public class ResponseDto<T> {
-    private int code;
+    private String code;
     private String message;
     private T data;
 
-    public static <T> ResponseDto<T> create(int code, String message) {
+    public static <T> ResponseDto<T> create(String code, String message) {
         return new ResponseDto(code, message, null);
     }
-    public static <T> ResponseDto<T> create(int code, String message, T dto) {
+    public static <T> ResponseDto<T> create(String code, String message, T dto) {
         return new ResponseDto(code, message, dto);
     }
 }

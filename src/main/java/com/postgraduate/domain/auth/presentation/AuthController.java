@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.postgraduate.domain.auth.presentation.contant.AuthResponseCode.*;
 import static com.postgraduate.domain.auth.presentation.contant.AuthResponseMessage.*;
-import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequiredArgsConstructor
@@ -34,10 +34,10 @@ public class AuthController {
     public ResponseDto<?> getUserDetails(@RequestBody KakaoLoginRequest request) {
         AuthUserResponse authUser = kakaoSignInUseCase.getUser(request.getAccessToken());
         if (authUser.getSocialId() != null) {
-            return ResponseDto.create(OK.value(), NOT_REGISTERED_USER_MESSAGE.getMessage(), authUser);
+            return ResponseDto.create(AUTH_CONTINUE.getCode(), NOT_REGISTERED_USER_MESSAGE.getMessage(), authUser);
         }
         JwtTokenResponse jwtToken = jwtUseCase.signIn(authUser.getUser());
-        return ResponseDto.create(OK.value(), SUCCESS_AUTH_MESSAGE.getMessage(), jwtToken);
+        return ResponseDto.create(AUTH_NONE.getCode(), SUCCESS_AUTH_MESSAGE.getMessage(), jwtToken);
     }
 
     @PostMapping("/signup")
@@ -45,13 +45,13 @@ public class AuthController {
     public ResponseDto<JwtTokenResponse> signUpUser(@RequestBody SignUpRequest request) {
         AuthUserResponse authUser = kakaoSignInUseCase.signUp(request);
         JwtTokenResponse jwtToken = jwtUseCase.signIn(authUser.getUser());
-        return ResponseDto.create(OK.value(), SUCCESS_AUTH_MESSAGE.getMessage(), jwtToken);
+        return ResponseDto.create(AUTH_CREATE.getCode(), SUCCESS_AUTH_MESSAGE.getMessage(), jwtToken);
     }
 
     @PostMapping("/refresh")
     @Operation(summary = "토큰 재발급", description = "refreshToken 으로 토큰 재발급")
     public ResponseDto<JwtTokenResponse> refresh(@AuthenticationPrincipal AuthDetails authDetails, HttpServletRequest request) {
         JwtTokenResponse jwtToken = jwtUseCase.regenerateToken(authDetails, request);
-        return ResponseDto.create(OK.value(), SUCCESS_REGENERATE_TOKEN_MESSAGE.getMessage(), jwtToken);
+        return ResponseDto.create(AUTH_UPDATE.getCode(), SUCCESS_REGENERATE_TOKEN_MESSAGE.getMessage(), jwtToken);
     }
 }
