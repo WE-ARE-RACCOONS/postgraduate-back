@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
@@ -38,10 +39,12 @@ public class Mentoring {
     private String date;
 
     @Column(nullable = false)
+    @ColumnDefault("40000")
     private int pay;
 
     @Enumerated(EnumType.STRING)
-    private Status status;
+    @Builder.Default
+    private Status status = Status.WAITING;
 
     @CreationTimestamp
     private LocalDate createdAt;
