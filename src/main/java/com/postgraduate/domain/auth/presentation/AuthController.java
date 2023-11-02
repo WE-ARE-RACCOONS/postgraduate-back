@@ -34,10 +34,10 @@ public class AuthController {
     public ResponseDto<?> getUserDetails(@RequestBody KakaoLoginRequest request) {
         AuthUserResponse authUser = kakaoSignInUseCase.getUser(request.getAccessToken());
         if (authUser.getSocialId() != null) {
-            return ResponseDto.create(AUTH_CONTINUE.getCode(), NOT_REGISTERED_USER_MESSAGE.getMessage(), authUser);
+            return ResponseDto.create(AUTH_NONE.getCode(), NOT_REGISTERED_USER_MESSAGE.getMessage(), authUser);
         }
         JwtTokenResponse jwtToken = jwtUseCase.signIn(authUser.getUser());
-        return ResponseDto.create(AUTH_NONE.getCode(), SUCCESS_AUTH_MESSAGE.getMessage(), jwtToken);
+        return ResponseDto.create(AUTH_ALREADY.getCode(), SUCCESS_AUTH_MESSAGE.getMessage(), jwtToken);
     }
 
     @PostMapping("/signup")
