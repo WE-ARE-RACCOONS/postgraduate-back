@@ -11,6 +11,6 @@ public enum AuthResponseCode {
     AUTH_CREATE("AU202"),
     AUTH_DELETE("AU203"),
     AUTH_ALREADY("AU204"),
-    AUTH_CONTINUE("AU205");
+    AUTH_NONE("AU205");
     private final String code;
 }
