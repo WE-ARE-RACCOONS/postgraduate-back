@@ -37,7 +37,7 @@ public class AuthController {
             return ResponseDto.create(AUTH_CONTINUE.getCode(), NOT_REGISTERED_USER_MESSAGE.getMessage(), authUser);
         }
         JwtTokenResponse jwtToken = jwtUseCase.signIn(authUser.getUser());
-        return ResponseDto.create(AUTH_ALREADY.getCode(), SUCCESS_AUTH_MESSAGE.getMessage(), jwtToken);
+        return ResponseDto.create(AUTH_NONE.getCode(), SUCCESS_AUTH_MESSAGE.getMessage(), jwtToken);
     }
 
     @PostMapping("/signup")
