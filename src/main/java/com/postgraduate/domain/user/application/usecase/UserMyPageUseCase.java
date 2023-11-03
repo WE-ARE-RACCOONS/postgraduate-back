@@ -24,9 +24,14 @@ public class UserMyPageUseCase {
         return UserMapper.mapToInfo(user);
     }
 
-    public void updateUser(AuthDetails authDetails, String nickName) {
+    public void updateNickName(AuthDetails authDetails, String nickName) {
         User user = securityUtils.getLoggedInUser(authDetails);
         userUpdateService.updateNickName(user.getUserId(), nickName);
+    }
+
+    public void updateProfile(AuthDetails authDetails, String profile) {
+        User user = securityUtils.getLoggedInUser(authDetails);
+        userUpdateService.updateProfile(user.getUserId(), profile);
     }
 
     public boolean duplicatedNickName(String nickName) {

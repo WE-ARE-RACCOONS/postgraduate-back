@@ -6,11 +6,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.Optional;
+
 @Builder
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class AuthUserResponse {
-    private User user;
+    private Optional<User> user;
     private Long socialId;
 }
