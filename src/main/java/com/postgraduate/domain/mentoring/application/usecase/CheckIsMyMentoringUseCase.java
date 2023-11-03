@@ -1,5 +1,6 @@
 package com.postgraduate.domain.mentoring.application.usecase;
 
+import com.postgraduate.domain.auth.exception.PermissionDeniedException;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
 import com.postgraduate.domain.senior.domain.entity.Senior;
@@ -17,10 +18,16 @@ public class CheckIsMyMentoringUseCase {
     private final SeniorGetService seniorGetService;
     public Mentoring checkByRole(User user, Long mentoringId) {
         Mentoring mentoring = mentoringGetService.byMentoringId(mentoringId);
+        if (mentoring.getUser() != user) {
+            throw new PermissionDeniedException();
+        }
+        return mentoring;
+    }
 
-        Senior senior = seniorGetService.byUser(user);
-        if (mentoring.getUser() != user && mentoring.getSenior() != senior) {
-            throw new IllegalArgumentException("권한없음");
+    public Mentoring checkByRole(Senior senior, Long mentoringId) {
+        Mentoring mentoring = mentoringGetService.byMentoringId(mentoringId);
+        if (mentoring.getSenior() != senior) {
+            throw new PermissionDeniedException();
         }
         return mentoring;
     }
