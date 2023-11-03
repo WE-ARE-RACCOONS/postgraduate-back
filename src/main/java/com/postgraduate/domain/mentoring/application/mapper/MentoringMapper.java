@@ -17,10 +17,10 @@ public class MentoringMapper {
                 .dates(dates)
                 .seniorId(senior.getSeniorId())
                 .nickName(senior.getUser().getNickName())
-                .postgradu(senior.getPostgradu())
-                .professor(senior.getProfessor())
-                .field(senior.getField())
-                .chatLink(senior.getChatLink())
+                .postgradu(senior.getInfo().getPostgradu())
+                .professor(senior.getInfo().getProfessor())
+                .field(senior.getInfo().getField())
+                .chatLink(senior.getProfile().getChatLink())
                 .build();
     }
     public static AppliedMentoringInfo mapToWaitingOrDoneAppliedInfo(Mentoring mentoring) {
@@ -29,12 +29,12 @@ public class MentoringMapper {
         return AppliedMentoringInfo.builder()
                 .mentoringId(mentoring.getMentoringId())
                 .dates(dates)
-                .term(senior.getTerm())
+                .term(senior.getProfile().getTerm())
                 .seniorId(senior.getSeniorId())
                 .nickName(senior.getUser().getNickName())
-                .postgradu(senior.getPostgradu())
-                .professor(senior.getProfessor())
-                .field(senior.getField())
+                .postgradu(senior.getInfo().getPostgradu())
+                .professor(senior.getInfo().getProfessor())
+                .field(senior.getInfo().getField())
                 .build();
     }
     public static AppliedMentoringDetailResponse mapToAppliedDetailInfo(Mentoring mentoring) {
@@ -44,8 +44,8 @@ public class MentoringMapper {
         return AppliedMentoringDetailResponse.builder()
                 .seniorId(senior.getSeniorId())
                 .nickName(senior.getUser().getNickName())
-                .field(senior.getField())
-                .professor(senior.getProfessor())
+                .field(senior.getInfo().getField())
+                .professor(senior.getInfo().getProfessor())
                 .topic(mentoring.getTopic())
                 .question(mentoring.getQuestion())
                 .dates(dates)
