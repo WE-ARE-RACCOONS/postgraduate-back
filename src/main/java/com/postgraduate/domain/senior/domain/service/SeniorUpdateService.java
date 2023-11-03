@@ -12,4 +12,8 @@ public class SeniorUpdateService {
     public void updateSeniorProfile(Senior senior, SeniorProfileRequest profileRequest) {
         senior.updateProfile(profileRequest);
     }
+
+    public void updateCertification(Senior senior, String imageUrl) {
+        senior.updateCertification(imageUrl);
+    }
 }
