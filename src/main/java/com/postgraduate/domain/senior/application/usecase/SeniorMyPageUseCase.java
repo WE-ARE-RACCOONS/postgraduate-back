@@ -6,6 +6,7 @@ import com.postgraduate.domain.senior.application.dto.res.SeniorInfoResponse;
 import com.postgraduate.domain.senior.application.mapper.SeniorMapper;
 import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
+import com.postgraduate.domain.senior.domain.entity.constant.Status;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.domain.senior.domain.service.SeniorUpdateService;
 import com.postgraduate.domain.user.domain.entity.User;
@@ -28,7 +29,7 @@ public class SeniorMyPageUseCase {
     public SeniorInfoResponse seniorInfo(AuthDetails authDetails) {
         User user = securityUtils.getLoggedInUser(authDetails);
         Senior senior = seniorGetService.byUser(user);
-        Boolean status = senior.getStatus();
+        Status status = senior.getStatus();
         Optional<Profile> profile = ofNullable(senior.getProfile());
         return SeniorMapper.mapToSeniorInfo(senior, status, profile.isPresent());
     }

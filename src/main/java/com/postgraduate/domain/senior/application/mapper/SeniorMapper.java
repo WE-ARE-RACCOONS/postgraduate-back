@@ -5,6 +5,7 @@ import com.postgraduate.domain.senior.application.dto.res.SeniorInfoResponse;
 import com.postgraduate.domain.senior.domain.entity.Account;
 import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Senior;
+import com.postgraduate.domain.senior.domain.entity.constant.Status;
 import com.postgraduate.domain.user.domain.entity.User;
 
 public class SeniorMapper {
@@ -37,7 +38,7 @@ public class SeniorMapper {
                 .build();
     }
 
-    public static SeniorInfoResponse mapToSeniorInfo(Senior senior, boolean certificationRegister, boolean profileRegister) {
+    public static SeniorInfoResponse mapToSeniorInfo(Senior senior, Status certificationRegister, boolean profileRegister) {
         return SeniorInfoResponse.builder()
                 .nickName(senior.getUser().getNickName())
                 .profile(senior.getUser().getProfile())
