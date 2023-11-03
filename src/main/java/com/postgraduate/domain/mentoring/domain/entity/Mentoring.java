@@ -50,4 +50,8 @@ public class Mentoring {
     private LocalDate createdAt;
 
     private LocalDate deletedAt;
+
+    public void updateStatus(Status status) {
+        this.status = status;
+    }
 }
