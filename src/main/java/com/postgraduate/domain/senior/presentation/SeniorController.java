@@ -4,6 +4,7 @@ import com.postgraduate.domain.senior.application.dto.req.SeniorCertificationReq
 import com.postgraduate.domain.senior.application.dto.req.SeniorProfileRequest;
 import com.postgraduate.domain.senior.application.dto.req.SeniorSignUpRequest;
 import com.postgraduate.domain.senior.application.dto.res.SeniorInfoResponse;
+import com.postgraduate.domain.senior.application.dto.res.SeniorProfileResponse;
 import com.postgraduate.domain.senior.application.usecase.SeniorMyPageUseCase;
 import com.postgraduate.domain.senior.application.usecase.SeniorSignUpUseCase;
 import com.postgraduate.global.auth.AuthDetails;
@@ -55,5 +56,12 @@ public class SeniorController {
     public ResponseDto<SeniorInfoResponse> getSeniorInfo(@AuthenticationPrincipal AuthDetails authDetails) {
         SeniorInfoResponse seniorInfoResponse = myPageUseCase.seniorInfo(authDetails);
         return ResponseDto.create(SENIOR_FIND.getCode(), GET_SENIOR_INFO.getMessage(), seniorInfoResponse);
+    }
+
+    @GetMapping("/me/profile")
+    @Operation(summary = "대학원생 마이페이지 프로필 보기")
+    public ResponseDto<SeniorProfileResponse> getSeniorProfile(@AuthenticationPrincipal AuthDetails authDetails) {
+        SeniorProfileResponse seniorProfile = myPageUseCase.getSeniorProfile(authDetails);
+        return ResponseDto.create(SENIOR_FIND.getCode(), GET_SENIOR_PROFILE.getMessage(), seniorProfile);
     }
 }

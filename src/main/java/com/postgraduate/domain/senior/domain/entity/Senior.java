@@ -49,8 +49,9 @@ public class Senior {
 
     @Embedded
     private Profile profile;
-    public void updateProfile(SeniorProfileRequest profileRequest) {
-        profile.updateProfile(profileRequest);
+
+    public void updateProfile(Profile profile) {
+        this.profile = profile;
     }
 
     public void updateCertification(String certification) {
