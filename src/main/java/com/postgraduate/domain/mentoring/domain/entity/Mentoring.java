@@ -39,8 +39,8 @@ public class Mentoring {
     private String date;
 
     @Column(nullable = false)
-    @ColumnDefault("40000")
-    private int pay;
+    @Builder.Default
+    private int pay = 20000;
 
     @Enumerated(EnumType.STRING)
     @Builder.Default
