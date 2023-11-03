@@ -17,12 +17,10 @@ public class MentoringGetService {
     private final MentoringRepository mentoringRepository;
 
     public List<Mentoring> mentoringByUser(User user, Status status) {
-        List<Mentoring> mentorings =
-                mentoringRepository.findAllByUserAndStatus(user, status).orElse(new ArrayList<>());
-        return mentorings;
+        return mentoringRepository.findAllByUserAndStatusAndDeletedAtIsNull(user, status).orElse(new ArrayList<>());
     }
 
     public Mentoring byMentoringId(Long mentoringId) {
-        return mentoringRepository.findById(mentoringId).orElseThrow(MentoringNotFoundException::new);
+        return mentoringRepository.findByMentoringIdAndDeletedAtIsNull(mentoringId).orElseThrow(MentoringNotFoundException::new);
     }
 }
