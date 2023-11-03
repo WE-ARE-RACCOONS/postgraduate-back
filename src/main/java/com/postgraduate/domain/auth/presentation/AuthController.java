@@ -6,6 +6,7 @@ import com.postgraduate.domain.auth.application.dto.res.AuthUserResponse;
 import com.postgraduate.domain.auth.application.dto.res.JwtTokenResponse;
 import com.postgraduate.domain.auth.application.usecase.jwt.JwtUseCase;
 import com.postgraduate.domain.auth.application.usecase.kakao.KakaoSignInUseCase;
+import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.global.auth.AuthDetails;
 import com.postgraduate.global.dto.ResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,20 +32,20 @@ public class AuthController {
 
     @PostMapping("/login")
     @Operation(summary = "카카오 로그인", description = "회원인 경우 JWT를, 회원이 아닌 경우 socialId를 반환합니다(회원가입은 진행하지 않습니다).")
-    public ResponseDto<?> getUserDetails(@RequestBody KakaoLoginRequest request) {
+    public ResponseDto<?> authLogin(@RequestBody KakaoLoginRequest request) {
         AuthUserResponse authUser = kakaoSignInUseCase.getUser(request.getAccessToken());
-        if (authUser.getSocialId() != null) {
+        if (authUser.getUser().isEmpty())
             return ResponseDto.create(AUTH_NONE.getCode(), NOT_REGISTERED_USER_MESSAGE.getMessage(), authUser);
-        }
-        JwtTokenResponse jwtToken = jwtUseCase.signIn(authUser.getUser());
+
+        JwtTokenResponse jwtToken = jwtUseCase.signIn(authUser.getUser().get());
         return ResponseDto.create(AUTH_ALREADY.getCode(), SUCCESS_AUTH_MESSAGE.getMessage(), jwtToken);
     }
 
     @PostMapping("/signup")
     @Operation(summary = "회원가입", description = "로그인 API에서 반환한 socialId와 닉네임을 함께 보내주세요.")
     public ResponseDto<JwtTokenResponse> signUpUser(@RequestBody SignUpRequest request) {
-        AuthUserResponse authUser = kakaoSignInUseCase.signUp(request);
-        JwtTokenResponse jwtToken = jwtUseCase.signIn(authUser.getUser());
+        User user = kakaoSignInUseCase.signUp(request);
+        JwtTokenResponse jwtToken = jwtUseCase.signIn(user);
         return ResponseDto.create(AUTH_CREATE.getCode(), SUCCESS_AUTH_MESSAGE.getMessage(), jwtToken);
     }
 

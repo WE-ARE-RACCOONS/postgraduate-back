@@ -1,6 +1,7 @@
 package com.postgraduate.domain.user.presentation;
 
 import com.postgraduate.domain.user.application.dto.req.UserNickNameRequest;
+import com.postgraduate.domain.user.application.dto.req.UserProfileRequest;
 import com.postgraduate.domain.user.application.dto.res.UserInfoResponse;
 import com.postgraduate.domain.user.application.usecase.UserMyPageUseCase;
 import com.postgraduate.domain.user.presentation.constant.UserResponseCode;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import static com.postgraduate.domain.user.presentation.constant.UserResponseCode.USER_FIND;
 import static com.postgraduate.domain.user.presentation.constant.UserResponseCode.USER_UPDATE;
 import static com.postgraduate.domain.user.presentation.constant.UserResponseMessage.*;
-import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequiredArgsConstructor
@@ -34,7 +34,7 @@ public class UserController {
     @PatchMapping("/nickname")
     @Operation(description = "사용자 닉네임 변경 및 업데이트")
     public ResponseDto updateNickName(@AuthenticationPrincipal AuthDetails authDetails, @RequestBody UserNickNameRequest userNickNameRequest) {
-        myPageUseCase.updateUser(authDetails, userNickNameRequest.getNickName());
+        myPageUseCase.updateNickName(authDetails, userNickNameRequest.getNickName());
         return ResponseDto.create(USER_UPDATE.getCode(), UPDATE_USER_INFO.getMessage());
     }
 
@@ -43,5 +43,12 @@ public class UserController {
     public ResponseDto<Boolean> duplicatedNickName(@RequestParam String nickName) {
         boolean checkDup = myPageUseCase.duplicatedNickName(nickName);
         return ResponseDto.create(USER_FIND.getCode(), GET_NICKNAME_CHECK.getMessage(), checkDup);
+    }
+
+    @PatchMapping("/profile")
+    @Operation(description = "사용자 프로필 사진 업데이트 - url을 주세요")
+    public ResponseDto updateProfile(@AuthenticationPrincipal AuthDetails authDetails, @RequestBody UserProfileRequest userProfileRequest) {
+        myPageUseCase.updateProfile(authDetails, userProfileRequest.getProfile());
+        return ResponseDto.create(USER_UPDATE.getCode(), UPDATE_USER_INFO.getMessage());
     }
 }
