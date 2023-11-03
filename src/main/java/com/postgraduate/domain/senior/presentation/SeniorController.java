@@ -1,9 +1,11 @@
 package com.postgraduate.domain.senior.presentation;
 
+import com.postgraduate.domain.senior.application.dto.req.SeniorCertificationRequest;
 import com.postgraduate.domain.senior.application.dto.req.SeniorProfileRequest;
 import com.postgraduate.domain.senior.application.dto.req.SeniorSignUpRequest;
+import com.postgraduate.domain.senior.application.dto.res.SeniorInfoResponse;
+import com.postgraduate.domain.senior.application.usecase.SeniorMyPageUseCase;
 import com.postgraduate.domain.senior.application.usecase.SeniorSignUpUseCase;
-import com.postgraduate.domain.senior.application.usecase.SeniorUpdateUseCase;
 import com.postgraduate.global.auth.AuthDetails;
 import com.postgraduate.global.dto.ResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,10 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseCode.SENIOR_CREATE;
-import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseCode.SENIOR_UPDATE;
-import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseMessage.SUCCESS_SENIOR_SIGN_UP_MESSAGE;
-import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseMessage.SUCCESS_UPDATE_PROFILE_MESSAGE;
+import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseCode.*;
+import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseMessage.*;
 
 
 @RestController
@@ -24,21 +24,36 @@ import static com.postgraduate.domain.senior.presentation.constant.SeniorRespons
 @Tag(name = "SENIOR Controller")
 public class SeniorController {
     private final SeniorSignUpUseCase signUpUseCase;
-    private final SeniorUpdateUseCase updateUseCase;
+    private final SeniorMyPageUseCase myPageUseCase;
 
     @PostMapping("/signup")
     @Operation(summary = "대학원생 가입 - 필수 과정만", description = "대학원생 회원가입 - 필수 과정만")
     public ResponseDto singUpSenior(@AuthenticationPrincipal AuthDetails authDetails,
                                        @RequestBody SeniorSignUpRequest signUpRequest) {
         signUpUseCase.signUp(authDetails, signUpRequest);
-        return ResponseDto.create(SENIOR_CREATE.getCode(), SUCCESS_SENIOR_SIGN_UP_MESSAGE.getMessage());
+        return ResponseDto.create(SENIOR_CREATE.getCode(), CREATE_SENIOR.getMessage());
     }
 
     @PatchMapping("/profile")
     @Operation(summary = "대학원생 프로필 등록", description = "소개글, 추천대상, 오픈채팅방 링크, 가능 시간대, 소통시간")
     public ResponseDto singUpSenior(@AuthenticationPrincipal AuthDetails authDetails,
-                                       @RequestBody SeniorProfileRequest profileRequest) {
-        updateUseCase.updateProfile(authDetails, profileRequest);
-        return ResponseDto.create(SENIOR_UPDATE.getCode(), SUCCESS_UPDATE_PROFILE_MESSAGE.getMessage());
+                                        @RequestBody SeniorProfileRequest profileRequest) {
+        myPageUseCase.updateProfile(authDetails, profileRequest);
+        return ResponseDto.create(SENIOR_UPDATE.getCode(), UPDATE_PROFILE.getMessage());
+    }
+
+    @PatchMapping("/certification")
+    @Operation(summary = "대학원생 인증", description = "이미지 업로드 이후 url 담아서 요청")
+    public ResponseDto updateCertification(@AuthenticationPrincipal AuthDetails authDetails,
+                                                @RequestBody SeniorCertificationRequest certificationRequest) {
+        myPageUseCase.updateCertification(authDetails, certificationRequest);
+        return ResponseDto.create(SENIOR_UPDATE.getCode(), UPDATE_CERTIFICATION.getMessage());
+    }
+
+    @GetMapping("/me")
+    @Operation(summary = "대학원생 마이페이지 기본 정보", description = "닉네임, 프로필 사진, 인증 여부")
+    public ResponseDto<SeniorInfoResponse> getSeniorInfo(@AuthenticationPrincipal AuthDetails authDetails) {
+        SeniorInfoResponse seniorInfoResponse = myPageUseCase.seniorInfo(authDetails);
+        return ResponseDto.create(SENIOR_FIND.getCode(), GET_SENIOR_INFO.getMessage(), seniorInfoResponse);
     }
 }
