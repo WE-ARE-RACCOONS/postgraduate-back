@@ -1,5 +1,6 @@
 package com.postgraduate.domain.senior.application.mapper;
 
+import com.postgraduate.domain.senior.application.dto.req.SeniorProfileAndAccountPageRequest;
 import com.postgraduate.domain.senior.application.dto.req.SeniorProfileRequest;
 import com.postgraduate.domain.senior.application.dto.req.SeniorSignUpRequest;
 import com.postgraduate.domain.senior.application.dto.res.SeniorInfoResponse;
@@ -19,7 +20,6 @@ public class SeniorMapper {
                 .info(mapToInfo(request))
                 .certification(request.getCertification())
                 .account(mapToAccount(request))
-                .rrn(request.getRrn())
                 .build();
     }
 
@@ -38,6 +38,24 @@ public class SeniorMapper {
         return Account.builder()
                 .bank(request.getBank())
                 .account(request.getAccount())
+                .rrn(request.getRrn())
+                .build();
+    }
+
+    public static Account mapToAccount(SeniorProfileAndAccountPageRequest profileAndAccountPageRequest) {
+        return Account.builder()
+                .bank(profileAndAccountPageRequest.getBank())
+                .account(profileAndAccountPageRequest.getAccount())
+                .rrn(profileAndAccountPageRequest.getRrn())
+                .build();
+    }
+
+    public static Profile mapToProfile(SeniorProfileAndAccountPageRequest profileAndAccountPageRequest) {
+        return Profile.builder()
+                .info(profileAndAccountPageRequest.getInfo())
+                .chatLink(profileAndAccountPageRequest.getChatLink())
+                .target(profileAndAccountPageRequest.getTarget())
+                .time(profileAndAccountPageRequest.getTime())
                 .build();
     }
 
@@ -62,6 +80,7 @@ public class SeniorMapper {
     public static SeniorProfileResponse mapToSeniorProfileInfo(Senior senior) {
         return SeniorProfileResponse.builder()
                 .profile(senior.getProfile())
+                .account(senior.getAccount())
                 .build();
     }
 }

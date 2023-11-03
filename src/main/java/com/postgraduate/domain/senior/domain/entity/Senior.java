@@ -1,6 +1,5 @@
 package com.postgraduate.domain.senior.domain.entity;
 
-import com.postgraduate.domain.senior.application.dto.req.SeniorProfileRequest;
 import com.postgraduate.domain.senior.domain.entity.constant.Status;
 import com.postgraduate.domain.user.domain.entity.User;
 import jakarta.persistence.*;
@@ -10,7 +9,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 
-import static com.postgraduate.domain.senior.domain.entity.constant.Status.NOT_APPROVE;
 import static com.postgraduate.domain.senior.domain.entity.constant.Status.WAITING;
 
 @Entity
@@ -31,9 +29,6 @@ public class Senior {
     private String certification;
 
     @Column(nullable = false)
-    private String rrn;
-
-    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     @Builder.Default
     private Status status = WAITING;
@@ -52,6 +47,11 @@ public class Senior {
 
     public void updateProfile(Profile profile) {
         this.profile = profile;
+    }
+
+    public void updateProfileAndAccount(Profile profile, Account account) {
+        this.profile = profile;
+        this.account = account;
     }
 
     public void updateCertification(String certification) {

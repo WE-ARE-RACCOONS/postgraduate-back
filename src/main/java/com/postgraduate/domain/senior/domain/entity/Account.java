@@ -18,4 +18,7 @@ public class Account {
 
     @Column(nullable = false)
     private String bank;
+
+    @Column(nullable = false)
+    private String rrn;
 }

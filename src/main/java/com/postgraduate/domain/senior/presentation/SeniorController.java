@@ -1,6 +1,7 @@
 package com.postgraduate.domain.senior.presentation;
 
 import com.postgraduate.domain.senior.application.dto.req.SeniorCertificationRequest;
+import com.postgraduate.domain.senior.application.dto.req.SeniorProfileAndAccountPageRequest;
 import com.postgraduate.domain.senior.application.dto.req.SeniorProfileRequest;
 import com.postgraduate.domain.senior.application.dto.req.SeniorSignUpRequest;
 import com.postgraduate.domain.senior.application.dto.res.SeniorInfoResponse;
@@ -36,17 +37,17 @@ public class SeniorController {
     }
 
     @PatchMapping("/profile")
-    @Operation(summary = "대학원생 프로필 등록", description = "소개글, 추천대상, 오픈채팅방 링크, 가능 시간대, 소통시간")
+    @Operation(summary = "대학원생 프로필 등록")
     public ResponseDto singUpSenior(@AuthenticationPrincipal AuthDetails authDetails,
-                                        @RequestBody SeniorProfileRequest profileRequest) {
-        myPageUseCase.updateProfile(authDetails, profileRequest);
+                                    @RequestBody SeniorProfileRequest profileRequest) {
+        signUpUseCase.updateProfile(authDetails, profileRequest);
         return ResponseDto.create(SENIOR_UPDATE.getCode(), UPDATE_PROFILE.getMessage());
     }
 
     @PatchMapping("/certification")
     @Operation(summary = "대학원생 인증", description = "이미지 업로드 이후 url 담아서 요청")
     public ResponseDto updateCertification(@AuthenticationPrincipal AuthDetails authDetails,
-                                                @RequestBody SeniorCertificationRequest certificationRequest) {
+                                           @RequestBody SeniorCertificationRequest certificationRequest) {
         myPageUseCase.updateCertification(authDetails, certificationRequest);
         return ResponseDto.create(SENIOR_UPDATE.getCode(), UPDATE_CERTIFICATION.getMessage());
     }
@@ -64,4 +65,13 @@ public class SeniorController {
         SeniorProfileResponse seniorProfile = myPageUseCase.getSeniorProfile(authDetails);
         return ResponseDto.create(SENIOR_FIND.getCode(), GET_SENIOR_PROFILE.getMessage(), seniorProfile);
     }
+
+    @PatchMapping("/me/profile")
+    @Operation(summary = "대학원생 프로필 수정")
+    public ResponseDto updateProfile(@AuthenticationPrincipal AuthDetails authDetails,
+                                    @RequestBody SeniorProfileAndAccountPageRequest profileAndAccountPageRequest) {
+        myPageUseCase.updateProfile(authDetails, profileAndAccountPageRequest);
+        return ResponseDto.create(SENIOR_UPDATE.getCode(), UPDATE_PROFILE.getMessage());
+    }
+
 }
