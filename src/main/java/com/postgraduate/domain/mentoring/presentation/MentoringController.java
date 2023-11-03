@@ -51,9 +51,9 @@ public class MentoringController {
 
     @PatchMapping("/me/{mentoringId}")
     @Operation(summary = "멘토링 상태 업데이트", description = "대학생, 대학원생이 멘토링 상태를 변경합니다.")
-    public ResponseDto applyMentoring(@AuthenticationPrincipal AuthDetails authDetails,
-                                      @PathVariable Long mentoringId,
-                                      @RequestBody MentoringStatusRequest request) {
+    public ResponseDto updateMentoringStatus(@AuthenticationPrincipal AuthDetails authDetails,
+                                             @PathVariable Long mentoringId,
+                                             @RequestBody MentoringStatusRequest request) {
         updateUseCase.updateStatus(authDetails, mentoringId, request);
         return ResponseDto.create(MENTORING_UPDATE.getCode(), UPDATE_MENTORING.getMessage());
     }
