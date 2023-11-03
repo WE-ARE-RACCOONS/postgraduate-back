@@ -22,11 +22,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MentoringInfoUseCase {
     private final MentoringGetService mentoringGetService;
-
+    private final CheckIsMyMentoringUseCase checkIsMyMentoringUseCase;
+    private final SecurityUtils securityUtils;
     /**
      * securityUtils 이후 수정
      */
-    private final SecurityUtils securityUtils;
 
     public AppliedMentoringResponse getMentorings(Status status, AuthDetails authDetails) {
         User user = securityUtils.getLoggedInUser(authDetails);
@@ -55,9 +55,9 @@ public class MentoringInfoUseCase {
         }
     }
 
-    public AppliedMentoringDetailResponse getMentoringDetail(Long mentoringId) {
-        Mentoring mentoring = mentoringGetService.byMentoringId(mentoringId);
-        AppliedMentoringDetailResponse appliedMentoringDetailResponse = MentoringMapper.mapToAppliedDetailInfo(mentoring);
-        return appliedMentoringDetailResponse;
+    public AppliedMentoringDetailResponse getMentoringDetail(AuthDetails authDetails, Long mentoringId) {
+        User user = securityUtils.getLoggedInUser(authDetails);
+        Mentoring mentoring = checkIsMyMentoringUseCase.checkByRole(user, mentoringId);
+        return MentoringMapper.mapToAppliedDetailInfo(mentoring);
     }
 }
