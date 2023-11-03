@@ -3,6 +3,7 @@ package com.postgraduate.domain.mentoring.domain.service;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.entity.constant.Status;
 import com.postgraduate.domain.mentoring.domain.repository.MentoringRepository;
+import com.postgraduate.domain.mentoring.exception.MentoringNotFoundException;
 import com.postgraduate.domain.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,6 @@ public class MentoringGetService {
     }
 
     public Mentoring byMentoringId(Long mentoringId) {
-        return mentoringRepository.findById(mentoringId).orElseThrow();
+        return mentoringRepository.findById(mentoringId).orElseThrow(MentoringNotFoundException::new);
     }
 }
