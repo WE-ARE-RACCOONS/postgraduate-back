@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 public class MentoringUpdateService {
 
     public void updateStatus(Mentoring mentoring, Status status) {
+        if (status.equals(Status.CANCEL)) {
+            mentoring.updateDeletedAt();
+        }
         mentoring.updateStatus(status);
     }
 }

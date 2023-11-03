@@ -54,4 +54,8 @@ public class Mentoring {
     public void updateStatus(Status status) {
         this.status = status;
     }
+
+    public void updateDeletedAt() {
+        this.deletedAt = LocalDate.now();
+    }
 }
