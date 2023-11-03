@@ -50,7 +50,7 @@ public class MentoringController {
     }
 
     @PatchMapping("/me/{mentoringId}")
-    @Operation(summary = "[대학생, 대학원생] 멘토링 상태 업데이트", description = "대학생, 대학원생이 멘토링 상태를 변경합니다.")
+    @Operation(summary = "[대학생] 멘토링 상태 업데이트", description = "대학생이 멘토링 상태를 변경합니다.")
     public ResponseDto updateMentoringStatus(@AuthenticationPrincipal AuthDetails authDetails,
                                              @PathVariable Long mentoringId,
                                              @RequestBody MentoringStatusRequest request) {
