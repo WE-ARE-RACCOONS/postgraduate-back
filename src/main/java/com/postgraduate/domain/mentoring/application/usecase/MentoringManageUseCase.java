@@ -2,7 +2,6 @@ package com.postgraduate.domain.mentoring.application.usecase;
 
 import com.postgraduate.domain.mentoring.application.dto.req.MentoringStatusRequest;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
-import com.postgraduate.domain.mentoring.domain.entity.constant.Status;
 import com.postgraduate.domain.mentoring.domain.service.MentoringUpdateService;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.global.auth.AuthDetails;
@@ -14,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class MentoringUpdateUseCase {
+public class MentoringManageUseCase {
     private final SecurityUtils securityUtils;
     private final MentoringUpdateService mentoringUpdateService;
     private final CheckIsMyMentoringUseCase checkIsMyMentoringUseCase;

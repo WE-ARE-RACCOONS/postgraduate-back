@@ -6,7 +6,7 @@ import com.postgraduate.domain.mentoring.application.dto.res.AppliedMentoringDet
 import com.postgraduate.domain.mentoring.application.dto.res.AppliedMentoringResponse;
 import com.postgraduate.domain.mentoring.application.usecase.MentoringApplyUseCase;
 import com.postgraduate.domain.mentoring.application.usecase.MentoringInfoUseCase;
-import com.postgraduate.domain.mentoring.application.usecase.MentoringUpdateUseCase;
+import com.postgraduate.domain.mentoring.application.usecase.MentoringManageUseCase;
 import com.postgraduate.domain.mentoring.domain.entity.constant.Status;
 import com.postgraduate.global.auth.AuthDetails;
 import com.postgraduate.global.dto.ResponseDto;
@@ -26,7 +26,7 @@ import static com.postgraduate.domain.mentoring.presentation.constant.MentoringR
 public class MentoringController {
     private final MentoringInfoUseCase infoUsecase;
     private final MentoringApplyUseCase applyUseCase;
-    private final MentoringUpdateUseCase updateUseCase;
+    private final MentoringManageUseCase updateUseCase;
 
     @GetMapping("/me")
     @Operation(summary = "[대학생] 신청한 멘토링 목록 조회", description = "대학생이 신청한 멘토링 목록을 조회합니다.")
