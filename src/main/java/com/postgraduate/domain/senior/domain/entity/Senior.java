@@ -7,12 +7,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicInsert;
 
 @Entity
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@DynamicInsert
 public class Senior {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,55 +24,32 @@ public class Senior {
     private User user;
 
     @Column(nullable = false)
-    private String college;
-
-    @Column(nullable = false)
-    private String major;
-
-    @Column(nullable = false)
-    private String postgradu;
-
-    @Column(nullable = false)
-    private String professor;
-
-    @Column(nullable = false)
-    private String lab;
-
-    @Column(nullable = false)
-    private String field;
-
-    private String info;
-
-    private String target;
-
-    private String chatLink;
-
-    private String time;
-
-    private int term;
-
-    @Column(nullable = false)
-    private String account;
-
-    @Column(nullable = false)
-    private String bank;
-
-    @Column(nullable = false)
     private String certification;
 
     @Column(nullable = false)
     private String rrn;
 
     @Column(nullable = false)
-    private boolean status;
+    @Builder.Default
+    private Boolean status = false;
 
     @Column(nullable = false)
     private int hit;
 
+    @Embedded
+    private Info info;
+
+    @Embedded
+    private Account account;
+
+    @Embedded
+    private Profile profile;
     public void updateProfile(SeniorProfileRequest profileRequest) {
-        this.info = profileRequest.getInfo();
-        this.target = profileRequest.getTarget();
-        this.chatLink = profileRequest.getChatLink();
-        this.time = profileRequest.getTime();
+        profile.updateProfile(profileRequest);
+    }
+
+    public void updateCertification(String certification) {
+        this.certification = certification;
+        this.status = false;
     }
 }
