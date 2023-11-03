@@ -1,30 +1,46 @@
 package com.postgraduate.domain.auth.application.usecase.kakao;
 
-import com.postgraduate.domain.auth.application.dto.req.SignUpRequest;
-import com.postgraduate.domain.user.application.usecase.UserCheckUseCase;
+import com.postgraduate.domain.auth.application.dto.res.AuthUserResponse;
+import com.postgraduate.domain.auth.application.dto.res.KakaoUserInfoResponse;
+import com.postgraduate.domain.auth.application.dto.res.KakaoUserInfoResponse.KakaoAccount;
+import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.service.UserGetService;
-import com.postgraduate.domain.user.domain.service.UserSaveService;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import java.util.Optional;
 
+import static org.mockito.BDDMockito.given;
+
+@ExtendWith(MockitoExtension.class)
 class KakaoSignInUseCaseTest {
+    @Mock
+    UserGetService userGetService;
+    @Mock
+    KakaoAccessTokenUseCase kakaoAccessTokenUseCase;
+    @InjectMocks
+    KakaoSignInUseCase kakaoSignInUseCase;
+    @Test
+    void 첫_로그인_socialId_반환() {
+        String token = "abcd";
+        given(kakaoAccessTokenUseCase.getUserInfo(token)).willReturn(new KakaoUserInfoResponse(10000L, new KakaoAccount()));
+        given(userGetService.bySocialId(10000L)).willReturn(Optional.ofNullable(null));
+        AuthUserResponse authUserResponse = kakaoSignInUseCase.getUser(token);
+        Assertions.assertThat(authUserResponse.getSocialId()).isEqualTo(10000L);
+        Assertions.assertThat(authUserResponse.getUser().isEmpty()).isTrue();
+    }
 
     @Test
-    void 중복_아이디를_입력하면_예외를_발생시킨다() {
-        KakaoAccessTokenUseCase kakaoAccessTokenUseCase = mock();
-        UserCheckUseCase userCheckUseCase = mock();
-        UserSaveService userSaveService = mock();
-        UserGetService userGetService = mock();
-
-        SignUpRequest request = new SignUpRequest(23423423L, "nickname");
-
-        when(userCheckUseCase.isDuplicatedNickName(request.getNickName())).thenReturn(true);
-
-        KakaoSignInUseCase kakaoSignInUseCase = new KakaoSignInUseCase(kakaoAccessTokenUseCase, userCheckUseCase, userSaveService, userGetService);
-
-        assertThrows(RuntimeException.class, () -> kakaoSignInUseCase.signUp(request));
+    void 기존_유저_로그인_user반환() {
+        String token = "abcd";
+        given(kakaoAccessTokenUseCase.getUserInfo(token)).willReturn(new KakaoUserInfoResponse(10000L, new KakaoAccount()));
+        given(userGetService.bySocialId(10000L)).willReturn(Optional.ofNullable(new User()));
+        AuthUserResponse authUserResponse = kakaoSignInUseCase.getUser(token);
+        Assertions.assertThat(authUserResponse.getSocialId()).isEqualTo(10000L);
+        Assertions.assertThat(authUserResponse.getUser().isEmpty()).isFalse();
     }
 }

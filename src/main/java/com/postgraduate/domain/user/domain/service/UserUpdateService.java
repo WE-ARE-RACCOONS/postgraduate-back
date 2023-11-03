@@ -20,4 +20,9 @@ public class UserUpdateService {
         User user = userRepository.findById(userId).get();
         user.updateRole(role);
     }
+
+    public void updateProfile(Long userId, String profile) {
+        User user = userRepository.findById(userId).get();
+        user.updateProfile(profile);
+    }
 }
