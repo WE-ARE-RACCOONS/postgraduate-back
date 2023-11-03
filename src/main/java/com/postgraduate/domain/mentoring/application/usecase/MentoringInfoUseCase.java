@@ -56,7 +56,7 @@ public class MentoringInfoUseCase {
     }
 
     public AppliedMentoringDetailResponse getMentoringDetail(Long mentoringId) {
-        Mentoring mentoring = mentoringGetService.mentoringDetail(mentoringId);
+        Mentoring mentoring = mentoringGetService.byMentoringId(mentoringId);
         AppliedMentoringDetailResponse appliedMentoringDetailResponse = MentoringMapper.mapToAppliedDetailInfo(mentoring);
         return appliedMentoringDetailResponse;
     }

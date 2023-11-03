@@ -21,7 +21,7 @@ public class MentoringGetService {
         return mentorings;
     }
 
-    public Mentoring mentoringDetail(Long mentoringId) {
+    public Mentoring byMentoringId(Long mentoringId) {
         return mentoringRepository.findById(mentoringId).orElseThrow();
     }
 }
