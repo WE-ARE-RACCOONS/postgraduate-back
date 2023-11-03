@@ -22,6 +22,6 @@ public class MentoringUpdateUseCase {
     public void updateStatus(AuthDetails authDetails, Long mentoringId, MentoringStatusRequest request) {
         User user = securityUtils.getLoggedInUser(authDetails);
         Mentoring mentoring = checkIsMyMentoringUseCase.checkByRole(user, mentoringId);
-        mentoringUpdateService.updateStatus(mentoring, Status.valueOf(request.getStatus()));
+        mentoringUpdateService.updateStatus(mentoring, request.getStatus());
     }
 }

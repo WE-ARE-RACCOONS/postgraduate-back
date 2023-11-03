@@ -1,5 +1,6 @@
 package com.postgraduate.domain.mentoring.application.dto.req;
 
+import com.postgraduate.domain.mentoring.domain.entity.constant.Status;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,5 +11,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MentoringStatusRequest {
     @NotNull
-    private String status;
+    private Status status;
 }
