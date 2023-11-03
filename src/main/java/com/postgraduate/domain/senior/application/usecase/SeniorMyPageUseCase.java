@@ -3,6 +3,7 @@ package com.postgraduate.domain.senior.application.usecase;
 import com.postgraduate.domain.senior.application.dto.req.SeniorCertificationRequest;
 import com.postgraduate.domain.senior.application.dto.req.SeniorProfileRequest;
 import com.postgraduate.domain.senior.application.dto.res.SeniorInfoResponse;
+import com.postgraduate.domain.senior.application.dto.res.SeniorProfileResponse;
 import com.postgraduate.domain.senior.application.mapper.SeniorMapper;
 import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
@@ -14,6 +15,7 @@ import com.postgraduate.global.auth.AuthDetails;
 import com.postgraduate.global.config.security.util.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -21,6 +23,7 @@ import static java.util.Optional.ofNullable;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class SeniorMyPageUseCase {
     private final SeniorGetService seniorGetService;
     private final SeniorUpdateService seniorUpdateService;
@@ -43,6 +46,14 @@ public class SeniorMyPageUseCase {
     public void updateProfile(AuthDetails authDetails, SeniorProfileRequest profileRequest) {
         User user = securityUtils.getLoggedInUser(authDetails);
         Senior senior = seniorGetService.byUser(user);
-        seniorUpdateService.updateSeniorProfile(senior, profileRequest);
+        Profile profile = SeniorMapper.mapToProfile(profileRequest);
+        seniorUpdateService.updateSeniorProfile(senior, profile);
+    }
+
+    public SeniorProfileResponse getSeniorProfile(AuthDetails authDetails) {
+        User user = securityUtils.getLoggedInUser(authDetails);
+        Senior senior = seniorGetService.byUser(user);
+        SeniorProfileResponse seniorProfileResponse = SeniorMapper.mapToSeniorProfileInfo(senior);
+        return seniorProfileResponse;
     }
 }
