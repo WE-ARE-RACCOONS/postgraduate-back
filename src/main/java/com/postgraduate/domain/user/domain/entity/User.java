@@ -26,7 +26,7 @@ public class User {
 //    @Column(unique = true) email은 여러 소셜을 사용하면 unique가 깨질 수 있음
     private String email;
 
-    @Column(unique = true)
+    @Column(nullable = false, unique = true)
     private String nickName;
 
     @Column(nullable = false)
