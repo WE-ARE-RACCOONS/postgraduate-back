@@ -1,5 +1,6 @@
 package com.postgraduate.domain.senior.domain.entity;
 
+import com.postgraduate.domain.senior.application.dto.req.SeniorProfileRequest;
 import com.postgraduate.domain.user.domain.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -54,6 +55,7 @@ public class Senior {
     @Column(nullable = false)
     private String bank;
 
+    @Column(nullable = false)
     private String certification;
 
     @Column(nullable = false)
@@ -65,11 +67,10 @@ public class Senior {
     @Column(nullable = false)
     private int hit;
 
-    public void updateProfile(String info, String target, String chatLink, String time, int term) {
-        this.info = info;
-        this.target = target;
-        this.chatLink = chatLink;
-        this.time = time;
-        this.term = term;
+    public void updateProfile(SeniorProfileRequest profileRequest) {
+        this.info = profileRequest.getInfo();
+        this.target = profileRequest.getTarget();
+        this.chatLink = profileRequest.getChatLink();
+        this.time = profileRequest.getTime();
     }
 }

@@ -17,6 +17,4 @@ public class SeniorProfileRequest {
     private String chatLink;
     @NotNull
     private String time;
-    @NotNull
-    private int term;
 }

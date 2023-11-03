@@ -29,14 +29,4 @@ public class SeniorSignUpRequest {
     private String bank;
     @NotNull
     private String rrn;
-    @NotNull
-    private String info;
-    @NotNull
-    private String target;
-    @NotNull
-    private String chatLink;
-//    @NotNull
-//    private int term;
-    @NotNull
-    private String time;
 }

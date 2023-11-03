@@ -19,10 +19,6 @@ public class SeniorMapper {
                 .account(request.getAccount())
                 .bank(request.getBank())
                 .rrn(request.getRrn())
-                .info(request.getInfo())
-                .target(request.getTarget())
-                .chatLink(request.getChatLink())
-                .time(request.getTime())
                 .build();
     }
 }

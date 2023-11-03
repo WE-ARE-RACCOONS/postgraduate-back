@@ -1,6 +1,8 @@
 package com.postgraduate.domain.senior.application.usecase;
 
 import com.postgraduate.domain.senior.application.dto.req.SeniorSignUpRequest;
+import com.postgraduate.domain.senior.application.mapper.SeniorMapper;
+import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorSaveService;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.entity.constant.Role;
@@ -22,6 +24,7 @@ public class SeniorSignUpUseCase {
     public void signUp(AuthDetails authDetails, SeniorSignUpRequest request) {
         User user = securityUtils.getLoggedInUser(authDetails);
         userUpdateService.updateRole(user.getUserId(), Role.SENIOR);
-        seniorSaveService.saveSenior(user, request);
+        Senior senior = SeniorMapper.mapToSenior(user, request);
+        seniorSaveService.saveSenior(senior);
     }
 }
