@@ -1,7 +1,7 @@
 package com.postgraduate.domain.senior.presentation;
 
 import com.postgraduate.domain.senior.application.dto.req.SeniorCertificationRequest;
-import com.postgraduate.domain.senior.application.dto.req.SeniorProfileAndAccountPageRequest;
+import com.postgraduate.domain.senior.application.dto.req.SeniorProfileAndAccountRequest;
 import com.postgraduate.domain.senior.application.dto.req.SeniorProfileRequest;
 import com.postgraduate.domain.senior.application.dto.req.SeniorSignUpRequest;
 import com.postgraduate.domain.senior.application.dto.res.SeniorInfoResponse;
@@ -69,7 +69,7 @@ public class SeniorController {
     @PatchMapping("/me/profile")
     @Operation(summary = "대학원생 프로필 수정")
     public ResponseDto updateProfile(@AuthenticationPrincipal AuthDetails authDetails,
-                                    @RequestBody SeniorProfileAndAccountPageRequest profileAndAccountPageRequest) {
+                                    @RequestBody SeniorProfileAndAccountRequest profileAndAccountPageRequest) {
         myPageUseCase.updateProfile(authDetails, profileAndAccountPageRequest);
         return ResponseDto.create(SENIOR_UPDATE.getCode(), UPDATE_PROFILE.getMessage());
     }

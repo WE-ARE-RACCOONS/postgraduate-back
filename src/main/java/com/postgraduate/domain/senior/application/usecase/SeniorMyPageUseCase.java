@@ -1,7 +1,7 @@
 package com.postgraduate.domain.senior.application.usecase;
 
 import com.postgraduate.domain.senior.application.dto.req.SeniorCertificationRequest;
-import com.postgraduate.domain.senior.application.dto.req.SeniorProfileAndAccountPageRequest;
+import com.postgraduate.domain.senior.application.dto.req.SeniorProfileAndAccountRequest;
 import com.postgraduate.domain.senior.application.dto.res.SeniorInfoResponse;
 import com.postgraduate.domain.senior.application.dto.res.SeniorProfileResponse;
 import com.postgraduate.domain.senior.application.mapper.SeniorMapper;
@@ -44,7 +44,7 @@ public class SeniorMyPageUseCase {
         seniorUpdateService.updateCertification(senior, certificationRequest.getCertification());
     }
 
-    public void updateProfile(AuthDetails authDetails, SeniorProfileAndAccountPageRequest profileRequest) {
+    public void updateProfile(AuthDetails authDetails, SeniorProfileAndAccountRequest profileRequest) {
         User user = securityUtils.getLoggedInUser(authDetails);
         Senior senior = seniorGetService.byUser(user);
         Profile profile = SeniorMapper.mapToProfile(profileRequest);

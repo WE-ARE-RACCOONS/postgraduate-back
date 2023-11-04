@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class SeniorProfileAndAccountPageRequest {
+public class SeniorProfileAndAccountRequest {
     @NotNull
     private String info;
     @NotNull

@@ -1,6 +1,6 @@
 package com.postgraduate.domain.senior.application.mapper;
 
-import com.postgraduate.domain.senior.application.dto.req.SeniorProfileAndAccountPageRequest;
+import com.postgraduate.domain.senior.application.dto.req.SeniorProfileAndAccountRequest;
 import com.postgraduate.domain.senior.application.dto.req.SeniorProfileRequest;
 import com.postgraduate.domain.senior.application.dto.req.SeniorSignUpRequest;
 import com.postgraduate.domain.senior.application.dto.res.SeniorInfoResponse;
@@ -42,7 +42,7 @@ public class SeniorMapper {
                 .build();
     }
 
-    public static Account mapToAccount(SeniorProfileAndAccountPageRequest profileAndAccountPageRequest) {
+    public static Account mapToAccount(SeniorProfileAndAccountRequest profileAndAccountPageRequest) {
         return Account.builder()
                 .bank(profileAndAccountPageRequest.getBank())
                 .account(profileAndAccountPageRequest.getAccount())
@@ -50,7 +50,7 @@ public class SeniorMapper {
                 .build();
     }
 
-    public static Profile mapToProfile(SeniorProfileAndAccountPageRequest profileAndAccountPageRequest) {
+    public static Profile mapToProfile(SeniorProfileAndAccountRequest profileAndAccountPageRequest) {
         return Profile.builder()
                 .info(profileAndAccountPageRequest.getInfo())
                 .chatLink(profileAndAccountPageRequest.getChatLink())
