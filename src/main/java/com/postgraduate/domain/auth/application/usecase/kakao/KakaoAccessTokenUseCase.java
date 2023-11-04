@@ -22,13 +22,15 @@ public class KakaoAccessTokenUseCase {
     @Value("${kakao.authorization-grant-type}")
     private String AUTHORIZATION_GRANT_TYPE;
     private final WebClient webClient;
+
+    private static final String KAKAO_TOKEN_URI = "https://kauth.kakao.com/oauth/token";
     private static final String USER_INFO_URI = "https://kapi.kakao.com/v2/user/me";
     private static final String VALIDATE_TOKEN_URI = "https://kapi.kakao.com/v1/user/access_token_info";
 
     public KakaoUserInfoResponse getKakaoToken(String code) {
         MultiValueMap<String, String> requestBody = getRequestBody(code);
         KakaoTokenInfoResponse tokenInfoResponse = webClient.post()
-                .uri("https://kauth.kakao.com/oauth/token")
+                .uri(KAKAO_TOKEN_URI)
                 .headers(h -> h.setContentType(MediaType.APPLICATION_FORM_URLENCODED))
                 .bodyValue(requestBody)
                 .retrieve()
