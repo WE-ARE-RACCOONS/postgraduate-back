@@ -1,5 +1,6 @@
 package com.postgraduate.domain.senior.application.dto.req;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,5 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SeniorCertificationRequest {
+    @NotNull
     private String certification;
 }
