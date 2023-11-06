@@ -4,6 +4,7 @@ import com.postgraduate.domain.mentoring.application.dto.req.MentoringApplyReque
 import com.postgraduate.domain.mentoring.application.dto.req.MentoringStatusRequest;
 import com.postgraduate.domain.mentoring.application.dto.res.AppliedMentoringDetailResponse;
 import com.postgraduate.domain.mentoring.application.dto.res.AppliedMentoringResponse;
+import com.postgraduate.domain.mentoring.application.dto.res.SeniorMentoringDetailResponse;
 import com.postgraduate.domain.mentoring.application.dto.res.SeniorMentoringResponse;
 import com.postgraduate.domain.mentoring.application.usecase.MentoringApplyUseCase;
 import com.postgraduate.domain.mentoring.application.usecase.MentoringInfoUseCase;
@@ -66,5 +67,12 @@ public class MentoringController {
     public ResponseDto<List<SeniorMentoringResponse>> getSeniorMentorings(@RequestParam Status status, @AuthenticationPrincipal AuthDetails authDetails) {
         List<SeniorMentoringResponse> seniorMentorings = infoUsecase.getSeniorMentorings(status, authDetails);
         return ResponseDto.create(MENTORING_FIND.getCode(), GET_MENTORING_LIST_INFO.getMessage(), seniorMentorings);
+    }
+
+    @GetMapping("/senior/me/{mentoringId}")
+    @Operation(summary = "[대학원생] 신청받은 멘토링 상세조회", description = "대학원생이 신청받은 멘토링을 상세조회합니다.")
+    public ResponseDto<SeniorMentoringDetailResponse> getSeniorMentoringDetail(@AuthenticationPrincipal AuthDetails authDetails, @PathVariable Long mentoringId) {
+        SeniorMentoringDetailResponse seniorMentoringDetail = infoUsecase.getSeniorMentoringDetail(authDetails, mentoringId);
+        return ResponseDto.create(MENTORING_FIND.getCode(), GET_MENTORING_DETAIL_INFO.getMessage(), seniorMentoringDetail);
     }
 }

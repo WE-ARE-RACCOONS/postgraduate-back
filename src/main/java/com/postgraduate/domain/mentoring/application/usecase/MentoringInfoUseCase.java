@@ -3,6 +3,7 @@ package com.postgraduate.domain.mentoring.application.usecase;
 import com.postgraduate.domain.mentoring.application.dto.res.AppliedMentoringDetailResponse;
 import com.postgraduate.domain.mentoring.application.dto.res.AppliedMentoringResponse;
 import com.postgraduate.domain.mentoring.application.dto.AppliedMentoringInfo;
+import com.postgraduate.domain.mentoring.application.dto.res.SeniorMentoringDetailResponse;
 import com.postgraduate.domain.mentoring.application.dto.res.SeniorMentoringResponse;
 import com.postgraduate.domain.mentoring.application.mapper.MentoringMapper;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
@@ -73,5 +74,12 @@ public class MentoringInfoUseCase {
         User user = securityUtils.getLoggedInUser(authDetails);
         Mentoring mentoring = checkIsMyMentoringUseCase.checkByRole(user, mentoringId);
         return MentoringMapper.mapToAppliedDetailInfo(mentoring);
+    }
+
+    public SeniorMentoringDetailResponse getSeniorMentoringDetail(AuthDetails authDetails, Long mentoringId) {
+        User user = securityUtils.getLoggedInUser(authDetails);
+        Senior senior = seniorGetService.byUser(user);
+        Mentoring mentoring = checkIsMyMentoringUseCase.checkByRole(senior, mentoringId);
+        return MentoringMapper.mapToSeniorMentoringDetail(mentoring);
     }
 }
