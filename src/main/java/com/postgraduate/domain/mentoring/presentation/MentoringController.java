@@ -2,6 +2,7 @@ package com.postgraduate.domain.mentoring.presentation;
 
 import com.postgraduate.domain.mentoring.application.dto.req.MentoringApplyRequest;
 import com.postgraduate.domain.mentoring.application.dto.req.MentoringDateRequest;
+import com.postgraduate.domain.mentoring.application.dto.req.MentoringRefuseRequest;
 import com.postgraduate.domain.mentoring.application.dto.req.MentoringStatusRequest;
 import com.postgraduate.domain.mentoring.application.dto.res.AppliedMentoringDetailResponse;
 import com.postgraduate.domain.mentoring.application.dto.res.AppliedMentoringResponse;
@@ -77,12 +78,22 @@ public class MentoringController {
         return ResponseDto.create(MENTORING_FIND.getCode(), GET_MENTORING_DETAIL_INFO.getMessage(), seniorMentoringDetail);
     }
 
-    @PatchMapping("/senior/me/{mentoringId}")
+    @PatchMapping("/senior/me/{mentoringId}/time")
     @Operation(summary = "[대학원생] 멘토링 시간 선택", description = "대학생이 신청한 시간 옵션 3개 중 하나를 선택합니다. 확정 대기 상태의 멘토링만 가능합니다.")
     public ResponseDto getSeniorMentorings(@AuthenticationPrincipal AuthDetails authDetails,
-                                             @PathVariable Long mentoringId,
-                                             @RequestBody MentoringDateRequest request) {
+                                           @PathVariable Long mentoringId,
+                                           @RequestBody MentoringDateRequest request) {
         manageUseCase.updateDate(authDetails, mentoringId, request);
         return ResponseDto.create(MENTORING_UPDATE.getCode(), UPDATE_MENTORING.getMessage());
     }
+
+    @PatchMapping("/senior/me/{mentoringId}")
+    @Operation(summary = "[대학원생] 멘토링 상태 업데이트", description = "대학원생이 멘토링 상태를 변경합니다.")
+    public ResponseDto updateSeniorMentoringStatus(@AuthenticationPrincipal AuthDetails authDetails,
+                                                   @PathVariable Long mentoringId,
+                                                   @RequestBody MentoringStatusRequest request) {
+        manageUseCase.updateSeniorStatus(authDetails, mentoringId, request);
+        return ResponseDto.create(MENTORING_UPDATE.getCode(), UPDATE_MENTORING.getMessage());
+    }
+
 }

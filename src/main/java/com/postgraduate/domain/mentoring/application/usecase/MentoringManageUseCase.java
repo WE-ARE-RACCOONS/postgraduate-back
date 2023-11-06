@@ -31,6 +31,13 @@ public class MentoringManageUseCase {
         mentoringUpdateService.updateStatus(mentoring, request.getStatus());
     }
 
+    public void updateSeniorStatus(AuthDetails authDetails, Long mentoringId, MentoringStatusRequest request) {
+        User user = securityUtils.getLoggedInUser(authDetails);
+        Senior senior = seniorGetService.byUser(user);
+        Mentoring mentoring = checkIsMyMentoringUseCase.checkByRole(senior, mentoringId);
+        mentoringUpdateService.updateStatus(mentoring, request.getStatus());
+    }
+
     public void updateDate(AuthDetails authDetails, Long mentoringId, MentoringDateRequest request) {
         User user = securityUtils.getLoggedInUser(authDetails);
         Senior senior = seniorGetService.byUser(user);
