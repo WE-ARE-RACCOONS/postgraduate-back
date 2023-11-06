@@ -70,7 +70,7 @@ public class MentoringController {
     }
 
     @GetMapping("/senior/me/{mentoringId}")
-    @Operation(summary = "[대학원생] 신청받은 멘토링 상세조회", description = "대학원생이 신청받은 멘토링을 상세조회합니다.")
+    @Operation(summary = "[대학원생] 신청받은 멘토링 상세조회", description = "대학원생이 신청받은 멘토링을 상세조회합니다. <완료> 상태의 멘토링은 상세조회되지 않습니다.")
     public ResponseDto<SeniorMentoringDetailResponse> getSeniorMentoringDetail(@AuthenticationPrincipal AuthDetails authDetails, @PathVariable Long mentoringId) {
         SeniorMentoringDetailResponse seniorMentoringDetail = infoUsecase.getSeniorMentoringDetail(authDetails, mentoringId);
         return ResponseDto.create(MENTORING_FIND.getCode(), GET_MENTORING_DETAIL_INFO.getMessage(), seniorMentoringDetail);

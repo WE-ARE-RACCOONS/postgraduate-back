@@ -1,14 +1,15 @@
 package com.postgraduate.domain.mentoring.application.usecase;
 
+import com.postgraduate.domain.mentoring.application.dto.AppliedMentoringInfo;
 import com.postgraduate.domain.mentoring.application.dto.res.AppliedMentoringDetailResponse;
 import com.postgraduate.domain.mentoring.application.dto.res.AppliedMentoringResponse;
-import com.postgraduate.domain.mentoring.application.dto.AppliedMentoringInfo;
 import com.postgraduate.domain.mentoring.application.dto.res.SeniorMentoringDetailResponse;
 import com.postgraduate.domain.mentoring.application.dto.res.SeniorMentoringResponse;
 import com.postgraduate.domain.mentoring.application.mapper.MentoringMapper;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.entity.constant.Status;
 import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
+import com.postgraduate.domain.mentoring.exception.MentoringDoneException;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.domain.user.domain.entity.User;
@@ -21,6 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.DONE;
 
 @Service
 @Transactional
@@ -79,6 +82,9 @@ public class MentoringInfoUseCase {
         User user = securityUtils.getLoggedInUser(authDetails);
         Senior senior = seniorGetService.byUser(user);
         Mentoring mentoring = checkIsMyMentoringUseCase.checkByRole(senior, mentoringId);
+        if (mentoring.getStatus() == DONE) {
+            throw new MentoringDoneException();
+        }
         return MentoringMapper.mapToSeniorMentoringDetail(mentoring);
     }
 }
