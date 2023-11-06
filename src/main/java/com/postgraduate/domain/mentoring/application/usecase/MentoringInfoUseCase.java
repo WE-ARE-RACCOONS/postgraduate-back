@@ -46,8 +46,7 @@ public class MentoringInfoUseCase {
         Senior senior = seniorGetService.byUser(user);
 
         List<Mentoring> mentorings = mentoringGetService.mentoringBySenior(senior, status);
-        return mentorings.stream().map(mentoring ->
-                        MentoringMapper.mapToSeniorMentoring(mentoring)).collect(Collectors.toList());
+        return mentorings.stream().map(MentoringMapper::mapToSeniorMentoring).collect(Collectors.toList());
     }
 
     private AppliedMentoringResponse getCategories(Status status, List<Mentoring> mentorings) {
