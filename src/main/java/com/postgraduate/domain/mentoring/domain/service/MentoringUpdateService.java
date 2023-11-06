@@ -16,6 +16,10 @@ public class MentoringUpdateService {
         mentoring.updateStatus(status);
     }
 
+    public void updateStatus(Mentoring mentoring, String refuse) {
+        mentoring.updateRefuse(refuse);
+    }
+
     public void updateDate(Mentoring mentoring, String date) {
         mentoring.updateDate(date);
     }
