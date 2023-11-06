@@ -13,6 +13,7 @@ public enum MentoringResponseCode {
 
     MENTORING_NOT_FOUND("EX901"),
     MENTORING_DONE("EX902"),
+    MENTORING_NOT_WAITING("EX903"),
     ;
     private final String code;
 }
