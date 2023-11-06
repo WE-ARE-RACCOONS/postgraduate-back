@@ -8,6 +8,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class SeniorMentoringResponse {
+    private Long mentoringId;
     private String nickname;
     private String[] dates;
     private int term;

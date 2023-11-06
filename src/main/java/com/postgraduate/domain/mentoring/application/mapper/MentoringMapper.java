@@ -68,6 +68,7 @@ public class MentoringMapper {
     public static SeniorMentoringResponse mapToSeniorMentoring(Mentoring mentoring) {
         String[] dates = mentoring.getDate().split(",");
         return SeniorMentoringResponse.builder()
+                .mentoringId(mentoring.getMentoringId())
                 .nickname(mentoring.getUser().getNickName())
                 .dates(dates)
                 .term(mentoring.getSenior().getTerm())
