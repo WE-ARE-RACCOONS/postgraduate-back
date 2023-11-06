@@ -3,6 +3,7 @@ package com.postgraduate.domain.mentoring.application.mapper;
 import com.postgraduate.domain.mentoring.application.dto.AppliedMentoringInfo;
 import com.postgraduate.domain.mentoring.application.dto.req.MentoringApplyRequest;
 import com.postgraduate.domain.mentoring.application.dto.res.AppliedMentoringDetailResponse;
+import com.postgraduate.domain.mentoring.application.dto.res.SeniorMentoringDetailResponse;
 import com.postgraduate.domain.mentoring.application.dto.res.SeniorMentoringResponse;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.senior.domain.entity.Senior;
@@ -72,6 +73,16 @@ public class MentoringMapper {
                 .nickname(mentoring.getUser().getNickName())
                 .dates(dates)
                 .term(mentoring.getSenior().getTerm())
+                .build();
+    }
+
+    public static SeniorMentoringDetailResponse mapToSeniorMentoringDetail(Mentoring mentoring) {
+        String[] dates = mentoring.getDate().split(",");
+        return SeniorMentoringDetailResponse.builder()
+                .nickName(mentoring.getUser().getNickName())
+                .topic(mentoring.getTopic())
+                .question(mentoring.getQuestion())
+                .dates(dates)
                 .build();
     }
 }
