@@ -11,7 +11,8 @@ public enum MentoringResponseMessage {
     CREATE_MENTORING("멘토링 신청에 성공하였습니다."),
     UPDATE_MENTORING("멘토링 상태 갱신에 성공하였습니다."),
 
-    NOT_FOUND_MENTORING("멘토링이 존재하지 않습니다.");
+    NOT_FOUND_MENTORING("멘토링이 존재하지 않습니다."),
+    DONE_MENTORING("완료된 멘토링입니다.");
 
     private final String message;
 }

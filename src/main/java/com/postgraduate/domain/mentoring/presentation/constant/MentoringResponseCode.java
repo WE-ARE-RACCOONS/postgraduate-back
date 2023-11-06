@@ -11,7 +11,8 @@ public enum MentoringResponseCode {
     MENTORING_CREATE("MT202"),
     MENTORING_DELETE("MT203"),
 
-    MENTORING_NOT_FOUND("MT400")
+    MENTORING_NOT_FOUND("EX901"),
+    MENTORING_DONE("EX902"),
     ;
     private final String code;
 }
