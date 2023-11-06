@@ -96,4 +96,12 @@ public class MentoringController {
         return ResponseDto.create(MENTORING_UPDATE.getCode(), UPDATE_MENTORING.getMessage());
     }
 
+    @PatchMapping("/senior/me/{mentoringId}/refuse")
+    @Operation(summary = "[대학원생] 멘토링 거절사유 업데이트", description = "대학원생이 거절사유를 변경합니다.")
+    public ResponseDto updateSeniorMentoringStatus(@AuthenticationPrincipal AuthDetails authDetails,
+                                                   @PathVariable Long mentoringId,
+                                                   @RequestBody MentoringRefuseRequest request) {
+        manageUseCase.updateRefuse(authDetails, mentoringId, request);
+        return ResponseDto.create(MENTORING_UPDATE.getCode(), UPDATE_MENTORING.getMessage());
+    }
 }
