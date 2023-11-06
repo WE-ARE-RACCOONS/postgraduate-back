@@ -1,6 +1,7 @@
 package com.postgraduate.domain.mentoring.presentation;
 
 import com.postgraduate.domain.mentoring.application.dto.req.MentoringApplyRequest;
+import com.postgraduate.domain.mentoring.application.dto.req.MentoringDateRequest;
 import com.postgraduate.domain.mentoring.application.dto.req.MentoringStatusRequest;
 import com.postgraduate.domain.mentoring.application.dto.res.AppliedMentoringDetailResponse;
 import com.postgraduate.domain.mentoring.application.dto.res.AppliedMentoringResponse;
@@ -30,7 +31,7 @@ import static com.postgraduate.domain.mentoring.presentation.constant.MentoringR
 public class MentoringController {
     private final MentoringInfoUseCase infoUsecase;
     private final MentoringApplyUseCase applyUseCase;
-    private final MentoringManageUseCase updateUseCase;
+    private final MentoringManageUseCase manageUseCase;
 
     @GetMapping("/me")
     @Operation(summary = "[대학생] 신청한 멘토링 목록 조회", description = "대학생이 신청한 멘토링 목록을 조회합니다.")
@@ -58,7 +59,7 @@ public class MentoringController {
     public ResponseDto updateMentoringStatus(@AuthenticationPrincipal AuthDetails authDetails,
                                              @PathVariable Long mentoringId,
                                              @RequestBody MentoringStatusRequest request) {
-        updateUseCase.updateStatus(authDetails, mentoringId, request);
+        manageUseCase.updateStatus(authDetails, mentoringId, request);
         return ResponseDto.create(MENTORING_UPDATE.getCode(), UPDATE_MENTORING.getMessage());
     }
 
@@ -74,5 +75,14 @@ public class MentoringController {
     public ResponseDto<SeniorMentoringDetailResponse> getSeniorMentoringDetail(@AuthenticationPrincipal AuthDetails authDetails, @PathVariable Long mentoringId) {
         SeniorMentoringDetailResponse seniorMentoringDetail = infoUsecase.getSeniorMentoringDetail(authDetails, mentoringId);
         return ResponseDto.create(MENTORING_FIND.getCode(), GET_MENTORING_DETAIL_INFO.getMessage(), seniorMentoringDetail);
+    }
+
+    @PatchMapping("/senior/me/{mentoringId}")
+    @Operation(summary = "[대학원생] 멘토링 시간 선택", description = "대학생이 신청한 시간 옵션 3개 중 하나를 선택합니다. 확정 대기 상태의 멘토링만 가능합니다.")
+    public ResponseDto getSeniorMentorings(@AuthenticationPrincipal AuthDetails authDetails,
+                                             @PathVariable Long mentoringId,
+                                             @RequestBody MentoringDateRequest request) {
+        manageUseCase.updateDate(authDetails, mentoringId, request);
+        return ResponseDto.create(MENTORING_UPDATE.getCode(), UPDATE_MENTORING.getMessage());
     }
 }
