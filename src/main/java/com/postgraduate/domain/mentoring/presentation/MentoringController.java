@@ -4,6 +4,7 @@ import com.postgraduate.domain.mentoring.application.dto.req.MentoringApplyReque
 import com.postgraduate.domain.mentoring.application.dto.req.MentoringStatusRequest;
 import com.postgraduate.domain.mentoring.application.dto.res.AppliedMentoringDetailResponse;
 import com.postgraduate.domain.mentoring.application.dto.res.AppliedMentoringResponse;
+import com.postgraduate.domain.mentoring.application.dto.res.SeniorMentoringResponse;
 import com.postgraduate.domain.mentoring.application.usecase.MentoringApplyUseCase;
 import com.postgraduate.domain.mentoring.application.usecase.MentoringInfoUseCase;
 import com.postgraduate.domain.mentoring.application.usecase.MentoringManageUseCase;
@@ -15,6 +16,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static com.postgraduate.domain.mentoring.presentation.constant.MentoringResponseCode.*;
 import static com.postgraduate.domain.mentoring.presentation.constant.MentoringResponseMessage.*;
@@ -56,5 +59,12 @@ public class MentoringController {
                                              @RequestBody MentoringStatusRequest request) {
         updateUseCase.updateStatus(authDetails, mentoringId, request);
         return ResponseDto.create(MENTORING_UPDATE.getCode(), UPDATE_MENTORING.getMessage());
+    }
+
+    @GetMapping("/senior/me")
+    @Operation(summary = "[대학원생] 신청받은 멘토링 목록 조회", description = "대학원생이 신청받은 멘토링 목록을 조회합니다.")
+    public ResponseDto<List<SeniorMentoringResponse>> getSeniorMentorings(@RequestParam Status status, @AuthenticationPrincipal AuthDetails authDetails) {
+        List<SeniorMentoringResponse> seniorMentorings = infoUsecase.getSeniorMentorings(status, authDetails);
+        return ResponseDto.create(MENTORING_FIND.getCode(), GET_MENTORING_LIST_INFO.getMessage(), seniorMentorings);
     }
 }
