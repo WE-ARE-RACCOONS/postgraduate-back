@@ -58,4 +58,8 @@ public class Mentoring {
     public void updateDeletedAt() {
         this.deletedAt = LocalDate.now();
     }
+
+    public void updateDate(String date) {
+        this.date = date;
+    }
 }

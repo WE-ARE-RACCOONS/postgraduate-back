@@ -15,4 +15,8 @@ public class MentoringUpdateService {
         }
         mentoring.updateStatus(status);
     }
+
+    public void updateDate(Mentoring mentoring, String date) {
+        mentoring.updateDate(date);
+    }
 }
