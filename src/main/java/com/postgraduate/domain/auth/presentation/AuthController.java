@@ -1,6 +1,6 @@
 package com.postgraduate.domain.auth.presentation;
 
-import com.postgraduate.domain.auth.application.dto.req.KakaoLoginRequest;
+import com.postgraduate.domain.auth.application.dto.req.KakaoCodeRequest;
 import com.postgraduate.domain.auth.application.dto.req.SignUpRequest;
 import com.postgraduate.domain.auth.application.dto.res.AuthUserResponse;
 import com.postgraduate.domain.auth.application.dto.res.JwtTokenResponse;
@@ -32,11 +32,10 @@ public class AuthController {
 
     @PostMapping("/login")
     @Operation(summary = "카카오 로그인", description = "회원인 경우 JWT를, 회원이 아닌 경우 socialId를 반환합니다(회원가입은 진행하지 않습니다).")
-    public ResponseDto<?> authLogin(@RequestBody KakaoLoginRequest request) {
-        AuthUserResponse authUser = kakaoSignInUseCase.getUser(request.getAccessToken());
+    public ResponseDto<?> authLogin(@RequestBody KakaoCodeRequest tokenRequest) {
+        AuthUserResponse authUser = kakaoSignInUseCase.getUser(tokenRequest);
         if (authUser.getUser().isEmpty())
             return ResponseDto.create(AUTH_NONE.getCode(), NOT_REGISTERED_USER_MESSAGE.getMessage(), authUser);
-
         JwtTokenResponse jwtToken = jwtUseCase.signIn(authUser.getUser().get());
         return ResponseDto.create(AUTH_ALREADY.getCode(), SUCCESS_AUTH_MESSAGE.getMessage(), jwtToken);
     }

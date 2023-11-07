@@ -1,4 +1,4 @@
-package com.postgraduate.domain.auth.application.dto.req;
+package com.postgraduate.domain.senior.application.dto.req;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class KakaoLoginRequest {
+public class SeniorCertificationRequest {
     @NotNull
-    private String accessToken;
+    private String certification;
 }
