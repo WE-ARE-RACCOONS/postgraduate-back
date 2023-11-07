@@ -40,7 +40,6 @@ public class KakaoAccessTokenUseCase {
     }
 
     private MultiValueMap<String, String> getRequestBody(String code) {
-        System.out.println(code);
         MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
         requestBody.add("grant_type", AUTHORIZATION_GRANT_TYPE);
         requestBody.add("client_id", APP_ID);
