@@ -1,5 +1,6 @@
 package com.postgraduate.domain.auth.application.usecase.kakao;
 
+import com.postgraduate.domain.auth.application.dto.req.KakaoCodeRequest;
 import com.postgraduate.domain.auth.application.dto.res.AuthUserResponse;
 import com.postgraduate.domain.auth.application.dto.res.KakaoUserInfoResponse;
 import com.postgraduate.domain.auth.application.dto.req.SignUpRequest;
@@ -22,8 +23,8 @@ public class KakaoSignInUseCase {
     private final UserGetService userGetService;
 
     @Transactional
-    public AuthUserResponse getUser(String token) {
-        KakaoUserInfoResponse userInfo = kakaoTokenUseCase.getUserInfo(token);
+    public AuthUserResponse getUser(KakaoCodeRequest codeRequest) {
+        KakaoUserInfoResponse userInfo = kakaoTokenUseCase.getKakaoToken(codeRequest.getCode());
         Long socialId = userInfo.getId();
         Optional<User> user = userGetService.bySocialId(socialId);
         return AuthMapper.mapToAuthUser(user, socialId);

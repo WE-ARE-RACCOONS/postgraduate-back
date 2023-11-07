@@ -1,5 +1,6 @@
-package com.postgraduate.domain.auth.application.dto.req;
+package com.postgraduate.domain.mentoring.application.dto.req;
 
+import com.postgraduate.domain.mentoring.domain.entity.constant.Status;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class KakaoLoginRequest {
+public class MentoringStatusRequest {
     @NotNull
-    private String accessToken;
+    private Status status;
 }

@@ -1,9 +1,11 @@
 package com.postgraduate.domain.mentoring.application.mapper;
 
-import com.postgraduate.domain.mentoring.application.dto.AppliedMentoringDetailResponse;
 import com.postgraduate.domain.mentoring.application.dto.AppliedMentoringInfo;
+import com.postgraduate.domain.mentoring.application.dto.req.MentoringApplyRequest;
+import com.postgraduate.domain.mentoring.application.dto.res.AppliedMentoringDetailResponse;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.senior.domain.entity.Senior;
+import com.postgraduate.domain.user.domain.entity.User;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -49,6 +51,16 @@ public class MentoringMapper {
                 .topic(mentoring.getTopic())
                 .question(mentoring.getQuestion())
                 .dates(dates)
+                .build();
+    }
+
+    public static Mentoring mapToMentoring(User user, Senior senior, MentoringApplyRequest request) {
+        return Mentoring.builder()
+                .user(user)
+                .senior(senior)
+                .topic(request.getTopic())
+                .question(request.getQuestion())
+                .date(request.getDate())
                 .build();
     }
 }

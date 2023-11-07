@@ -14,4 +14,8 @@ public class SeniorGetService {
     public Senior byUser(User user) {
         return seniorRepository.findByUser(user).orElseThrow(/**예외 처리**/);
     }
+
+    public Senior bySeniorId(Long seniorId) {
+        return seniorRepository.findById(seniorId).orElseThrow(/**예외 처리**/);
+    }
 }
