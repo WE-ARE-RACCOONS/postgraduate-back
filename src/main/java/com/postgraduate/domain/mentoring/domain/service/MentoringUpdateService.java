@@ -15,4 +15,12 @@ public class MentoringUpdateService {
         }
         mentoring.updateStatus(status);
     }
+
+    public void updateRefuse(Mentoring mentoring, String refuse) {
+        mentoring.updateRefuse(refuse);
+    }
+
+    public void updateDate(Mentoring mentoring, String date) {
+        mentoring.updateDate(date);
+    }
 }
