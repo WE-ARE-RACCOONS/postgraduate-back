@@ -1,4 +1,4 @@
-package com.postgraduate.global.jwt;
+package com.postgraduate.global.config.security.jwt;
 
 import com.postgraduate.global.exception.ApplicationException;
 import jakarta.servlet.FilterChain;
