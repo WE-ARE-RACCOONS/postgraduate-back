@@ -20,17 +20,16 @@ public class UserMyPageUseCase {
     private final UserGetService userGetService;
 
     public UserInfoResponse getUserInfo(AuthDetails authDetails) {
-        User user = securityUtils.getLoggedInUser(authDetails);
-        return UserMapper.mapToInfo(user);
+        return UserMapper.mapToInfo(authDetails.getUser());
     }
 
     public void updateNickName(AuthDetails authDetails, String nickName) {
-        User user = securityUtils.getLoggedInUser(authDetails);
+        User user = authDetails.getUser();
         userUpdateService.updateNickName(user.getUserId(), nickName);
     }
 
     public void updateProfile(AuthDetails authDetails, String profile) {
-        User user = securityUtils.getLoggedInUser(authDetails);
+        User user = authDetails.getUser();
         userUpdateService.updateProfile(user.getUserId(), profile);
     }
 

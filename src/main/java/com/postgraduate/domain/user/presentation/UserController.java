@@ -4,7 +4,6 @@ import com.postgraduate.domain.user.application.dto.req.UserNickNameRequest;
 import com.postgraduate.domain.user.application.dto.req.UserProfileRequest;
 import com.postgraduate.domain.user.application.dto.res.UserInfoResponse;
 import com.postgraduate.domain.user.application.usecase.UserMyPageUseCase;
-import com.postgraduate.domain.user.presentation.constant.UserResponseCode;
 import com.postgraduate.global.auth.AuthDetails;
 import com.postgraduate.global.dto.ResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
