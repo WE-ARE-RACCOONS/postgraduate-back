@@ -29,7 +29,7 @@ class KakaoSignInUseCaseTest {
     void 첫_로그인_socialId_반환() {
         String code = "abcdefg";
         KakaoCodeRequest kakaoCodeRequest = new KakaoCodeRequest(code);
-        given(kakaoAccessTokenUseCase.getKakaoToken(code)).willReturn(new KakaoUserInfoResponse(10000L, new KakaoAccount()));
+        given(kakaoAccessTokenUseCase.getKakaoToken(kakaoCodeRequest)).willReturn(new KakaoUserInfoResponse(10000L, new KakaoAccount()));
         given(userGetService.bySocialId(10000L)).willReturn(Optional.ofNullable(null));
         AuthUserResponse authUserResponse = kakaoSignInUseCase.getUser(kakaoCodeRequest);
         Assertions.assertThat(authUserResponse.getSocialId()).isEqualTo(10000L);
@@ -40,7 +40,7 @@ class KakaoSignInUseCaseTest {
     void 기존_유저_로그인_user반환() {
         String code = "abcdefg";
         KakaoCodeRequest kakaoCodeRequest = new KakaoCodeRequest(code);
-        given(kakaoAccessTokenUseCase.getKakaoToken(code)).willReturn(new KakaoUserInfoResponse(10000L, new KakaoAccount()));
+        given(kakaoAccessTokenUseCase.getKakaoToken(kakaoCodeRequest)).willReturn(new KakaoUserInfoResponse(10000L, new KakaoAccount()));
         given(userGetService.bySocialId(10000L)).willReturn(Optional.ofNullable(new User()));
         AuthUserResponse authUserResponse = kakaoSignInUseCase.getUser(kakaoCodeRequest);
         Assertions.assertThat(authUserResponse.getSocialId()).isEqualTo(10000L);
