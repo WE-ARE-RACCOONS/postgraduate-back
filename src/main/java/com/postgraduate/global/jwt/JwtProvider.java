@@ -4,6 +4,10 @@ import com.postgraduate.domain.user.domain.entity.constant.Role;
 import com.postgraduate.global.auth.AuthDetails;
 import com.postgraduate.global.auth.AuthDetailsService;
 import com.postgraduate.global.config.redis.RedisRepository;
+import com.postgraduate.global.jwt.exception.InvalidRefreshTokenException;
+import com.postgraduate.global.jwt.exception.InvalidTokenException;
+import com.postgraduate.global.jwt.exception.NoneRefreshTokenException;
+import com.postgraduate.global.jwt.exception.TokenExpiredException;
 import io.jsonwebtoken.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -33,13 +37,14 @@ public class JwtProvider {
     private int refreshExpiration;
     @Value("${jwt.accessExpiration}")
     private int accessExpiration;
+    private final String ROLE = "role";
     private final String REFRESH = "refresh";
     private final String AUTHORIZATION = "Authorization";
 
     public String generateAccessToken(Long id, Role role) {
         Instant accessDate = LocalDateTime.now().plusSeconds(accessExpiration).atZone(ZoneId.systemDefault()).toInstant();
         return Jwts.builder()
-                .claim("role", role)
+                .claim(ROLE, role)
                 .setSubject(String.valueOf(id))
                 .setExpiration(Date.from(accessDate))
                 .signWith(SignatureAlgorithm.HS256, secret)
@@ -49,7 +54,7 @@ public class JwtProvider {
     public String generateRefreshToken(Long id, Role role) {
         Instant refreshDate = LocalDateTime.now().plusSeconds(refreshExpiration).atZone(ZoneId.systemDefault()).toInstant();
         String refreshToken = Jwts.builder()
-                .claim("role", role)
+                .claim(ROLE, role)
                 .setSubject(String.valueOf(id))
                 .setExpiration(Date.from(refreshDate))
                 .signWith(SignatureAlgorithm.HS256, secret)
@@ -60,7 +65,7 @@ public class JwtProvider {
 
     public Authentication getAuthentication(String token) {
         Claims claims = parseClaims(token);
-        Collection<? extends GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(claims.get("role").toString()));
+        Collection<? extends GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(claims.get(ROLE).toString()));
         return new UsernamePasswordAuthenticationToken(getDetails(claims), "", authorities);
     }
 
@@ -72,19 +77,17 @@ public class JwtProvider {
         try {
             parseClaims(token);
         } catch (SignatureException | UnsupportedJwtException | IllegalArgumentException | MalformedJwtException e) {
-            //TODO: 유효하지 않은 토큰 예외
-            throw new IllegalArgumentException();
+            throw new InvalidTokenException();
         } catch (ExpiredJwtException e) {
-            //TODO: 만료된 토큰 예외
-            throw new IllegalArgumentException();
+            throw new TokenExpiredException();
         }
     }
 
     public void checkRedis(Long id, HttpServletRequest request) {
         String refreshToken = request.getHeader(AUTHORIZATION).split(" ")[1];
-        String redisToken = redisRepository.getValues(REFRESH + id).orElseThrow();//TODO: 예외처리
+        String redisToken = redisRepository.getValues(REFRESH + id).orElseThrow(NoneRefreshTokenException::new);
         if (!redisToken.equals(refreshToken))
-            throw new IllegalArgumentException(); //TODO: 예외처리
+            throw new InvalidRefreshTokenException();
     }
 
     public Claims parseClaims(String token) {
