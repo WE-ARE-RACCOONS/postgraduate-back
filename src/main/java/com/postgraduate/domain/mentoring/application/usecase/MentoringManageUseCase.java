@@ -1,7 +1,7 @@
 package com.postgraduate.domain.mentoring.application.usecase;
 
 import com.postgraduate.domain.mentoring.application.dto.req.MentoringDateRequest;
-import com.postgraduate.domain.mentoring.application.dto.req.MentoringStatusRequest;
+import com.postgraduate.domain.mentoring.application.dto.req.MentoringRefuseRequest;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.entity.constant.Status;
 import com.postgraduate.domain.mentoring.domain.service.MentoringUpdateService;
@@ -30,7 +30,7 @@ public class MentoringManageUseCase {
         mentoringUpdateService.updateStatus(mentoring, status);
     }
 
-    public void updateRefuse(AuthDetails authDetails, Long mentoringId, MentoringStatusRequest request, Status status) {
+    public void updateRefuse(AuthDetails authDetails, Long mentoringId, MentoringRefuseRequest request, Status status) {
         Mentoring mentoring = checkIsMyMentoringUseCase.bySenior(authDetails, mentoringId);
         mentoringUpdateService.updateRefuse(mentoring, request.getRefuse());
         mentoringUpdateService.updateStatus(mentoring, status);

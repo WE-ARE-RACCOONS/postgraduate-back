@@ -2,7 +2,7 @@ package com.postgraduate.domain.mentoring.presentation;
 
 import com.postgraduate.domain.mentoring.application.dto.req.MentoringApplyRequest;
 import com.postgraduate.domain.mentoring.application.dto.req.MentoringDateRequest;
-import com.postgraduate.domain.mentoring.application.dto.req.MentoringStatusRequest;
+import com.postgraduate.domain.mentoring.application.dto.req.MentoringRefuseRequest;
 import com.postgraduate.domain.mentoring.application.dto.res.AppliedMentoringDetailResponse;
 import com.postgraduate.domain.mentoring.application.dto.res.AppliedMentoringResponse;
 import com.postgraduate.domain.mentoring.application.dto.res.SeniorMentoringDetailResponse;
@@ -104,7 +104,7 @@ public class MentoringController {
     @Operation(summary = "[대학원생] 멘토링 상태 업데이트(거절)", description = "대학원생이 멘토링을 거절하고 거절사유를 변경합니다.")
     public ResponseDto updateMentoringCancel(@AuthenticationPrincipal AuthDetails authDetails,
                                              @PathVariable Long mentoringId,
-                                             @RequestBody MentoringStatusRequest request) {
+                                             @RequestBody MentoringRefuseRequest request) {
         manageUseCase.updateRefuse(authDetails, mentoringId, request, Status.CANCEL);
         return ResponseDto.create(MENTORING_UPDATE.getCode(), UPDATE_MENTORING.getMessage());
     }
