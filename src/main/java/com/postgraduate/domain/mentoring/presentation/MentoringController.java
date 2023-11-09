@@ -55,10 +55,18 @@ public class MentoringController {
     }
 
     @PatchMapping("/me/{mentoringId}/done")
-    @Operation(summary = "[대학생] 멘토링 상태 업데이트", description = "대학생이 멘토링 상태를 변경합니다.")
+    @Operation(summary = "[대학생] 멘토링 상태 업데이트(완료)", description = "대학생이 멘토링을 완료합니다.")
     public ResponseDto updateMentoringDone(@AuthenticationPrincipal AuthDetails authDetails,
-                                             @PathVariable Long mentoringId) {
+                                           @PathVariable Long mentoringId) {
         manageUseCase.updateStatus(authDetails, mentoringId, Status.DONE);
+        return ResponseDto.create(MENTORING_UPDATE.getCode(), UPDATE_MENTORING.getMessage());
+    }
+
+    @PatchMapping("/me/{mentoringId}/cancel")
+    @Operation(summary = "[대학생] 멘토링 상태 업데이트(취소)", description = "대학생이 신청한 멘토링을 취소합니다.")
+    public ResponseDto updateMentoringCancel(@AuthenticationPrincipal AuthDetails authDetails,
+                                             @PathVariable Long mentoringId) {
+        manageUseCase.updateStatus(authDetails, mentoringId, Status.CANCEL);
         return ResponseDto.create(MENTORING_UPDATE.getCode(), UPDATE_MENTORING.getMessage());
     }
 
