@@ -3,6 +3,7 @@ package com.postgraduate.domain.auth.application.usecase.kakao;
 import com.postgraduate.domain.auth.application.dto.req.KakaoCodeRequest;
 import com.postgraduate.domain.auth.application.dto.res.KakaoTokenInfoResponse;
 import com.postgraduate.domain.auth.application.dto.res.KakaoUserInfoResponse;
+import com.postgraduate.domain.auth.exception.KakaoCodeException;
 import com.postgraduate.domain.auth.exception.KakaoException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,7 +43,7 @@ public class KakaoAccessTokenUseCase {
                     .block();
             return getUserInfo(tokenInfoResponse.getAccess_token());
         } catch (WebClientResponseException ex) {
-            throw new KakaoException();
+            throw new KakaoCodeException();
         }
     }
 
