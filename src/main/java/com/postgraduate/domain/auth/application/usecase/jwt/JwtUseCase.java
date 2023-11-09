@@ -4,7 +4,7 @@ import com.postgraduate.domain.auth.application.dto.res.JwtTokenResponse;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.global.auth.AuthDetails;
 import com.postgraduate.global.config.security.util.SecurityUtils;
-import com.postgraduate.global.jwt.JwtProvider;
+import com.postgraduate.global.config.security.jwt.JwtProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
