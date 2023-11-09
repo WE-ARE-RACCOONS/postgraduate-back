@@ -3,6 +3,8 @@ package com.postgraduate.domain.mentoring.application.usecase;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
 import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.global.auth.AuthDetails;
+import com.postgraduate.global.config.security.util.SecurityUtils;
 import com.postgraduate.global.exception.ApplicationException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,12 +21,16 @@ class CheckIsMyMentoringUseCaseTest {
     @Mock
     private MentoringGetService mentoringGetService;
 
+    @Mock
+    private SecurityUtils securityUtils;
+
     @InjectMocks
     private CheckIsMyMentoringUseCase checkIsMyMentoringUseCase;
 
     @Test
     public void testCheckByRoleInvalid() {
-        User user = new User();
+        AuthDetails authDetails = mock(AuthDetails.class);
+        when(securityUtils.getLoggedInUser(authDetails)).thenReturn(new User());
         Long mentoringId = 1L;
         Mentoring mentoring = mock();
 
@@ -32,7 +38,7 @@ class CheckIsMyMentoringUseCaseTest {
         when(mentoringGetService.byMentoringId(mentoringId)).thenReturn(mentoring);
 
         assertThrows(ApplicationException.class, () -> {
-            checkIsMyMentoringUseCase.checkByRole(user, mentoringId);
+            checkIsMyMentoringUseCase.byUser(authDetails, mentoringId);
         });
     }
 }
