@@ -10,6 +10,7 @@ import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.entity.constant.Status;
 import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
 import com.postgraduate.domain.mentoring.exception.MentoringDoneException;
+import com.postgraduate.domain.mentoring.exception.MentoringNotWaitingException;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.domain.user.domain.entity.User;
@@ -24,6 +25,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.DONE;
+import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.WAITING;
 
 @Service
 @Transactional
@@ -75,6 +77,9 @@ public class MentoringInfoUseCase {
     public AppliedMentoringDetailResponse getMentoringDetail(AuthDetails authDetails, Long mentoringId) {
         User user = securityUtils.getLoggedInUser(authDetails);
         Mentoring mentoring = checkIsMyMentoringUseCase.checkByRole(user, mentoringId);
+        if (mentoring.getStatus() != WAITING) {
+            throw new MentoringNotWaitingException();
+        }
         return MentoringMapper.mapToAppliedDetailInfo(mentoring);
     }
 
