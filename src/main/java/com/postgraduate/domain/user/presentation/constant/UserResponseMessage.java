@@ -10,7 +10,7 @@ public enum UserResponseMessage {
     GET_NICKNAME_CHECK("닉네임 중복체크에 성공하였습니다."),
     UPDATE_USER_INFO("사용자 업데이트에 성공하였습니다."),
 
-    NONE_USER("등록된 사용자가 없습니다.");
+    NOT_FOUND_USER("등록된 사용자가 없습니다.");
 
     private final String message;
 }
