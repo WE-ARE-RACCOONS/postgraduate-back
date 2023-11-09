@@ -1,9 +1,9 @@
 package com.postgraduate.domain.mentoring.application.usecase;
 
 import com.postgraduate.domain.mentoring.application.dto.req.MentoringDateRequest;
-import com.postgraduate.domain.mentoring.application.dto.req.MentoringRefuseRequest;
 import com.postgraduate.domain.mentoring.application.dto.req.MentoringStatusRequest;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
+import com.postgraduate.domain.mentoring.domain.entity.constant.Status;
 import com.postgraduate.domain.mentoring.domain.service.MentoringUpdateService;
 import com.postgraduate.domain.mentoring.exception.MentoringNotWaitingException;
 import com.postgraduate.domain.senior.domain.entity.Senior;
@@ -26,24 +26,25 @@ public class MentoringManageUseCase {
     private final SeniorGetService seniorGetService;
     private final CheckIsMyMentoringUseCase checkIsMyMentoringUseCase;
 
-    public void updateStatus(AuthDetails authDetails, Long mentoringId, MentoringStatusRequest request) {
+    public void updateStatus(AuthDetails authDetails, Long mentoringId, Status status) {
         User user = securityUtils.getLoggedInUser(authDetails);
         Mentoring mentoring = checkIsMyMentoringUseCase.checkByRole(user, mentoringId);
-        mentoringUpdateService.updateStatus(mentoring, request.getStatus());
+        mentoringUpdateService.updateStatus(mentoring, status);
     }
 
-    public void updateSeniorStatus(AuthDetails authDetails, Long mentoringId, MentoringStatusRequest request) {
+    public void updateSeniorStatus(AuthDetails authDetails, Long mentoringId, Status status) {
         User user = securityUtils.getLoggedInUser(authDetails);
         Senior senior = seniorGetService.byUser(user);
         Mentoring mentoring = checkIsMyMentoringUseCase.checkByRole(senior, mentoringId);
-        mentoringUpdateService.updateStatus(mentoring, request.getStatus());
+        mentoringUpdateService.updateStatus(mentoring, status);
     }
 
-    public void updateRefuse(AuthDetails authDetails, Long mentoringId, MentoringRefuseRequest request) {
+    public void updateRefuse(AuthDetails authDetails, Long mentoringId, MentoringStatusRequest request, Status status) {
         User user = securityUtils.getLoggedInUser(authDetails);
         Senior senior = seniorGetService.byUser(user);
         Mentoring mentoring = checkIsMyMentoringUseCase.checkByRole(senior, mentoringId);
-        mentoringUpdateService.updateStatus(mentoring, request.getRefuse());
+        mentoringUpdateService.updateRefuse(mentoring, request.getRefuse());
+        mentoringUpdateService.updateStatus(mentoring, status);
     }
 
     public void updateDate(AuthDetails authDetails, Long mentoringId, MentoringDateRequest request) {
