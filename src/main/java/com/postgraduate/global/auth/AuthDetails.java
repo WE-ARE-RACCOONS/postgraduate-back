@@ -1,8 +1,8 @@
 package com.postgraduate.global.auth;
 
-import com.postgraduate.domain.user.domain.entity.constant.Role;
-import lombok.AllArgsConstructor;
+import com.postgraduate.domain.user.domain.entity.User;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,14 +11,13 @@ import java.util.Collection;
 import java.util.Collections;
 
 @Getter
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AuthDetails implements UserDetails {
-    private final Long userId;
-    private final Role role;
+    private final User user;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singletonList(new SimpleGrantedAuthority(role.toString()));
+        return Collections.singletonList(new SimpleGrantedAuthority(user.getRole().name()));
     }
 
     @Override
@@ -28,26 +27,26 @@ public class AuthDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return null;
+        return user.getUserId().toString();
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
     }
 }
