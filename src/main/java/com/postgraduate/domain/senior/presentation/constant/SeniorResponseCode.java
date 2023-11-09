@@ -11,6 +11,6 @@ public enum SeniorResponseCode {
     SENIOR_CREATE("SNR202"),
     SENIOR_DELETE("SNR203"),
 
-    NONE_SENIOR("SNR400");
+    NONE_SENIOR("EX400");
     private final String code;
 }

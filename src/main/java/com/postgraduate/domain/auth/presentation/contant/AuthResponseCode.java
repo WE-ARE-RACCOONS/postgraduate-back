@@ -12,7 +12,7 @@ public enum AuthResponseCode {
     AUTH_DELETE("AU203"),
     AUTH_ALREADY("AU204"),
 
-    AUTH_NONE("AU900"),
-    AUTH_INVALID_KAKAO("AU901");
+    AUTH_NONE("EX900"),
+    AUTH_INVALID_KAKAO("EX901");
     private final String code;
 }
