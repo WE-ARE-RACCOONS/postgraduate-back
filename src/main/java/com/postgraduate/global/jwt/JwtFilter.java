@@ -1,5 +1,6 @@
 package com.postgraduate.global.jwt;
 
+import com.postgraduate.global.exception.ApplicationException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,9 +23,14 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = resolveToken(request);
         if (token != null) {
-            jwtProvider.validateToken(token);
-            Authentication authentication = this.jwtProvider.getAuthentication(token);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            if (!jwtProvider.validateToken(response, token))
+                return;
+            try {
+                Authentication authentication = jwtProvider.getAuthentication(response, token);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            } catch (ApplicationException ex) {
+                return;
+            }
         }
 
         filterChain.doFilter(request, response);

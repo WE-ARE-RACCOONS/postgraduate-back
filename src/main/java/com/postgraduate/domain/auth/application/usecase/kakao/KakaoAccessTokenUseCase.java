@@ -1,13 +1,15 @@
 package com.postgraduate.domain.auth.application.usecase.kakao;
 
-import com.postgraduate.domain.auth.application.dto.res.KakaoAccessTokenResponse;
+import com.postgraduate.domain.auth.application.dto.req.KakaoCodeRequest;
 import com.postgraduate.domain.auth.application.dto.res.KakaoTokenInfoResponse;
 import com.postgraduate.domain.auth.application.dto.res.KakaoUserInfoResponse;
+import com.postgraduate.domain.auth.exception.KakaoCodeException;
 import com.postgraduate.domain.auth.exception.KakaoException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -15,6 +17,7 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 
 @RequiredArgsConstructor
 @Service
+@Transactional
 public class KakaoAccessTokenUseCase {
 
     @Value("${app-id.kakao}")
@@ -27,10 +30,9 @@ public class KakaoAccessTokenUseCase {
 
     private static final String KAKAO_TOKEN_URI = "https://kauth.kakao.com/oauth/token";
     private static final String USER_INFO_URI = "https://kapi.kakao.com/v2/user/me";
-    private static final String VALIDATE_TOKEN_URI = "https://kapi.kakao.com/v1/user/access_token_info";
 
-    public KakaoUserInfoResponse getKakaoToken(String code) {
-        MultiValueMap<String, String> requestBody = getRequestBody(code);
+    public KakaoUserInfoResponse getKakaoToken(KakaoCodeRequest codeRequest) {
+        MultiValueMap<String, String> requestBody = getRequestBody(codeRequest.getCode());
         try {
             KakaoTokenInfoResponse tokenInfoResponse = webClient.post()
                     .uri(KAKAO_TOKEN_URI)
@@ -41,7 +43,7 @@ public class KakaoAccessTokenUseCase {
                     .block();
             return getUserInfo(tokenInfoResponse.getAccess_token());
         } catch (WebClientResponseException ex) {
-            throw new KakaoException();
+            throw new KakaoCodeException();
         }
     }
 
@@ -55,8 +57,6 @@ public class KakaoAccessTokenUseCase {
     }
 
     private KakaoUserInfoResponse getUserInfo(String accessToken) {
-        verifyAccessToken(accessToken);
-
         try {
             return webClient.get()
                     .uri(USER_INFO_URI)
@@ -64,24 +64,6 @@ public class KakaoAccessTokenUseCase {
                     .retrieve()
                     .bodyToMono(KakaoUserInfoResponse.class)
                     .block();
-        } catch (WebClientResponseException ex) {
-            throw new KakaoException();
-        }
-    }
-
-    private void verifyAccessToken(String accessToken) {
-        try {
-            KakaoAccessTokenResponse kakaoAccessTokenResponse = webClient.get()
-                    .uri(VALIDATE_TOKEN_URI)
-                    .headers(h -> h.setBearerAuth(accessToken))
-                    .retrieve()
-                    .bodyToMono(KakaoAccessTokenResponse.class)
-                    .block();
-
-            if (kakaoAccessTokenResponse == null ||
-                    !kakaoAccessTokenResponse.getApp_id().toString().equals(APP_ID)) {
-                throw new KakaoException();
-            }
         } catch (WebClientResponseException ex) {
             throw new KakaoException();
         }

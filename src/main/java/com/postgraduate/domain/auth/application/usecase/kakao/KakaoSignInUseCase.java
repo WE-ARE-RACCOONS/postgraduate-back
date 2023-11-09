@@ -16,15 +16,15 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
+@Transactional
 public class KakaoSignInUseCase {
     private final KakaoAccessTokenUseCase kakaoTokenUseCase;
     private final UserSaveService userSaveService;
     private final UserGetService userGetService;
 
     public AuthUserResponse getUser(KakaoCodeRequest codeRequest) {
-        KakaoUserInfoResponse userInfo = kakaoTokenUseCase.getKakaoToken(codeRequest.getCode());
+        KakaoUserInfoResponse userInfo = kakaoTokenUseCase.getKakaoToken(codeRequest);
         Long socialId = userInfo.getId();
         Optional<User> user = userGetService.bySocialId(socialId);
         return AuthMapper.mapToAuthUser(user, socialId);
