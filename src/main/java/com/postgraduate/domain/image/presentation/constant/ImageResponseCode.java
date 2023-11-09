@@ -9,6 +9,8 @@ public enum ImageResponseCode {
     IMAGE_FIND("IMG200"),
     IMAGE_UPDATE("IMG201"),
     IMAGE_CREATE("IMG202"),
-    IMAGE_DELETE("IMG203");
+    IMAGE_DELETE("IMG203"),
+
+    IMAGE_EMPTY("EX800");
     private final String code;
 }
