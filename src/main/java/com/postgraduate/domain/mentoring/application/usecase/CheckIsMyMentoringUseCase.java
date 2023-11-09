@@ -4,7 +4,10 @@ import com.postgraduate.domain.auth.exception.PermissionDeniedException;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
 import com.postgraduate.domain.senior.domain.entity.Senior;
+import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.global.auth.AuthDetails;
+import com.postgraduate.global.config.security.util.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,8 +16,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @RequiredArgsConstructor
 public class CheckIsMyMentoringUseCase {
+    private final SecurityUtils securityUtils;
+    private final SeniorGetService seniorGetService;
     private final MentoringGetService mentoringGetService;
-    public Mentoring checkByRole(User user, Long mentoringId) {
+
+    public Mentoring byUser(AuthDetails authDetails, Long mentoringId) {
+        User user = securityUtils.getLoggedInUser(authDetails);
         Mentoring mentoring = mentoringGetService.byMentoringId(mentoringId);
         if (mentoring.getUser() != user) {
             throw new PermissionDeniedException();
@@ -22,7 +29,9 @@ public class CheckIsMyMentoringUseCase {
         return mentoring;
     }
 
-    public Mentoring checkByRole(Senior senior, Long mentoringId) {
+    public Mentoring bySenior(AuthDetails authDetails, Long mentoringId) {
+        User user = securityUtils.getLoggedInUser(authDetails);
+        Senior senior = seniorGetService.byUser(user);
         Mentoring mentoring = mentoringGetService.byMentoringId(mentoringId);
         if (mentoring.getSenior() != senior) {
             throw new PermissionDeniedException();

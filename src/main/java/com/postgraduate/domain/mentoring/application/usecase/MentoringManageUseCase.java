@@ -6,11 +6,7 @@ import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.entity.constant.Status;
 import com.postgraduate.domain.mentoring.domain.service.MentoringUpdateService;
 import com.postgraduate.domain.mentoring.exception.MentoringNotWaitingException;
-import com.postgraduate.domain.senior.domain.entity.Senior;
-import com.postgraduate.domain.senior.domain.service.SeniorGetService;
-import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.global.auth.AuthDetails;
-import com.postgraduate.global.config.security.util.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,36 +17,27 @@ import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.WA
 @Transactional
 @RequiredArgsConstructor
 public class MentoringManageUseCase {
-    private final SecurityUtils securityUtils;
-    private final MentoringUpdateService mentoringUpdateService;
-    private final SeniorGetService seniorGetService;
     private final CheckIsMyMentoringUseCase checkIsMyMentoringUseCase;
+    private final MentoringUpdateService mentoringUpdateService;
 
     public void updateStatus(AuthDetails authDetails, Long mentoringId, Status status) {
-        User user = securityUtils.getLoggedInUser(authDetails);
-        Mentoring mentoring = checkIsMyMentoringUseCase.checkByRole(user, mentoringId);
+        Mentoring mentoring = checkIsMyMentoringUseCase.byUser(authDetails, mentoringId);
         mentoringUpdateService.updateStatus(mentoring, status);
     }
 
     public void updateSeniorStatus(AuthDetails authDetails, Long mentoringId, Status status) {
-        User user = securityUtils.getLoggedInUser(authDetails);
-        Senior senior = seniorGetService.byUser(user);
-        Mentoring mentoring = checkIsMyMentoringUseCase.checkByRole(senior, mentoringId);
+        Mentoring mentoring = checkIsMyMentoringUseCase.bySenior(authDetails, mentoringId);
         mentoringUpdateService.updateStatus(mentoring, status);
     }
 
     public void updateRefuse(AuthDetails authDetails, Long mentoringId, MentoringStatusRequest request, Status status) {
-        User user = securityUtils.getLoggedInUser(authDetails);
-        Senior senior = seniorGetService.byUser(user);
-        Mentoring mentoring = checkIsMyMentoringUseCase.checkByRole(senior, mentoringId);
+        Mentoring mentoring = checkIsMyMentoringUseCase.bySenior(authDetails, mentoringId);
         mentoringUpdateService.updateRefuse(mentoring, request.getRefuse());
         mentoringUpdateService.updateStatus(mentoring, status);
     }
 
     public void updateDate(AuthDetails authDetails, Long mentoringId, MentoringDateRequest request) {
-        User user = securityUtils.getLoggedInUser(authDetails);
-        Senior senior = seniorGetService.byUser(user);
-        Mentoring mentoring = checkIsMyMentoringUseCase.checkByRole(senior, mentoringId);
+        Mentoring mentoring = checkIsMyMentoringUseCase.bySenior(authDetails, mentoringId);
         if (mentoring.getStatus() != WAITING) {
             throw new MentoringNotWaitingException();
         }

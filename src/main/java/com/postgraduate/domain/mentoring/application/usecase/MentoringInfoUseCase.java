@@ -75,8 +75,7 @@ public class MentoringInfoUseCase {
     }
 
     public AppliedMentoringDetailResponse getMentoringDetail(AuthDetails authDetails, Long mentoringId) {
-        User user = securityUtils.getLoggedInUser(authDetails);
-        Mentoring mentoring = checkIsMyMentoringUseCase.checkByRole(user, mentoringId);
+        Mentoring mentoring = checkIsMyMentoringUseCase.byUser(authDetails, mentoringId);
         if (mentoring.getStatus() != WAITING) {
             throw new MentoringNotWaitingException();
         }
@@ -84,9 +83,7 @@ public class MentoringInfoUseCase {
     }
 
     public SeniorMentoringDetailResponse getSeniorMentoringDetail(AuthDetails authDetails, Long mentoringId) {
-        User user = securityUtils.getLoggedInUser(authDetails);
-        Senior senior = seniorGetService.byUser(user);
-        Mentoring mentoring = checkIsMyMentoringUseCase.checkByRole(senior, mentoringId);
+        Mentoring mentoring = checkIsMyMentoringUseCase.bySenior(authDetails, mentoringId);
         if (mentoring.getStatus() == DONE) {
             throw new MentoringDoneException();
         }
