@@ -72,7 +72,7 @@ public class MentoringMapper {
                 .mentoringId(mentoring.getMentoringId())
                 .nickname(mentoring.getUser().getNickName())
                 .dates(dates)
-                .term(mentoring.getSenior().getTerm())
+                .term(mentoring.getSenior().getProfile().getTerm())
                 .build();
     }
 
