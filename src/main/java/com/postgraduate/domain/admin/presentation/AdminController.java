@@ -51,7 +51,7 @@ public class AdminController {
 
     @GetMapping("/users")
     @Operation(summary = "[관리자] 후배 정보 목록", description = "대학생 후배 정보 목록을 조회합니다.")
-    public ResponseDto<List<UserResponse>> getSeniors() {
+    public ResponseDto<List<UserResponse>> getUsers() {
         List<UserResponse> users = userManageUseCase.getUsers();
         return ResponseDto.create(USER_FIND.getCode(), GET_USER_INFO.getMessage(), users);
     }
