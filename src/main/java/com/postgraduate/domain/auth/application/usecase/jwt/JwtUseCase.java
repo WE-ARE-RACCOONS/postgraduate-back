@@ -2,8 +2,6 @@ package com.postgraduate.domain.auth.application.usecase.jwt;
 
 import com.postgraduate.domain.auth.application.dto.res.JwtTokenResponse;
 import com.postgraduate.domain.user.domain.entity.User;
-import com.postgraduate.global.auth.AuthDetails;
-import com.postgraduate.global.config.security.util.SecurityUtils;
 import com.postgraduate.global.config.security.jwt.JwtProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +12,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class JwtUseCase {
     private final JwtProvider jwtProvider;
-    private final SecurityUtils securityUtils;
     @Value("${jwt.refreshExpiration}")
     private int refreshExpiration;
     @Value("${jwt.accessExpiration}")
@@ -24,8 +21,7 @@ public class JwtUseCase {
         return generateToken(user);
     }
 
-    public JwtTokenResponse regenerateToken(AuthDetails authDetails, HttpServletRequest request) {
-        User user = securityUtils.getLoggedInUser(authDetails);
+    public JwtTokenResponse regenerateToken(User user, HttpServletRequest request) {
         jwtProvider.checkRedis(user.getUserId(), request);
         return generateToken(user);
     }

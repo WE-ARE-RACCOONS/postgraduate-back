@@ -11,7 +11,6 @@ import com.postgraduate.domain.senior.domain.service.SeniorUpdateService;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.entity.constant.Role;
 import com.postgraduate.domain.user.domain.service.UserUpdateService;
-import com.postgraduate.global.auth.AuthDetails;
 import com.postgraduate.global.config.security.util.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,15 +26,13 @@ public class SeniorSignUpUseCase {
     private final SeniorUpdateService seniorUpdateService;
     private final SecurityUtils securityUtils;
 
-    public void signUp(AuthDetails authDetails, SeniorSignUpRequest request) {
-        User user = securityUtils.getLoggedInUser(authDetails);
+    public void signUp(User user, SeniorSignUpRequest request) {
         userUpdateService.updateRole(user.getUserId(), Role.SENIOR);
         Senior senior = SeniorMapper.mapToSenior(user, request);
         seniorSaveService.saveSenior(senior);
     }
 
-    public void updateProfile(AuthDetails authDetails, SeniorProfileRequest profileRequest) {
-        User user = securityUtils.getLoggedInUser(authDetails);
+    public void updateProfile(User user, SeniorProfileRequest profileRequest) {
         Senior senior = seniorGetService.byUser(user);
         Profile profile = SeniorMapper.mapToProfile(profileRequest);
         seniorUpdateService.updateSeniorProfile(senior, profile);

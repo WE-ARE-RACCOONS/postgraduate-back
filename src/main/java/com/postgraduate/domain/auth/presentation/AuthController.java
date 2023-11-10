@@ -50,8 +50,8 @@ public class AuthController {
 
     @PostMapping("/refresh")
     @Operation(summary = "토큰 재발급", description = "refreshToken 으로 토큰 재발급")
-    public ResponseDto<JwtTokenResponse> refresh(@AuthenticationPrincipal AuthDetails authDetails, HttpServletRequest request) {
-        JwtTokenResponse jwtToken = jwtUseCase.regenerateToken(authDetails, request);
+    public ResponseDto<JwtTokenResponse> refresh(@AuthenticationPrincipal User user, HttpServletRequest request) {
+        JwtTokenResponse jwtToken = jwtUseCase.regenerateToken(user, request);
         return ResponseDto.create(AUTH_UPDATE.getCode(), SUCCESS_REGENERATE_TOKEN.getMessage(), jwtToken);
     }
 }
