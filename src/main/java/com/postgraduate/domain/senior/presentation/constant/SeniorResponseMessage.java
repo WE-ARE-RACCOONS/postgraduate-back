@@ -10,7 +10,8 @@ public enum SeniorResponseMessage {
     UPDATE_PROFILE("대학원생 프로필 등록에 성공하였습니다"),
     GET_SENIOR_INFO("대학원생 정보 조회에 성공하였습니다"),
     GET_SENIOR_PROFILE("대학원생 프로필 조회에 성공하였습니다"),
-    UPDATE_CERTIFICATION("대학원생 인증사진 업로드에 성공하였습니다");
+    UPDATE_CERTIFICATION("대학원생 인증사진 업로드에 성공하였습니다"),
+    GET_CERTIFICATION("대학원생 인증정보 조회에 성공하였습니다");
 
     private final String message;
 }
