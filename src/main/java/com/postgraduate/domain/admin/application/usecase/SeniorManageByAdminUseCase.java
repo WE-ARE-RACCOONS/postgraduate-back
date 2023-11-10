@@ -19,7 +19,7 @@ import java.util.List;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class SeniorManageUseCase {
+public class SeniorManageByAdminUseCase {
     private final SeniorGetService seniorGetService;
 
     public CertificationDetailsResponse getCertificationDetails(Long seniorId) {

@@ -13,7 +13,7 @@ import java.util.List;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class MentoringManageUseCase {
+public class MentoringManageByAdminUseCase {
     private final MentoringGetService mentoringGetService;
     public List<MentoringResponse> getMentorings() {
         List<Mentoring> mentorings = mentoringGetService.all();

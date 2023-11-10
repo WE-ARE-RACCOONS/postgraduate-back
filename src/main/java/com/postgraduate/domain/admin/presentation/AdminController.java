@@ -2,9 +2,10 @@ package com.postgraduate.domain.admin.presentation;
 
 import com.postgraduate.domain.admin.application.dto.req.SeniorStatusRequest;
 import com.postgraduate.domain.admin.application.dto.res.*;
-import com.postgraduate.domain.admin.application.usecase.MentoringManageUseCase;
-import com.postgraduate.domain.admin.application.usecase.SeniorManageUseCase;
-import com.postgraduate.domain.admin.application.usecase.UserManageUseCase;
+import com.postgraduate.domain.admin.application.usecase.MentoringManageByAdminUseCase;
+import com.postgraduate.domain.admin.application.usecase.PaymentManageByAdminUseCase;
+import com.postgraduate.domain.admin.application.usecase.SeniorManageByAdminUseCase;
+import com.postgraduate.domain.admin.application.usecase.UserManageByAdminUseCase;
 import com.postgraduate.global.dto.ResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,9 +28,10 @@ import static com.postgraduate.domain.user.presentation.constant.UserResponseMes
 @RequestMapping("/admin")
 @Tag(name = "ADMIN Controller")
 public class AdminController {
-    private final SeniorManageUseCase seniorManageUseCase;
-    private final UserManageUseCase userManageUseCase;
-    private final MentoringManageUseCase mentoringManageUseCase;
+    private final SeniorManageByAdminUseCase seniorManageUseCase;
+    private final UserManageByAdminUseCase userManageUseCase;
+    private final MentoringManageByAdminUseCase mentoringManageUseCase;
+    private final PaymentManageByAdminUseCase paymentManageUseCase;
 
     @GetMapping("/certification/{seniorId}")
     @Operation(summary = "[관리자] 선배 프로필 승인 요청 조회", description = "선배 신청 시 작성한 사전 작성정보 및 첨부사진을 조회합니다.")

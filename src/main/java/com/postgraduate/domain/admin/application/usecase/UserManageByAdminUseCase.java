@@ -13,7 +13,7 @@ import java.util.List;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class UserManageUseCase {
+public class UserManageByAdminUseCase {
     private final UserGetService userGetService;
     public List<UserResponse> getUsers() {
         List<User> users = userGetService.all();
