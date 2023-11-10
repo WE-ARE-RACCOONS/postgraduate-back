@@ -3,8 +3,10 @@ package com.postgraduate.domain.admin.application.mapper;
 import com.postgraduate.domain.admin.application.dto.CertificationInfo;
 import com.postgraduate.domain.admin.application.dto.CertificationProfile;
 import com.postgraduate.domain.admin.application.dto.res.CertificationResponse;
+import com.postgraduate.domain.admin.application.dto.res.MentoringResponse;
 import com.postgraduate.domain.admin.application.dto.res.SeniorResponse;
 import com.postgraduate.domain.admin.application.dto.res.UserResponse;
+import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.entity.constant.Role;
@@ -50,6 +52,18 @@ public class AdminMapper {
                 .seniorId(senior.getSeniorId())
                 .nickName(senior.getUser().getNickName())
                 .createdAt(senior.getCreatedAt())
+                .build();
+    }
+
+    public static MentoringResponse mapToMentoringResponse(Mentoring mentoring) {
+        return MentoringResponse.builder()
+                .mentoringId(mentoring.getMentoringId())
+                .status(mentoring.getStatus())
+                .userNickName(mentoring.getUser().getNickName())
+                .seniorId(mentoring.getSenior().getSeniorId())
+                .seniorNickName(mentoring.getSenior().getUser().getNickName())
+                .createdAt(mentoring.getCreatedAt())
+                .date(mentoring.getDate())
                 .build();
     }
 }
