@@ -10,5 +10,6 @@ import lombok.Getter;
 public class CertificationProfile {
     private Integer term;
     private String time;
+    private String info;
     //연구실 대표 키워드
 }

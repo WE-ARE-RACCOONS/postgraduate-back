@@ -13,7 +13,4 @@ public class CertificationInfo {
     private String postgradu;
     private String field;
     private String professor;
-    private Integer term;
-    private String info;
-    private String time;
 }

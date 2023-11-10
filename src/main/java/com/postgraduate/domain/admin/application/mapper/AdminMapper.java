@@ -25,6 +25,7 @@ public class AdminMapper {
         return CertificationProfile.builder()
                 .time(senior.getProfile().getTime())
                 .term(senior.getProfile().getTerm())
+                .info(senior.getProfile().getInfo())
                 .build();
     }
 
