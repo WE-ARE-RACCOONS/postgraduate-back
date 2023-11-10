@@ -14,8 +14,6 @@ import com.postgraduate.domain.mentoring.exception.MentoringNotWaitingException;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.domain.user.domain.entity.User;
-import com.postgraduate.global.auth.AuthDetails;
-import com.postgraduate.global.config.security.util.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,20 +32,13 @@ public class MentoringInfoUseCase {
     private final MentoringGetService mentoringGetService;
     private final CheckIsMyMentoringUseCase checkIsMyMentoringUseCase;
     private final SeniorGetService seniorGetService;
-    private final SecurityUtils securityUtils;
-    /**
-     * securityUtils 이후 수정
-     */
 
-    public AppliedMentoringResponse getMentorings(Status status, AuthDetails authDetails) {
-        User user = securityUtils.getLoggedInUser(authDetails);
-
+    public AppliedMentoringResponse getMentorings(Status status, User user) {
         List<Mentoring> mentorings = mentoringGetService.mentoringByUser(user, status);
         return getCategories(status, mentorings);
     }
 
-    public List<SeniorMentoringResponse> getSeniorMentorings(Status status, AuthDetails authDetails) {
-        User user = securityUtils.getLoggedInUser(authDetails);
+    public List<SeniorMentoringResponse> getSeniorMentorings(Status status, User user) {
         Senior senior = seniorGetService.byUser(user);
 
         List<Mentoring> mentorings = mentoringGetService.mentoringBySenior(senior, status);
@@ -74,16 +65,16 @@ public class MentoringInfoUseCase {
         }
     }
 
-    public AppliedMentoringDetailResponse getMentoringDetail(AuthDetails authDetails, Long mentoringId) {
-        Mentoring mentoring = checkIsMyMentoringUseCase.byUser(authDetails, mentoringId);
+    public AppliedMentoringDetailResponse getMentoringDetail(User user, Long mentoringId) {
+        Mentoring mentoring = checkIsMyMentoringUseCase.byUser(user, mentoringId);
         if (mentoring.getStatus() != WAITING) {
             throw new MentoringNotWaitingException();
         }
         return MentoringMapper.mapToAppliedDetailInfo(mentoring);
     }
 
-    public SeniorMentoringDetailResponse getSeniorMentoringDetail(AuthDetails authDetails, Long mentoringId) {
-        Mentoring mentoring = checkIsMyMentoringUseCase.bySenior(authDetails, mentoringId);
+    public SeniorMentoringDetailResponse getSeniorMentoringDetail(User user, Long mentoringId) {
+        Mentoring mentoring = checkIsMyMentoringUseCase.bySenior(user, mentoringId);
         if (mentoring.getStatus() == DONE) {
             throw new MentoringDoneException();
         }
