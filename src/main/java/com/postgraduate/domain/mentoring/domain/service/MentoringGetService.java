@@ -28,4 +28,8 @@ public class MentoringGetService {
     public Mentoring byMentoringId(Long mentoringId) {
         return mentoringRepository.findByMentoringIdAndDeletedAtIsNull(mentoringId).orElseThrow(MentoringNotFoundException::new);
     }
+
+    public List<Mentoring> all() {
+        return mentoringRepository.findAllByDeletedAtIsNull().orElse(new ArrayList<>());
+    }
 }
