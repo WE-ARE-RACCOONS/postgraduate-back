@@ -16,6 +16,8 @@ import java.util.List;
 
 import static com.postgraduate.domain.mentoring.presentation.constant.MentoringResponseCode.MENTORING_FIND;
 import static com.postgraduate.domain.mentoring.presentation.constant.MentoringResponseMessage.GET_MENTORING_LIST_INFO;
+import static com.postgraduate.domain.payment.presentation.constant.PaymentResponseCode.PAYMENT_FIND;
+import static com.postgraduate.domain.payment.presentation.constant.PaymentResponseMessage.GET_PAYMENT_LIST_INFO;
 import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseCode.SENIOR_FIND;
 import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseMessage.GET_CERTIFICATION;
 import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseMessage.GET_SENIOR_INFO;
@@ -73,5 +75,12 @@ public class AdminController {
     public ResponseDto<List<MentoringResponse>> getMentorings() {
         List<MentoringResponse> mentorings = mentoringManageUseCase.getMentorings();
         return ResponseDto.create(MENTORING_FIND.getCode(), GET_MENTORING_LIST_INFO.getMessage(), mentorings);
+    }
+
+    @GetMapping("/payments")
+    @Operation(summary = "[관리자] 결제 정보 목록", description = "결제 정보 목록을 조회합니다.")
+    public ResponseDto<List<PaymentResponse>> getPayments() {
+        List<PaymentResponse> payments = paymentManageUseCase.getPayments();
+        return ResponseDto.create(PAYMENT_FIND.getCode(), GET_PAYMENT_LIST_INFO.getMessage(), payments);
     }
 }
