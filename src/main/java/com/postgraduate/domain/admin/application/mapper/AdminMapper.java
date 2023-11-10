@@ -3,6 +3,7 @@ package com.postgraduate.domain.admin.application.mapper;
 import com.postgraduate.domain.admin.application.dto.CertificationInfo;
 import com.postgraduate.domain.admin.application.dto.CertificationProfile;
 import com.postgraduate.domain.admin.application.dto.res.CertificationResponse;
+import com.postgraduate.domain.admin.application.dto.res.SeniorResponse;
 import com.postgraduate.domain.admin.application.dto.res.UserResponse;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.user.domain.entity.User;
@@ -35,13 +36,20 @@ public class AdminMapper {
                 .build();
     }
 
-
     public static UserResponse mapToUserResponse(User user) {
         return UserResponse.builder()
                 .userId(user.getUserId())
                 .nickName(user.getNickName())
                 .createdAt(user.getCreatedAt())
                 .isSenior(user.getRole() == Role.SENIOR)
+                .build();
+    }
+
+    public static SeniorResponse mapToSeniorResponse(Senior senior) {
+        return SeniorResponse.builder()
+                .seniorId(senior.getSeniorId())
+                .nickName(senior.getUser().getNickName())
+                .createdAt(senior.getCreatedAt())
                 .build();
     }
 }
