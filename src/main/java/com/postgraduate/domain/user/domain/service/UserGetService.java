@@ -5,6 +5,7 @@ import com.postgraduate.domain.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,5 +24,8 @@ public class UserGetService {
 
     public Optional<User> byNickName(String nickName) {
         return userRepository.findByNickName(nickName);
+    }
+    public List<User> all() {
+        return userRepository.findAll();
     }
 }
