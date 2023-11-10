@@ -1,7 +1,7 @@
 package com.postgraduate.global.config.security;
 
-import com.postgraduate.global.jwt.JwtFilter;
-import com.postgraduate.global.jwt.JwtProvider;
+import com.postgraduate.global.config.security.jwt.JwtFilter;
+import com.postgraduate.global.config.security.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

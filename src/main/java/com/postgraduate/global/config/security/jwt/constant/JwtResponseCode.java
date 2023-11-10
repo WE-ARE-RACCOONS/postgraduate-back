@@ -1,4 +1,4 @@
-package com.postgraduate.global.jwt.constant;
+package com.postgraduate.global.config.security.jwt.constant;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

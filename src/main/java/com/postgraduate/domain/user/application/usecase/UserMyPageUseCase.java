@@ -5,8 +5,6 @@ import com.postgraduate.domain.user.application.mapper.UserMapper;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.service.UserGetService;
 import com.postgraduate.domain.user.domain.service.UserUpdateService;
-import com.postgraduate.global.auth.AuthDetails;
-import com.postgraduate.global.config.security.util.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,22 +13,18 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @RequiredArgsConstructor
 public class UserMyPageUseCase {
-    private final SecurityUtils securityUtils;
     private final UserUpdateService userUpdateService;
     private final UserGetService userGetService;
 
-    public UserInfoResponse getUserInfo(AuthDetails authDetails) {
-        User user = securityUtils.getLoggedInUser(authDetails);
+    public UserInfoResponse getUserInfo(User user) {
         return UserMapper.mapToInfo(user);
     }
 
-    public void updateNickName(AuthDetails authDetails, String nickName) {
-        User user = securityUtils.getLoggedInUser(authDetails);
+    public void updateNickName(User user, String nickName) {
         userUpdateService.updateNickName(user.getUserId(), nickName);
     }
 
-    public void updateProfile(AuthDetails authDetails, String profile) {
-        User user = securityUtils.getLoggedInUser(authDetails);
+    public void updateProfile(User user, String profile) {
         userUpdateService.updateProfile(user.getUserId(), profile);
     }
 

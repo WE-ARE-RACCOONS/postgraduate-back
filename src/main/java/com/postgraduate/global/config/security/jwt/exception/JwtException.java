@@ -1,4 +1,4 @@
-package com.postgraduate.global.jwt.exception;
+package com.postgraduate.global.config.security.jwt.exception;
 
 import com.postgraduate.global.exception.ApplicationException;
 

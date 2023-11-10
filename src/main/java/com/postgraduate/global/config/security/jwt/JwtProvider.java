@@ -1,17 +1,18 @@
-package com.postgraduate.global.jwt;
+package com.postgraduate.global.config.security.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.postgraduate.domain.user.application.exception.NotFoundUserException;
+import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.entity.constant.Role;
 import com.postgraduate.global.auth.AuthDetails;
 import com.postgraduate.global.auth.AuthDetailsService;
+import com.postgraduate.global.config.security.jwt.exception.InvalidRefreshTokenException;
+import com.postgraduate.global.config.security.jwt.exception.InvalidTokenException;
 import com.postgraduate.global.config.redis.RedisRepository;
 import com.postgraduate.global.dto.ResponseDto;
 import com.postgraduate.global.exception.ApplicationException;
-import com.postgraduate.global.jwt.exception.InvalidRefreshTokenException;
-import com.postgraduate.global.jwt.exception.InvalidTokenException;
-import com.postgraduate.global.jwt.exception.NoneRefreshTokenException;
-import com.postgraduate.global.jwt.exception.TokenExpiredException;
+import com.postgraduate.global.config.security.jwt.exception.NoneRefreshTokenException;
+import com.postgraduate.global.config.security.jwt.exception.TokenExpiredException;
 import com.postgraduate.global.logging.dto.LogRequest;
 import com.postgraduate.global.logging.service.LogService;
 import io.jsonwebtoken.*;
@@ -30,9 +31,9 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -76,8 +77,9 @@ public class JwtProvider {
 
     public Authentication getAuthentication(HttpServletResponse response, String token) throws NotFoundUserException{
         Claims claims = parseClaims(token);
-        Collection<? extends GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(claims.get(ROLE).toString()));
-        return new UsernamePasswordAuthenticationToken(getDetails(response, claims), "", authorities);
+        List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(claims.get(ROLE).toString()));
+        User user = getDetails(response, claims).getUser();
+        return new UsernamePasswordAuthenticationToken(user, "", authorities);
     }
 
     private AuthDetails getDetails(HttpServletResponse response, Claims claims) {
