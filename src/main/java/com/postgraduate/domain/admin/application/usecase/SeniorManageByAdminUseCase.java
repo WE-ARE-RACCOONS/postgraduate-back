@@ -7,6 +7,7 @@ import com.postgraduate.domain.admin.application.dto.res.CertificationDetailsRes
 import com.postgraduate.domain.admin.application.dto.res.CertificationResponse;
 import com.postgraduate.domain.admin.application.dto.res.SeniorResponse;
 import com.postgraduate.domain.admin.application.mapper.AdminMapper;
+import com.postgraduate.domain.admin.exception.SeniorNotWaitingException;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.entity.constant.Status;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
@@ -24,6 +25,9 @@ public class SeniorManageByAdminUseCase {
 
     public CertificationDetailsResponse getCertificationDetails(Long seniorId) {
         Senior senior = seniorGetService.bySeniorId(seniorId);
+        if (senior.getStatus() != Status.WAITING) {
+            throw new SeniorNotWaitingException();
+        }
         CertificationProfile certificationProfile = null;
         if (senior.getProfile() != null) {
             certificationProfile = AdminMapper.mapToCertificationProfile(senior);
