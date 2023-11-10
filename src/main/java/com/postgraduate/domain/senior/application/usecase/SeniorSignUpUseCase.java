@@ -24,7 +24,6 @@ public class SeniorSignUpUseCase {
     private final SeniorSaveService seniorSaveService;
     private final SeniorGetService seniorGetService;
     private final SeniorUpdateService seniorUpdateService;
-    private final SecurityUtils securityUtils;
 
     public void signUp(User user, SeniorSignUpRequest request) {
         userUpdateService.updateRole(user.getUserId(), Role.SENIOR);

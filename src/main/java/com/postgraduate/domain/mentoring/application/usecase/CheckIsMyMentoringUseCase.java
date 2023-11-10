@@ -6,8 +6,6 @@ import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.domain.user.domain.entity.User;
-import com.postgraduate.global.auth.AuthDetails;
-import com.postgraduate.global.config.security.util.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @RequiredArgsConstructor
 public class CheckIsMyMentoringUseCase {
-    private final SecurityUtils securityUtils;
     private final SeniorGetService seniorGetService;
     private final MentoringGetService mentoringGetService;
 
