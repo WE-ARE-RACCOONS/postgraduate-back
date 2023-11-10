@@ -19,4 +19,8 @@ public class LogRequest {
         this.executeTime = executeTime;
         this.methodName = methodName;
     }
+
+    public LogRequest(String exceptionMessage) {
+        this.exceptionMessage = exceptionMessage;
+    }
 }

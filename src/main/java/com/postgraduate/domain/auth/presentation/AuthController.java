@@ -32,12 +32,12 @@ public class AuthController {
 
     @PostMapping("/login")
     @Operation(summary = "카카오 로그인", description = "회원인 경우 JWT를, 회원이 아닌 경우 socialId를 반환합니다(회원가입은 진행하지 않습니다).")
-    public ResponseDto<?> authLogin(@RequestBody KakaoCodeRequest tokenRequest) {
-        AuthUserResponse authUser = kakaoSignInUseCase.getUser(tokenRequest);
+    public ResponseDto<?> authLogin(@RequestBody KakaoCodeRequest request) {
+        AuthUserResponse authUser = kakaoSignInUseCase.getUser(request);
         if (authUser.getUser().isEmpty())
-            return ResponseDto.create(AUTH_NONE.getCode(), NOT_REGISTERED_USER_MESSAGE.getMessage(), authUser);
+            return ResponseDto.create(AUTH_NONE.getCode(), NOT_REGISTERED_USER.getMessage(), authUser);
         JwtTokenResponse jwtToken = jwtUseCase.signIn(authUser.getUser().get());
-        return ResponseDto.create(AUTH_ALREADY.getCode(), SUCCESS_AUTH_MESSAGE.getMessage(), jwtToken);
+        return ResponseDto.create(AUTH_ALREADY.getCode(), SUCCESS_AUTH.getMessage(), jwtToken);
     }
 
     @PostMapping("/signup")
@@ -45,13 +45,13 @@ public class AuthController {
     public ResponseDto<JwtTokenResponse> signUpUser(@RequestBody SignUpRequest request) {
         User user = kakaoSignInUseCase.signUp(request);
         JwtTokenResponse jwtToken = jwtUseCase.signIn(user);
-        return ResponseDto.create(AUTH_CREATE.getCode(), SUCCESS_AUTH_MESSAGE.getMessage(), jwtToken);
+        return ResponseDto.create(AUTH_CREATE.getCode(), SUCCESS_AUTH.getMessage(), jwtToken);
     }
 
     @PostMapping("/refresh")
     @Operation(summary = "토큰 재발급", description = "refreshToken 으로 토큰 재발급")
     public ResponseDto<JwtTokenResponse> refresh(@AuthenticationPrincipal AuthDetails authDetails, HttpServletRequest request) {
         JwtTokenResponse jwtToken = jwtUseCase.regenerateToken(authDetails, request);
-        return ResponseDto.create(AUTH_UPDATE.getCode(), SUCCESS_REGENERATE_TOKEN_MESSAGE.getMessage(), jwtToken);
+        return ResponseDto.create(AUTH_UPDATE.getCode(), SUCCESS_REGENERATE_TOKEN.getMessage(), jwtToken);
     }
 }
