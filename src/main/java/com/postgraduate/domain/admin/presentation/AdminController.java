@@ -1,10 +1,8 @@
 package com.postgraduate.domain.admin.presentation;
 
 import com.postgraduate.domain.admin.application.dto.req.SeniorStatusRequest;
-import com.postgraduate.domain.admin.application.dto.res.CertificationDetailsResponse;
-import com.postgraduate.domain.admin.application.dto.res.CertificationResponse;
-import com.postgraduate.domain.admin.application.dto.res.SeniorResponse;
-import com.postgraduate.domain.admin.application.dto.res.UserResponse;
+import com.postgraduate.domain.admin.application.dto.res.*;
+import com.postgraduate.domain.admin.application.usecase.MentoringManageUseCase;
 import com.postgraduate.domain.admin.application.usecase.SeniorManageUseCase;
 import com.postgraduate.domain.admin.application.usecase.UserManageUseCase;
 import com.postgraduate.global.dto.ResponseDto;
@@ -15,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.postgraduate.domain.mentoring.presentation.constant.MentoringResponseCode.MENTORING_FIND;
+import static com.postgraduate.domain.mentoring.presentation.constant.MentoringResponseMessage.GET_MENTORING_LIST_INFO;
 import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseCode.SENIOR_FIND;
 import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseMessage.GET_CERTIFICATION;
 import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseMessage.GET_SENIOR_INFO;
@@ -29,6 +29,7 @@ import static com.postgraduate.domain.user.presentation.constant.UserResponseMes
 public class AdminController {
     private final SeniorManageUseCase seniorManageUseCase;
     private final UserManageUseCase userManageUseCase;
+    private final MentoringManageUseCase mentoringManageUseCase;
 
     @GetMapping("/certification/{seniorId}")
     @Operation(summary = "[관리자] 선배 프로필 승인 요청 조회", description = "선배 신청 시 작성한 사전 작성정보 및 첨부사진을 조회합니다.")
@@ -63,5 +64,12 @@ public class AdminController {
     public ResponseDto<List<SeniorResponse>> getSeniors() {
         List<SeniorResponse> seniors = seniorManageUseCase.getSeniors();
         return ResponseDto.create(SENIOR_FIND.getCode(), GET_SENIOR_INFO.getMessage(), seniors);
+    }
+
+    @GetMapping("/mentorings")
+    @Operation(summary = "[관리자] 매칭 정보 목록", description = "매칭 정보 목록을 조회합니다.")
+    public ResponseDto<List<MentoringResponse>> getMentorings() {
+        List<MentoringResponse> mentorings = mentoringManageUseCase.getMentorings();
+        return ResponseDto.create(MENTORING_FIND.getCode(), GET_MENTORING_LIST_INFO.getMessage(), mentorings);
     }
 }
