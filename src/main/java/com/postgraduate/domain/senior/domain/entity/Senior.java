@@ -69,4 +69,8 @@ public class Senior {
         this.certification = certification;
         this.status = WAITING;
     }
+
+    public void updateStatus(Status status) {
+        this.status = status;
+    }
 }
