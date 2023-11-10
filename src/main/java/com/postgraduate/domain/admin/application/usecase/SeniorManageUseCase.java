@@ -2,6 +2,7 @@ package com.postgraduate.domain.admin.application.usecase;
 
 import com.postgraduate.domain.admin.application.dto.CertificationInfo;
 import com.postgraduate.domain.admin.application.dto.CertificationProfile;
+import com.postgraduate.domain.admin.application.dto.req.SeniorStatusRequest;
 import com.postgraduate.domain.admin.application.dto.res.CertificationDetailsResponse;
 import com.postgraduate.domain.admin.application.dto.res.CertificationResponse;
 import com.postgraduate.domain.admin.application.mapper.AdminMapper;
@@ -33,5 +34,10 @@ public class SeniorManageUseCase {
     public List<CertificationResponse> getCertifications() {
         List<Senior> seniors = seniorGetService.byStatus(Status.WAITING);
         return seniors.stream().map(AdminMapper::mapToCertification).toList();
+    }
+
+    public void updateSeniorStatus(Long seniorId, SeniorStatusRequest request) {
+        Senior senior = seniorGetService.bySeniorId(seniorId);
+        senior.updateStatus(request.getStatus());
     }
 }
