@@ -80,7 +80,8 @@ public class SeniorMapper {
     public static SeniorProfileResponse mapToSeniorProfileInfo(Senior senior) {
         return SeniorProfileResponse.builder()
                 .profile(senior.getProfile())
-                .account(senior.getAccount())
+                .account(senior.getAccount().getAccount())
+                .bank(senior.getAccount().getBank())
                 .build();
     }
 }
