@@ -5,6 +5,7 @@ import com.postgraduate.domain.admin.application.dto.CertificationProfile;
 import com.postgraduate.domain.admin.application.dto.req.SeniorStatusRequest;
 import com.postgraduate.domain.admin.application.dto.res.CertificationDetailsResponse;
 import com.postgraduate.domain.admin.application.dto.res.CertificationResponse;
+import com.postgraduate.domain.admin.application.dto.res.SeniorResponse;
 import com.postgraduate.domain.admin.application.mapper.AdminMapper;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.entity.constant.Status;
@@ -39,5 +40,10 @@ public class SeniorManageUseCase {
     public void updateSeniorStatus(Long seniorId, SeniorStatusRequest request) {
         Senior senior = seniorGetService.bySeniorId(seniorId);
         senior.updateStatus(request.getStatus());
+    }
+
+    public List<SeniorResponse> getSeniors() {
+        List<Senior> seniors = seniorGetService.byStatus(Status.APPROVE);
+        return seniors.stream().map(AdminMapper::mapToSeniorResponse).toList();
     }
 }

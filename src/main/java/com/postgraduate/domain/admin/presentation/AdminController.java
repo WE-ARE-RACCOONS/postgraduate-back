@@ -3,6 +3,7 @@ package com.postgraduate.domain.admin.presentation;
 import com.postgraduate.domain.admin.application.dto.req.SeniorStatusRequest;
 import com.postgraduate.domain.admin.application.dto.res.CertificationDetailsResponse;
 import com.postgraduate.domain.admin.application.dto.res.CertificationResponse;
+import com.postgraduate.domain.admin.application.dto.res.SeniorResponse;
 import com.postgraduate.domain.admin.application.dto.res.UserResponse;
 import com.postgraduate.domain.admin.application.usecase.SeniorManageUseCase;
 import com.postgraduate.domain.admin.application.usecase.UserManageUseCase;
@@ -16,6 +17,7 @@ import java.util.List;
 
 import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseCode.SENIOR_FIND;
 import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseMessage.GET_CERTIFICATION;
+import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseMessage.GET_SENIOR_INFO;
 import static com.postgraduate.domain.user.presentation.constant.UserResponseCode.USER_FIND;
 import static com.postgraduate.domain.user.presentation.constant.UserResponseMessage.GET_USER_INFO;
 
@@ -54,5 +56,12 @@ public class AdminController {
     public ResponseDto<List<UserResponse>> getUsers() {
         List<UserResponse> users = userManageUseCase.getUsers();
         return ResponseDto.create(USER_FIND.getCode(), GET_USER_INFO.getMessage(), users);
+    }
+
+    @GetMapping("/seniors")
+    @Operation(summary = "[관리자] 선배 정보 목록", description = "대학원생 선배 정보 목록을 조회합니다.")
+    public ResponseDto<List<SeniorResponse>> getSeniors() {
+        List<SeniorResponse> seniors = seniorManageUseCase.getSeniors();
+        return ResponseDto.create(SENIOR_FIND.getCode(), GET_SENIOR_INFO.getMessage(), seniors);
     }
 }
