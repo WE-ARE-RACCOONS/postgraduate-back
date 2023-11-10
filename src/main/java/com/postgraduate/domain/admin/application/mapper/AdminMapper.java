@@ -2,11 +2,9 @@ package com.postgraduate.domain.admin.application.mapper;
 
 import com.postgraduate.domain.admin.application.dto.CertificationInfo;
 import com.postgraduate.domain.admin.application.dto.CertificationProfile;
-import com.postgraduate.domain.admin.application.dto.res.CertificationResponse;
-import com.postgraduate.domain.admin.application.dto.res.MentoringResponse;
-import com.postgraduate.domain.admin.application.dto.res.SeniorResponse;
-import com.postgraduate.domain.admin.application.dto.res.UserResponse;
+import com.postgraduate.domain.admin.application.dto.res.*;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
+import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.entity.constant.Role;
@@ -64,6 +62,17 @@ public class AdminMapper {
                 .seniorNickName(mentoring.getSenior().getUser().getNickName())
                 .createdAt(mentoring.getCreatedAt())
                 .date(mentoring.getDate())
+                .build();
+    }
+
+    public static PaymentResponse mapToPaymentResponse(Payment payment) {
+        return PaymentResponse.builder()
+                .paymentId(payment.getPaymentId())
+                .mentoringId(payment.getMentoring().getMentoringId())
+                .userNickName(payment.getMentoring().getUser().getNickName())
+                .seniorNickName(payment.getMentoring().getSenior().getUser().getNickName())
+                .createdAt(payment.getCreatedAt())
+                .pay(payment.getMentoring().getPay())
                 .build();
     }
 }
