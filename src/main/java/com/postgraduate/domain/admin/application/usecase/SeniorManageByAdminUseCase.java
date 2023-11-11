@@ -11,6 +11,9 @@ import com.postgraduate.domain.admin.exception.SeniorNotWaitingException;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.entity.constant.Status;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
+import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.user.domain.entity.constant.Role;
+import com.postgraduate.domain.user.domain.service.UserUpdateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SeniorManageByAdminUseCase {
     private final SeniorGetService seniorGetService;
+    private final UserUpdateService userUpdateService;
 
     public CertificationDetailsResponse getCertificationDetails(Long seniorId) {
         Senior senior = seniorGetService.bySeniorId(seniorId);
@@ -44,6 +48,10 @@ public class SeniorManageByAdminUseCase {
     public void updateSeniorStatus(Long seniorId, SeniorStatusRequest request) {
         Senior senior = seniorGetService.bySeniorId(seniorId);
         senior.updateStatus(request.getStatus());
+        if (request.getStatus() == Status.APPROVE) {
+            User user = senior.getUser();
+            userUpdateService.updateRole(user.getUserId(), Role.SENIOR);
+        }
     }
 
     public List<SeniorResponse> getSeniors() {
