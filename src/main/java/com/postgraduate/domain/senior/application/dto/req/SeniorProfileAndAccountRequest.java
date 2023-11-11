@@ -18,6 +18,10 @@ public class SeniorProfileAndAccountRequest {
     @NotNull
     private String time;
     @NotNull
+    private String oneLiner;
+    @NotNull
+    private String keyword;
+    @NotNull
     private String account;
     @NotNull
     private String bank;

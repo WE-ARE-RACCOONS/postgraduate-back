@@ -56,6 +56,8 @@ public class SeniorMapper {
                 .chatLink(profileAndAccountPageRequest.getChatLink())
                 .target(profileAndAccountPageRequest.getTarget())
                 .time(profileAndAccountPageRequest.getTime())
+                .oneLiner(profileAndAccountPageRequest.getOneLiner())
+                .keyword(profileAndAccountPageRequest.getKeyword())
                 .build();
     }
 
@@ -63,6 +65,8 @@ public class SeniorMapper {
         return Profile.builder()
                 .info(profileRequest.getInfo())
                 .chatLink(profileRequest.getChatLink())
+                .oneLiner(profileRequest.getOneLiner())
+                .keyword(profileRequest.getKeyword())
                 .target(profileRequest.getTarget())
                 .time(profileRequest.getTime())
                 .build();
