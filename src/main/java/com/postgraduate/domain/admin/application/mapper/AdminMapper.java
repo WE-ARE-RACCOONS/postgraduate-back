@@ -7,7 +7,6 @@ import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.user.domain.entity.User;
-import com.postgraduate.domain.user.domain.entity.constant.Role;
 
 public class AdminMapper {
 
@@ -42,7 +41,15 @@ public class AdminMapper {
                 .userId(user.getUserId())
                 .nickName(user.getNickName())
                 .createdAt(user.getCreatedAt())
-                .isSenior(user.getRole() == Role.SENIOR)
+                .build();
+    }
+
+    public static UserWithSeniorResponse mapToUserWithSeniorResponse(User user, Long seniorId) {
+        return UserWithSeniorResponse.builder()
+                .userId(user.getUserId())
+                .nickName(user.getNickName())
+                .createdAt(user.getCreatedAt())
+                .seniorId(seniorId)
                 .build();
     }
 
