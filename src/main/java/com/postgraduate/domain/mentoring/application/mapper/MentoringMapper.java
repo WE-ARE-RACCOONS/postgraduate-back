@@ -1,6 +1,8 @@
 package com.postgraduate.domain.mentoring.application.mapper;
 
-import com.postgraduate.domain.mentoring.application.dto.AppliedMentoringInfo;
+import com.postgraduate.domain.mentoring.application.dto.DoneMentoringInfo;
+import com.postgraduate.domain.mentoring.application.dto.ExpectedMentoringInfo;
+import com.postgraduate.domain.mentoring.application.dto.WaitingMentoringInfo;
 import com.postgraduate.domain.mentoring.application.dto.req.MentoringApplyRequest;
 import com.postgraduate.domain.mentoring.application.dto.res.AppliedMentoringDetailResponse;
 import com.postgraduate.domain.mentoring.application.dto.res.SeniorMentoringDetailResponse;
@@ -13,31 +15,44 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class MentoringMapper {
-    public static AppliedMentoringInfo mapToExpectedAppliedInfo(Mentoring mentoring) {
+    public static ExpectedMentoringInfo mapToExpectedInfo(Mentoring mentoring) {
         Senior senior = mentoring.getSenior();
-        String[] dates = mentoring.getDate().split(",");
-        return AppliedMentoringInfo.builder()
+        return ExpectedMentoringInfo.builder()
                 .mentoringId(mentoring.getMentoringId())
-                .dates(dates)
                 .seniorId(senior.getSeniorId())
                 .nickName(senior.getUser().getNickName())
                 .postgradu(senior.getInfo().getPostgradu())
                 .professor(senior.getInfo().getProfessor())
                 .field(senior.getInfo().getField())
+                .term(senior.getProfile().getTerm())
+                .date(mentoring.getDate())
                 .chatLink(senior.getProfile().getChatLink())
                 .build();
     }
-    public static AppliedMentoringInfo mapToWaitingOrDoneAppliedInfo(Mentoring mentoring) {
+
+    public static DoneMentoringInfo mapToDoneInfo(Mentoring mentoring) {
         Senior senior = mentoring.getSenior();
-        String[] dates = mentoring.getDate().split(",");
-        return AppliedMentoringInfo.builder()
+        return DoneMentoringInfo.builder()
                 .mentoringId(mentoring.getMentoringId())
-                .dates(dates)
-                .term(senior.getProfile().getTerm())
                 .seniorId(senior.getSeniorId())
                 .nickName(senior.getUser().getNickName())
                 .postgradu(senior.getInfo().getPostgradu())
                 .professor(senior.getInfo().getProfessor())
+                .field(senior.getInfo().getField())
+                .term(senior.getProfile().getTerm())
+                .date(mentoring.getDate())
+                .build();
+    }
+
+    public static WaitingMentoringInfo mapToWaitingInfo(Mentoring mentoring) {
+        Senior senior = mentoring.getSenior();
+        return WaitingMentoringInfo.builder()
+                .mentoringId(mentoring.getMentoringId())
+                .term(senior.getProfile().getTerm())
+                .seniorId(senior.getSeniorId())
+                .nickName(senior.getUser().getNickName())
+                .postgradu(senior.getInfo().getPostgradu())
+                .major(senior.getInfo().getMajor())
                 .field(senior.getInfo().getField())
                 .build();
     }
