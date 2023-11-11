@@ -23,11 +23,13 @@ public class User {
     @Column(nullable = false, unique = true)
     private Long socialId;
 
-//    @Column(unique = true) email은 여러 소셜을 사용하면 unique가 깨질 수 있음
     private String email;
 
     @Column(nullable = false, unique = true)
     private String nickName;
+
+    @Column(nullable = false)
+    private String phoneNumber;
 
     @Column(nullable = false)
     @Builder.Default //이후에 기본 이미지 생기면 수정이 필요할 듯
@@ -40,6 +42,9 @@ public class User {
     @Column(nullable = false)
     @Builder.Default
     private Role role = Role.USER;
+
+    @Embedded
+    private Hope hope;
 
     @Column(nullable = false)
     @CreationTimestamp
@@ -58,5 +63,9 @@ public class User {
 
     public void updateProfile(String profile) {
         this.profile = profile;
+    }
+
+    public void updateHope(Hope hope) {
+        this.hope = hope;
     }
 }
