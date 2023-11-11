@@ -4,13 +4,11 @@ import com.postgraduate.domain.user.domain.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.util.Optional;
 
 @Builder
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
 public class AuthUserResponse {
     private Optional<User> user;
