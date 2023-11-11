@@ -25,6 +25,4 @@ public class SeniorProfileAndAccountRequest {
     private String account;
     @NotNull
     private String bank;
-    @NotNull
-    private String rrn;
 }

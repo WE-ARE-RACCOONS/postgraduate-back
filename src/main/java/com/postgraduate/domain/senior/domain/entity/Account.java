@@ -21,4 +21,9 @@ public class Account {
 
     @Column(nullable = false)
     private String rrn;
+
+    public void updateAccount(Account account) {
+        this.account = account.getAccount();
+        this.bank = account.getBank();
+    }
 }

@@ -46,7 +46,6 @@ public class SeniorMapper {
         return Account.builder()
                 .bank(profileAndAccountPageRequest.getBank())
                 .account(profileAndAccountPageRequest.getAccount())
-                .rrn(profileAndAccountPageRequest.getRrn())
                 .build();
     }
 
