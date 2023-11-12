@@ -19,13 +19,13 @@ public class UserMapper {
         Hope hope = Hope.builder()
                 .field(request.getField())
                 .major(request.getMajor())
-                .matchingReceive(request.getMatchingRelieve())
+                .matchingReceive(request.getMatchingReceive())
                 .build();
         return User.builder()
                 .socialId(request.getSocialId())
                 .nickName(request.getNickName())
                 .phoneNumber(request.getPhoneNumber())
-                .marketingRelieve(request.getMarketingRelieve())
+                .marketingReceive(request.getMarketingReceive())
                 .hope(hope)
                 .build();
     }
@@ -34,7 +34,7 @@ public class UserMapper {
         return Hope.builder()
                 .major(hopeRequest.getMajor())
                 .field(hopeRequest.getField())
-                .matchingReceive(hopeRequest.getMatchingRelieve())
+                .matchingReceive(hopeRequest.getMatchingReceive())
                 .build();
     }
 }

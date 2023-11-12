@@ -47,7 +47,7 @@ public class User {
     private Hope hope;
 
     @Column(nullable = false)
-    private Boolean marketingRelieve;
+    private Boolean marketingReceive;
 
     @Column(nullable = false)
     @CreationTimestamp

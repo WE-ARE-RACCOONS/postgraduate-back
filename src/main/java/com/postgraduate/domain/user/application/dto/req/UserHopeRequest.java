@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 public class UserHopeRequest {
     private String major;
     private String field;
-    private Boolean matchingRelieve;
+    private Boolean matchingReceive;
 }
