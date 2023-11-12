@@ -16,11 +16,16 @@ public class UserMapper {
     }
 
     public static User mapToUser(SignUpRequest request) {
+        Hope hope = Hope.builder()
+                .field(request.getField())
+                .major(request.getMajor())
+                .receive(request.getReceive())
+                .build();
         return User.builder()
                 .socialId(request.getSocialId())
                 .nickName(request.getNickName())
                 .phoneNumber(request.getPhoneNumber())
-                .hope(new Hope())
+                .hope(hope)
                 .build();
     }
 

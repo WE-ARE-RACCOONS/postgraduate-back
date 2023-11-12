@@ -15,4 +15,7 @@ public class SignUpRequest {
     private String phoneNumber;
     @NotNull
     private String nickName;
+    private String major;
+    private String field;
+    private Boolean receive;
 }
