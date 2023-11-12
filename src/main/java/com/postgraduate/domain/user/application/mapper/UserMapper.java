@@ -16,11 +16,17 @@ public class UserMapper {
     }
 
     public static User mapToUser(SignUpRequest request) {
+        Hope hope = Hope.builder()
+                .field(request.getField())
+                .major(request.getMajor())
+                .matchingReceive(request.getMatchingReceive())
+                .build();
         return User.builder()
                 .socialId(request.getSocialId())
                 .nickName(request.getNickName())
                 .phoneNumber(request.getPhoneNumber())
-                .hope(new Hope())
+                .marketingReceive(request.getMarketingReceive())
+                .hope(hope)
                 .build();
     }
 
@@ -28,7 +34,7 @@ public class UserMapper {
         return Hope.builder()
                 .major(hopeRequest.getMajor())
                 .field(hopeRequest.getField())
-                .receive(hopeRequest.isReceive())
+                .matchingReceive(hopeRequest.getMatchingReceive())
                 .build();
     }
 }

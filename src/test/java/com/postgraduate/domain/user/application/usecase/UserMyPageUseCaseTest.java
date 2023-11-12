@@ -31,7 +31,7 @@ public class UserMyPageUseCaseTest {
     void setTestUser() {
         Hope hope = new Hope("computer","ai", true);
         testUser = new User(100000000L, 12345L, "test.com",
-                "test", "test.png", "01012341234", 0, Role.USER, hope,
+                "test", "test.png", "01012341234", 0, Role.USER, hope, false,
                 LocalDate.now(), LocalDate.now());
     }
 
