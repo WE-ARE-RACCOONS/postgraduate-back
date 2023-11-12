@@ -2,6 +2,7 @@ package com.postgraduate.domain.mentoring.application.usecase;
 
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
+import com.postgraduate.domain.user.domain.entity.Hope;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.entity.constant.Role;
 import com.postgraduate.global.exception.ApplicationException;
@@ -29,9 +30,11 @@ class CheckIsMyMentoringUseCaseTest {
     User user;
     @BeforeEach
     void setUser() {
+        Hope hope = new Hope("computer","ai", true);
         user = new User(100000000L, 12345L, "test.com",
-                        "test", "test.png", 0, Role.USER,
-                        LocalDate.now(), LocalDate.now());
+                "test", "test.png", "01012341234", 0, Role.USER, hope,
+                LocalDate.now(), LocalDate.now());
+
     }
 
     @Test

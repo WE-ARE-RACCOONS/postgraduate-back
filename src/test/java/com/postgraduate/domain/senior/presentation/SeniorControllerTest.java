@@ -15,7 +15,9 @@ import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.entity.constant.Status;
+import com.postgraduate.domain.user.domain.entity.Hope;
 import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.user.domain.entity.constant.Role;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -57,19 +59,12 @@ class SeniorControllerTest {
 
     @BeforeEach
     public void setUp(final WebApplicationContext context) throws Exception {
-        testUser = User.builder()
-                .userId(1000000000L)
-                .socialId(1000000000L)
-                .email("test.com")
-                .role(USER)
-                .nickName("test")
-                .profile("test")
-                .point(0)
-                .createdAt(LocalDate.now())
-                .updatedAt(LocalDate.now())
-                .build();
+        Hope hope = new Hope("computer","ai", true);
+        testUser = new User(100000000L, 12345L, "test.com",
+                "test", "test.png", "01012341234", 0, Role.USER, hope,
+                LocalDate.now(), LocalDate.now());
         Account account = new Account("account", "bank", "123");
-        Profile profile = new Profile("info", "you", "abc", "1000", 10);
+        Profile profile = new Profile("info", "hello", "keyword", "you", "abc", "1000", 10);
         Info info = new Info("c", "m", "p", "p", "a", "f");
         testSenior = Senior.builder()
                 .seniorId(100000000L)
@@ -114,7 +109,7 @@ class SeniorControllerTest {
     @DisplayName("대학원생 프로필 등록")
     void signUpSeniorWithProfile() throws Exception {
         //given
-        SeniorProfileRequest seniorProfileRequest = new SeniorProfileRequest("test", "test", "test", "test");
+        SeniorProfileRequest seniorProfileRequest = new SeniorProfileRequest("test", "test", "test", "test","test","test");
         String body = objectMapper.writeValueAsString(seniorProfileRequest);
 
         //when
@@ -202,7 +197,7 @@ class SeniorControllerTest {
     @DisplayName("대학원생 프로필 정보")
     void getProfile() throws Exception {
         //given
-        Profile profile = new Profile("test", "test", "test", "test", 10);
+        Profile profile = new Profile("test", "test", "test", "test","test","test", 10);
         SeniorProfileResponse seniorProfileResponse = new SeniorProfileResponse(profile, "ac", "ba");
         given(seniorMyPageUseCase.getSeniorProfile(any()))
                 .willReturn(seniorProfileResponse);
@@ -232,7 +227,7 @@ class SeniorControllerTest {
     void updateProfile() throws Exception {
         //given
         SeniorProfileAndAccountRequest request = new SeniorProfileAndAccountRequest(
-                "test","test","test","test","test","test","test"
+                "test","test","test","test","test","test","test","test"
         );
         String body = objectMapper.writeValueAsString(request);
 
