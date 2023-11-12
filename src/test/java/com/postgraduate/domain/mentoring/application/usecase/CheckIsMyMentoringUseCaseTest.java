@@ -32,9 +32,8 @@ class CheckIsMyMentoringUseCaseTest {
     void setUser() {
         Hope hope = new Hope("computer","ai", true);
         user = new User(100000000L, 12345L, "test.com",
-                "test", "test.png", "01012341234", 0, Role.USER, hope,
+                "test", "test.png", "01012341234", 0, Role.USER, hope, false,
                 LocalDate.now(), LocalDate.now());
-
     }
 
     @Test
