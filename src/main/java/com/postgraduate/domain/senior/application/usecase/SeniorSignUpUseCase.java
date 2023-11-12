@@ -11,7 +11,6 @@ import com.postgraduate.domain.senior.domain.service.SeniorUpdateService;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.entity.constant.Role;
 import com.postgraduate.domain.user.domain.service.UserUpdateService;
-import com.postgraduate.global.config.security.util.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
