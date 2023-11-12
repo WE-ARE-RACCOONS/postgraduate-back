@@ -16,8 +16,8 @@ public class SignUpRequest {
     @NotNull
     private String nickName;
     @NotNull
-    private Boolean marketingRelieve;
+    private Boolean marketingReceive;
     private String major;
     private String field;
-    private Boolean matchingRelieve;
+    private Boolean matchingReceive;
 }
