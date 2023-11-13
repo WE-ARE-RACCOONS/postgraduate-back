@@ -7,7 +7,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDate;
 
 import static com.postgraduate.domain.senior.domain.entity.constant.Status.WAITING;
 
@@ -45,17 +49,28 @@ public class Senior {
     @Embedded
     private Profile profile;
 
+    @Column(nullable = false)
+    @CreationTimestamp
+    private LocalDate createdAt;
+
+    @UpdateTimestamp
+    private LocalDate updatedAt;
+
     public void updateProfile(Profile profile) {
         this.profile = profile;
     }
 
     public void updateProfileAndAccount(Profile profile, Account account) {
         this.profile = profile;
-        this.account = account;
+        account.updateAccount(account);
     }
 
     public void updateCertification(String certification) {
         this.certification = certification;
         this.status = WAITING;
+    }
+
+    public void updateStatus(Status status) {
+        this.status = status;
     }
 }

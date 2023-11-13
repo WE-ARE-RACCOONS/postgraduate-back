@@ -1,5 +1,6 @@
 package com.postgraduate.domain.user.domain.service;
 
+import com.postgraduate.domain.user.domain.entity.Hope;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.entity.constant.Role;
 import com.postgraduate.domain.user.domain.repository.UserRepository;
@@ -24,5 +25,10 @@ public class UserUpdateService {
     public void updateProfile(Long userId, String profile) {
         User user = userRepository.findById(userId).get();
         user.updateProfile(profile);
+    }
+
+    public void updateHope(Long userId, Hope hope) {
+        User user = userRepository.findById(userId).get();
+        user.updateHope(hope);
     }
 }

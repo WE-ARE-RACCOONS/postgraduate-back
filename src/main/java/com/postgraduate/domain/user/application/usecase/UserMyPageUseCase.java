@@ -1,7 +1,9 @@
 package com.postgraduate.domain.user.application.usecase;
 
+import com.postgraduate.domain.user.application.dto.req.UserHopeRequest;
 import com.postgraduate.domain.user.application.dto.res.UserInfoResponse;
 import com.postgraduate.domain.user.application.mapper.UserMapper;
+import com.postgraduate.domain.user.domain.entity.Hope;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.service.UserGetService;
 import com.postgraduate.domain.user.domain.service.UserUpdateService;
@@ -26,6 +28,11 @@ public class UserMyPageUseCase {
 
     public void updateProfile(User user, String profile) {
         userUpdateService.updateProfile(user.getUserId(), profile);
+    }
+
+    public void updateHope(User user, UserHopeRequest hopeRequest) {
+        Hope hope = UserMapper.mapToHope(hopeRequest);
+        userUpdateService.updateHope(user.getUserId(), hope);
     }
 
     public boolean duplicatedNickName(String nickName) {

@@ -1,6 +1,7 @@
 package com.postgraduate.domain.user.application.usecase;
 
 import com.postgraduate.domain.user.application.dto.res.UserInfoResponse;
+import com.postgraduate.domain.user.domain.entity.Hope;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.entity.constant.Role;
 import com.postgraduate.domain.user.domain.service.UserGetService;
@@ -28,8 +29,9 @@ public class UserMyPageUseCaseTest {
     private User testUser;
     @BeforeEach
     void setTestUser() {
+        Hope hope = new Hope("computer","ai", true);
         testUser = new User(100000000L, 12345L, "test.com",
-                "test", "test.png", 0, Role.USER,
+                "test", "test.png", "01012341234", 0, Role.USER, hope, false,
                 LocalDate.now(), LocalDate.now());
     }
 
