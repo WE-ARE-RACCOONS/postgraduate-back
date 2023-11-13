@@ -1,7 +1,9 @@
 package com.postgraduate.domain.user.application.mapper;
 
 import com.postgraduate.domain.auth.application.dto.req.SignUpRequest;
+import com.postgraduate.domain.user.application.dto.req.UserHopeRequest;
 import com.postgraduate.domain.user.application.dto.res.UserInfoResponse;
+import com.postgraduate.domain.user.domain.entity.Hope;
 import com.postgraduate.domain.user.domain.entity.User;
 
 public class UserMapper {
@@ -14,9 +16,25 @@ public class UserMapper {
     }
 
     public static User mapToUser(SignUpRequest request) {
+        Hope hope = Hope.builder()
+                .field(request.getField())
+                .major(request.getMajor())
+                .matchingReceive(request.getMatchingReceive())
+                .build();
         return User.builder()
                 .socialId(request.getSocialId())
                 .nickName(request.getNickName())
+                .phoneNumber(request.getPhoneNumber())
+                .marketingReceive(request.getMarketingReceive())
+                .hope(hope)
+                .build();
+    }
+
+    public static Hope mapToHope(UserHopeRequest hopeRequest) {
+        return Hope.builder()
+                .major(hopeRequest.getMajor())
+                .field(hopeRequest.getField())
+                .matchingReceive(hopeRequest.getMatchingReceive())
                 .build();
     }
 }

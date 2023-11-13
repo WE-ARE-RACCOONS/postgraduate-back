@@ -62,7 +62,7 @@ public class Senior {
 
     public void updateProfileAndAccount(Profile profile, Account account) {
         this.profile = profile;
-        this.account = account;
+        account.updateAccount(account);
     }
 
     public void updateCertification(String certification) {

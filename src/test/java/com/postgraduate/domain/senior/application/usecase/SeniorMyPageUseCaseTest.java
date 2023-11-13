@@ -9,6 +9,7 @@ import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.entity.constant.Status;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
+import com.postgraduate.domain.user.domain.entity.Hope;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.entity.constant.Role;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,11 +35,12 @@ public class SeniorMyPageUseCaseTest {
     private User testUser;
     @BeforeEach
     void setSenior() {
+        Hope hope = new Hope("computer","ai", true);
         testUser = new User(100000000L, 12345L, "test.com",
-                "test", "test.png", 0, Role.USER,
+                "test", "test.png", "01012341234", 0, Role.USER, hope, false,
                 LocalDate.now(), LocalDate.now());
         Account account = new Account("account", "bank", "123");
-        Profile profile = new Profile("info", "you", "abc", "1000", 10);
+        Profile profile = new Profile("info", "hello", "keyword", "you", "abc", "1000", 10);
         Info info = new Info("c", "m", "p", "p", "a", "f");
         testSenior = Senior.builder()
                 .seniorId(100000000L)

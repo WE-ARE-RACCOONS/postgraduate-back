@@ -14,11 +14,16 @@ import lombok.NoArgsConstructor;
 public class Profile {
     private String info;
 
+    private String oneLiner;
+
+    private String keyword;
+
     private String target;
 
     private String chatLink;
 
     private String time;
 
-    private Integer term;
+    @Builder.Default
+    private Integer term = 40;
 }
