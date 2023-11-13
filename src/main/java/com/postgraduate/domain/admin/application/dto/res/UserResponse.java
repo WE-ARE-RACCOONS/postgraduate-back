@@ -11,6 +11,6 @@ public class UserResponse {
     private Long userId;
     private String nickName;
     private LocalDate createdAt;
-    // 마케팅 수신 도으이
-    // 매칭문자 수신 동의
+    private Boolean marketingReceive;
+    private Boolean matchingReceive;
 }

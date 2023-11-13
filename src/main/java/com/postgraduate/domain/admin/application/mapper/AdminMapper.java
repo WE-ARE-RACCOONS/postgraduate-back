@@ -40,6 +40,8 @@ public class AdminMapper {
         return UserResponse.builder()
                 .userId(user.getUserId())
                 .nickName(user.getNickName())
+                .marketingReceive(user.getMarketingReceive())
+                .matchingReceive(user.getHope().getMatchingReceive())
                 .createdAt(user.getCreatedAt())
                 .build();
     }
@@ -48,6 +50,8 @@ public class AdminMapper {
         return UserWithSeniorResponse.builder()
                 .userId(user.getUserId())
                 .nickName(user.getNickName())
+                .marketingReceive(user.getMarketingReceive())
+                .matchingReceive(user.getHope().getMatchingReceive())
                 .createdAt(user.getCreatedAt())
                 .seniorId(seniorId)
                 .build();
