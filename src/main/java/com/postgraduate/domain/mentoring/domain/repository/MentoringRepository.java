@@ -13,4 +13,5 @@ public interface MentoringRepository extends JpaRepository<Mentoring, Long> {
     Optional<Mentoring> findByMentoringIdAndDeletedAtIsNull(Long mentoringId);
     Optional<List<Mentoring>> findAllByUserAndStatusAndDeletedAtIsNull(User user, Status status);
     Optional<List<Mentoring>> findAllBySeniorAndStatusAndDeletedAtIsNull(Senior senior, Status status);
+    Optional<List<Mentoring>> findAllByDeletedAtIsNull();
 }

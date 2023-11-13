@@ -1,5 +1,6 @@
 package com.postgraduate.global.config.security;
 
+import com.postgraduate.domain.user.domain.entity.constant.Role;
 import com.postgraduate.global.config.security.jwt.JwtFilter;
 import com.postgraduate.global.config.security.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
@@ -42,6 +43,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers(PASS).permitAll()
+                        .requestMatchers("/admin/**").hasAuthority(Role.ADMIN.name())
                         .anyRequest().permitAll()
                 )
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

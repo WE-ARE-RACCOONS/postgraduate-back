@@ -9,8 +9,6 @@ import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.domain.senior.domain.service.SeniorSaveService;
 import com.postgraduate.domain.senior.domain.service.SeniorUpdateService;
 import com.postgraduate.domain.user.domain.entity.User;
-import com.postgraduate.domain.user.domain.entity.constant.Role;
-import com.postgraduate.domain.user.domain.service.UserUpdateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,13 +17,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @RequiredArgsConstructor
 public class SeniorSignUpUseCase {
-    private final UserUpdateService userUpdateService;
     private final SeniorSaveService seniorSaveService;
     private final SeniorGetService seniorGetService;
     private final SeniorUpdateService seniorUpdateService;
 
     public void signUp(User user, SeniorSignUpRequest request) {
-        userUpdateService.updateRole(user.getUserId(), Role.SENIOR);
         Senior senior = SeniorMapper.mapToSenior(user, request);
         seniorSaveService.saveSenior(senior);
     }
