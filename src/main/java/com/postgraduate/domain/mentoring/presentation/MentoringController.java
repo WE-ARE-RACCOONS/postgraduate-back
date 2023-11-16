@@ -41,13 +41,13 @@ public class MentoringController {
     }
 
     @GetMapping("/me/{mentoringId}")
-    @Operation(summary = "[대학생] 신청한 멘토링 상세조회", description = "대학생이 신청한 멘토링을 상세조회합니다. <확정대기> 상태의 멘토링만 조회 가능합니다.")
+    @Operation(summary = "[대학생] 신청한 멘토링 상세조회", description = "대학생이 신청한 멘토링을 상세조회합니다.")
     public ResponseDto<AppliedMentoringDetailResponse> getMentoringDetail(@AuthenticationPrincipal User user, @PathVariable Long mentoringId) {
         AppliedMentoringDetailResponse mentoringDetail = infoUsecase.getMentoringDetail(user, mentoringId);
         return ResponseDto.create(MENTORING_FIND.getCode(), GET_MENTORING_DETAIL_INFO.getMessage(), mentoringDetail);
     }
 
-    @PostMapping()
+    @PostMapping("/applying")
     @Operation(summary = "[대학생] 멘토링 신청", description = "대학생이 멘토링을 신청합니다.")
     public ResponseDto applyMentoring(@AuthenticationPrincipal User user, @RequestBody MentoringApplyRequest request) {
         applyUseCase.applyMentoring(user, request);
@@ -100,12 +100,12 @@ public class MentoringController {
         return ResponseDto.create(MENTORING_UPDATE.getCode(), UPDATE_MENTORING.getMessage());
     }
 
-    @PatchMapping("/senior/me/{mentoringId}/cancel")
-    @Operation(summary = "[대학원생] 멘토링 상태 업데이트(거절)", description = "대학원생이 멘토링을 거절하고 거절사유를 변경합니다.")
-    public ResponseDto updateMentoringCancel(@AuthenticationPrincipal User user,
-                                             @PathVariable Long mentoringId,
-                                             @RequestBody MentoringRefuseRequest request) {
-        manageUseCase.updateRefuse(user, mentoringId, request, Status.CANCEL);
-        return ResponseDto.create(MENTORING_UPDATE.getCode(), UPDATE_MENTORING.getMessage());
-    }
+//    @PatchMapping("/senior/me/{mentoringId}/cancel")
+//    @Operation(summary = "[대학원생] 멘토링 상태 업데이트(거절)", description = "대학원생이 멘토링을 거절하고 거절사유를 변경합니다.")
+//    public ResponseDto updateMentoringCancel(@AuthenticationPrincipal User user,
+//                                             @PathVariable Long mentoringId,
+//                                             @RequestBody MentoringRefuseRequest request) {
+//        manageUseCase.updateRefuse(user, mentoringId, request, Status.CANCEL);
+//        return ResponseDto.create(MENTORING_UPDATE.getCode(), UPDATE_MENTORING.getMessage());
+//    }
 }

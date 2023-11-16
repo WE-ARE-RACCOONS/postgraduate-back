@@ -1,6 +1,5 @@
 package com.postgraduate.domain.user.presentation;
 
-import com.postgraduate.domain.user.application.dto.req.UserHopeRequest;
 import com.postgraduate.domain.user.application.dto.req.UserNickNameRequest;
 import com.postgraduate.domain.user.application.dto.req.UserProfileRequest;
 import com.postgraduate.domain.user.application.dto.res.UserInfoResponse;
@@ -49,13 +48,6 @@ public class UserController {
     @Operation(description = "사용자 프로필 사진 업데이트 - url을 주세요")
     public ResponseDto updateProfile(@AuthenticationPrincipal User user, @RequestBody UserProfileRequest userProfileRequest) {
         myPageUseCase.updateProfile(user, userProfileRequest.getProfile());
-        return ResponseDto.create(USER_UPDATE.getCode(), UPDATE_USER_INFO.getMessage());
-    }
-
-    @PatchMapping("/hope")
-    @Operation(description = "대학생 희망 학과, 분야 및 수신 동의 업데이트")
-    public ResponseDto updateHope(@AuthenticationPrincipal User user, @RequestBody UserHopeRequest userHopeRequest) {
-        myPageUseCase.updateHope(user, userHopeRequest);
         return ResponseDto.create(USER_UPDATE.getCode(), UPDATE_USER_INFO.getMessage());
     }
 }

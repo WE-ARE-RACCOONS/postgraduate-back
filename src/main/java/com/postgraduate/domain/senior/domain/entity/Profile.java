@@ -16,8 +16,6 @@ public class Profile {
 
     private String oneLiner;
 
-    private String keyword;
-
     private String target;
 
     private String chatLink;

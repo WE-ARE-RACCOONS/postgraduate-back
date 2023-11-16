@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.postgraduate.domain.mentoring.application.mapper.MentoringMapper.*;
+import static com.postgraduate.domain.mentoring.application.mapper.MentoringMapper.mapToAppliedDetailInfo;
 import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.*;
 
 @Service
@@ -37,10 +39,10 @@ public class MentoringInfoUseCase {
 
     public AppliedMentoringDetailResponse getMentoringDetail(User user, Long mentoringId) {
         Mentoring mentoring = checkIsMyMentoringUseCase.byUser(user, mentoringId);
-        if (mentoring.getStatus() != WAITING) {
+        if (mentoring.getStatus() == DONE) {
             throw new MentoringNotWaitingException();
         }
-        return MentoringMapper.mapToAppliedDetailInfo(mentoring);
+        return mapToAppliedDetailInfo(mentoring);
     }
 
     public SeniorMentoringDetailResponse getSeniorMentoringDetail(User user, Long mentoringId) {
@@ -48,7 +50,7 @@ public class MentoringInfoUseCase {
         if (mentoring.getStatus() == DONE) {
             throw new MentoringDoneException();
         }
-        return MentoringMapper.mapToSeniorMentoringDetail(mentoring);
+        return mapToSeniorMentoringDetail(mentoring);
     }
 
     public List<SeniorMentoringResponse> getSeniorMentorings(Status status, User user) {
@@ -76,7 +78,7 @@ public class MentoringInfoUseCase {
     private AppliedMentoringResponse getWaiting(List<Mentoring> mentorings) {
         List<WaitingMentoringInfo> waitingMentoringInfos = new ArrayList<>();
         for (Mentoring mentoring : mentorings) {
-            waitingMentoringInfos.add(MentoringMapper.mapToWaitingInfo(mentoring));
+            waitingMentoringInfos.add(mapToWaitingInfo(mentoring));
         }
         return new AppliedMentoringResponse(waitingMentoringInfos);
     }
@@ -84,7 +86,7 @@ public class MentoringInfoUseCase {
     private AppliedMentoringResponse getExpected(List<Mentoring> mentorings) {
         List<ExpectedMentoringInfo> expectedMentoringInfos = new ArrayList<>();
         for (Mentoring mentoring : mentorings) {
-            expectedMentoringInfos.add(MentoringMapper.mapToExpectedInfo(mentoring));
+            expectedMentoringInfos.add(mapToExpectedInfo(mentoring));
         }
         return new AppliedMentoringResponse(expectedMentoringInfos);
     }
@@ -92,7 +94,7 @@ public class MentoringInfoUseCase {
     private AppliedMentoringResponse getDone(List<Mentoring> mentorings) {
         List<DoneMentoringInfo> doneMentoringInfos = new ArrayList<>();
         for (Mentoring mentoring : mentorings) {
-            doneMentoringInfos.add(MentoringMapper.mapToDoneInfo(mentoring));
+            doneMentoringInfos.add(mapToDoneInfo(mentoring));
         }
         return new AppliedMentoringResponse(doneMentoringInfos);
     }

@@ -23,6 +23,9 @@ public class Info {
     private String professor;
 
     @Column(nullable = false)
+    private String keyword;
+
+    @Column(nullable = false)
     private String lab;
 
     @Column(nullable = false)

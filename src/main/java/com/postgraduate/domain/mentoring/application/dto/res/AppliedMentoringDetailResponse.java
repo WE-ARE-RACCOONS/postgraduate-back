@@ -10,11 +10,13 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 public class AppliedMentoringDetailResponse {
-        Long seniorId;
-        String nickName;
-        String field;
-        String professor;
-        String topic;
-        String question;
-        List<String> dates;
+        private Long seniorId;
+        private String profile;
+        private String nickName;
+        private String postgradu;
+        private String major;
+        private String lab;
+        private String topic;
+        private String question;
+        private List<String> dates;
 }

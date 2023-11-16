@@ -9,11 +9,12 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor
 public class WaitingMentoringInfo {
-    Long mentoringId;
-    Long seniorId;
-    String nickName;
-    String postgradu;
-    String field;
-    String major;
-    int term;
+    private Long mentoringId;
+    private Long seniorId;
+    private String profile;
+    private String nickName;
+    private String postgradu;
+    private String major;
+    private String lab;
+    private int term;
 }

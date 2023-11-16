@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MentoringRepository extends JpaRepository<Mentoring, Long> {
-    Optional<Mentoring> findByMentoringIdAndDeletedAtIsNull(Long mentoringId);
-    Optional<List<Mentoring>> findAllByUserAndStatusAndDeletedAtIsNull(User user, Status status);
-    Optional<List<Mentoring>> findAllBySeniorAndStatusAndDeletedAtIsNull(Senior senior, Status status);
-    Optional<List<Mentoring>> findAllByDeletedAtIsNull();
+    Optional<Mentoring> findByMentoringId(Long mentoringId);
+    Optional<List<Mentoring>> findAllByUserAndStatus(User user, Status status);
+    Optional<List<Mentoring>> findAllBySeniorAndStatus(Senior senior, Status status);
+//    Optional<List<Mentoring>> findAllByDeletedAtIsNull();
 }
