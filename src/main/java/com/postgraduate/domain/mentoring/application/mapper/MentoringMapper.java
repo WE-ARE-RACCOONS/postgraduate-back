@@ -1,18 +1,12 @@
 package com.postgraduate.domain.mentoring.application.mapper;
 
-import com.postgraduate.domain.mentoring.application.dto.DoneMentoringInfo;
-import com.postgraduate.domain.mentoring.application.dto.ExpectedMentoringInfo;
-import com.postgraduate.domain.mentoring.application.dto.WaitingMentoringInfo;
+import com.postgraduate.domain.mentoring.application.dto.*;
 import com.postgraduate.domain.mentoring.application.dto.req.MentoringApplyRequest;
 import com.postgraduate.domain.mentoring.application.dto.res.AppliedMentoringDetailResponse;
 import com.postgraduate.domain.mentoring.application.dto.res.SeniorMentoringDetailResponse;
-import com.postgraduate.domain.mentoring.application.dto.res.SeniorMentoringResponse;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.user.domain.entity.User;
-
-import java.util.List;
-import java.util.stream.Stream;
 
 public class MentoringMapper {
     public static ExpectedMentoringInfo mapToExpectedInfo(Mentoring mentoring) {
@@ -61,8 +55,7 @@ public class MentoringMapper {
     }
     public static AppliedMentoringDetailResponse mapToAppliedDetailInfo(Mentoring mentoring) {
         Senior senior = mentoring.getSenior();
-        List<String> dates = Stream.of(mentoring.getDate())
-                .toList();
+        String[] dates = mentoring.getDate().split(",");
         return AppliedMentoringDetailResponse.builder()
                 .seniorId(senior.getSeniorId())
                 .profile(senior.getUser().getProfile())
@@ -86,20 +79,44 @@ public class MentoringMapper {
                 .build();
     }
 
-    public static SeniorMentoringResponse mapToSeniorMentoring(Mentoring mentoring) {
-        String[] dates = mentoring.getDate().split(",");
-        return SeniorMentoringResponse.builder()
+    public static WaitingSeniorMentoringInfo mapToSeniorWaitingInfo(Mentoring mentoring, int remainTime) {
+        return WaitingSeniorMentoringInfo.builder()
                 .mentoringId(mentoring.getMentoringId())
+                .profile(mentoring.getUser().getProfile())
                 .nickname(mentoring.getUser().getNickName())
-                .dates(dates)
                 .term(mentoring.getSenior().getProfile().getTerm())
+                .remainTime(remainTime)
+                .build();
+    }
+
+    public static ExpectedSeniorMentoringInfo mapToSeniorExpectedInfo(Mentoring mentoring) {
+        return ExpectedSeniorMentoringInfo.builder()
+                .mentoringId(mentoring.getMentoringId())
+                .profile(mentoring.getUser().getProfile())
+                .nickname(mentoring.getUser().getNickName())
+                .date(mentoring.getDate())
+                .term(mentoring.getSenior().getProfile().getTerm())
+                .build();
+    }
+
+    public static DoneSeniorMentoringInfo mapToSeniorDoneInfo(Mentoring mentoring, String month, Boolean status) {
+        return DoneSeniorMentoringInfo.builder()
+                .mentoringId(mentoring.getMentoringId())
+                .profile(mentoring.getUser().getProfile())
+                .nickname(mentoring.getUser().getNickName())
+                .date(mentoring.getDate())
+                .term(mentoring.getSenior().getProfile().getTerm())
+                .month(month)
+                .status(status)
                 .build();
     }
 
     public static SeniorMentoringDetailResponse mapToSeniorMentoringDetail(Mentoring mentoring) {
         String[] dates = mentoring.getDate().split(",");
+        User user = mentoring.getUser();
         return SeniorMentoringDetailResponse.builder()
-                .nickName(mentoring.getUser().getNickName())
+                .profile(user.getProfile())
+                .nickName(user.getNickName())
                 .topic(mentoring.getTopic())
                 .question(mentoring.getQuestion())
                 .dates(dates)

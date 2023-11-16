@@ -8,6 +8,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class SeniorMentoringDetailResponse {
+    private String profile;
     private String nickName;
     private String topic;
     private String question;

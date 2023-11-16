@@ -1,6 +1,5 @@
 package com.postgraduate.domain.salary.domain.entity;
 
-import com.postgraduate.domain.salary.domain.entity.constant.Status;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -23,7 +22,7 @@ public class Salary {
 
     private int amount;
 
-    private Status status;
+    private Boolean status;
 
     @ManyToOne
     private Senior senior;
