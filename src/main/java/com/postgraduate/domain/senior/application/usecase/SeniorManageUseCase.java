@@ -45,7 +45,7 @@ public class SeniorManageUseCase {
         Senior senior = seniorGetService.byUser(user);
         Optional<Account> account = accountGetService.bySenior(senior);
         if (account.isEmpty()) {
-            accountSaveService.saveAccount(mapToAccount(accountRequest));
+            accountSaveService.saveAccount(mapToAccount(senior, accountRequest));
             return;
         }
         accountUpdateService.updateAccount(account.get(), accountRequest);

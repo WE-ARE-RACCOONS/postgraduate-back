@@ -45,7 +45,8 @@ public class SeniorController {
 
     @PatchMapping("/account")
     @Operation(summary = "대학원생 정산 계좌 설정")
-    public ResponseDto updateAccount(@AuthenticationPrincipal User user, SeniorAccountRequest accountRequest) {
+    public ResponseDto updateAccount(@AuthenticationPrincipal User user,
+                                     @RequestBody SeniorAccountRequest accountRequest) {
         seniorManageUseCase.updateAccount(user, accountRequest);
         return ResponseDto.create(SENIOR_UPDATE.getCode(), UPDATE_ACCOUNT.getMessage());
     }
@@ -59,7 +60,8 @@ public class SeniorController {
 
     @PatchMapping("/me/profile")
     @Operation(summary = "대학원생 마이페이지 프로필 수정")
-    public ResponseDto getSeniorProfile(@AuthenticationPrincipal User user, @RequestBody SeniorMyPageProfileRequest myPageProfileRequest) {
+    public ResponseDto getSeniorProfile(@AuthenticationPrincipal User user,
+                                        @RequestBody SeniorMyPageProfileRequest myPageProfileRequest) {
         seniorMyPageUseCase.updateMyPageProfile(user, myPageProfileRequest);
         return ResponseDto.create(SENIOR_UPDATE.getCode(), UPDATE_MYPAGE_PROFILE.getMessage());
     }
