@@ -15,8 +15,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MentoringManageByAdminUseCase {
     private final MentoringGetService mentoringGetService;
-    public List<MentoringResponse> getMentorings() {
-        List<Mentoring> mentorings = mentoringGetService.all();
-        return mentorings.stream().map(AdminMapper::mapToMentoringResponse).toList();
-    }
+//    public List<MentoringResponse> getMentorings() {
+//        List<Mentoring> mentorings = mentoringGetService.all();
+//        return mentorings.stream().map(AdminMapper::mapToMentoringResponse).toList();
+//    }
 }

@@ -20,16 +20,16 @@ import java.util.List;
 public class UserManageByAdminUseCase {
     private final UserGetService userGetService;
     private final SeniorGetService seniorGetService;
-    public List<UserResponse> getUsers() {
-        List<User> users = userGetService.all();
-        List<UserResponse> userResponses = new ArrayList<>();
-        users.forEach(user -> {
-            if (user.getRole() == Role.SENIOR) {
-                Senior senior = seniorGetService.byUser(user);
-                userResponses.add(AdminMapper.mapToUserWithSeniorResponse(user, senior.getSeniorId()));
-            }
-            userResponses.add(AdminMapper.mapToUserResponse(user));
-        });
-        return userResponses;
-    }
+//    public List<UserResponse> getUsers() {
+//        List<User> users = userGetService.all();
+//        List<UserResponse> userResponses = new ArrayList<>();
+//        users.forEach(user -> {
+//            if (user.getRole() == Role.SENIOR) {
+//                Senior senior = seniorGetService.byUser(user);
+//                userResponses.add(AdminMapper.mapToUserWithSeniorResponse(user, senior.getSeniorId()));
+//            }
+//            userResponses.add(AdminMapper.mapToUserResponse(user));
+//        });
+//        return userResponses;
+//    }
 }
