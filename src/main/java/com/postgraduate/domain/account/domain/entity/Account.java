@@ -1,5 +1,6 @@
 package com.postgraduate.domain.account.domain.entity;
 
+import com.postgraduate.domain.senior.application.dto.req.SeniorAccountRequest;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -34,4 +35,12 @@ public class Account {
 
     @OneToOne
     private Senior senior;
+
+    public void updateAccount(SeniorAccountRequest accountRequest) {
+        this.accountNumber = accountRequest.getAccountNumber();
+        this.bank = accountRequest.getBank();
+        this.accountHolder = accountRequest.getAccountHolder();
+        this.name = accountRequest.getName();
+        this.rrn = accountRequest.getRrn();
+    }
 }

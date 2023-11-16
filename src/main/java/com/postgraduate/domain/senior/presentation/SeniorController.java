@@ -1,11 +1,12 @@
 package com.postgraduate.domain.senior.presentation;
 
+import com.postgraduate.domain.senior.application.dto.req.SeniorAccountRequest;
 import com.postgraduate.domain.senior.application.dto.req.SeniorCertificationRequest;
 import com.postgraduate.domain.senior.application.dto.req.SeniorMyPageProfileRequest;
 import com.postgraduate.domain.senior.application.dto.req.SeniorProfileRequest;
 import com.postgraduate.domain.senior.application.dto.res.SeniorInfoResponse;
+import com.postgraduate.domain.senior.application.usecase.SeniorManageUseCase;
 import com.postgraduate.domain.senior.application.usecase.SeniorMyPageUseCase;
-import com.postgraduate.domain.senior.application.usecase.SeniorSignUpUseCase;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.global.dto.ResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,13 +25,13 @@ import static com.postgraduate.domain.senior.presentation.constant.SeniorRespons
 @Tag(name = "SENIOR Controller")
 public class SeniorController {
     private final SeniorMyPageUseCase seniorMyPageUseCase;
-    private final SeniorSignUpUseCase seniorSignUpUseCase;
+    private final SeniorManageUseCase seniorManageUseCase;
 
     @PatchMapping("/certification")
     @Operation(summary = "대학원생 인증", description = "이미지 업로드 이후 url 담아서 요청")
     public ResponseDto updateCertification(@AuthenticationPrincipal User user,
                                            @RequestBody SeniorCertificationRequest certificationRequest) {
-        seniorSignUpUseCase.updateCertification(user, certificationRequest);
+        seniorManageUseCase.updateCertification(user, certificationRequest);
         return ResponseDto.create(SENIOR_UPDATE.getCode(), UPDATE_CERTIFICATION.getMessage());
     }
 
@@ -38,8 +39,15 @@ public class SeniorController {
     @Operation(summary = "대학원생 프로필 등록")
     public ResponseDto singUpSenior(@AuthenticationPrincipal User user,
                                     @RequestBody SeniorProfileRequest profileRequest) {
-        seniorSignUpUseCase.updateProfile(user, profileRequest);
+        seniorManageUseCase.updateProfile(user, profileRequest);
         return ResponseDto.create(SENIOR_UPDATE.getCode(), UPDATE_PROFILE.getMessage());
+    }
+
+    @PatchMapping("/account")
+    @Operation(summary = "대학원생 정산 계좌 설정")
+    public ResponseDto updateAccount(@AuthenticationPrincipal User user, SeniorAccountRequest accountRequest) {
+        seniorManageUseCase.updateAccount(user, accountRequest);
+        return ResponseDto.create(SENIOR_UPDATE.getCode(), UPDATE_ACCOUNT.getMessage());
     }
 
     @GetMapping("/me")
