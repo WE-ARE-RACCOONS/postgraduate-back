@@ -14,9 +14,6 @@ import lombok.NoArgsConstructor;
 @Embeddable
 public class Info {
     @Column(nullable = false)
-    private String college;
-
-    @Column(nullable = false)
     private String major;
 
     @Column(nullable = false)

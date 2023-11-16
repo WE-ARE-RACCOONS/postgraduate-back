@@ -44,9 +44,6 @@ public class Senior {
     private Info info;
 
     @Embedded
-    private Account account;
-
-    @Embedded
     private Profile profile;
 
     @Column(nullable = false)
@@ -58,11 +55,6 @@ public class Senior {
 
     public void updateProfile(Profile profile) {
         this.profile = profile;
-    }
-
-    public void updateProfileAndAccount(Profile profile, Account account) {
-        this.profile = profile;
-        account.updateAccount(account);
     }
 
     public void updateCertification(String certification) {
