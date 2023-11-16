@@ -1,5 +1,6 @@
 package com.postgraduate.domain.user.domain.entity;
 
+import com.postgraduate.domain.senior.application.dto.req.SeniorMyPageProfileRequest;
 import com.postgraduate.domain.user.domain.entity.constant.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -63,5 +64,10 @@ public class User {
 
     public void updateProfile(String profile) {
         this.profile = profile;
+    }
+
+    public void updateMyPage(SeniorMyPageProfileRequest request) {
+        this.profile = request.getProfile();
+        this.nickName = request.getNickName();
     }
 }

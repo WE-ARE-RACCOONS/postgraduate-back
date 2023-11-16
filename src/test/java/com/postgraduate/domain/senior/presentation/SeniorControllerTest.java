@@ -1,44 +1,9 @@
 package com.postgraduate.domain.senior.presentation;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.postgraduate.domain.senior.application.dto.req.SeniorCertificationRequest;
-import com.postgraduate.domain.senior.application.dto.req.SeniorProfileAndAccountRequest;
-import com.postgraduate.domain.senior.application.dto.req.SeniorProfileRequest;
-import com.postgraduate.domain.auth.application.dto.req.SeniorSignUpRequest;
-import com.postgraduate.domain.senior.application.dto.res.SeniorInfoResponse;
-import com.postgraduate.domain.senior.application.dto.res.SeniorProfileResponse;
-import com.postgraduate.domain.senior.application.mapper.SeniorMapper;
-import com.postgraduate.domain.senior.application.usecase.SeniorMyPageUseCase;
-import com.postgraduate.domain.senior.domain.entity.Info;
-import com.postgraduate.domain.senior.domain.entity.Profile;
-import com.postgraduate.domain.senior.domain.entity.Senior;
-import com.postgraduate.domain.senior.domain.entity.constant.Status;
-import com.postgraduate.domain.user.domain.entity.User;
-import com.postgraduate.domain.user.domain.entity.constant.Role;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
-import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.filter.CharacterEncodingFilter;
 
-import java.time.LocalDate;
-
-import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseCode.*;
-import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseMessage.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(SeniorController.class)
 class SeniorControllerTest {

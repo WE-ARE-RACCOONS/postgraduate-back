@@ -1,5 +1,6 @@
 package com.postgraduate.domain.senior.domain.entity;
 
+import com.postgraduate.domain.senior.application.dto.req.SeniorMyPageProfileRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
@@ -30,4 +31,10 @@ public class Info {
 
     @Column(nullable = false)
     private String field;
+
+    public void updateMyPage(SeniorMyPageProfileRequest request) {
+        this.keyword = request.getKeyword();
+        this.lab = request.getLab();
+        this.field = request.getField();
+    }
 }

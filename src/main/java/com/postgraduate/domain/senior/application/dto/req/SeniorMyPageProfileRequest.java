@@ -8,7 +8,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class SeniorProfileAndAccountRequest {
+public class SeniorMyPageProfileRequest {
+    @NotNull
+    private String profile;
+    @NotNull
+    private String nickName;
+    @NotNull
+    private String lab;
+    @NotNull
+    private String keyword;
     @NotNull
     private String info;
     @NotNull
@@ -16,13 +24,7 @@ public class SeniorProfileAndAccountRequest {
     @NotNull
     private String chatLink;
     @NotNull
-    private String time;
+    private String field;
     @NotNull
     private String oneLiner;
-    @NotNull
-    private String keyword;
-    @NotNull
-    private String account;
-    @NotNull
-    private String bank;
 }

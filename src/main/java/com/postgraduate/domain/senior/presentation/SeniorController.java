@@ -1,9 +1,11 @@
 package com.postgraduate.domain.senior.presentation;
 
 import com.postgraduate.domain.senior.application.dto.req.SeniorCertificationRequest;
+import com.postgraduate.domain.senior.application.dto.req.SeniorMyPageProfileRequest;
 import com.postgraduate.domain.senior.application.dto.req.SeniorProfileRequest;
 import com.postgraduate.domain.senior.application.dto.res.SeniorInfoResponse;
 import com.postgraduate.domain.senior.application.usecase.SeniorMyPageUseCase;
+import com.postgraduate.domain.senior.application.usecase.SeniorSignUpUseCase;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.global.dto.ResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,34 +24,35 @@ import static com.postgraduate.domain.senior.presentation.constant.SeniorRespons
 @Tag(name = "SENIOR Controller")
 public class SeniorController {
     private final SeniorMyPageUseCase seniorMyPageUseCase;
+    private final SeniorSignUpUseCase seniorSignUpUseCase;
 
-    @PatchMapping("/me/certification")
+    @PatchMapping("/certification")
     @Operation(summary = "대학원생 인증", description = "이미지 업로드 이후 url 담아서 요청")
     public ResponseDto updateCertification(@AuthenticationPrincipal User user,
                                            @RequestBody SeniorCertificationRequest certificationRequest) {
-        seniorMyPageUseCase.updateCertification(user, certificationRequest);
+        seniorSignUpUseCase.updateCertification(user, certificationRequest);
         return ResponseDto.create(SENIOR_UPDATE.getCode(), UPDATE_CERTIFICATION.getMessage());
     }
 
-    @PatchMapping("/me/profile")
+    @PatchMapping("/profile")
     @Operation(summary = "대학원생 프로필 등록")
     public ResponseDto singUpSenior(@AuthenticationPrincipal User user,
                                     @RequestBody SeniorProfileRequest profileRequest) {
-        seniorMyPageUseCase.updateProfile(user, profileRequest);
+        seniorSignUpUseCase.updateProfile(user, profileRequest);
         return ResponseDto.create(SENIOR_UPDATE.getCode(), UPDATE_PROFILE.getMessage());
     }
 
     @GetMapping("/me")
-    @Operation(summary = "대학원생 마이페이지 기본 정보", description = "닉네임, 프로필 사진, 인증 여부")
+    @Operation(summary = "대학원생 마이페이지 기본 정보 조회", description = "닉네임, 프로필 사진, 인증 여부")
     public ResponseDto<SeniorInfoResponse> getSeniorInfo(@AuthenticationPrincipal User user) {
         SeniorInfoResponse seniorInfoResponse = seniorMyPageUseCase.seniorInfo(user);
         return ResponseDto.create(SENIOR_FIND.getCode(), GET_SENIOR_INFO.getMessage(), seniorInfoResponse);
     }
 
-//    @GetMapping("/me/profile")
-//    @Operation(summary = "대학원생 마이페이지 프로필 보기")
-//    public ResponseDto<SeniorProfileResponse> getSeniorProfile(@AuthenticationPrincipal User user) {
-//        SeniorProfileResponse seniorProfile = myPageUseCase.getSeniorProfile(user);
-//        return ResponseDto.create(SENIOR_FIND.getCode(), GET_SENIOR_PROFILE.getMessage(), seniorProfile);
-//    }
+    @PatchMapping("/me/profile")
+    @Operation(summary = "대학원생 마이페이지 프로필 수정")
+    public ResponseDto getSeniorProfile(@AuthenticationPrincipal User user, @RequestBody SeniorMyPageProfileRequest myPageProfileRequest) {
+        seniorMyPageUseCase.updateMyPageProfile(user, myPageProfileRequest);
+        return ResponseDto.create(SENIOR_UPDATE.getCode(), UPDATE_MYPAGE_PROFILE.getMessage());
+    }
 }
