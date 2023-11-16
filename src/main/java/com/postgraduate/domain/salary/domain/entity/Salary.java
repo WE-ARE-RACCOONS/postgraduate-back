@@ -17,12 +17,20 @@ public class Salary {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long salaryId;
 
-    private String month; //todo : 타입 고민
+    @Column(nullable = false)
+    private String month;
 
+    @Column(nullable = false)
     private int amount;
 
-    private Boolean status;
+    @Column(nullable = false)
+    @Builder.Default
+    private Boolean status = false;
 
     @ManyToOne
     private Senior senior;
+
+    public void updateAmount(int amount) {
+        this.amount += (amount-4000);
+    }
 }
