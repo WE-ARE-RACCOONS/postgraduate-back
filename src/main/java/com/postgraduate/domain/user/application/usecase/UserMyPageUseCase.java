@@ -13,22 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @RequiredArgsConstructor
 public class UserMyPageUseCase {
-    private final UserUpdateService userUpdateService;
-    private final UserGetService userGetService;
-
     public UserInfoResponse getUserInfo(User user) {
         return UserMapper.mapToInfo(user);
-    }
-
-    public void updateNickName(User user, String nickName) {
-        userUpdateService.updateNickName(user.getUserId(), nickName);
-    }
-
-    public void updateProfile(User user, String profile) {
-        userUpdateService.updateProfile(user.getUserId(), profile);
-    }
-
-    public boolean duplicatedNickName(String nickName) {
-        return userGetService.byNickName(nickName).isEmpty();
     }
 }
