@@ -1,6 +1,7 @@
 package com.postgraduate.domain.auth.presentation;
 
 import com.postgraduate.domain.auth.application.dto.req.KakaoCodeRequest;
+import com.postgraduate.domain.auth.application.dto.req.SeniorChangeRequest;
 import com.postgraduate.domain.auth.application.dto.req.SeniorSignUpRequest;
 import com.postgraduate.domain.auth.application.dto.req.SignUpRequest;
 import com.postgraduate.domain.auth.application.dto.res.AuthUserResponse;
@@ -51,9 +52,18 @@ public class AuthController {
 
     @PostMapping("/senior/signup")
     @Operation(summary = "대학원생 가입 - 필수 과정만", description = "대학원생 회원가입 - 필수 과정만")
-    public ResponseDto singUpSenior(@RequestBody SeniorSignUpRequest request) {
+    public ResponseDto<JwtTokenResponse> singUpSenior(@RequestBody SeniorSignUpRequest request) {
         User user = signUpUseCase.seniorSignUp(request);
         JwtTokenResponse jwtToken = jwtUseCase.signIn(user);
+        return ResponseDto.create(SENIOR_CREATE.getCode(), CREATE_SENIOR.getMessage(), jwtToken);
+    }
+
+    @PostMapping("/senior/change")
+    @Operation(summary = "선배로 변경", description = "대학생 대학원생으로 변경")
+    public ResponseDto<JwtTokenResponse> changeSenior(@AuthenticationPrincipal User user,
+                                    @RequestBody SeniorChangeRequest changeRequest) {
+        User changeUser = signUpUseCase.changeSenior(user, changeRequest);
+        JwtTokenResponse jwtToken = jwtUseCase.signIn(changeUser);
         return ResponseDto.create(SENIOR_CREATE.getCode(), CREATE_SENIOR.getMessage(), jwtToken);
     }
 

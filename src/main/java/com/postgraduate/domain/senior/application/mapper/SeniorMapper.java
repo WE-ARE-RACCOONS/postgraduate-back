@@ -1,5 +1,6 @@
 package com.postgraduate.domain.senior.application.mapper;
 
+import com.postgraduate.domain.auth.application.dto.req.SeniorChangeRequest;
 import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.senior.application.dto.req.SeniorProfileRequest;
 import com.postgraduate.domain.auth.application.dto.req.SeniorSignUpRequest;
@@ -38,6 +39,25 @@ public class SeniorMapper {
                 .oneLiner(profileRequest.getOneLiner())
                 .target(profileRequest.getTarget())
                 .time(profileRequest.getTime())
+                .build();
+    }
+
+    public static Senior mapToSenior(User user, SeniorChangeRequest request) {
+        return Senior.builder()
+                .user(user)
+                .info(mapToInfo(request))
+                .certification(request.getCertification())
+                .build();
+    }
+
+    public static Info mapToInfo(SeniorChangeRequest request) {
+        return Info.builder()
+                .major(request.getMajor())
+                .postgradu(request.getPostgradu())
+                .professor(request.getProfessor())
+                .lab(request.getLab())
+                .keyword(request.getKeyword())
+                .field(request.getField())
                 .build();
     }
 

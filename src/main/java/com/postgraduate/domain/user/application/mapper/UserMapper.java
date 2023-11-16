@@ -4,6 +4,9 @@ import com.postgraduate.domain.auth.application.dto.req.SeniorSignUpRequest;
 import com.postgraduate.domain.auth.application.dto.req.SignUpRequest;
 import com.postgraduate.domain.user.application.dto.res.UserInfoResponse;
 import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.user.domain.entity.constant.Role;
+
+import static com.postgraduate.domain.user.domain.entity.constant.Role.SENIOR;
 
 public class UserMapper {
     public static UserInfoResponse mapToInfo(User user) {
@@ -29,6 +32,7 @@ public class UserMapper {
                 .nickName(request.getNickName())
                 .phoneNumber(request.getPhoneNumber())
                 .marketingReceive(request.getMarketingReceive())
+                .role(SENIOR)
                 .build();
     }
 }
