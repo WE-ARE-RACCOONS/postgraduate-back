@@ -79,7 +79,7 @@ public class MentoringMapper {
                 .build();
     }
 
-    public static WaitingSeniorMentoringInfo mapToSeniorWaitingInfo(Mentoring mentoring, int remainTime) {
+    public static WaitingSeniorMentoringInfo mapToSeniorWaitingInfo(Mentoring mentoring, long remainTime) {
         return WaitingSeniorMentoringInfo.builder()
                 .mentoringId(mentoring.getMentoringId())
                 .profile(mentoring.getUser().getProfile())

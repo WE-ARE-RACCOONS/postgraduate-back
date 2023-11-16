@@ -19,8 +19,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static com.postgraduate.domain.mentoring.application.mapper.MentoringMapper.*;
@@ -64,13 +68,12 @@ public class MentoringSeniorInfoUseCase {
     private AppliedMentoringResponse getSeniorWaiting(List<Mentoring> mentorings) {
         List<WaitingSeniorMentoringInfo> waitingMentoringInfos = new ArrayList<>();
         for (Mentoring mentoring : mentorings) {
-            int expiredAt = mentoring.getCreatedAt()
+            LocalDateTime expiredAt = mentoring.getCreatedAt()
                     .plusDays(2)
-                    .atStartOfDay()
-                    .getMinute();
-            int now = LocalDateTime.now()
-                    .getMinute();
-            waitingMentoringInfos.add(mapToSeniorWaitingInfo(mentoring, (expiredAt - now)));
+                    .atStartOfDay();
+            LocalDateTime now = LocalDateTime.now();
+            long remain = Duration.between(now, expiredAt).toMinutes();
+            waitingMentoringInfos.add(mapToSeniorWaitingInfo(mentoring, remain));
         }
         return new AppliedMentoringResponse(waitingMentoringInfos);
     }
@@ -86,10 +89,12 @@ public class MentoringSeniorInfoUseCase {
     private AppliedMentoringResponse getSeniorDone(List<Mentoring> mentorings) {
         List<DoneSeniorMentoringInfo> doneMentoringInfos = new ArrayList<>();
         for (Mentoring mentoring : mentorings) {
-            String month = getMonthFormat(mentoring.getUpdatedAt());
-            Salary salary = salaryGetService.bySeniorAndMonth(mentoring.getSenior(), month);
+            LocalDate updatedAt = mentoring.getUpdatedAt();
+            String month = updatedAt.format(getMonthFormat());
+            Salary salary = salaryGetService.bySeniorAndMonth(mentoring.getSenior(), month)
+                            .orElseThrow();
             doneMentoringInfos.add(mapToSeniorDoneInfo(mentoring, mentoring.getDate(), salary.getStatus()));
-            //todo : 정산 관련 로직 필요
+            //todo : 정산 관련 로직 필요, 예외 처리 필요
             /**
              * 우선 yyyy-MM 형식으로 저장
              */

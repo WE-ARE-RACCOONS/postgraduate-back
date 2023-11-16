@@ -61,11 +61,11 @@ public class SeniorMapper {
                 .build();
     }
 
-    public static SeniorInfoResponse mapToSeniorInfo(Senior senior, Salary salary, Status certificationRegister, boolean profileRegister) {
+    public static SeniorInfoResponse mapToSeniorInfo(Senior senior, Salary salary, String month, Status certificationRegister, boolean profileRegister) {
         return SeniorInfoResponse.builder()
                 .nickName(senior.getUser().getNickName())
                 .profile(senior.getUser().getProfile())
-                .month(salary.getMonth())
+                .month(month)
                 .amount(salary.getAmount())
                 .certificationRegister(certificationRegister)
                 .profileRegister(profileRegister)

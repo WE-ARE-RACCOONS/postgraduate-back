@@ -12,5 +12,5 @@ public class WaitingSeniorMentoringInfo {
     private String profile;
     private String nickname;
     private int term;
-    private int remainTime;
+    private long remainTime;
 }
