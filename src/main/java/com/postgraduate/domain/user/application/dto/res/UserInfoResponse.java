@@ -10,5 +10,4 @@ import lombok.Getter;
 public class UserInfoResponse {
     private String nickName;
     private String profile;
-    private int point;
 }

@@ -13,7 +13,6 @@ public class UserMapper {
         return UserInfoResponse.builder()
                 .nickName(user.getNickName())
                 .profile(user.getProfile())
-                .point(user.getPoint())
                 .build();
     }
 

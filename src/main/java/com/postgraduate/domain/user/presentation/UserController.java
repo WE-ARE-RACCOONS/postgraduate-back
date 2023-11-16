@@ -24,7 +24,7 @@ public class UserController {
     private final UserMyPageUseCase myPageUseCase;
 
     @GetMapping("/me")
-    @Operation(description = "사용자 기본 정보 조회 - 닉네임, 프로필, 포인트")
+    @Operation(description = "사용자 기본 정보 조회 - 닉네임, 프로필")
     public ResponseDto<UserInfoResponse> getUserInfo(@AuthenticationPrincipal User user) {
         UserInfoResponse userInfo = myPageUseCase.getUserInfo(user);
         return ResponseDto.create(USER_FIND.getCode(), GET_USER_INFO.getMessage(), userInfo);
