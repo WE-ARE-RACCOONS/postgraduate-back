@@ -19,6 +19,4 @@ public class SeniorProfileRequest {
     private String time;
     @NotNull
     private String oneLiner;
-    @NotNull
-    private String keyword;
 }

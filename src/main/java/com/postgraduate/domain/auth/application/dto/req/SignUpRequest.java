@@ -19,5 +19,6 @@ public class SignUpRequest {
     private Boolean marketingReceive;
     private String major;
     private String field;
+    @NotNull
     private Boolean matchingReceive;
 }

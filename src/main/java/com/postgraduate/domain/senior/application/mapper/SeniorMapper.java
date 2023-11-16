@@ -1,11 +1,8 @@
 package com.postgraduate.domain.senior.application.mapper;
 
-import com.postgraduate.domain.senior.application.dto.req.SeniorProfileAndAccountRequest;
 import com.postgraduate.domain.senior.application.dto.req.SeniorProfileRequest;
-import com.postgraduate.domain.senior.application.dto.req.SeniorSignUpRequest;
+import com.postgraduate.domain.auth.application.dto.req.SeniorSignUpRequest;
 import com.postgraduate.domain.senior.application.dto.res.SeniorInfoResponse;
-import com.postgraduate.domain.senior.application.dto.res.SeniorProfileResponse;
-import com.postgraduate.domain.senior.domain.entity.Account;
 import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
@@ -19,44 +16,17 @@ public class SeniorMapper {
                 .user(user)
                 .info(mapToInfo(request))
                 .certification(request.getCertification())
-                .account(mapToAccount(request))
                 .build();
     }
 
     public static Info mapToInfo(SeniorSignUpRequest request) {
         return Info.builder()
-                .college(request.getCollege())
                 .major(request.getMajor())
                 .postgradu(request.getPostgradu())
                 .professor(request.getProfessor())
                 .lab(request.getLab())
+                .keyword(request.getKeyword())
                 .field(request.getField())
-                .build();
-    }
-
-    public static Account mapToAccount(SeniorSignUpRequest request) {
-        return Account.builder()
-                .bank(request.getBank())
-                .account(request.getAccount())
-                .rrn(request.getRrn())
-                .build();
-    }
-
-    public static Account mapToAccount(SeniorProfileAndAccountRequest profileAndAccountPageRequest) {
-        return Account.builder()
-                .bank(profileAndAccountPageRequest.getBank())
-                .account(profileAndAccountPageRequest.getAccount())
-                .build();
-    }
-
-    public static Profile mapToProfile(SeniorProfileAndAccountRequest profileAndAccountPageRequest) {
-        return Profile.builder()
-                .info(profileAndAccountPageRequest.getInfo())
-                .chatLink(profileAndAccountPageRequest.getChatLink())
-                .target(profileAndAccountPageRequest.getTarget())
-                .time(profileAndAccountPageRequest.getTime())
-                .oneLiner(profileAndAccountPageRequest.getOneLiner())
-                .keyword(profileAndAccountPageRequest.getKeyword())
                 .build();
     }
 
@@ -65,7 +35,6 @@ public class SeniorMapper {
                 .info(profileRequest.getInfo())
                 .chatLink(profileRequest.getChatLink())
                 .oneLiner(profileRequest.getOneLiner())
-                .keyword(profileRequest.getKeyword())
                 .target(profileRequest.getTarget())
                 .time(profileRequest.getTime())
                 .build();
@@ -77,14 +46,6 @@ public class SeniorMapper {
                 .profile(senior.getUser().getProfile())
                 .certificationRegister(certificationRegister)
                 .profileRegister(profileRegister)
-                .build();
-    }
-
-    public static SeniorProfileResponse mapToSeniorProfileInfo(Senior senior) {
-        return SeniorProfileResponse.builder()
-                .profile(senior.getProfile())
-                .account(senior.getAccount().getAccount())
-                .bank(senior.getAccount().getBank())
                 .build();
     }
 }

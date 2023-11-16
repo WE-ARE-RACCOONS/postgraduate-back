@@ -43,9 +43,6 @@ public class User {
     @Builder.Default
     private Role role = Role.USER;
 
-    @Embedded
-    private Hope hope;
-
     @Column(nullable = false)
     private Boolean marketingReceive;
 
@@ -66,9 +63,5 @@ public class User {
 
     public void updateProfile(String profile) {
         this.profile = profile;
-    }
-
-    public void updateHope(Hope hope) {
-        this.hope = hope;
     }
 }
