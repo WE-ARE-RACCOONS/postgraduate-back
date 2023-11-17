@@ -1,6 +1,5 @@
 package com.postgraduate.domain.mentoring.application.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,13 +9,14 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor
 public class ExpectedMentoringInfo {
-    Long mentoringId;
-    Long seniorId;
-    String nickName;
-    String postgradu;
-    String field;
-    String professor;
-    String date;
-    int term;
-    String chatLink;
+    private Long mentoringId;
+    private Long seniorId;
+    private String profile;
+    private String nickName;
+    private String postgradu;
+    private String major;
+    private String lab;
+    private String date;
+    private int term;
+    private String chatLink;
 }

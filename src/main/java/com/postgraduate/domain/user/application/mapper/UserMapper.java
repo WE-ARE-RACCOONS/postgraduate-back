@@ -1,40 +1,37 @@
 package com.postgraduate.domain.user.application.mapper;
 
+import com.postgraduate.domain.auth.application.dto.req.SeniorSignUpRequest;
 import com.postgraduate.domain.auth.application.dto.req.SignUpRequest;
-import com.postgraduate.domain.user.application.dto.req.UserHopeRequest;
 import com.postgraduate.domain.user.application.dto.res.UserInfoResponse;
-import com.postgraduate.domain.user.domain.entity.Hope;
 import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.user.domain.entity.constant.Role;
+
+import static com.postgraduate.domain.user.domain.entity.constant.Role.SENIOR;
 
 public class UserMapper {
     public static UserInfoResponse mapToInfo(User user) {
         return UserInfoResponse.builder()
                 .nickName(user.getNickName())
                 .profile(user.getProfile())
-                .point(user.getPoint())
                 .build();
     }
 
     public static User mapToUser(SignUpRequest request) {
-        Hope hope = Hope.builder()
-                .field(request.getField())
-                .major(request.getMajor())
-                .matchingReceive(request.getMatchingReceive())
-                .build();
         return User.builder()
                 .socialId(request.getSocialId())
                 .nickName(request.getNickName())
                 .phoneNumber(request.getPhoneNumber())
                 .marketingReceive(request.getMarketingReceive())
-                .hope(hope)
                 .build();
     }
 
-    public static Hope mapToHope(UserHopeRequest hopeRequest) {
-        return Hope.builder()
-                .major(hopeRequest.getMajor())
-                .field(hopeRequest.getField())
-                .matchingReceive(hopeRequest.getMatchingReceive())
+    public static User mapToUser(SeniorSignUpRequest request) {
+        return User.builder()
+                .socialId(request.getSocialId())
+                .nickName(request.getNickName())
+                .phoneNumber(request.getPhoneNumber())
+                .marketingReceive(request.getMarketingReceive())
+                .role(SENIOR)
                 .build();
     }
 }

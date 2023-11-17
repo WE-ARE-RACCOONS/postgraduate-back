@@ -19,7 +19,7 @@ public class CheckIsMyMentoringUseCase {
 
     public Mentoring byUser(User user, Long mentoringId) {
         Mentoring mentoring = mentoringGetService.byMentoringId(mentoringId);
-        if (mentoring.getUser() != user) {
+        if (mentoring.getUser().getUserId() != user.getUserId()) {
             throw new PermissionDeniedException();
         }
         return mentoring;
@@ -28,7 +28,7 @@ public class CheckIsMyMentoringUseCase {
     public Mentoring bySenior(User user, Long mentoringId) {
         Senior senior = seniorGetService.byUser(user);
         Mentoring mentoring = mentoringGetService.byMentoringId(mentoringId);
-        if (mentoring.getSenior() != senior) {
+        if (mentoring.getSenior().getSeniorId() != senior.getSeniorId()) {
             throw new PermissionDeniedException();
         }
         return mentoring;

@@ -1,5 +1,6 @@
 package com.postgraduate.domain.user.domain.entity;
 
+import com.postgraduate.domain.senior.application.dto.req.SeniorMyPageProfileRequest;
 import com.postgraduate.domain.user.domain.entity.constant.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -43,9 +44,6 @@ public class User {
     @Builder.Default
     private Role role = Role.USER;
 
-    @Embedded
-    private Hope hope;
-
     @Column(nullable = false)
     private Boolean marketingReceive;
 
@@ -68,7 +66,8 @@ public class User {
         this.profile = profile;
     }
 
-    public void updateHope(Hope hope) {
-        this.hope = hope;
+    public void updateSeniorMyPage(SeniorMyPageProfileRequest request) {
+        this.profile = request.getProfile();
+        this.nickName = request.getNickName();
     }
 }

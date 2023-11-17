@@ -18,18 +18,18 @@ public class MentoringGetService {
     private final MentoringRepository mentoringRepository;
 
     public List<Mentoring> mentoringByUser(User user, Status status) {
-        return mentoringRepository.findAllByUserAndStatusAndDeletedAtIsNull(user, status).orElse(new ArrayList<>());
+        return mentoringRepository.findAllByUserAndStatus(user, status).orElse(new ArrayList<>());
     }
 
     public List<Mentoring> mentoringBySenior(Senior senior, Status status) {
-        return mentoringRepository.findAllBySeniorAndStatusAndDeletedAtIsNull(senior, status).orElse(new ArrayList<>());
+        return mentoringRepository.findAllBySeniorAndStatus(senior, status).orElse(new ArrayList<>());
     }
 
     public Mentoring byMentoringId(Long mentoringId) {
-        return mentoringRepository.findByMentoringIdAndDeletedAtIsNull(mentoringId).orElseThrow(MentoringNotFoundException::new);
+        return mentoringRepository.findByMentoringId(mentoringId).orElseThrow(MentoringNotFoundException::new);
     }
 
-    public List<Mentoring> all() {
-        return mentoringRepository.findAllByDeletedAtIsNull().orElse(new ArrayList<>());
-    }
+//    public List<Mentoring> all() {
+//        return mentoringRepository.findAllByDeletedAtIsNull().orElse(new ArrayList<>());
+//    }
 }

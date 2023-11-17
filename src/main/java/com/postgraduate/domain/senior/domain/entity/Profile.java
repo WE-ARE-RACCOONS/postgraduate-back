@@ -1,5 +1,6 @@
 package com.postgraduate.domain.senior.domain.entity;
 
+import com.postgraduate.domain.senior.application.dto.req.SeniorMyPageProfileRequest;
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,8 +17,6 @@ public class Profile {
 
     private String oneLiner;
 
-    private String keyword;
-
     private String target;
 
     private String chatLink;
@@ -26,4 +25,11 @@ public class Profile {
 
     @Builder.Default
     private Integer term = 40;
+
+    public void updateMyPage(SeniorMyPageProfileRequest request) {
+        this.info = request.getInfo();
+        this.oneLiner = request.getOneLiner();
+        this.target = request.getTarget();
+        this.chatLink = request.getChatLink();
+    }
 }

@@ -1,5 +1,6 @@
 package com.postgraduate.domain.senior.domain.entity;
 
+import com.postgraduate.domain.senior.application.dto.req.SeniorMyPageProfileRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
@@ -14,9 +15,6 @@ import lombok.NoArgsConstructor;
 @Embeddable
 public class Info {
     @Column(nullable = false)
-    private String college;
-
-    @Column(nullable = false)
     private String major;
 
     @Column(nullable = false)
@@ -26,8 +24,17 @@ public class Info {
     private String professor;
 
     @Column(nullable = false)
+    private String keyword;
+
+    @Column(nullable = false)
     private String lab;
 
     @Column(nullable = false)
     private String field;
+
+    public void updateMyPage(SeniorMyPageProfileRequest request) {
+        this.keyword = request.getKeyword();
+        this.lab = request.getLab();
+        this.field = request.getField();
+    }
 }

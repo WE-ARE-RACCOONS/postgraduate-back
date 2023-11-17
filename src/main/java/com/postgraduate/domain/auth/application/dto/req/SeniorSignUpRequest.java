@@ -1,4 +1,4 @@
-package com.postgraduate.domain.senior.application.dto.req;
+package com.postgraduate.domain.auth.application.dto.req;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SeniorSignUpRequest {
     @NotNull
-    private String college;
+    private Long socialId;
+    @NotNull
+    private String phoneNumber;
+    @NotNull
+    private String nickName;
+    @NotNull
+    private Boolean marketingReceive;
     @NotNull
     private String major;
     @NotNull
@@ -22,11 +28,7 @@ public class SeniorSignUpRequest {
     @NotNull
     private String field;
     @NotNull
+    private String keyword;
+    @NotNull
     private String certification;
-    @NotNull
-    private String account;
-    @NotNull
-    private String bank;
-    @NotNull
-    private String rrn;
 }

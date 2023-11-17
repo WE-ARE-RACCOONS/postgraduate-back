@@ -1,9 +1,9 @@
 package com.postgraduate.domain.user.presentation;
 
-import com.postgraduate.domain.user.application.dto.req.UserHopeRequest;
 import com.postgraduate.domain.user.application.dto.req.UserNickNameRequest;
 import com.postgraduate.domain.user.application.dto.req.UserProfileRequest;
 import com.postgraduate.domain.user.application.dto.res.UserInfoResponse;
+import com.postgraduate.domain.user.application.usecase.UserManageUseCase;
 import com.postgraduate.domain.user.application.usecase.UserMyPageUseCase;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.global.dto.ResponseDto;
@@ -23,9 +23,10 @@ import static com.postgraduate.domain.user.presentation.constant.UserResponseMes
 @Tag(name = "USER Controller")
 public class UserController {
     private final UserMyPageUseCase myPageUseCase;
+    private final UserManageUseCase manageUseCase;
 
     @GetMapping("/me")
-    @Operation(description = "사용자 기본 정보 조회 - 닉네임, 프로필, 포인트")
+    @Operation(description = "사용자 기본 정보 조회 - 닉네임, 프로필")
     public ResponseDto<UserInfoResponse> getUserInfo(@AuthenticationPrincipal User user) {
         UserInfoResponse userInfo = myPageUseCase.getUserInfo(user);
         return ResponseDto.create(USER_FIND.getCode(), GET_USER_INFO.getMessage(), userInfo);
@@ -34,28 +35,21 @@ public class UserController {
     @PatchMapping("/nickname")
     @Operation(description = "사용자 닉네임 변경 및 업데이트")
     public ResponseDto updateNickName(@AuthenticationPrincipal User user, @RequestBody UserNickNameRequest userNickNameRequest) {
-        myPageUseCase.updateNickName(user, userNickNameRequest.getNickName());
+        manageUseCase.updateNickName(user, userNickNameRequest.getNickName());
         return ResponseDto.create(USER_UPDATE.getCode(), UPDATE_USER_INFO.getMessage());
     }
 
     @GetMapping("/nickname")
     @Operation(description = "사용자 닉네임 중복체크")
     public ResponseDto<Boolean> duplicatedNickName(@RequestParam String nickName) {
-        boolean checkDup = myPageUseCase.duplicatedNickName(nickName);
+        boolean checkDup = manageUseCase.duplicatedNickName(nickName);
         return ResponseDto.create(USER_FIND.getCode(), GET_NICKNAME_CHECK.getMessage(), checkDup);
     }
 
     @PatchMapping("/profile")
     @Operation(description = "사용자 프로필 사진 업데이트 - url을 주세요")
     public ResponseDto updateProfile(@AuthenticationPrincipal User user, @RequestBody UserProfileRequest userProfileRequest) {
-        myPageUseCase.updateProfile(user, userProfileRequest.getProfile());
-        return ResponseDto.create(USER_UPDATE.getCode(), UPDATE_USER_INFO.getMessage());
-    }
-
-    @PatchMapping("/hope")
-    @Operation(description = "대학생 희망 학과, 분야 및 수신 동의 업데이트")
-    public ResponseDto updateHope(@AuthenticationPrincipal User user, @RequestBody UserHopeRequest userHopeRequest) {
-        myPageUseCase.updateHope(user, userHopeRequest);
+        manageUseCase.updateProfile(user, userProfileRequest.getProfile());
         return ResponseDto.create(USER_UPDATE.getCode(), UPDATE_USER_INFO.getMessage());
     }
 }

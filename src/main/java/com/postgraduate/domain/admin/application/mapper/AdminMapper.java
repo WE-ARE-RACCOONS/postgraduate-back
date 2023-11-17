@@ -36,26 +36,26 @@ public class AdminMapper {
                 .build();
     }
 
-    public static UserResponse mapToUserResponse(User user) {
-        return UserResponse.builder()
-                .userId(user.getUserId())
-                .nickName(user.getNickName())
-                .marketingReceive(user.getMarketingReceive())
-                .matchingReceive(user.getHope().getMatchingReceive())
-                .createdAt(user.getCreatedAt())
-                .build();
-    }
+//    public static UserResponse mapToUserResponse(User user) {
+//        return UserResponse.builder()
+//                .userId(user.getUserId())
+//                .nickName(user.getNickName())
+//                .marketingReceive(user.getMarketingReceive())
+//                .matchingReceive(user.getHope().getMatchingReceive())
+//                .createdAt(user.getCreatedAt())
+//                .build();
+//    }
 
-    public static UserWithSeniorResponse mapToUserWithSeniorResponse(User user, Long seniorId) {
-        return UserWithSeniorResponse.builder()
-                .userId(user.getUserId())
-                .nickName(user.getNickName())
-                .marketingReceive(user.getMarketingReceive())
-                .matchingReceive(user.getHope().getMatchingReceive())
-                .createdAt(user.getCreatedAt())
-                .seniorId(seniorId)
-                .build();
-    }
+//    public static UserWithSeniorResponse mapToUserWithSeniorResponse(User user, Long seniorId) {
+//        return UserWithSeniorResponse.builder()
+//                .userId(user.getUserId())
+//                .nickName(user.getNickName())
+//                .marketingReceive(user.getMarketingReceive())
+//                .matchingReceive(user.getHope().getMatchingReceive())
+//                .createdAt(user.getCreatedAt())
+//                .seniorId(seniorId)
+//                .build();
+//    }
 
     public static SeniorResponse mapToSeniorResponse(Senior senior) {
         return SeniorResponse.builder()

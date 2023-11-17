@@ -1,5 +1,6 @@
 package com.postgraduate.domain.senior.domain.entity;
 
+import com.postgraduate.domain.senior.application.dto.req.SeniorMyPageProfileRequest;
 import com.postgraduate.domain.senior.domain.entity.constant.Status;
 import com.postgraduate.domain.user.domain.entity.User;
 import jakarta.persistence.*;
@@ -44,9 +45,6 @@ public class Senior {
     private Info info;
 
     @Embedded
-    private Account account;
-
-    @Embedded
     private Profile profile;
 
     @Column(nullable = false)
@@ -60,9 +58,9 @@ public class Senior {
         this.profile = profile;
     }
 
-    public void updateProfileAndAccount(Profile profile, Account account) {
-        this.profile = profile;
-        account.updateAccount(account);
+    public void updateMyPage(SeniorMyPageProfileRequest myPageProfileRequest) {
+        info.updateMyPage(myPageProfileRequest);
+        profile.updateMyPage(myPageProfileRequest);
     }
 
     public void updateCertification(String certification) {
