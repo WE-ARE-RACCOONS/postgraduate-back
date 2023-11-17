@@ -16,8 +16,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Date;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -43,7 +41,7 @@ public class SeniorMyPageUseCase {
         return SeniorMapper.mapToSeniorInfo(senior, salary, month, status, profile.isPresent());
     }
 
-    public void updateMyPageProfile(User user, SeniorMyPageProfileRequest myPageProfileRequest) {
+    public void updateSeniorMyPageProfile(User user, SeniorMyPageProfileRequest myPageProfileRequest) {
         userUpdateService.updateSeniorMyPage(user.getUserId(), myPageProfileRequest);
         Senior senior = seniorGetService.byUser(user);
         seniorUpdateService.updateMyPageProfile(senior, myPageProfileRequest);

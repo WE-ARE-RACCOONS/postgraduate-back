@@ -8,6 +8,7 @@ import com.postgraduate.domain.mentoring.application.dto.res.AppliedMentoringRes
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.entity.constant.Status;
 import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
+import com.postgraduate.domain.mentoring.exception.MentoringDoneException;
 import com.postgraduate.domain.mentoring.exception.MentoringNotWaitingException;
 import com.postgraduate.domain.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +31,7 @@ public class MentoringUserInfoUseCase {
     public AppliedMentoringDetailResponse getMentoringDetail(User user, Long mentoringId) {
         Mentoring mentoring = checkIsMyMentoringUseCase.byUser(user, mentoringId);
         if (mentoring.getStatus() == DONE) {
-            throw new MentoringNotWaitingException();
+            throw new MentoringDoneException();
         }
         return mapToAppliedDetailInfo(mentoring);
     }

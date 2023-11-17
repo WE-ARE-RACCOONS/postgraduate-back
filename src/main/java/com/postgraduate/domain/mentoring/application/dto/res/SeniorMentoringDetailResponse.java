@@ -13,4 +13,5 @@ public class SeniorMentoringDetailResponse {
     private String topic;
     private String question;
     private String[] dates;
+    private int term;
 }

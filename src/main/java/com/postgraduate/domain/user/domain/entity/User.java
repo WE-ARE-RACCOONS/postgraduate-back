@@ -66,7 +66,7 @@ public class User {
         this.profile = profile;
     }
 
-    public void updateMyPage(SeniorMyPageProfileRequest request) {
+    public void updateSeniorMyPage(SeniorMyPageProfileRequest request) {
         this.profile = request.getProfile();
         this.nickName = request.getNickName();
     }

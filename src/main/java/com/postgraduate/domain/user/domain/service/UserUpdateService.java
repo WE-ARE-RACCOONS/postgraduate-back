@@ -29,6 +29,6 @@ public class UserUpdateService {
 
     public void updateSeniorMyPage(Long userId, SeniorMyPageProfileRequest myPageProfileRequest) {
         User user = userRepository.findById(userId).get();
-        user.updateMyPage(myPageProfileRequest);
+        user.updateSeniorMyPage(myPageProfileRequest);
     }
 }

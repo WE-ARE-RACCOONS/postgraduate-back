@@ -114,12 +114,14 @@ public class MentoringMapper {
     public static SeniorMentoringDetailResponse mapToSeniorMentoringDetail(Mentoring mentoring) {
         String[] dates = mentoring.getDate().split(",");
         User user = mentoring.getUser();
+        Senior senior = mentoring.getSenior();
         return SeniorMentoringDetailResponse.builder()
                 .profile(user.getProfile())
                 .nickName(user.getNickName())
                 .topic(mentoring.getTopic())
                 .question(mentoring.getQuestion())
                 .dates(dates)
+                .term(senior.getProfile().getTerm())
                 .build();
     }
 }

@@ -62,7 +62,7 @@ public class SeniorController {
     @Operation(summary = "대학원생 마이페이지 프로필 수정")
     public ResponseDto getSeniorProfile(@AuthenticationPrincipal User user,
                                         @RequestBody SeniorMyPageProfileRequest myPageProfileRequest) {
-        seniorMyPageUseCase.updateMyPageProfile(user, myPageProfileRequest);
+        seniorMyPageUseCase.updateSeniorMyPageProfile(user, myPageProfileRequest);
         return ResponseDto.create(SENIOR_UPDATE.getCode(), UPDATE_MYPAGE_PROFILE.getMessage());
     }
 }
