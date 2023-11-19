@@ -65,4 +65,11 @@ public class SeniorController {
         seniorMyPageUseCase.updateSeniorMyPageProfile(user, myPageProfileRequest);
         return ResponseDto.create(SENIOR_UPDATE.getCode(), UPDATE_MYPAGE_PROFILE.getMessage());
     }
+
+    @GetMapping("/salary")
+    @Operation(summary = "대학원생 정산 예정액, 다음 정산 예정일 조회", description = "마이페이지에서 공통으로 보이는 정산 예정 정보입니다.")
+    public ResponseDto<SalaryInfoResponse> getSalary(@AuthenticationPrincipal User user) {
+        SalaryInfoResponse salary = seniorMyPageUseCase.getSalary(user);
+        return ResponseDto.create(SALARY_FIND.getCode(), GET_SALARY_INFO    .getMessage(), salary);
+    }
 }

@@ -6,14 +6,15 @@ import com.postgraduate.domain.senior.domain.entity.Senior;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class SalaryGetService {
     private final SalaryRepository salaryRepository;
 
-    public Optional<Salary> bySeniorAndMonth(Senior senior, String month) {
-        return salaryRepository.findBySeniorAndMonth(senior, month);
+    public List<Salary> bySeniorAndSalaryDate(Senior senior, LocalDate salaryDate) {
+        return salaryRepository.findAllBySeniorAndSalaryDate(senior, salaryDate);
     }
 }
