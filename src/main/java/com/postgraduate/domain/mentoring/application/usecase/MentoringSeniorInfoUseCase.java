@@ -18,19 +18,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.SimpleDateFormat;
 import java.time.Duration;
-import java.time.Instant;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static com.postgraduate.domain.mentoring.application.mapper.MentoringMapper.*;
-import static com.postgraduate.domain.mentoring.application.mapper.MentoringMapper.mapToSeniorDoneInfo;
 import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.*;
-import static com.postgraduate.domain.salary.util.MonthFormat.getMonthFormat;
 
 @Service
 @Transactional
@@ -89,15 +83,8 @@ public class MentoringSeniorInfoUseCase {
     private AppliedMentoringResponse getSeniorDone(List<Mentoring> mentorings) {
         List<DoneSeniorMentoringInfo> doneMentoringInfos = new ArrayList<>();
         for (Mentoring mentoring : mentorings) {
-            LocalDate updatedAt = mentoring.getUpdatedAt();
-            String month = updatedAt.format(getMonthFormat());
-            Salary salary = salaryGetService.bySeniorAndMonth(mentoring.getSenior(), month)
-                            .orElseThrow();
-            doneMentoringInfos.add(mapToSeniorDoneInfo(mentoring, mentoring.getDate(), salary.getStatus()));
-            //todo : 정산 관련 로직 필요, 예외 처리 필요
-            /**
-             * 우선 yyyy-MM 형식으로 저장
-             */
+            Salary salary = salaryGetService.byMentoring(mentoring);
+            doneMentoringInfos.add(mapToSeniorDoneInfo(mentoring, salary));
         }
         return new AppliedMentoringResponse(doneMentoringInfos);
     }
