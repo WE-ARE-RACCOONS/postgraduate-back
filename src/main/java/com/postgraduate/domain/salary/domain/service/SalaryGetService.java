@@ -14,6 +14,10 @@ import java.util.List;
 public class SalaryGetService {
     private final SalaryRepository salaryRepository;
 
+    public List<Salary> bySeniorAndStatus(Senior senior, Boolean status) {
+        return salaryRepository.findAllBySeniorAndStatus(senior, status);
+    }
+
     public List<Salary> bySeniorAndSalaryDate(Senior senior, LocalDate salaryDate) {
         return salaryRepository.findAllBySeniorAndSalaryDate(senior, salaryDate);
     }

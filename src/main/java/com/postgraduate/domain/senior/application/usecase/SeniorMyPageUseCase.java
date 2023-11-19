@@ -1,6 +1,8 @@
 package com.postgraduate.domain.senior.application.usecase;
 
+import com.postgraduate.domain.salary.application.dto.res.SalaryDetailResponse;
 import com.postgraduate.domain.salary.application.dto.res.SalaryInfoResponse;
+import com.postgraduate.domain.salary.application.mapper.SalaryMapper;
 import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.salary.domain.service.SalaryGetService;
 import com.postgraduate.domain.senior.application.dto.req.SeniorMyPageProfileRequest;
@@ -70,5 +72,11 @@ public class SeniorMyPageUseCase {
                 .map(salary -> salary.getMentoring().getPay())
                 .mapToInt(Integer::intValue)
                 .sum();
+    }
+
+    public List<SalaryDetailResponse> getSalaryDetail(User user, Boolean status) {
+        Senior senior = seniorGetService.byUser(user);
+        List<Salary> salaries = salaryGetService.bySeniorAndStatus(senior, status);
+        return salaries.stream().map(SalaryMapper::mapToSalaryDetail).toList();
     }
 }
