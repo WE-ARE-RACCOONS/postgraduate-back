@@ -15,6 +15,7 @@ public enum AuthResponseCode {
 
     AUTH_DENIED("EX900"),
     AUTH_INVALID_KAKAO("EX901"),
-    AUTH_KAKAO_CODE("EX902");
+    AUTH_KAKAO_CODE("EX902"),
+    AUTH_FAILED("EX903");
     private final String code;
 }

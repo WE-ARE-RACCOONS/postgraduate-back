@@ -1,6 +1,8 @@
 package com.postgraduate.global.config.security;
 
 import com.postgraduate.domain.user.domain.entity.constant.Role;
+import com.postgraduate.global.config.security.filter.CustomAccessDeniedHandler;
+import com.postgraduate.global.config.security.filter.CustomAuthenticationEntryPoint;
 import com.postgraduate.global.config.security.jwt.JwtFilter;
 import com.postgraduate.global.config.security.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +23,10 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final JwtProvider jwtProvider;
     private static final String[] PASS = {"/resource/**", "/css/**", "/js/**", "/img/**", "/lib/**"};
+    private final JwtProvider jwtProvider;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
     @Bean
     public BCryptPasswordEncoder encodePassword() {
         return new BCryptPasswordEncoder();
@@ -31,15 +35,15 @@ public class SecurityConfig {
     @Bean
     protected SecurityFilterChain config(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf->csrf.disable())
+                .csrf(csrf -> csrf.disable())
                 .cors(corsConfigurer ->
                         corsConfigurer.configurationSource(source())
                 )
-                .httpBasic(httpBasic->httpBasic.disable())
+                .httpBasic(httpBasic -> httpBasic.disable())
                 .headers((headers) -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable));
         http
-                .formLogin(formLogin->formLogin.disable())
-                .logout(logout->logout.disable());
+                .formLogin(formLogin -> formLogin.disable())
+                .logout(logout -> logout.disable());
         http
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers(PASS).permitAll()
@@ -48,15 +52,8 @@ public class SecurityConfig {
                 )
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling((exceptions) -> exceptions
-                        .authenticationEntryPoint((request, response, authException) -> {
-                            //TODO: 인증되지 않은 유저 예외
-                            throw new IllegalAccessError("실패");
-                        })
-                        .accessDeniedHandler((request, response, authException) -> {
-                            //TODO: 엑세스 거부 예외
-                            throw new IllegalAccessError("실패");
-
-                        })
+                        .authenticationEntryPoint(customAuthenticationEntryPoint)
+                        .accessDeniedHandler(customAccessDeniedHandler)
                 )
                 .addFilterBefore(new JwtFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
 
