@@ -74,16 +74,17 @@ public class SeniorMapper {
     }
 
     public static SeniorDetailResponse mapToSeniorDetail(Senior senior) {
+        String[] keyword = senior.getInfo().getKeyword().split(",");
         return SeniorDetailResponse.builder()
                 .nickName(senior.getUser().getNickName())
                 .profile(senior.getUser().getProfile())
-                .certificationRegister(senior.getStatus())
                 .postgradu(senior.getInfo().getPostgradu())
-                .field(senior.getInfo().getField())
+                .major(senior.getInfo().getMajor())
                 .lab(senior.getInfo().getLab())
                 .professor(senior.getInfo().getProfessor())
-                .keyword(senior.getInfo().getKeyword())
+                .keyword(keyword)
                 .info(senior.getProfile().getInfo())
+                .oneLiner(senior.getProfile().getOneLiner())
                 .target(senior.getProfile().getTarget())
                 .time(senior.getProfile().getTime())
                 .build();
