@@ -1,9 +1,8 @@
 package com.postgraduate.domain.senior.application.mapper;
 
 import com.postgraduate.domain.auth.application.dto.req.SeniorChangeRequest;
-import com.postgraduate.domain.salary.domain.entity.Salary;
-import com.postgraduate.domain.senior.application.dto.req.SeniorProfileRequest;
 import com.postgraduate.domain.auth.application.dto.req.SeniorSignUpRequest;
+import com.postgraduate.domain.senior.application.dto.req.SeniorProfileRequest;
 import com.postgraduate.domain.senior.application.dto.res.SeniorInfoResponse;
 import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Profile;
@@ -61,12 +60,10 @@ public class SeniorMapper {
                 .build();
     }
 
-    public static SeniorInfoResponse mapToSeniorInfo(Senior senior, Salary salary, String month, Status certificationRegister, boolean profileRegister) {
+    public static SeniorInfoResponse mapToSeniorInfo(Senior senior, Status certificationRegister, boolean profileRegister) {
         return SeniorInfoResponse.builder()
                 .nickName(senior.getUser().getNickName())
                 .profile(senior.getUser().getProfile())
-                .month(month)
-                .amount(salary.getAmount())
                 .certificationRegister(certificationRegister)
                 .profileRegister(profileRegister)
                 .build();

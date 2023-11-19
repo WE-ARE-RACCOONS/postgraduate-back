@@ -23,7 +23,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import static com.postgraduate.domain.salary.util.MonthFormat.getMonthFormat;
 import static java.util.Optional.ofNullable;
 
 @Service
@@ -38,12 +37,9 @@ public class SeniorMyPageUseCase {
 
     public SeniorInfoResponse seniorInfo(User user) {
         Senior senior = seniorGetService.byUser(user);
-        String month = LocalDate.now().format(getMonthFormat());
-        Salary salary = salaryGetService.bySeniorAndMonth(senior, month)
-                .orElse(new Salary());
         Status status = senior.getStatus();
         Optional<Profile> profile = ofNullable(senior.getProfile());
-        return SeniorMapper.mapToSeniorInfo(senior, salary, month, status, profile.isPresent());
+        return SeniorMapper.mapToSeniorInfo(senior, status, profile.isPresent());
     }
 
     public void updateSeniorMyPageProfile(User user, SeniorMyPageProfileRequest myPageProfileRequest) {

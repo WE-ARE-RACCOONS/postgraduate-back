@@ -11,8 +11,6 @@ import lombok.Getter;
 public class SeniorInfoResponse {
     private String nickName;
     private String profile;
-    private int amount;
-    private String month;
     private Status certificationRegister;
     private boolean profileRegister;
 }
