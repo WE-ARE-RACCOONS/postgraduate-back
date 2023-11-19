@@ -14,7 +14,7 @@ public class SeniorInfoUseCase {
     private final SeniorGetService seniorGetService;
 
     public SeniorDetailResponse getSeniorDetail(Long seniorId) {
-        Senior senior = seniorGetService.bySeniorIdWithProfile(seniorId);
+        Senior senior = seniorGetService.bySeniorIdWithCertification(seniorId);
         return mapToSeniorDetail(senior);
     }
 }

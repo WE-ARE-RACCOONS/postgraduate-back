@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.postgraduate.domain.senior.domain.entity.constant.Status.APPROVE;
+
 @Service
 @RequiredArgsConstructor
 public class SeniorGetService {
@@ -24,8 +26,8 @@ public class SeniorGetService {
         return seniorRepository.findById(seniorId).orElseThrow(NoneSeniorException::new);
     }
 
-    public Senior bySeniorIdWithProfile(Long seniorId) {
-        return seniorRepository.findBySeniorIdAndProfileNotNull(seniorId).orElseThrow(NoneSeniorException::new);
+    public Senior bySeniorIdWithCertification(Long seniorId) {
+        return seniorRepository.findBySeniorIdAndProfileNotNullAndStatus(seniorId, APPROVE).orElseThrow(NoneSeniorException::new);
     }
 
     public List<Senior> byStatus(Status status) {
