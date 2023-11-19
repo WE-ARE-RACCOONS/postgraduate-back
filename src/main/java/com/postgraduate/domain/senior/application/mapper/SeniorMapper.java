@@ -4,6 +4,7 @@ import com.postgraduate.domain.auth.application.dto.req.SeniorChangeRequest;
 import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.senior.application.dto.req.SeniorProfileRequest;
 import com.postgraduate.domain.auth.application.dto.req.SeniorSignUpRequest;
+import com.postgraduate.domain.senior.application.dto.res.SeniorDetailResponse;
 import com.postgraduate.domain.senior.application.dto.res.SeniorInfoResponse;
 import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Profile;
@@ -69,6 +70,22 @@ public class SeniorMapper {
                 .amount(salary.getAmount())
                 .certificationRegister(certificationRegister)
                 .profileRegister(profileRegister)
+                .build();
+    }
+
+    public static SeniorDetailResponse mapToSeniorDetail(Senior senior) {
+        return SeniorDetailResponse.builder()
+                .nickName(senior.getUser().getNickName())
+                .profile(senior.getUser().getProfile())
+                .certificationRegister(senior.getStatus())
+                .postgradu(senior.getInfo().getPostgradu())
+                .field(senior.getInfo().getField())
+                .lab(senior.getInfo().getLab())
+                .professor(senior.getInfo().getProfessor())
+                .keyword(senior.getInfo().getKeyword())
+                .info(senior.getProfile().getInfo())
+                .target(senior.getProfile().getTarget())
+                .time(senior.getProfile().getTime())
                 .build();
     }
 }
