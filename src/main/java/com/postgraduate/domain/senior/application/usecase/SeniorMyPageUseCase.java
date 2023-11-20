@@ -53,7 +53,7 @@ public class SeniorMyPageUseCase {
         LocalDate settlementDate = getSettlementDate();
         List<Salary> salaries = salaryGetService.bySeniorAndSalaryDate(senior, settlementDate);
         int pay = getAmount(salaries);
-        return new SalaryInfoResponse(settlementDate, pay);
+        return new SalaryInfoResponse(settlementDate, pay); //TODO 수수료
     }
 
     private LocalDate getSettlementDate() {
