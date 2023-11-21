@@ -11,6 +11,6 @@ public enum SalaryResponseCode {
     SALARY_CREATE("SLR202"),
     SALARY_DELETE("SLR203"),
 
-    NONE_SALARY("EX500");
+    SALARY_NOT_FOUND("EX500");
     private final String code;
 }

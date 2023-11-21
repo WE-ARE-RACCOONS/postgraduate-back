@@ -3,6 +3,7 @@ package com.postgraduate.domain.salary.domain.service;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.salary.domain.repository.SalaryRepository;
+import com.postgraduate.domain.salary.exception.SalaryNotFoundException;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,6 @@ public class SalaryGetService {
     }
 
     public Salary byMentoring(Mentoring mentoring) {
-        return salaryRepository.findByMentoring(mentoring).orElseThrow(IllegalArgumentException::new);
+        return salaryRepository.findByMentoring(mentoring).orElseThrow(SalaryNotFoundException::new);
     }
 }
