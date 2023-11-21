@@ -1,7 +1,5 @@
 package com.postgraduate.domain.senior.presentation;
 
-import com.postgraduate.domain.salary.application.dto.res.SalaryDetailResponse;
-import com.postgraduate.domain.salary.application.dto.res.SalaryInfoResponse;
 import com.postgraduate.domain.senior.application.dto.req.SeniorAccountRequest;
 import com.postgraduate.domain.senior.application.dto.req.SeniorCertificationRequest;
 import com.postgraduate.domain.senior.application.dto.req.SeniorMyPageProfileRequest;
@@ -19,11 +17,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
-import static com.postgraduate.domain.salary.presentation.constant.SalaryResponseCode.SALARY_FIND;
-import static com.postgraduate.domain.salary.presentation.constant.SalaryResponseMessage.GET_SALARY_INFO;
-import static com.postgraduate.domain.salary.presentation.constant.SalaryResponseMessage.GET_SALARY_LIST_INFO;
 import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseCode.SENIOR_FIND;
 import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseCode.SENIOR_UPDATE;
 import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseMessage.*;
@@ -82,26 +75,5 @@ public class SeniorController {
     public ResponseDto<SeniorDetailResponse> getSeniorDetails(@PathVariable Long seniorId) {
         SeniorDetailResponse seniorDetail = seniorInfoUseCase.getSeniorDetail(seniorId);
         return ResponseDto.create(SENIOR_FIND.getCode(), GET_SENIOR_INFO.getMessage(), seniorDetail);
-    }
-
-    @GetMapping("/salary")
-    @Operation(summary = "대학원생 정산 예정액, 다음 정산 예정일 조회", description = "마이페이지에서 공통으로 보이는 정산 예정 정보입니다.")
-    public ResponseDto<SalaryInfoResponse> getSalary(@AuthenticationPrincipal User user) {
-        SalaryInfoResponse salary = seniorMyPageUseCase.getSalary(user);
-        return ResponseDto.create(SALARY_FIND.getCode(), GET_SALARY_INFO.getMessage(), salary);
-    }
-
-    @GetMapping("/salary/waiting")
-    @Operation(summary = "대학원생 정산예정 목록 조회", description = "정산 예정 탭에서 보이는 목록입니다.")
-    public ResponseDto<List<SalaryDetailResponse>> getWaitingSalary(@AuthenticationPrincipal User user) {
-        List<SalaryDetailResponse> salary = seniorMyPageUseCase.getSalaryDetail(user, false);
-        return ResponseDto.create(SALARY_FIND.getCode(), GET_SALARY_LIST_INFO.getMessage(), salary);
-    }
-
-    @GetMapping("/salary/done")
-    @Operation(summary = "대학원생 정산완료 목록 조회", description = "정산 완료 탭에서 보이는 목록입니다.")
-    public ResponseDto<List<SalaryDetailResponse>> getDoneSalary(@AuthenticationPrincipal User user) {
-        List<SalaryDetailResponse> salary = seniorMyPageUseCase.getSalaryDetail(user, true);
-        return ResponseDto.create(SALARY_FIND.getCode(), GET_SALARY_LIST_INFO.getMessage(), salary);
     }
 }
