@@ -5,6 +5,7 @@ import com.postgraduate.domain.auth.application.dto.req.SeniorSignUpRequest;
 import com.postgraduate.domain.senior.application.dto.res.SeniorDetailResponse;
 import com.postgraduate.domain.senior.application.dto.req.SeniorProfileRequest;
 import com.postgraduate.domain.senior.application.dto.res.SeniorInfoResponse;
+import com.postgraduate.domain.senior.application.dto.res.SeniorMyPageResponse;
 import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
@@ -61,12 +62,29 @@ public class SeniorMapper {
                 .build();
     }
 
-    public static SeniorInfoResponse mapToSeniorInfo(Senior senior, Status certificationRegister, boolean profileRegister) {
-        return SeniorInfoResponse.builder()
+    public static SeniorMyPageResponse mapToSeniorMyPageInfo(Senior senior, Status certificationRegister, boolean profileRegister) {
+        return SeniorMyPageResponse.builder()
                 .nickName(senior.getUser().getNickName())
                 .profile(senior.getUser().getProfile())
                 .certificationRegister(certificationRegister)
                 .profileRegister(profileRegister)
+                .build();
+    }
+
+    public static SeniorInfoResponse mapToOriginInfo(Senior senior) {
+        User user = senior.getUser();
+        Info info = senior.getInfo();
+        Profile profile = senior.getProfile();
+        return SeniorInfoResponse.builder()
+                .profile(user.getProfile())
+                .nickName(user.getNickName())
+                .lab(info.getLab())
+                .keyword(info.getKeyword())
+                .field(info.getField())
+                .info(profile.getInfo())
+                .target(profile.getTarget())
+                .chatLink(profile.getChatLink())
+                .oneLiner(profile.getOneLiner())
                 .build();
     }
 

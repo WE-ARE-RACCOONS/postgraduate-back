@@ -9,6 +9,7 @@ import com.postgraduate.domain.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class MentoringGetService {
         return mentoringRepository.findByMentoringId(mentoringId).orElseThrow(MentoringNotFoundException::new);
     }
 
-//    public List<Mentoring> all() {
-//        return mentoringRepository.findAllByDeletedAtIsNull().orElse(new ArrayList<>());
-//    }
+    public List<Mentoring> byStatusAndCreatedAt(Status status, LocalDate now) {
+        return mentoringRepository.findAllByStatusAndCreatedAtIsBefore(status, now);
+    }
 }

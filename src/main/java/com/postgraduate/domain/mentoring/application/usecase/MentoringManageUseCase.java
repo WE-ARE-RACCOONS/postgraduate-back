@@ -2,6 +2,7 @@ package com.postgraduate.domain.mentoring.application.usecase;
 
 import com.postgraduate.domain.mentoring.application.dto.req.MentoringDateRequest;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
+import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
 import com.postgraduate.domain.mentoring.domain.service.MentoringUpdateService;
 import com.postgraduate.domain.mentoring.exception.MentoringNotWaitingException;
 import com.postgraduate.domain.refuse.application.dto.req.MentoringRefuseRequest;
@@ -13,10 +14,13 @@ import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.salary.domain.service.SalarySaveService;
 import com.postgraduate.domain.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+
+import java.util.List;
 
 import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.*;
 
@@ -27,6 +31,7 @@ public class MentoringManageUseCase {
     private static final int SALARY_DATE = 10;
     private final CheckIsMyMentoringUseCase checkIsMyMentoringUseCase;
     private final MentoringUpdateService mentoringUpdateService;
+    private final MentoringGetService mentoringGetService;
     private final RefuseSaveService refuseSaveService;
     private final SalarySaveService salarySaveService;
 
@@ -63,5 +68,15 @@ public class MentoringManageUseCase {
             throw new MentoringNotWaitingException();
         mentoringUpdateService.updateDate(mentoring, dateRequest.getDate());
         mentoringUpdateService.updateStatus(mentoring, EXPECTED);
+    }
+
+    @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")
+    public void updateCancel() {
+        LocalDate now = LocalDate.now();
+        List<Mentoring> mentorings = mentoringGetService.byStatusAndCreatedAt(WAITING, now);
+        for (Mentoring mentoring : mentorings) {
+            mentoringUpdateService.updateStatus(mentoring, CANCEL);
+            //TODO : 알림 보내거나 나머지 작업
+        }
     }
 }
