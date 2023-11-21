@@ -6,7 +6,6 @@ import com.postgraduate.domain.salary.domain.repository.SalaryRepository;
 import com.postgraduate.domain.salary.exception.SalaryNotFoundException;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -18,8 +17,7 @@ public class SalaryGetService {
     private final SalaryRepository salaryRepository;
 
     public List<Salary> bySeniorAndStatus(Senior senior, Boolean status) {
-        Sort sort = Sort.by(Sort.Direction.DESC, "salaryDate");
-        return salaryRepository.findAllBySeniorAndStatus(senior, status, sort);
+        return salaryRepository.findAllBySeniorAndStatusOrderBySalaryDateDesc(senior, status);
     }
 
     public List<Salary> bySeniorAndSalaryDate(Senior senior, LocalDate salaryDate) {
