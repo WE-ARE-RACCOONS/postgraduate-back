@@ -1,8 +1,8 @@
 package com.postgraduate.domain.user.presentation;
 
-import com.postgraduate.domain.user.application.dto.req.UserNickNameRequest;
-import com.postgraduate.domain.user.application.dto.req.UserProfileRequest;
+import com.postgraduate.domain.user.application.dto.req.UserInfoRequest;
 import com.postgraduate.domain.user.application.dto.res.UserInfoResponse;
+import com.postgraduate.domain.user.application.dto.res.UserMyPageResponse;
 import com.postgraduate.domain.user.application.usecase.UserManageUseCase;
 import com.postgraduate.domain.user.application.usecase.UserMyPageUseCase;
 import com.postgraduate.domain.user.domain.entity.User;
@@ -26,17 +26,31 @@ public class UserController {
     private final UserManageUseCase manageUseCase;
 
     @GetMapping("/me")
-    @Operation(description = "사용자 기본 정보 조회 - 닉네임, 프로필")
-    public ResponseDto<UserInfoResponse> getUserInfo(@AuthenticationPrincipal User user) {
-        UserInfoResponse userInfo = myPageUseCase.getUserInfo(user);
+    @Operation(description = "사용자 마이페이지 정보 조회 - 닉네임, 프로필")
+    public ResponseDto<UserMyPageResponse> getUserInfo(@AuthenticationPrincipal User user) {
+        UserMyPageResponse userInfo = myPageUseCase.getUserInfo(user);
         return ResponseDto.create(USER_FIND.getCode(), GET_USER_INFO.getMessage(), userInfo);
     }
 
-    @PatchMapping("/nickname")
-    @Operation(description = "사용자 닉네임 변경 및 업데이트")
-    public ResponseDto updateNickName(@AuthenticationPrincipal User user, @RequestBody UserNickNameRequest userNickNameRequest) {
-        manageUseCase.updateNickName(user, userNickNameRequest.getNickName());
+    @GetMapping("/me/info")
+    @Operation(description = "대학생 마이페이지 정보 수정시 기존 정보 조회")
+    public ResponseDto<UserInfoResponse> getOriginUserInfo(@AuthenticationPrincipal User user) {
+        UserInfoResponse originInfo = myPageUseCase.getUserOriginInfo(user);
+        return ResponseDto.create(USER_FIND.getCode(), GET_USER_INFO.getMessage(), originInfo);
+    }
+
+    @PatchMapping("/me/info")
+    @Operation(description = "대학생 마이페이지 정보 수정 - 프로필사진, 닉네임, 번호")
+    public ResponseDto updateInfo(@AuthenticationPrincipal User user, @RequestBody UserInfoRequest userInfoRequest) {
+        manageUseCase.updateInfo(user, userInfoRequest);
         return ResponseDto.create(USER_UPDATE.getCode(), UPDATE_USER_INFO.getMessage());
+    }
+
+    @GetMapping("/me/role")
+    @Operation(description = "선배 전환시 가능 여부 확인 - true,false")
+    public ResponseDto<Boolean> checkRole(@AuthenticationPrincipal User user) {
+        boolean isOk = myPageUseCase.checkSenior(user);
+        return ResponseDto.create(USER_FIND.getCode(), GET_SENIOR_CHECK.getMessage(), isOk);
     }
 
     @GetMapping("/nickname")
@@ -44,12 +58,5 @@ public class UserController {
     public ResponseDto<Boolean> duplicatedNickName(@RequestParam String nickName) {
         boolean checkDup = manageUseCase.duplicatedNickName(nickName);
         return ResponseDto.create(USER_FIND.getCode(), GET_NICKNAME_CHECK.getMessage(), checkDup);
-    }
-
-    @PatchMapping("/profile")
-    @Operation(description = "사용자 프로필 사진 업데이트 - url을 주세요")
-    public ResponseDto updateProfile(@AuthenticationPrincipal User user, @RequestBody UserProfileRequest userProfileRequest) {
-        manageUseCase.updateProfile(user, userProfileRequest.getProfile());
-        return ResponseDto.create(USER_UPDATE.getCode(), UPDATE_USER_INFO.getMessage());
     }
 }

@@ -6,6 +6,7 @@ import com.postgraduate.global.config.security.filter.CustomAuthenticationEntryP
 import com.postgraduate.global.config.security.jwt.JwtFilter;
 import com.postgraduate.global.config.security.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,11 +14,16 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.encrypt.AesBytesEncryptor;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.UUID;
+
+import static java.util.UUID.randomUUID;
 
 @Configuration
 @EnableWebSecurity
@@ -27,9 +33,14 @@ public class SecurityConfig {
     private final JwtProvider jwtProvider;
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
+    @Value("${aesBytesEncryptor.secret}")
+    private String secretKey;
+    @Value("${aesBytesEncryptor.salt}")
+    private String salt;
+
     @Bean
-    public BCryptPasswordEncoder encodePassword() {
-        return new BCryptPasswordEncoder();
+    public AesBytesEncryptor aesBytesEncryptor() {
+        return new AesBytesEncryptor(secretKey, salt);
     }
 
     @Bean

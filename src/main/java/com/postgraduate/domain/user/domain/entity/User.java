@@ -66,6 +66,12 @@ public class User {
         this.profile = profile;
     }
 
+    public void updateInfo(String profile, String nickName, String phoneNumber) {
+        this.profile = profile;
+        this.nickName = nickName;
+        this.phoneNumber = phoneNumber;
+    }
+
     public void updateSeniorMyPage(SeniorMyPageProfileRequest request) {
         this.profile = request.getProfile();
         this.nickName = request.getNickName();
