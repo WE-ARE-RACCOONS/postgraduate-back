@@ -8,7 +8,6 @@ import com.postgraduate.domain.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.postgraduate.domain.senior.domain.entity.constant.Status.APPROVE;
@@ -31,6 +30,6 @@ public class SeniorGetService {
     }
 
     public List<Senior> byStatus(Status status) {
-        return seniorRepository.findAllByStatus(status).orElse(new ArrayList<>());
+        return seniorRepository.findAllByStatus(status);
     }
 }
