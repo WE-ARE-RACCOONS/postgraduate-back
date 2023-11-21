@@ -11,5 +11,5 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class SalaryInfoResponse {
     private LocalDate salaryDate;
-    private int pay;
+    private int salaryAmount;
 }

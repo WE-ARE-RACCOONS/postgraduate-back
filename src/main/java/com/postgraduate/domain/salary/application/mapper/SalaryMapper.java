@@ -21,7 +21,7 @@ public class SalaryMapper {
                 .nickName(salary.getMentoring().getUser().getNickName())
                 .date(salary.getMentoring().getDate())
                 .term(salary.getSenior().getProfile().getTerm())
-                .pay(salary.getMentoring().getPay()) //TODO 수수료
+                .salaryAmount(salary.getMentoring().getPay()) //TODO 수수료
                 .salaryDate(salary.getSalaryDate())
                 .build();
     }

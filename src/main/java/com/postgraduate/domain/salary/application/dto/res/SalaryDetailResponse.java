@@ -14,6 +14,6 @@ public class SalaryDetailResponse {
     private String nickName;
     private String date;
     private int term;
-    private int pay;
+    private int salaryAmount;
     private LocalDate salaryDate;
 }
