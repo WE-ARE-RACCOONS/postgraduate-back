@@ -75,7 +75,7 @@ public class MentoringManageUseCase {
     }
 
     @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")
-    private void updateCancel() {
+    public void updateCancel() {
         LocalDate now = LocalDate.now();
         List<Mentoring> mentorings = mentoringGetService.byStatusAndCreatedAt(WAITING, now);
         for (Mentoring mentoring : mentorings) {
