@@ -4,7 +4,10 @@ import com.postgraduate.domain.senior.application.dto.req.SeniorAccountRequest;
 import com.postgraduate.domain.senior.application.dto.req.SeniorCertificationRequest;
 import com.postgraduate.domain.senior.application.dto.req.SeniorMyPageProfileRequest;
 import com.postgraduate.domain.senior.application.dto.req.SeniorProfileRequest;
+import com.postgraduate.domain.senior.application.dto.res.SeniorDetailResponse;
 import com.postgraduate.domain.senior.application.dto.res.SeniorInfoResponse;
+import com.postgraduate.domain.senior.application.dto.res.SeniorMyPageResponse;
+import com.postgraduate.domain.senior.application.usecase.SeniorInfoUseCase;
 import com.postgraduate.domain.senior.application.usecase.SeniorManageUseCase;
 import com.postgraduate.domain.senior.application.usecase.SeniorMyPageUseCase;
 import com.postgraduate.domain.user.domain.entity.User;
@@ -26,6 +29,7 @@ import static com.postgraduate.domain.senior.presentation.constant.SeniorRespons
 public class SeniorController {
     private final SeniorMyPageUseCase seniorMyPageUseCase;
     private final SeniorManageUseCase seniorManageUseCase;
+    private final SeniorInfoUseCase seniorInfoUseCase;
 
     @PatchMapping("/certification")
     @Operation(summary = "대학원생 인증", description = "이미지 업로드 이후 url 담아서 요청")
@@ -53,16 +57,30 @@ public class SeniorController {
 
     @GetMapping("/me")
     @Operation(summary = "대학원생 마이페이지 기본 정보 조회", description = "닉네임, 프로필 사진, 인증 여부")
-    public ResponseDto<SeniorInfoResponse> getSeniorInfo(@AuthenticationPrincipal User user) {
-        SeniorInfoResponse seniorInfoResponse = seniorMyPageUseCase.seniorInfo(user);
-        return ResponseDto.create(SENIOR_FIND.getCode(), GET_SENIOR_INFO.getMessage(), seniorInfoResponse);
+    public ResponseDto<SeniorMyPageResponse> getSeniorInfo(@AuthenticationPrincipal User user) {
+        SeniorMyPageResponse seniorMyPageResponse = seniorMyPageUseCase.getSeniorInfo(user);
+        return ResponseDto.create(SENIOR_FIND.getCode(), GET_SENIOR_INFO.getMessage(), seniorMyPageResponse);
+    }
+
+    @GetMapping("/me/profile")
+    @Operation(summary = "대학생 마이페이지 프로필 수정시 기존 정보 조회")
+    public ResponseDto<SeniorInfoResponse> getSeniorProfile(@AuthenticationPrincipal User user) {
+        SeniorInfoResponse seniorOriginInfo = seniorMyPageUseCase.getSeniorOriginInfo(user);
+        return ResponseDto.create(SENIOR_FIND.getCode(), GET_SENIOR_INFO.getMessage(), seniorOriginInfo);
     }
 
     @PatchMapping("/me/profile")
     @Operation(summary = "대학원생 마이페이지 프로필 수정")
-    public ResponseDto getSeniorProfile(@AuthenticationPrincipal User user,
+    public ResponseDto updateSeniorProfile(@AuthenticationPrincipal User user,
                                         @RequestBody SeniorMyPageProfileRequest myPageProfileRequest) {
-        seniorMyPageUseCase.updateSeniorMyPageProfile(user, myPageProfileRequest);
+        seniorManageUseCase.updateSeniorMyPageProfile(user, myPageProfileRequest);
         return ResponseDto.create(SENIOR_UPDATE.getCode(), UPDATE_MYPAGE_PROFILE.getMessage());
+    }
+
+    @GetMapping("/{seniorId}")
+    @Operation(summary = "대학원생 상세 조회")
+    public ResponseDto<SeniorDetailResponse> getSeniorDetails(@PathVariable Long seniorId) {
+        SeniorDetailResponse seniorDetail = seniorInfoUseCase.getSeniorDetail(seniorId);
+        return ResponseDto.create(SENIOR_FIND.getCode(), GET_SENIOR_INFO.getMessage(), seniorDetail);
     }
 }

@@ -1,10 +1,11 @@
 package com.postgraduate.domain.senior.application.mapper;
 
 import com.postgraduate.domain.auth.application.dto.req.SeniorChangeRequest;
-import com.postgraduate.domain.salary.domain.entity.Salary;
-import com.postgraduate.domain.senior.application.dto.req.SeniorProfileRequest;
 import com.postgraduate.domain.auth.application.dto.req.SeniorSignUpRequest;
+import com.postgraduate.domain.senior.application.dto.res.SeniorDetailResponse;
+import com.postgraduate.domain.senior.application.dto.req.SeniorProfileRequest;
 import com.postgraduate.domain.senior.application.dto.res.SeniorInfoResponse;
+import com.postgraduate.domain.senior.application.dto.res.SeniorMyPageResponse;
 import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
@@ -61,14 +62,46 @@ public class SeniorMapper {
                 .build();
     }
 
-    public static SeniorInfoResponse mapToSeniorInfo(Senior senior, Salary salary, String month, Status certificationRegister, boolean profileRegister) {
-        return SeniorInfoResponse.builder()
+    public static SeniorMyPageResponse mapToSeniorMyPageInfo(Senior senior, Status certificationRegister, boolean profileRegister) {
+        return SeniorMyPageResponse.builder()
                 .nickName(senior.getUser().getNickName())
                 .profile(senior.getUser().getProfile())
-                .month(month)
-                .amount(salary.getAmount())
                 .certificationRegister(certificationRegister)
                 .profileRegister(profileRegister)
+                .build();
+    }
+
+    public static SeniorInfoResponse mapToOriginInfo(Senior senior) {
+        User user = senior.getUser();
+        Info info = senior.getInfo();
+        Profile profile = senior.getProfile();
+        return SeniorInfoResponse.builder()
+                .profile(user.getProfile())
+                .nickName(user.getNickName())
+                .lab(info.getLab())
+                .keyword(info.getKeyword())
+                .field(info.getField())
+                .info(profile.getInfo())
+                .target(profile.getTarget())
+                .chatLink(profile.getChatLink())
+                .oneLiner(profile.getOneLiner())
+                .build();
+    }
+
+    public static SeniorDetailResponse mapToSeniorDetail(Senior senior) {
+        String[] keyword = senior.getInfo().getKeyword().split(",");
+        return SeniorDetailResponse.builder()
+                .nickName(senior.getUser().getNickName())
+                .profile(senior.getUser().getProfile())
+                .postgradu(senior.getInfo().getPostgradu())
+                .major(senior.getInfo().getMajor())
+                .lab(senior.getInfo().getLab())
+                .professor(senior.getInfo().getProfessor())
+                .keyword(keyword)
+                .info(senior.getProfile().getInfo())
+                .oneLiner(senior.getProfile().getOneLiner())
+                .target(senior.getProfile().getTarget())
+                .time(senior.getProfile().getTime())
                 .build();
     }
 }

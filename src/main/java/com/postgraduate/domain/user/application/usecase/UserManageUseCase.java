@@ -1,5 +1,6 @@
 package com.postgraduate.domain.user.application.usecase;
 
+import com.postgraduate.domain.user.application.dto.req.UserInfoRequest;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.service.UserGetService;
 import com.postgraduate.domain.user.domain.service.UserUpdateService;
@@ -14,12 +15,8 @@ public class UserManageUseCase {
     private final UserUpdateService userUpdateService;
     private final UserGetService userGetService;
 
-    public void updateNickName(User user, String nickName) {
-        userUpdateService.updateNickName(user.getUserId(), nickName);
-    }
-
-    public void updateProfile(User user, String profile) {
-        userUpdateService.updateProfile(user.getUserId(), profile);
+    public void updateInfo(User user, UserInfoRequest userInfoRequest) {
+        userUpdateService.updateInfo(user.getUserId(), userInfoRequest);
     }
 
     public boolean duplicatedNickName(String nickName) {

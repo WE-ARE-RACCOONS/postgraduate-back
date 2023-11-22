@@ -10,5 +10,6 @@ import java.util.Optional;
 
 public interface SeniorRepository extends JpaRepository<Senior, Long> {
     Optional<Senior> findByUser(User user);
-    Optional<List<Senior>> findAllByStatus(Status status);
+    Optional<Senior> findBySeniorIdAndProfileNotNullAndStatus(Long seniorId, Status status);
+    List<Senior> findAllByStatus(Status status);
 }

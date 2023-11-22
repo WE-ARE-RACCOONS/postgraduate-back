@@ -1,21 +1,22 @@
 package com.postgraduate.domain.senior.application.dto.res;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
-@Builder
 @Getter
+@Builder
 @AllArgsConstructor
-public class SeniorInfoResponse {
-    private String profile;
+public class SeniorDetailResponse {
     private String nickName;
+    private String profile;
+    private String postgradu;
+    private String major;
     private String lab;
-    private String keyword;
+    private String professor;
+    private String[] keyword;
     private String info;
-    private String target;
-    private String chatLink;
-    private String field;
     private String oneLiner;
+    private String target;
+    private String time;
 }

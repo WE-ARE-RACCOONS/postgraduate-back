@@ -7,8 +7,7 @@ import lombok.Getter;
 @Getter
 @Builder
 @AllArgsConstructor
-public class UserInfoResponse {
-    private String profile;
+public class UserMyPageResponse {
     private String nickName;
-    private String phoneNumber;
+    private String profile;
 }
