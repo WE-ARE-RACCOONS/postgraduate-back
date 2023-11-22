@@ -1,4 +1,4 @@
-package com.postgraduate.domain.mentoring.application.dto;
+package com.postgraduate.domain.salary.application.dto.res;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,12 +9,11 @@ import java.time.LocalDate;
 @Getter
 @Builder
 @AllArgsConstructor
-public class DoneSeniorMentoringInfo {
-    private Long mentoringId;
+public class SalaryDetailResponse {
     private String profile;
-    private String nickname;
-    private int term;
+    private String nickName;
     private String date;
+    private int term;
+    private int salaryAmount;
     private LocalDate salaryDate;
-    private Boolean status;
 }

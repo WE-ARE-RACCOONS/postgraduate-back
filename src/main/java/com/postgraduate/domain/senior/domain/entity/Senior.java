@@ -71,4 +71,8 @@ public class Senior {
     public void updateStatus(Status status) {
         this.status = status;
     }
+
+    public void updateHit() {
+        this.hit++;
+    }
 }

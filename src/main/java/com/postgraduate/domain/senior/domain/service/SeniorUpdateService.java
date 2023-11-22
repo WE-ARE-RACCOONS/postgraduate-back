@@ -21,4 +21,8 @@ public class SeniorUpdateService {
     public void updateMyPageProfile(Senior senior, SeniorMyPageProfileRequest myPageProfileRequest) {
         senior.updateMyPage(myPageProfileRequest);
     }
+
+    public void updateHit(Senior senior) {
+        senior.updateHit();
+    }
 }

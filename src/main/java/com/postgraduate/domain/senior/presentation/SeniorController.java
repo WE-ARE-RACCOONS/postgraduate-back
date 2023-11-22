@@ -4,8 +4,10 @@ import com.postgraduate.domain.senior.application.dto.req.SeniorAccountRequest;
 import com.postgraduate.domain.senior.application.dto.req.SeniorCertificationRequest;
 import com.postgraduate.domain.senior.application.dto.req.SeniorMyPageProfileRequest;
 import com.postgraduate.domain.senior.application.dto.req.SeniorProfileRequest;
+import com.postgraduate.domain.senior.application.dto.res.SeniorDetailResponse;
 import com.postgraduate.domain.senior.application.dto.res.SeniorInfoResponse;
 import com.postgraduate.domain.senior.application.dto.res.SeniorMyPageResponse;
+import com.postgraduate.domain.senior.application.usecase.SeniorInfoUseCase;
 import com.postgraduate.domain.senior.application.usecase.SeniorManageUseCase;
 import com.postgraduate.domain.senior.application.usecase.SeniorMyPageUseCase;
 import com.postgraduate.domain.user.domain.entity.User;
@@ -27,6 +29,7 @@ import static com.postgraduate.domain.senior.presentation.constant.SeniorRespons
 public class SeniorController {
     private final SeniorMyPageUseCase seniorMyPageUseCase;
     private final SeniorManageUseCase seniorManageUseCase;
+    private final SeniorInfoUseCase seniorInfoUseCase;
 
     @PatchMapping("/certification")
     @Operation(summary = "대학원생 인증", description = "이미지 업로드 이후 url 담아서 요청")
@@ -72,5 +75,12 @@ public class SeniorController {
                                         @RequestBody SeniorMyPageProfileRequest myPageProfileRequest) {
         seniorManageUseCase.updateSeniorMyPageProfile(user, myPageProfileRequest);
         return ResponseDto.create(SENIOR_UPDATE.getCode(), UPDATE_MYPAGE_PROFILE.getMessage());
+    }
+
+    @GetMapping("/{seniorId}")
+    @Operation(summary = "대학원생 상세 조회")
+    public ResponseDto<SeniorDetailResponse> getSeniorDetails(@PathVariable Long seniorId) {
+        SeniorDetailResponse seniorDetail = seniorInfoUseCase.getSeniorDetail(seniorId);
+        return ResponseDto.create(SENIOR_FIND.getCode(), GET_SENIOR_INFO.getMessage(), seniorDetail);
     }
 }

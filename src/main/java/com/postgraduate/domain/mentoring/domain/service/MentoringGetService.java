@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -19,11 +18,11 @@ public class MentoringGetService {
     private final MentoringRepository mentoringRepository;
 
     public List<Mentoring> mentoringByUser(User user, Status status) {
-        return mentoringRepository.findAllByUserAndStatus(user, status).orElse(new ArrayList<>());
+        return mentoringRepository.findAllByUserAndStatus(user, status);
     }
 
     public List<Mentoring> mentoringBySenior(Senior senior, Status status) {
-        return mentoringRepository.findAllBySeniorAndStatus(senior, status).orElse(new ArrayList<>());
+        return mentoringRepository.findAllBySeniorAndStatus(senior, status);
     }
 
     public Mentoring byMentoringId(Long mentoringId) {
