@@ -23,4 +23,6 @@ public class SeniorMyPageProfileRequest {
     private String field;
     @NotNull
     private String oneLiner;
+    @NotNull
+    private String time;
 }

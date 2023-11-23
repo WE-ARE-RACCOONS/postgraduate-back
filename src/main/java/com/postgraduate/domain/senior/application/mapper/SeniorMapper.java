@@ -3,6 +3,7 @@ package com.postgraduate.domain.senior.application.mapper;
 import com.postgraduate.domain.account.domain.entity.Account;
 import com.postgraduate.domain.auth.application.dto.req.SeniorChangeRequest;
 import com.postgraduate.domain.auth.application.dto.req.SeniorSignUpRequest;
+import com.postgraduate.domain.senior.application.dto.req.SeniorMyPageProfileRequest;
 import com.postgraduate.domain.senior.application.dto.res.SeniorDetailResponse;
 import com.postgraduate.domain.senior.application.dto.req.SeniorProfileRequest;
 import com.postgraduate.domain.senior.application.dto.res.SeniorMyPageProfileResponse;
@@ -36,6 +37,16 @@ public class SeniorMapper {
     }
 
     public static Profile mapToProfile(SeniorProfileRequest profileRequest) {
+        return Profile.builder()
+                .info(profileRequest.getInfo())
+                .chatLink(profileRequest.getChatLink())
+                .oneLiner(profileRequest.getOneLiner())
+                .target(profileRequest.getTarget())
+                .time(profileRequest.getTime())
+                .build();
+    }
+
+    public static Profile mapToProfile(SeniorMyPageProfileRequest profileRequest) {
         return Profile.builder()
                 .info(profileRequest.getInfo())
                 .chatLink(profileRequest.getChatLink())

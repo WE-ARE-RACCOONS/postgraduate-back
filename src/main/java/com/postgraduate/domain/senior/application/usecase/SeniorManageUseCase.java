@@ -16,10 +16,13 @@ import com.postgraduate.domain.user.domain.service.UserUpdateService;
 import com.postgraduate.global.config.security.util.EncryptorUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.postgraduate.domain.account.application.mapper.AccountMapper.mapToAccount;
+import static com.postgraduate.domain.senior.application.mapper.SeniorMapper.mapToProfile;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class SeniorManageUseCase {
     private final UserUpdateService userUpdateService;
@@ -35,10 +38,10 @@ public class SeniorManageUseCase {
         seniorUpdateService.updateCertification(senior, certificationRequest.getCertification());
     }
 
-    public void updateProfile(User user, SeniorProfileRequest profileRequest) {
+    public void signUpProfile(User user, SeniorProfileRequest profileRequest) {
         Senior senior = seniorGetService.byUser(user);
-        Profile profile = SeniorMapper.mapToProfile(profileRequest);
-        seniorUpdateService.updateSeniorProfile(senior, profile);
+        Profile profile = mapToProfile(profileRequest);
+        seniorUpdateService.signUpSeniorProfile(senior, profile);
     }
 
     public void saveAccount(User user, SeniorAccountRequest accountRequest) {
@@ -50,7 +53,8 @@ public class SeniorManageUseCase {
 
     public void updateSeniorMyPageProfile(User user, SeniorMyPageProfileRequest myPageProfileRequest) {
         Senior senior = seniorGetService.byUser(user);
-        seniorUpdateService.updateMyPageProfile(senior, myPageProfileRequest);
+        Profile profile = mapToProfile(myPageProfileRequest);
+        seniorUpdateService.updateMyPageProfile(senior, myPageProfileRequest, profile);
     }
 
     public void updateSeniorMyPageUserAccount(User user, SeniorMyPageUserAccountRequest myPageUserAccountRequest) {

@@ -41,16 +41,16 @@ public class SeniorController {
     @Operation(summary = "대학원생 프로필 등록")
     public ResponseDto singUpSenior(@AuthenticationPrincipal User user,
                                     @RequestBody SeniorProfileRequest profileRequest) {
-        seniorManageUseCase.updateProfile(user, profileRequest);
+        seniorManageUseCase.signUpProfile(user, profileRequest);
         return ResponseDto.create(SENIOR_UPDATE.getCode(), UPDATE_PROFILE.getMessage());
     }
 
-    @PatchMapping("/account")
+    @PostMapping("/account")
     @Operation(summary = "대학원생 정산 계좌 생성")
     public ResponseDto updateAccount(@AuthenticationPrincipal User user,
                                      @RequestBody SeniorAccountRequest accountRequest) {
         seniorManageUseCase.saveAccount(user, accountRequest);
-        return ResponseDto.create(SENIOR_UPDATE.getCode(), UPDATE_ACCOUNT.getMessage());
+        return ResponseDto.create(SENIOR_CREATE.getCode(), CREATE_ACCOUNT.getMessage());
     }
 
     @GetMapping("/me")
@@ -89,8 +89,6 @@ public class SeniorController {
         seniorManageUseCase.updateSeniorMyPageUserAccount(user, myPageUserAccountRequest);
         return ResponseDto.create(SENIOR_UPDATE.getCode(), UPDATE_MYPAGE_ACCOOUNT.getMessage());
     }
-
-
 
     @GetMapping("/{seniorId}")
     @Operation(summary = "대학원생 상세 조회")

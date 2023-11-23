@@ -1,6 +1,5 @@
 package com.postgraduate.domain.user.domain.service;
 
-import com.postgraduate.domain.senior.application.dto.req.SeniorMyPageProfileRequest;
 import com.postgraduate.domain.senior.application.dto.req.SeniorMyPageUserAccountRequest;
 import com.postgraduate.domain.user.application.dto.req.UserInfoRequest;
 import com.postgraduate.domain.user.domain.entity.User;
