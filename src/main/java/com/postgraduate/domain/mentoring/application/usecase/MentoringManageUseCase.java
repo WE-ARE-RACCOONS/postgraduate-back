@@ -81,7 +81,7 @@ public class MentoringManageUseCase {
         return account.isPresent();
     }
 
-    @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 59 23 * * *", zone = "Asia/Seoul")
     public void updateCancel() {
         LocalDate now = LocalDate.now();
         List<Mentoring> mentorings = mentoringGetService.byStatusAndCreatedAt(WAITING, now);
