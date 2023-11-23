@@ -36,7 +36,8 @@ public class MentoringSeniorInfoUseCase {
     private final SalaryGetService salaryGetService;
 
     public SeniorMentoringDetailResponse getSeniorMentoringDetail(User user, Long mentoringId) {
-        Mentoring mentoring = checkIsMyMentoringUseCase.bySenior(user, mentoringId);
+        Senior senior = seniorGetService.byUser(user);
+        Mentoring mentoring = checkIsMyMentoringUseCase.bySenior(senior, mentoringId);
         if (mentoring.getStatus() == DONE) {
             throw new MentoringDoneException();
         }

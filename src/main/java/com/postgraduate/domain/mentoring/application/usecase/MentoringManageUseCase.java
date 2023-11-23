@@ -1,5 +1,7 @@
 package com.postgraduate.domain.mentoring.application.usecase;
 
+import com.postgraduate.domain.account.domain.entity.Account;
+import com.postgraduate.domain.account.domain.service.AccountGetService;
 import com.postgraduate.domain.mentoring.application.dto.req.MentoringDateRequest;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
@@ -12,6 +14,8 @@ import com.postgraduate.domain.refuse.domain.service.RefuseSaveService;
 import com.postgraduate.domain.salary.application.mapper.SalaryMapper;
 import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.salary.domain.service.SalarySaveService;
+import com.postgraduate.domain.senior.domain.entity.Senior;
+import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.domain.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -21,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.*;
 
@@ -34,6 +39,8 @@ public class MentoringManageUseCase {
     private final MentoringGetService mentoringGetService;
     private final RefuseSaveService refuseSaveService;
     private final SalarySaveService salarySaveService;
+    private final AccountGetService accountGetService;
+    private final SeniorGetService seniorGetService;
 
     public void updateCancel(User user, Long mentoringId) {
         Mentoring mentoring = checkIsMyMentoringUseCase.byUser(user, mentoringId);
@@ -56,18 +63,22 @@ public class MentoringManageUseCase {
     }
 
     public void updateRefuse(User user, Long mentoringId, MentoringRefuseRequest request) {
-        Mentoring mentoring = checkIsMyMentoringUseCase.bySenior(user, mentoringId);
+        Senior senior = seniorGetService.byUser(user);
+        Mentoring mentoring = checkIsMyMentoringUseCase.bySenior(senior, mentoringId);
         Refuse refuse = RefuseMapper.mapToRefuse(mentoring, request);
         refuseSaveService.saveRefuse(refuse);
         mentoringUpdateService.updateStatus(mentoring, REFUSE);
     }
 
-    public void updateExpected(User user, Long mentoringId, MentoringDateRequest dateRequest) {
-        Mentoring mentoring = checkIsMyMentoringUseCase.bySenior(user, mentoringId);
+    public Boolean updateExpected(User user, Long mentoringId, MentoringDateRequest dateRequest) {
+        Senior senior = seniorGetService.byUser(user);
+        Mentoring mentoring = checkIsMyMentoringUseCase.bySenior(senior, mentoringId);
         if (mentoring.getStatus() != WAITING)
             throw new MentoringNotWaitingException();
         mentoringUpdateService.updateDate(mentoring, dateRequest.getDate());
         mentoringUpdateService.updateStatus(mentoring, EXPECTED);
+        Optional<Account> account = accountGetService.bySenior(senior);
+        return account.isPresent();
     }
 
     @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")
