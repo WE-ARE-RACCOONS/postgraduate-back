@@ -1,4 +1,4 @@
-package com.postgraduate.global.config.security.filter;
+package com.postgraduate.global.config.security.jwt.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.postgraduate.global.dto.ErrorResponse;

@@ -1,9 +1,9 @@
 package com.postgraduate.global.config.security;
 
 import com.postgraduate.domain.user.domain.entity.constant.Role;
-import com.postgraduate.global.config.security.filter.CustomAccessDeniedHandler;
-import com.postgraduate.global.config.security.filter.CustomAuthenticationEntryPoint;
-import com.postgraduate.global.config.security.jwt.JwtFilter;
+import com.postgraduate.global.config.security.jwt.filter.CustomAccessDeniedHandler;
+import com.postgraduate.global.config.security.jwt.filter.CustomAuthenticationEntryPoint;
+import com.postgraduate.global.config.security.jwt.filter.JwtFilter;
 import com.postgraduate.global.config.security.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
