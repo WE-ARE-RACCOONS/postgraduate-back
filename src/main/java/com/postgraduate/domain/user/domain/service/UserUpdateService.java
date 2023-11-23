@@ -1,6 +1,7 @@
 package com.postgraduate.domain.user.domain.service;
 
 import com.postgraduate.domain.senior.application.dto.req.SeniorMyPageProfileRequest;
+import com.postgraduate.domain.senior.application.dto.req.SeniorMyPageUserAccountRequest;
 import com.postgraduate.domain.user.application.dto.req.UserInfoRequest;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.entity.constant.Role;
@@ -27,8 +28,8 @@ public class UserUpdateService {
         );
     }
 
-    public void updateSeniorMyPage(Long userId, SeniorMyPageProfileRequest myPageProfileRequest) {
-        User user = userRepository.findById(userId).get();
-        user.updateSeniorMyPage(myPageProfileRequest);
+    public void updateSeniorUserAccount(Long userId, SeniorMyPageUserAccountRequest myPageUserAccountRequest) {
+        User user = userRepository.findById(userId).orElseThrow();
+        user.updateSeniorMyPage(myPageUserAccountRequest);
     }
 }

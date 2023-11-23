@@ -1,11 +1,13 @@
 package com.postgraduate.domain.senior.application.mapper;
 
+import com.postgraduate.domain.account.domain.entity.Account;
 import com.postgraduate.domain.auth.application.dto.req.SeniorChangeRequest;
 import com.postgraduate.domain.auth.application.dto.req.SeniorSignUpRequest;
 import com.postgraduate.domain.senior.application.dto.res.SeniorDetailResponse;
 import com.postgraduate.domain.senior.application.dto.req.SeniorProfileRequest;
-import com.postgraduate.domain.senior.application.dto.res.SeniorInfoResponse;
+import com.postgraduate.domain.senior.application.dto.res.SeniorMyPageProfileResponse;
 import com.postgraduate.domain.senior.application.dto.res.SeniorMyPageResponse;
+import com.postgraduate.domain.senior.application.dto.res.SeniorMyPageUserAccountResponse;
 import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
@@ -71,13 +73,10 @@ public class SeniorMapper {
                 .build();
     }
 
-    public static SeniorInfoResponse mapToOriginInfo(Senior senior) {
-        User user = senior.getUser();
+    public static SeniorMyPageProfileResponse mapToMyPageProfile(Senior senior) {
         Info info = senior.getInfo();
         Profile profile = senior.getProfile();
-        return SeniorInfoResponse.builder()
-                .profile(user.getProfile())
-                .nickName(user.getNickName())
+        return SeniorMyPageProfileResponse.builder()
                 .lab(info.getLab())
                 .keyword(info.getKeyword())
                 .field(info.getField())
@@ -85,6 +84,17 @@ public class SeniorMapper {
                 .target(profile.getTarget())
                 .chatLink(profile.getChatLink())
                 .oneLiner(profile.getOneLiner())
+                .build();
+    }
+
+    public static SeniorMyPageUserAccountResponse mapToMyPageUserAccount(Senior senior, Account account, String accountNumber) {
+        User user = senior.getUser();
+        return SeniorMyPageUserAccountResponse.builder()
+                .profile(user.getProfile())
+                .nickName(user.getNickName())
+                .bank(account.getBank())
+                .accountNumber(accountNumber)
+                .accountHolder(account.getAccountHolder())
                 .build();
     }
 

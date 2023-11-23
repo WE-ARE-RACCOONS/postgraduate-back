@@ -1,6 +1,7 @@
 package com.postgraduate.domain.senior.domain.service;
 
 import com.postgraduate.domain.senior.application.dto.req.SeniorMyPageProfileRequest;
+import com.postgraduate.domain.senior.application.dto.req.SeniorMyPageUserAccountRequest;
 import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Service;
 public class SeniorUpdateService {
 
     public void updateSeniorProfile(Senior senior, Profile profile) {
-        senior.updateProfile(profile);
+        senior.signUpProfile(profile);
     }
 
     public void updateCertification(Senior senior, String imageUrl) {
@@ -19,7 +20,11 @@ public class SeniorUpdateService {
     }
 
     public void updateMyPageProfile(Senior senior, SeniorMyPageProfileRequest myPageProfileRequest) {
-        senior.updateMyPage(myPageProfileRequest);
+        senior.updateMyPageProfile(myPageProfileRequest);
+    }
+
+    public void updateMyPageUserAccount(Senior senior, SeniorMyPageUserAccountRequest myPageUserAccountRequest) {
+
     }
 
     public void updateHit(Senior senior) {

@@ -8,9 +8,7 @@ import lombok.Getter;
 @Builder
 @Getter
 @AllArgsConstructor
-public class SeniorInfoResponse {
-    private String profile;
-    private String nickName;
+public class SeniorMyPageProfileResponse {
     private String lab;
     private String keyword;
     private String info;

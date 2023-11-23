@@ -54,11 +54,11 @@ public class Senior {
     @UpdateTimestamp
     private LocalDate updatedAt;
 
-    public void updateProfile(Profile profile) {
-        this.profile = profile;
+    public void signUpProfile(Profile profile) {
+        profile.signUpProfile(profile);
     }
 
-    public void updateMyPage(SeniorMyPageProfileRequest myPageProfileRequest) {
+    public void updateMyPageProfile(SeniorMyPageProfileRequest myPageProfileRequest) {
         info.updateMyPage(myPageProfileRequest);
         profile.updateMyPage(myPageProfileRequest);
     }
