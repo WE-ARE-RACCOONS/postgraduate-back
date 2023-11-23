@@ -6,10 +6,12 @@ import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.domain.senior.domain.service.SeniorUpdateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.postgraduate.domain.senior.application.mapper.SeniorMapper.mapToSeniorDetail;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class SeniorInfoUseCase {
     private final SeniorGetService seniorGetService;
