@@ -1,12 +1,10 @@
 package com.postgraduate.domain.senior.presentation;
 
-import com.postgraduate.domain.senior.application.dto.req.SeniorAccountRequest;
-import com.postgraduate.domain.senior.application.dto.req.SeniorCertificationRequest;
-import com.postgraduate.domain.senior.application.dto.req.SeniorMyPageProfileRequest;
-import com.postgraduate.domain.senior.application.dto.req.SeniorProfileRequest;
+import com.postgraduate.domain.senior.application.dto.req.*;
 import com.postgraduate.domain.senior.application.dto.res.SeniorDetailResponse;
-import com.postgraduate.domain.senior.application.dto.res.SeniorInfoResponse;
+import com.postgraduate.domain.senior.application.dto.res.SeniorMyPageProfileResponse;
 import com.postgraduate.domain.senior.application.dto.res.SeniorMyPageResponse;
+import com.postgraduate.domain.senior.application.dto.res.SeniorMyPageUserAccountResponse;
 import com.postgraduate.domain.senior.application.usecase.SeniorInfoUseCase;
 import com.postgraduate.domain.senior.application.usecase.SeniorManageUseCase;
 import com.postgraduate.domain.senior.application.usecase.SeniorMyPageUseCase;
@@ -43,16 +41,16 @@ public class SeniorController {
     @Operation(summary = "대학원생 프로필 등록")
     public ResponseDto singUpSenior(@AuthenticationPrincipal User user,
                                     @RequestBody SeniorProfileRequest profileRequest) {
-        seniorManageUseCase.updateProfile(user, profileRequest);
+        seniorManageUseCase.signUpProfile(user, profileRequest);
         return ResponseDto.create(SENIOR_UPDATE.getCode(), UPDATE_PROFILE.getMessage());
     }
 
-    @PatchMapping("/account")
-    @Operation(summary = "대학원생 정산 계좌 설정")
+    @PostMapping("/account")
+    @Operation(summary = "대학원생 정산 계좌 생성")
     public ResponseDto updateAccount(@AuthenticationPrincipal User user,
                                      @RequestBody SeniorAccountRequest accountRequest) {
-        seniorManageUseCase.updateAccount(user, accountRequest);
-        return ResponseDto.create(SENIOR_UPDATE.getCode(), UPDATE_ACCOUNT.getMessage());
+        seniorManageUseCase.saveAccount(user, accountRequest);
+        return ResponseDto.create(SENIOR_CREATE.getCode(), CREATE_ACCOUNT.getMessage());
     }
 
     @GetMapping("/me")
@@ -63,10 +61,10 @@ public class SeniorController {
     }
 
     @GetMapping("/me/profile")
-    @Operation(summary = "대학생 마이페이지 프로필 수정시 기존 정보 조회")
-    public ResponseDto<SeniorInfoResponse> getSeniorProfile(@AuthenticationPrincipal User user) {
-        SeniorInfoResponse seniorOriginInfo = seniorMyPageUseCase.getSeniorOriginInfo(user);
-        return ResponseDto.create(SENIOR_FIND.getCode(), GET_SENIOR_INFO.getMessage(), seniorOriginInfo);
+    @Operation(summary = "대학원생 마이페이지 프로필 수정시 기존 정보 조회")
+    public ResponseDto<SeniorMyPageProfileResponse> getSeniorProfile(@AuthenticationPrincipal User user) {
+        SeniorMyPageProfileResponse myPageProfile = seniorMyPageUseCase.getSeniorMyPageProfile(user);
+        return ResponseDto.create(SENIOR_FIND.getCode(), GET_SENIOR_MYPAGE_PROFILE.getMessage(), myPageProfile);
     }
 
     @PatchMapping("/me/profile")
@@ -75,6 +73,21 @@ public class SeniorController {
                                         @RequestBody SeniorMyPageProfileRequest myPageProfileRequest) {
         seniorManageUseCase.updateSeniorMyPageProfile(user, myPageProfileRequest);
         return ResponseDto.create(SENIOR_UPDATE.getCode(), UPDATE_MYPAGE_PROFILE.getMessage());
+    }
+
+    @GetMapping("/me/account")
+    @Operation(summary = "대학원생 마이페이지 계좌설정시 기존 정보 조회")
+    public ResponseDto<SeniorMyPageUserAccountResponse> getSeniorUserAccount(@AuthenticationPrincipal User user) {
+        SeniorMyPageUserAccountResponse seniorOriginInfo = seniorMyPageUseCase.getSeniorMyPageUserAccount(user);
+        return ResponseDto.create(SENIOR_FIND.getCode(), GET_SENIOR_MYPAGE_ACCOUNT.getMessage(), seniorOriginInfo);
+    }
+
+    @PatchMapping("/me/account")
+    @Operation(summary = "대학원생 마이페이지 계좌설정")
+    public ResponseDto updateSeniorUserAccount(@AuthenticationPrincipal User user,
+                                           @RequestBody SeniorMyPageUserAccountRequest myPageUserAccountRequest) {
+        seniorManageUseCase.updateSeniorMyPageUserAccount(user, myPageUserAccountRequest);
+        return ResponseDto.create(SENIOR_UPDATE.getCode(), UPDATE_MYPAGE_ACCOOUNT.getMessage());
     }
 
     @GetMapping("/{seniorId}")

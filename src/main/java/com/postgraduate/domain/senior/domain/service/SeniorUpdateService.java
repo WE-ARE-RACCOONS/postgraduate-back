@@ -9,8 +9,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Service
 public class SeniorUpdateService {
-
-    public void updateSeniorProfile(Senior senior, Profile profile) {
+    public void signUpSeniorProfile(Senior senior, Profile profile) {
         senior.updateProfile(profile);
     }
 
@@ -18,8 +17,9 @@ public class SeniorUpdateService {
         senior.updateCertification(imageUrl);
     }
 
-    public void updateMyPageProfile(Senior senior, SeniorMyPageProfileRequest myPageProfileRequest) {
-        senior.updateMyPage(myPageProfileRequest);
+    public void updateMyPageProfile(Senior senior, SeniorMyPageProfileRequest myPageProfileRequest, Profile profile) {
+        senior.updateProfile(profile);
+        senior.updateInfo(myPageProfileRequest);
     }
 
     public void updateHit(Senior senior) {

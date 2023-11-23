@@ -88,8 +88,8 @@ public class MentoringController {
     public ResponseDto updateMentoringExpected(@AuthenticationPrincipal User user,
                                                @PathVariable Long mentoringId,
                                                @RequestBody MentoringDateRequest dateRequest) {
-        manageUseCase.updateExpected(user, mentoringId, dateRequest);
-        return ResponseDto.create(MENTORING_UPDATE.getCode(), UPDATE_MENTORING.getMessage());
+        Boolean accountPresent = manageUseCase.updateExpected(user, mentoringId, dateRequest);
+        return ResponseDto.create(MENTORING_UPDATE.getCode(), UPDATE_MENTORING.getMessage(), accountPresent);
     }
 
     @PatchMapping("/senior/me/{mentoringId}/refuse")

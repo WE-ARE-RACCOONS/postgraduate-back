@@ -25,11 +25,4 @@ public class Profile {
 
     @Builder.Default
     private Integer term = 40;
-
-    public void updateMyPage(SeniorMyPageProfileRequest request) {
-        this.info = request.getInfo();
-        this.oneLiner = request.getOneLiner();
-        this.target = request.getTarget();
-        this.chatLink = request.getChatLink();
-    }
 }

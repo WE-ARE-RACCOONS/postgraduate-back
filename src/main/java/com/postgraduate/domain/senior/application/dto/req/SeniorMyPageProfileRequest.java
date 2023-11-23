@@ -10,10 +10,6 @@ import lombok.NoArgsConstructor;
 @Getter
 public class SeniorMyPageProfileRequest {
     @NotNull
-    private String profile;
-    @NotNull
-    private String nickName;
-    @NotNull
     private String lab;
     @NotNull
     private String keyword;
@@ -27,4 +23,6 @@ public class SeniorMyPageProfileRequest {
     private String field;
     @NotNull
     private String oneLiner;
+    @NotNull
+    private String time;
 }

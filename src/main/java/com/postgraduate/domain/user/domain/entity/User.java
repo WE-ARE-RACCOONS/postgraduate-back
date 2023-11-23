@@ -1,6 +1,6 @@
 package com.postgraduate.domain.user.domain.entity;
 
-import com.postgraduate.domain.senior.application.dto.req.SeniorMyPageProfileRequest;
+import com.postgraduate.domain.senior.application.dto.req.SeniorMyPageUserAccountRequest;
 import com.postgraduate.domain.user.domain.entity.constant.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -54,26 +54,13 @@ public class User {
     @UpdateTimestamp
     private LocalDate updatedAt;
 
-    public void updateNickName(String nickName) {
-        this.nickName = nickName;
-    }
-
     public void updateRole(Role role) {
         this.role = role;
-    }
-
-    public void updateProfile(String profile) {
-        this.profile = profile;
     }
 
     public void updateInfo(String profile, String nickName, String phoneNumber) {
         this.profile = profile;
         this.nickName = nickName;
         this.phoneNumber = phoneNumber;
-    }
-
-    public void updateSeniorMyPage(SeniorMyPageProfileRequest request) {
-        this.profile = request.getProfile();
-        this.nickName = request.getNickName();
     }
 }
