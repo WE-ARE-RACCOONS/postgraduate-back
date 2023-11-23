@@ -1,10 +1,7 @@
 package com.postgraduate.domain.senior.presentation;
 
 import com.postgraduate.domain.senior.application.dto.req.*;
-import com.postgraduate.domain.senior.application.dto.res.SeniorDetailResponse;
-import com.postgraduate.domain.senior.application.dto.res.SeniorMyPageProfileResponse;
-import com.postgraduate.domain.senior.application.dto.res.SeniorMyPageResponse;
-import com.postgraduate.domain.senior.application.dto.res.SeniorMyPageUserAccountResponse;
+import com.postgraduate.domain.senior.application.dto.res.*;
 import com.postgraduate.domain.senior.application.usecase.SeniorInfoUseCase;
 import com.postgraduate.domain.senior.application.usecase.SeniorManageUseCase;
 import com.postgraduate.domain.senior.application.usecase.SeniorMyPageUseCase;
@@ -95,5 +92,14 @@ public class SeniorController {
     public ResponseDto<SeniorDetailResponse> getSeniorDetails(@PathVariable Long seniorId) {
         SeniorDetailResponse seniorDetail = seniorInfoUseCase.getSeniorDetail(seniorId);
         return ResponseDto.create(SENIOR_FIND.getCode(), GET_SENIOR_INFO.getMessage(), seniorDetail);
+    }
+
+    @GetMapping("/search")
+    @Operation(summary = "대학원생 검색어 검색")
+    public ResponseDto<AllSeniorSearchResponse> getSearchSenior(@RequestParam String find,
+                                                                @RequestParam(required = false) String sort,
+                                                                @RequestParam(required = false) Integer page) {
+        AllSeniorSearchResponse searchSenior = seniorInfoUseCase.getSearchSenior(find, page, sort);
+        return ResponseDto.create(SENIOR_FIND.getCode(), GET_SENIOR_LIST_INFO.getMessage(), searchSenior);
     }
 }

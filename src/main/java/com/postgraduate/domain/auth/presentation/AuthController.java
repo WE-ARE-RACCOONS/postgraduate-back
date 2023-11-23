@@ -59,7 +59,7 @@ public class AuthController {
     }
 
     @PostMapping("/senior/change")
-    @Operation(summary = "선배로 변경", description = "대학생 대학원생으로 변경")
+    @Operation(summary = "선배로 업데이트", description = "대학생 대학원생으로 변경")
     public ResponseDto<JwtTokenResponse> changeSenior(@AuthenticationPrincipal User user,
                                     @RequestBody SeniorChangeRequest changeRequest) {
         User changeUser = signUpUseCase.changeSenior(user, changeRequest);
