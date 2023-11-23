@@ -29,6 +29,10 @@ public class UserUpdateService {
 
     public void updateSeniorUserAccount(Long userId, SeniorMyPageUserAccountRequest myPageUserAccountRequest) {
         User user = userRepository.findById(userId).orElseThrow();
-        user.updateSeniorMyPage(myPageUserAccountRequest);
+        user.updateInfo(
+                myPageUserAccountRequest.profile(),
+                myPageUserAccountRequest.nickName(),
+                myPageUserAccountRequest.phoneNumber()
+        );
     }
 }

@@ -63,9 +63,4 @@ public class User {
         this.nickName = nickName;
         this.phoneNumber = phoneNumber;
     }
-
-    public void updateSeniorMyPage(SeniorMyPageUserAccountRequest request) {
-        this.profile = request.profile();
-        this.nickName = request.nickName();
-    }
 }
