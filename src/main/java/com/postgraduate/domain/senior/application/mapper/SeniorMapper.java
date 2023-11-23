@@ -87,10 +87,12 @@ public class SeniorMapper {
     public static SeniorMyPageProfileResponse mapToMyPageProfile(Senior senior) {
         Info info = senior.getInfo();
         Profile profile = senior.getProfile();
+        String[] keyword = info.getKeyword().split(",");
+        String[] field = info.getField().split(",");
         return SeniorMyPageProfileResponse.builder()
                 .lab(info.getLab())
-                .keyword(info.getKeyword())
-                .field(info.getField())
+                .keyword(keyword)
+                .field(field)
                 .info(profile.getInfo())
                 .target(profile.getTarget())
                 .chatLink(profile.getChatLink())
