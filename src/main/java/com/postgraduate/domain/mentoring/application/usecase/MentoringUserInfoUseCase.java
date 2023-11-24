@@ -3,13 +3,13 @@ package com.postgraduate.domain.mentoring.application.usecase;
 import com.postgraduate.domain.mentoring.application.dto.DoneMentoringInfo;
 import com.postgraduate.domain.mentoring.application.dto.ExpectedMentoringInfo;
 import com.postgraduate.domain.mentoring.application.dto.WaitingMentoringInfo;
+import com.postgraduate.domain.mentoring.application.dto.res.AppliedDoneMentoringResponse;
+import com.postgraduate.domain.mentoring.application.dto.res.AppliedExpectedMentoringResponse;
 import com.postgraduate.domain.mentoring.application.dto.res.AppliedMentoringDetailResponse;
-import com.postgraduate.domain.mentoring.application.dto.res.AppliedMentoringResponse;
+import com.postgraduate.domain.mentoring.application.dto.res.AppliedWaitingMentoringResponse;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
-import com.postgraduate.domain.mentoring.domain.entity.constant.Status;
 import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
 import com.postgraduate.domain.mentoring.exception.MentoringDoneException;
-import com.postgraduate.domain.mentoring.exception.MentoringNotWaitingException;
 import com.postgraduate.domain.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -36,42 +36,30 @@ public class MentoringUserInfoUseCase {
         return mapToAppliedDetailInfo(mentoring);
     }
 
-    public AppliedMentoringResponse getMentorings(Status status, User user) {
-        List<Mentoring> mentorings = mentoringGetService.mentoringByUser(user, status);
-        return getCategories(status, mentorings);
-    }
-
-    private AppliedMentoringResponse getCategories(Status status, List<Mentoring> mentorings) {
-        if (status == WAITING) {
-            return getWaiting(mentorings);
-        }
-        if (status == EXPECTED) {
-            return getExpected(mentorings);
-        }
-        return getDone(mentorings);
-    }
-
-    private AppliedMentoringResponse getWaiting(List<Mentoring> mentorings) {
+    public AppliedWaitingMentoringResponse getWaiting(User user) {
+        List<Mentoring> mentorings = mentoringGetService.mentoringByUser(user, WAITING);
         List<WaitingMentoringInfo> waitingMentoringInfos = new ArrayList<>();
         for (Mentoring mentoring : mentorings) {
             waitingMentoringInfos.add(mapToWaitingInfo(mentoring));
         }
-        return new AppliedMentoringResponse(waitingMentoringInfos);
+        return new AppliedWaitingMentoringResponse(waitingMentoringInfos);
     }
 
-    private AppliedMentoringResponse getExpected(List<Mentoring> mentorings) {
+    public AppliedExpectedMentoringResponse getExpected(User user) {
+        List<Mentoring> mentorings = mentoringGetService.mentoringByUser(user, EXPECTED);
         List<ExpectedMentoringInfo> expectedMentoringInfos = new ArrayList<>();
         for (Mentoring mentoring : mentorings) {
             expectedMentoringInfos.add(mapToExpectedInfo(mentoring));
         }
-        return new AppliedMentoringResponse(expectedMentoringInfos);
+        return new AppliedExpectedMentoringResponse(expectedMentoringInfos);
     }
 
-    private AppliedMentoringResponse getDone(List<Mentoring> mentorings) {
+    public AppliedDoneMentoringResponse getDone(User user) {
+        List<Mentoring> mentorings = mentoringGetService.mentoringByUser(user, DONE);
         List<DoneMentoringInfo> doneMentoringInfos = new ArrayList<>();
         for (Mentoring mentoring : mentorings) {
             doneMentoringInfos.add(mapToDoneInfo(mentoring));
         }
-        return new AppliedMentoringResponse(doneMentoringInfos);
+        return new AppliedDoneMentoringResponse(doneMentoringInfos);
     }
 }
