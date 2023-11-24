@@ -6,6 +6,7 @@ import com.postgraduate.domain.mentoring.application.dto.req.MentoringDateReques
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
 import com.postgraduate.domain.mentoring.domain.service.MentoringUpdateService;
+import com.postgraduate.domain.mentoring.exception.MentoringDoneException;
 import com.postgraduate.domain.mentoring.exception.MentoringNotWaitingException;
 import com.postgraduate.domain.refuse.application.dto.req.MentoringRefuseRequest;
 import com.postgraduate.domain.refuse.application.mapper.RefuseMapper;
@@ -23,7 +24,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -49,6 +49,9 @@ public class MentoringManageUseCase {
 
     public void updateDone(User user, Long mentoringId) {
         Mentoring mentoring = checkIsMyMentoringUseCase.byUser(user, mentoringId);
+        if (mentoring.getStatus() == DONE) {
+            throw new MentoringDoneException();
+        }
         createSalary(mentoring);
         mentoringUpdateService.updateStatus(mentoring, DONE);
     }
