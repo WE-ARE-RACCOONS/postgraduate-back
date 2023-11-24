@@ -1,4 +1,4 @@
-package com.postgraduate.domain.user.application.exception;
+package com.postgraduate.domain.user.exception;
 
 import com.postgraduate.global.exception.ApplicationException;
 

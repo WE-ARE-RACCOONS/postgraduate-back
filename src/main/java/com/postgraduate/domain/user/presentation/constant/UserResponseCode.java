@@ -11,6 +11,6 @@ public enum UserResponseCode {
     USER_CREATE("UR202"),
     USER_DELETE("UR203"),
 
-    NOT_FOUND_USER("EX300");
+    USER_NOT_FOUND("EX300");
     private final String code;
 }
