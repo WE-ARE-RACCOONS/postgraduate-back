@@ -3,8 +3,7 @@ package com.postgraduate.domain.mentoring.application.usecase;
 import com.postgraduate.domain.mentoring.application.dto.DoneSeniorMentoringInfo;
 import com.postgraduate.domain.mentoring.application.dto.ExpectedSeniorMentoringInfo;
 import com.postgraduate.domain.mentoring.application.dto.WaitingSeniorMentoringInfo;
-import com.postgraduate.domain.mentoring.application.dto.res.AppliedMentoringResponse;
-import com.postgraduate.domain.mentoring.application.dto.res.SeniorMentoringDetailResponse;
+import com.postgraduate.domain.mentoring.application.dto.res.*;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.entity.constant.Status;
 import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
@@ -44,23 +43,8 @@ public class MentoringSeniorInfoUseCase {
         return mapToSeniorMentoringDetail(mentoring);
     }
 
-    public AppliedMentoringResponse getSeniorMentorings(Status status, User user) {
-        Senior senior = seniorGetService.byUser(user);
-        List<Mentoring> mentorings = mentoringGetService.mentoringBySenior(senior, status);
-        return getSeniorCategories(status, mentorings);
-    }
-
-    private AppliedMentoringResponse getSeniorCategories(Status status, List<Mentoring> mentorings) {
-        if (status == WAITING) {
-            return getSeniorWaiting(mentorings);
-        }
-        if (status == EXPECTED) {
-            return getSeniorExpected(mentorings);
-        }
-        return getSeniorDone(mentorings);
-    }
-
-    private AppliedMentoringResponse getSeniorWaiting(List<Mentoring> mentorings) {
+    public SeniorWaitingMentoringResponse getSeniorWaiting(User user) {
+        List<Mentoring> mentorings = getMentorings(user, WAITING);
         List<WaitingSeniorMentoringInfo> waitingMentoringInfos = new ArrayList<>();
         for (Mentoring mentoring : mentorings) {
             LocalDateTime expiredAt = mentoring.getCreatedAt()
@@ -70,23 +54,30 @@ public class MentoringSeniorInfoUseCase {
             long remain = Duration.between(now, expiredAt).toMinutes();
             waitingMentoringInfos.add(mapToSeniorWaitingInfo(mentoring, remain));
         }
-        return new AppliedMentoringResponse(waitingMentoringInfos);
+        return new SeniorWaitingMentoringResponse(waitingMentoringInfos);
     }
 
-    private AppliedMentoringResponse getSeniorExpected(List<Mentoring> mentorings) {
+    public SeniorExpectedMentoringResponse getSeniorExpected(User user) {
+        List<Mentoring> mentorings = getMentorings(user, EXPECTED);
         List<ExpectedSeniorMentoringInfo> expectedMentoringInfos = new ArrayList<>();
         for (Mentoring mentoring : mentorings) {
             expectedMentoringInfos.add(mapToSeniorExpectedInfo(mentoring));
         }
-        return new AppliedMentoringResponse(expectedMentoringInfos);
+        return new SeniorExpectedMentoringResponse(expectedMentoringInfos);
     }
 
-    private AppliedMentoringResponse getSeniorDone(List<Mentoring> mentorings) {
+    public SeniorDoneMentoringResponse getSeniorDone(User user) {
+        List<Mentoring> mentorings = getMentorings(user, DONE);
         List<DoneSeniorMentoringInfo> doneMentoringInfos = new ArrayList<>();
         for (Mentoring mentoring : mentorings) {
             Salary salary = salaryGetService.byMentoring(mentoring);
             doneMentoringInfos.add(mapToSeniorDoneInfo(mentoring, salary));
         }
-        return new AppliedMentoringResponse(doneMentoringInfos);
+        return new SeniorDoneMentoringResponse(doneMentoringInfos);
+    }
+
+    private List<Mentoring> getMentorings(User user, Status status) {
+        Senior senior = seniorGetService.byUser(user);
+        return mentoringGetService.mentoringBySenior(senior, status);
     }
 }
