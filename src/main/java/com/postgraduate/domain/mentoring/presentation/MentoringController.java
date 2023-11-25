@@ -31,22 +31,22 @@ public class MentoringController {
 
     @GetMapping("/me/waiting")
     @Operation(summary = "[대학생] 신청한 멘토링 목록 조회", description = "대학생이 신청한 멘토링 목록을 조회합니다.")
-    public ResponseDto<AppliedWaitingMentoringResponse> getWaitingMentorings(@AuthenticationPrincipal User user) {
-        AppliedWaitingMentoringResponse mentoringResponse = userInfoUseCase.getWaiting(user);
+    public ResponseDto<AppliedMentoringResponse> getWaitingMentorings(@AuthenticationPrincipal User user) {
+        AppliedMentoringResponse mentoringResponse = userInfoUseCase.getWaiting(user);
         return ResponseDto.create(MENTORING_FIND.getCode(), GET_MENTORING_LIST_INFO.getMessage(), mentoringResponse);
     }
 
     @GetMapping("/me/expected")
     @Operation(summary = "[대학생] 예정된 멘토링 목록 조회", description = "대학생이 예정된 멘토링 목록을 조회합니다.")
-    public ResponseDto<AppliedExpectedMentoringResponse> getExpectedMentorings(@AuthenticationPrincipal User user) {
-        AppliedExpectedMentoringResponse mentoringResponse = userInfoUseCase.getExpected(user);
+    public ResponseDto<AppliedMentoringResponse> getExpectedMentorings(@AuthenticationPrincipal User user) {
+        AppliedMentoringResponse mentoringResponse = userInfoUseCase.getExpected(user);
         return ResponseDto.create(MENTORING_FIND.getCode(), GET_MENTORING_LIST_INFO.getMessage(), mentoringResponse);
     }
 
     @GetMapping("/me/done")
     @Operation(summary = "[대학생] 완료한 멘토링 목록 조회", description = "대학생이 완료한 멘토링 목록을 조회합니다.")
-    public ResponseDto<AppliedDoneMentoringResponse> getDoneMentorings(@AuthenticationPrincipal User user) {
-        AppliedDoneMentoringResponse mentoringResponse = userInfoUseCase.getDone(user);
+    public ResponseDto<AppliedMentoringResponse> getDoneMentorings(@AuthenticationPrincipal User user) {
+        AppliedMentoringResponse mentoringResponse = userInfoUseCase.getDone(user);
         return ResponseDto.create(MENTORING_FIND.getCode(), GET_MENTORING_LIST_INFO.getMessage(), mentoringResponse);
     }
 
@@ -82,22 +82,22 @@ public class MentoringController {
 
     @GetMapping("/senior/me/waiting")
     @Operation(summary = "[대학원생] 신청받은 확정대기 멘토링 목록 조회", description = "대학원생이 신청받은 확정대기 상태의 멘토링 목록을 조회합니다.")
-    public ResponseDto<SeniorWaitingMentoringResponse> getSeniorWaitingMentorings(@AuthenticationPrincipal User user) {
-        SeniorWaitingMentoringResponse mentoringResponse = seniorInfoUseCase.getSeniorWaiting(user);
+    public ResponseDto<SeniorMentoringResponse> getSeniorWaitingMentorings(@AuthenticationPrincipal User user) {
+        SeniorMentoringResponse mentoringResponse = seniorInfoUseCase.getSeniorWaiting(user);
         return ResponseDto.create(MENTORING_FIND.getCode(), GET_MENTORING_LIST_INFO.getMessage(), mentoringResponse);
     }
 
     @GetMapping("/senior/me/expected")
     @Operation(summary = "[대학원생] 신청받은 예정된 멘토링 목록 조회", description = "대학원생이 신청받은 예정 상태의 멘토링 목록을 조회합니다.")
-    public ResponseDto<SeniorExpectedMentoringResponse> getSeniorExpectedMentorings(@AuthenticationPrincipal User user) {
-        SeniorExpectedMentoringResponse mentoringResponse = seniorInfoUseCase.getSeniorExpected(user);
+    public ResponseDto<SeniorMentoringResponse> getSeniorExpectedMentorings(@AuthenticationPrincipal User user) {
+        SeniorMentoringResponse mentoringResponse = seniorInfoUseCase.getSeniorExpected(user);
         return ResponseDto.create(MENTORING_FIND.getCode(), GET_MENTORING_LIST_INFO.getMessage(), mentoringResponse);
     }
 
     @GetMapping("/senior/me/done")
     @Operation(summary = "[대학원생] 신청받은 완료된 멘토링 목록 조회", description = "대학원생이 신청받은 완료 상태의 멘토링 목록을 조회합니다.")
-    public ResponseDto<SeniorDoneMentoringResponse> getSeniorDoneMentorings(@AuthenticationPrincipal User user) {
-        SeniorDoneMentoringResponse mentoringResponse = seniorInfoUseCase.getSeniorDone(user);
+    public ResponseDto<SeniorMentoringResponse> getSeniorDoneMentorings(@AuthenticationPrincipal User user) {
+        SeniorMentoringResponse mentoringResponse = seniorInfoUseCase.getSeniorDone(user);
         return ResponseDto.create(MENTORING_FIND.getCode(), GET_MENTORING_LIST_INFO.getMessage(), mentoringResponse);
     }
 

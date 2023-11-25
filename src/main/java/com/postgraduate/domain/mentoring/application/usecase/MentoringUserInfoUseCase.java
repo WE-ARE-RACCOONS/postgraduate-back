@@ -3,10 +3,8 @@ package com.postgraduate.domain.mentoring.application.usecase;
 import com.postgraduate.domain.mentoring.application.dto.DoneMentoringInfo;
 import com.postgraduate.domain.mentoring.application.dto.ExpectedMentoringInfo;
 import com.postgraduate.domain.mentoring.application.dto.WaitingMentoringInfo;
-import com.postgraduate.domain.mentoring.application.dto.res.AppliedDoneMentoringResponse;
-import com.postgraduate.domain.mentoring.application.dto.res.AppliedExpectedMentoringResponse;
 import com.postgraduate.domain.mentoring.application.dto.res.AppliedMentoringDetailResponse;
-import com.postgraduate.domain.mentoring.application.dto.res.AppliedWaitingMentoringResponse;
+import com.postgraduate.domain.mentoring.application.dto.res.AppliedMentoringResponse;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
 import com.postgraduate.domain.mentoring.exception.MentoringDoneException;
@@ -36,30 +34,30 @@ public class MentoringUserInfoUseCase {
         return mapToAppliedDetailInfo(mentoring);
     }
 
-    public AppliedWaitingMentoringResponse getWaiting(User user) {
+    public AppliedMentoringResponse getWaiting(User user) {
         List<Mentoring> mentorings = mentoringGetService.mentoringByUser(user, WAITING);
         List<WaitingMentoringInfo> waitingMentoringInfos = new ArrayList<>();
         for (Mentoring mentoring : mentorings) {
             waitingMentoringInfos.add(mapToWaitingInfo(mentoring));
         }
-        return new AppliedWaitingMentoringResponse(waitingMentoringInfos);
+        return new AppliedMentoringResponse(waitingMentoringInfos);
     }
 
-    public AppliedExpectedMentoringResponse getExpected(User user) {
+    public AppliedMentoringResponse getExpected(User user) {
         List<Mentoring> mentorings = mentoringGetService.mentoringByUser(user, EXPECTED);
         List<ExpectedMentoringInfo> expectedMentoringInfos = new ArrayList<>();
         for (Mentoring mentoring : mentorings) {
             expectedMentoringInfos.add(mapToExpectedInfo(mentoring));
         }
-        return new AppliedExpectedMentoringResponse(expectedMentoringInfos);
+        return new AppliedMentoringResponse(expectedMentoringInfos);
     }
 
-    public AppliedDoneMentoringResponse getDone(User user) {
+    public AppliedMentoringResponse getDone(User user) {
         List<Mentoring> mentorings = mentoringGetService.mentoringByUser(user, DONE);
         List<DoneMentoringInfo> doneMentoringInfos = new ArrayList<>();
         for (Mentoring mentoring : mentorings) {
             doneMentoringInfos.add(mapToDoneInfo(mentoring));
         }
-        return new AppliedDoneMentoringResponse(doneMentoringInfos);
+        return new AppliedMentoringResponse(doneMentoringInfos);
     }
 }

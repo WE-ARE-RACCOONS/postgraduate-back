@@ -43,7 +43,7 @@ public class MentoringSeniorInfoUseCase {
         return mapToSeniorMentoringDetail(mentoring);
     }
 
-    public SeniorWaitingMentoringResponse getSeniorWaiting(User user) {
+    public SeniorMentoringResponse getSeniorWaiting(User user) {
         List<Mentoring> mentorings = getMentorings(user, WAITING);
         List<WaitingSeniorMentoringInfo> waitingMentoringInfos = new ArrayList<>();
         for (Mentoring mentoring : mentorings) {
@@ -54,26 +54,26 @@ public class MentoringSeniorInfoUseCase {
             long remain = Duration.between(now, expiredAt).toMinutes();
             waitingMentoringInfos.add(mapToSeniorWaitingInfo(mentoring, remain));
         }
-        return new SeniorWaitingMentoringResponse(waitingMentoringInfos);
+        return new SeniorMentoringResponse(waitingMentoringInfos);
     }
 
-    public SeniorExpectedMentoringResponse getSeniorExpected(User user) {
+    public SeniorMentoringResponse getSeniorExpected(User user) {
         List<Mentoring> mentorings = getMentorings(user, EXPECTED);
         List<ExpectedSeniorMentoringInfo> expectedMentoringInfos = new ArrayList<>();
         for (Mentoring mentoring : mentorings) {
             expectedMentoringInfos.add(mapToSeniorExpectedInfo(mentoring));
         }
-        return new SeniorExpectedMentoringResponse(expectedMentoringInfos);
+        return new SeniorMentoringResponse(expectedMentoringInfos);
     }
 
-    public SeniorDoneMentoringResponse getSeniorDone(User user) {
+    public SeniorMentoringResponse getSeniorDone(User user) {
         List<Mentoring> mentorings = getMentorings(user, DONE);
         List<DoneSeniorMentoringInfo> doneMentoringInfos = new ArrayList<>();
         for (Mentoring mentoring : mentorings) {
             Salary salary = salaryGetService.byMentoring(mentoring);
             doneMentoringInfos.add(mapToSeniorDoneInfo(mentoring, salary));
         }
-        return new SeniorDoneMentoringResponse(doneMentoringInfos);
+        return new SeniorMentoringResponse(doneMentoringInfos);
     }
 
     private List<Mentoring> getMentorings(User user, Status status) {
