@@ -103,21 +103,21 @@ public class SeniorMapper {
 
     public static SeniorMyPageUserAccountResponse mapToMyPageUserAccount(Senior senior, Account account, String accountNumber) {
         User user = senior.getUser();
-        return SeniorMyPageUserAccountResponse.builder()
-                .profile(user.getProfile())
-                .nickName(user.getNickName())
-                .bank(account.getBank())
-                .accountNumber(accountNumber)
-                .accountHolder(account.getAccountHolder())
-                .build();
+        return new SeniorMyPageUserAccountResponse(
+                user.getProfile(),
+                user.getPhoneNumber(),
+                user.getNickName(),
+                account.getBank(),
+                accountNumber,
+                account.getAccountHolder());
     }
 
     public static SeniorMyPageUserAccountResponse mapToMyPageUserAccount(Senior senior) {
         User user = senior.getUser();
-        return SeniorMyPageUserAccountResponse.builder()
-                .profile(user.getProfile())
-                .nickName(user.getNickName())
-                .build();
+        return new SeniorMyPageUserAccountResponse(
+                user.getProfile(),
+                user.getPhoneNumber(),
+                user.getNickName());
     }
 
     public static SeniorDetailResponse mapToSeniorDetail(Senior senior) {

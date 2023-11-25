@@ -1,16 +1,8 @@
 package com.postgraduate.domain.senior.application.dto.res;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-
-@Builder
-@Getter
-@AllArgsConstructor
-public class SeniorMyPageUserAccountResponse {
-    private final String profile;
-    private final String nickName;
-    private final String bank;
-    private final String accountNumber;
-    private final String accountHolder;
+public record SeniorMyPageUserAccountResponse(String profile, String phoneNumber, String nickName, String bank, String accountNumber,
+                                              String accountHolder) {
+    public SeniorMyPageUserAccountResponse(String profile, String phoneNumber, String nickName) {
+        this(profile, phoneNumber, nickName, null, null, null);
+    }
 }
