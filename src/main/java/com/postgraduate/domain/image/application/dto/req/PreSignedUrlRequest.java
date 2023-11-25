@@ -1,4 +1,4 @@
-package com.postgraduate.domain.image.application.dto;
+package com.postgraduate.domain.image.application.dto.req;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

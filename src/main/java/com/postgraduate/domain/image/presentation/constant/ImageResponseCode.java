@@ -11,6 +11,7 @@ public enum ImageResponseCode {
     IMAGE_CREATE("IMG202"),
     IMAGE_DELETE("IMG203"),
 
-    IMAGE_EMPTY("EX800");
+    IMAGE_EMPTY("EX800"),
+    IMAGE_UPLOAD_ERROR("EX801");
     private final String code;
 }
