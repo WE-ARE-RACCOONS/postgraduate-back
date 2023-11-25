@@ -1,6 +1,6 @@
 package com.postgraduate.global.auth;
 
-import com.postgraduate.domain.user.application.exception.NotFoundUserException;
+import com.postgraduate.domain.user.exception.UserNotFoundException;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ public class AuthDetailsService implements UserDetailsService {
     public AuthDetails loadUserByUsername(String id) {
         User user = userRepository
                 .findById(Long.valueOf(id))
-                .orElseThrow(NotFoundUserException::new);
+                .orElseThrow(UserNotFoundException::new);
         return new AuthDetails(user);
     }
 }
