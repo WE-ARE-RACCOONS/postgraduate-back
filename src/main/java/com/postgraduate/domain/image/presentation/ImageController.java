@@ -41,7 +41,7 @@ public class ImageController {
     }
 
     @PostMapping("/upload/profile")
-    @Operation(summary = "USER Profile 업로드 후 업로드 URL return", description = "profileFile 사진 Multipart File로 보내주세요")
+    @Operation(summary = "USER Profile 업로드 후 업로드 URL return / 토큰 필요", description = "profileFile 사진 Multipart File로 보내주세요")
     public ResponseDto<ImageUrlResponse> getProfileUrl(@AuthenticationPrincipal User user, @RequestPart MultipartFile profileFile) {
         ImageUrlResponse imageUrlResponse = imageUploadUseCase.uploadProfile(user, profileFile);
         return ResponseDto.create(IMAGE_CREATE.getCode(), UPLOAD_URL.getMessage(), imageUrlResponse);
@@ -49,8 +49,8 @@ public class ImageController {
 
     @PostMapping("/upload/certification")
     @Operation(summary = "SENIOR Certification 업로드 후 업로드 URL return", description = "certificationFile 사진 Multipart File로 보내주세요")
-    public ResponseDto<ImageUrlResponse> getCertificationUrl(@AuthenticationPrincipal User user, @RequestPart MultipartFile certificationFile) {
-        ImageUrlResponse imageUrlResponse = imageUploadUseCase.uploadCertification(user, certificationFile);
+    public ResponseDto<ImageUrlResponse> getCertificationUrl(@RequestPart MultipartFile certificationFile) {
+        ImageUrlResponse imageUrlResponse = imageUploadUseCase.uploadCertification(certificationFile);
         return ResponseDto.create(IMAGE_CREATE.getCode(), UPLOAD_URL.getMessage(), imageUrlResponse);
     }
 }
