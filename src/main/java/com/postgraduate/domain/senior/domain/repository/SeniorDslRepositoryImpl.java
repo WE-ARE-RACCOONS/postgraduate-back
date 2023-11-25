@@ -41,10 +41,10 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
 
     private OrderSpecifier<?> orderSpecifier(String sort) {
         if (sort == null)
-            return new OrderSpecifier<>(Order.ASC, senior.hit);
+            return new OrderSpecifier<>(Order.DESC, senior.hit);
         return switch (sort) {
-            case "high" -> new OrderSpecifier<>(Order.DESC, senior.hit);
-            default -> new OrderSpecifier<>(Order.ASC, senior.hit);
+            case "low" -> new OrderSpecifier<>(Order.ASC, senior.hit);
+            default -> new OrderSpecifier<>(Order.DESC, senior.hit);
         };
     }
 

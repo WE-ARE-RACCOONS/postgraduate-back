@@ -43,6 +43,6 @@ public class Info {
     }
 
     private void combineTotalInfo() {
-        this.totalInfo = major + lab + field + professor + postgradu;
+        this.totalInfo = major + lab + field + professor + postgradu + keyword;
     }
 }
