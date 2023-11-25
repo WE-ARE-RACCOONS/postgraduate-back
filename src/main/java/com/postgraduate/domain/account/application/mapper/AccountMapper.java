@@ -2,17 +2,25 @@ package com.postgraduate.domain.account.application.mapper;
 
 import com.postgraduate.domain.account.domain.entity.Account;
 import com.postgraduate.domain.senior.application.dto.req.SeniorAccountRequest;
+import com.postgraduate.domain.senior.application.dto.req.SeniorMyPageUserAccountRequest;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 
 public class AccountMapper {
-    public static Account mapToAccount(Senior senior, SeniorAccountRequest accountRequest, String accountNumber, String rrn) {
+    public static Account mapToAccount(Senior senior, SeniorAccountRequest accountRequest, String accountNumber) {
         return Account.builder()
                 .senior(senior)
                 .accountNumber(accountNumber)
                 .accountHolder(accountRequest.getAccountHolder())
                 .bank(accountRequest.getBank())
-                .name(accountRequest.getName())
-                .rrn(rrn)
+                .build();
+    }
+
+    public static Account mapToAccount(Senior senior, SeniorMyPageUserAccountRequest myPageUserAccountRequest, String accountNumber) {
+        return Account.builder()
+                .senior(senior)
+                .accountNumber(accountNumber)
+                .accountHolder(myPageUserAccountRequest.accountHolder())
+                .bank(myPageUserAccountRequest.bank())
                 .build();
     }
 }

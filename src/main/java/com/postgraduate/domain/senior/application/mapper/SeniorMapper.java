@@ -4,11 +4,8 @@ import com.postgraduate.domain.account.domain.entity.Account;
 import com.postgraduate.domain.auth.application.dto.req.SeniorChangeRequest;
 import com.postgraduate.domain.auth.application.dto.req.SeniorSignUpRequest;
 import com.postgraduate.domain.senior.application.dto.req.SeniorMyPageProfileRequest;
-import com.postgraduate.domain.senior.application.dto.res.SeniorDetailResponse;
+import com.postgraduate.domain.senior.application.dto.res.*;
 import com.postgraduate.domain.senior.application.dto.req.SeniorProfileRequest;
-import com.postgraduate.domain.senior.application.dto.res.SeniorMyPageProfileResponse;
-import com.postgraduate.domain.senior.application.dto.res.SeniorMyPageResponse;
-import com.postgraduate.domain.senior.application.dto.res.SeniorMyPageUserAccountResponse;
 import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
@@ -33,6 +30,8 @@ public class SeniorMapper {
                 .lab(request.getLab())
                 .keyword(request.getKeyword())
                 .field(request.getField())
+                .totalInfo(request.getMajor() + request.getLab() + request.getField()
+                        + request.getProfessor() + request.getPostgradu())
                 .build();
     }
 
@@ -72,6 +71,8 @@ public class SeniorMapper {
                 .lab(request.getLab())
                 .keyword(request.getKeyword())
                 .field(request.getField())
+                .totalInfo(request.getMajor() + request.getLab() + request.getField()
+                        + request.getProfessor() + request.getPostgradu())
                 .build();
     }
 
@@ -112,6 +113,14 @@ public class SeniorMapper {
                 .build();
     }
 
+    public static SeniorMyPageUserAccountResponse mapToMyPageUserAccount(Senior senior) {
+        User user = senior.getUser();
+        return SeniorMyPageUserAccountResponse.builder()
+                .profile(user.getProfile())
+                .nickName(user.getNickName())
+                .build();
+    }
+
     public static SeniorDetailResponse mapToSeniorDetail(Senior senior) {
         String[] keyword = senior.getInfo().getKeyword().split(",");
         return SeniorDetailResponse.builder()
@@ -127,5 +136,16 @@ public class SeniorMapper {
                 .target(senior.getProfile().getTarget())
                 .time(senior.getProfile().getTime())
                 .build();
+    }
+
+    public static SeniorSearchResponse mapToSeniorSearch(Senior senior) {
+        User user = senior.getUser();
+        Info info = senior.getInfo();
+        Profile profile = senior.getProfile();
+        String[] keyword = info.getKeyword().split(",");
+
+        return new SeniorSearchResponse(user.getProfile(), user.getNickName(),
+                info.getPostgradu(), info.getMajor(), info.getLab(),
+                profile.getOneLiner(), keyword);
     }
 }

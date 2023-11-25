@@ -6,6 +6,9 @@ import com.postgraduate.domain.senior.domain.repository.SeniorRepository;
 import com.postgraduate.domain.senior.exception.NoneSeniorException;
 import com.postgraduate.domain.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +19,7 @@ import static com.postgraduate.domain.senior.domain.entity.constant.Status.APPRO
 @RequiredArgsConstructor
 public class SeniorGetService {
     private final SeniorRepository seniorRepository;
+    private static final int SENIOR_PAGE_SIZE = 10;
 
     public Senior byUser(User user) {
         return seniorRepository.findByUser(user).orElseThrow(NoneSeniorException::new);
@@ -31,5 +35,12 @@ public class SeniorGetService {
 
     public List<Senior> byStatus(Status status) {
         return seniorRepository.findAllByStatus(status);
+    }
+
+    public Page<Senior> bySearch(String search, Integer page, String sort) {
+        if (page == null)
+            page = 1;
+        Pageable pageable = PageRequest.of(page-1, SENIOR_PAGE_SIZE);
+        return seniorRepository.findAllSenior(search, sort, pageable);
     }
 }
