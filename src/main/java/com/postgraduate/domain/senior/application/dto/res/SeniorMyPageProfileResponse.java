@@ -16,4 +16,5 @@ public class SeniorMyPageProfileResponse {
     private String chatLink;
     private String[] field;
     private String oneLiner;
+    private String time;
 }
