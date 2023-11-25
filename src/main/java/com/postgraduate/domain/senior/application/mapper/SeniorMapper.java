@@ -112,6 +112,14 @@ public class SeniorMapper {
                 .build();
     }
 
+    public static SeniorMyPageUserAccountResponse mapToMyPageUserAccount(Senior senior) {
+        User user = senior.getUser();
+        return SeniorMyPageUserAccountResponse.builder()
+                .profile(user.getProfile())
+                .nickName(user.getNickName())
+                .build();
+    }
+
     public static SeniorDetailResponse mapToSeniorDetail(Senior senior) {
         String[] keyword = senior.getInfo().getKeyword().split(",");
         return SeniorDetailResponse.builder()

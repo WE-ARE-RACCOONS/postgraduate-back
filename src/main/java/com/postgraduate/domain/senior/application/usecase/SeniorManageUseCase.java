@@ -18,6 +18,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 import static com.postgraduate.domain.account.application.mapper.AccountMapper.mapToAccount;
 import static com.postgraduate.domain.senior.application.mapper.SeniorMapper.mapToProfile;
 
@@ -58,9 +60,21 @@ public class SeniorManageUseCase {
 
     public void updateSeniorMyPageUserAccount(User user, SeniorMyPageUserAccountRequest myPageUserAccountRequest) {
         Senior senior = seniorGetService.byUser(user);
-        Account account = accountGetService.bySenior(senior).orElseThrow(NoneAccountException::new);
+        Optional<Account> optionalAccount = accountGetService.bySenior(senior);
+        if (optionalAccount.isEmpty()) {
+            updateSeniorMyPageUserAccountNoneAccount(senior, user, myPageUserAccountRequest);
+            return;
+        }
+        Account account = optionalAccount.get();
         String accountNumber = encryptorUtils.encryptData(myPageUserAccountRequest.accountNumber());
         userUpdateService.updateSeniorUserAccount(user.getUserId(), myPageUserAccountRequest);
         accountUpdateService.updateAccount(account, myPageUserAccountRequest, accountNumber);
+    }
+
+    private void updateSeniorMyPageUserAccountNoneAccount(Senior senior, User user, SeniorMyPageUserAccountRequest myPageUserAccountRequest) {
+        String accountNumber = encryptorUtils.encryptData(myPageUserAccountRequest.accountNumber());
+        Account account = mapToAccount(senior, myPageUserAccountRequest, accountNumber);
+        userUpdateService.updateSeniorUserAccount(user.getUserId(), myPageUserAccountRequest);
+        accountSaveService.saveAccount(account);
     }
 }

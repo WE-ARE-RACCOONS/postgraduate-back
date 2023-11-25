@@ -44,7 +44,10 @@ public class SeniorMyPageUseCase {
 
     public SeniorMyPageUserAccountResponse getSeniorMyPageUserAccount(User user) {
         Senior senior = seniorGetService.byUser(user);
-        Account account = accountGetService.bySenior(senior).orElseThrow(NoneAccountException::new);
+        Optional<Account> optionalAccount = accountGetService.bySenior(senior);
+        if (optionalAccount.isEmpty())
+            return mapToMyPageUserAccount(senior);
+        Account account = optionalAccount.get();
         String accountNumber = encryptorUtils.decryptData(account.getAccountNumber());
         return mapToMyPageUserAccount(senior, account, accountNumber);
     }
