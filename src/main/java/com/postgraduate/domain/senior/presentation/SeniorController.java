@@ -73,14 +73,14 @@ public class SeniorController {
     }
 
     @GetMapping("/me/account")
-    @Operation(summary = "대학원생 마이페이지 계좌설정시 기존 정보 조회")
+    @Operation(summary = "대학원생 마이페이지 계정 설정시 기존 정보 조회")
     public ResponseDto<SeniorMyPageUserAccountResponse> getSeniorUserAccount(@AuthenticationPrincipal User user) {
         SeniorMyPageUserAccountResponse seniorOriginInfo = seniorMyPageUseCase.getSeniorMyPageUserAccount(user);
         return ResponseDto.create(SENIOR_FIND.getCode(), GET_SENIOR_MYPAGE_ACCOUNT.getMessage(), seniorOriginInfo);
     }
 
     @PatchMapping("/me/account")
-    @Operation(summary = "대학원생 마이페이지 계좌설정")
+    @Operation(summary = "대학원생 마이페이지 계정 설정")
     public ResponseDto updateSeniorUserAccount(@AuthenticationPrincipal User user,
                                            @RequestBody SeniorMyPageUserAccountRequest myPageUserAccountRequest) {
         seniorManageUseCase.updateSeniorMyPageUserAccount(user, myPageUserAccountRequest);

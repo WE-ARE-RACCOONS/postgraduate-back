@@ -98,6 +98,7 @@ public class SeniorMapper {
                 .target(profile.getTarget())
                 .chatLink(profile.getChatLink())
                 .oneLiner(profile.getOneLiner())
+                .time(profile.getTime())
                 .build();
     }
 
