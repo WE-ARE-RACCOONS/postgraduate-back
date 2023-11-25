@@ -5,14 +5,12 @@ import com.postgraduate.domain.senior.application.dto.req.SeniorAccountRequest;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 
 public class AccountMapper {
-    public static Account mapToAccount(Senior senior, SeniorAccountRequest accountRequest, String accountNumber, String rrn) {
+    public static Account mapToAccount(Senior senior, SeniorAccountRequest accountRequest, String accountNumber) {
         return Account.builder()
                 .senior(senior)
                 .accountNumber(accountNumber)
                 .accountHolder(accountRequest.getAccountHolder())
                 .bank(accountRequest.getBank())
-                .name(accountRequest.getName())
-                .rrn(rrn)
                 .build();
     }
 }

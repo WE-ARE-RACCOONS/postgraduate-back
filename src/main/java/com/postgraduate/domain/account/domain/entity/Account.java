@@ -28,12 +28,6 @@ public class Account {
     @Column(nullable = false)
     private String accountHolder;
 
-    @Column(nullable = false)
-    private String name;
-
-    @Column(nullable = false)
-    private String rrn;
-
     @OneToOne
     private Senior senior;
 

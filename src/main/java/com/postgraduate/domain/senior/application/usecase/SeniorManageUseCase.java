@@ -47,8 +47,7 @@ public class SeniorManageUseCase {
     public void saveAccount(User user, SeniorAccountRequest accountRequest) {
         Senior senior = seniorGetService.byUser(user);
         String accountNumber = encryptorUtils.encryptData(accountRequest.getAccountNumber());
-        String rrn = encryptorUtils.encryptData(accountRequest.getRrn());
-        accountSaveService.saveAccount(mapToAccount(senior, accountRequest, accountNumber, rrn));
+        accountSaveService.saveAccount(mapToAccount(senior, accountRequest, accountNumber));
     }
 
     public void updateSeniorMyPageProfile(User user, SeniorMyPageProfileRequest myPageProfileRequest) {
