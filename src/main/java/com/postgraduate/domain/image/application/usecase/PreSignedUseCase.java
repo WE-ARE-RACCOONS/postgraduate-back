@@ -1,7 +1,7 @@
 package com.postgraduate.domain.image.application.usecase;
 
-import com.postgraduate.domain.image.application.dto.PreSignedUrlRequest;
-import com.postgraduate.domain.image.application.dto.PreSignedUrlResponse;
+import com.postgraduate.domain.image.application.dto.req.PreSignedUrlRequest;
+import com.postgraduate.domain.image.application.dto.res.PreSignedUrlResponse;
 import com.postgraduate.domain.image.exception.EmptyFileException;
 import com.postgraduate.global.config.s3.S3Service;
 import lombok.RequiredArgsConstructor;
