@@ -2,6 +2,7 @@ package com.postgraduate.global.config.s3;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.postgraduate.domain.image.exception.DeleteException;
 import com.postgraduate.domain.image.exception.UploadException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.UUID;
 
 @Service
@@ -48,11 +51,23 @@ public class S3UploadService {
         }
     }
 
-    public void deleteCertificationImage(String fileName)  {
-        amazonS3.deleteObject(bucket+"/"+certification, fileName);
+    public void deleteCertificationImage(String url) {
+        try {
+            String decodedUrl = URLDecoder.decode(url, "UTF-8");
+            String fileName = decodedUrl.substring(decodedUrl.lastIndexOf('/') + 1);
+            amazonS3.deleteObject(bucket + "/" + certification, fileName);
+        } catch (UnsupportedEncodingException e) {
+            throw new DeleteException();
+        }
     }
 
-    public void deleteProfileImage(String fileName)  {
-        amazonS3.deleteObject(bucket+"/"+profile, fileName);
+        public void deleteProfileImage(String url)  {
+            try {
+                String decodedUrl = URLDecoder.decode(url, "UTF-8");
+                String fileName = decodedUrl.substring(decodedUrl.lastIndexOf('/') + 1);
+                amazonS3.deleteObject(bucket + "/" + profile, fileName);
+            } catch (UnsupportedEncodingException e) {
+                throw new DeleteException();
+            }
+        }
     }
-}
