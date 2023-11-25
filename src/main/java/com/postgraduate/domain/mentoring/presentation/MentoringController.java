@@ -2,9 +2,7 @@ package com.postgraduate.domain.mentoring.presentation;
 
 import com.postgraduate.domain.mentoring.application.dto.req.MentoringApplyRequest;
 import com.postgraduate.domain.mentoring.application.dto.req.MentoringDateRequest;
-import com.postgraduate.domain.mentoring.application.dto.res.AppliedMentoringDetailResponse;
-import com.postgraduate.domain.mentoring.application.dto.res.AppliedMentoringResponse;
-import com.postgraduate.domain.mentoring.application.dto.res.SeniorMentoringDetailResponse;
+import com.postgraduate.domain.mentoring.application.dto.res.*;
 import com.postgraduate.domain.mentoring.application.usecase.MentoringApplyUseCase;
 import com.postgraduate.domain.mentoring.application.usecase.MentoringManageUseCase;
 import com.postgraduate.domain.mentoring.application.usecase.MentoringSeniorInfoUseCase;
@@ -19,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.*;
 import static com.postgraduate.domain.mentoring.presentation.constant.MentoringResponseCode.*;
 import static com.postgraduate.domain.mentoring.presentation.constant.MentoringResponseMessage.*;
 
@@ -32,15 +31,29 @@ public class MentoringController {
     private final MentoringApplyUseCase applyUseCase;
     private final MentoringManageUseCase manageUseCase;
 
-    @GetMapping("/me")
+    @GetMapping("/me/waiting")
     @Operation(summary = "[대학생] 신청한 멘토링 목록 조회", description = "대학생이 신청한 멘토링 목록을 조회합니다.")
-    public ResponseDto<AppliedMentoringResponse> getMentoringInfos(@RequestParam Status status, @AuthenticationPrincipal User user) {
-        AppliedMentoringResponse mentoringResponse = userInfoUseCase.getMentorings(status, user);
+    public ResponseDto<AppliedWaitingMentoringResponse> getWaitingMentorings(@AuthenticationPrincipal User user) {
+        AppliedWaitingMentoringResponse mentoringResponse = userInfoUseCase.getWaiting(user);
+        return ResponseDto.create(MENTORING_FIND.getCode(), GET_MENTORING_LIST_INFO.getMessage(), mentoringResponse);
+    }
+
+    @GetMapping("/me/expected")
+    @Operation(summary = "[대학생] 예정된 멘토링 목록 조회", description = "대학생이 예정된 멘토링 목록을 조회합니다.")
+    public ResponseDto<AppliedExpectedMentoringResponse> getExpectedMentorings(@AuthenticationPrincipal User user) {
+        AppliedExpectedMentoringResponse mentoringResponse = userInfoUseCase.getExpected(user);
+        return ResponseDto.create(MENTORING_FIND.getCode(), GET_MENTORING_LIST_INFO.getMessage(), mentoringResponse);
+    }
+
+    @GetMapping("/me/done")
+    @Operation(summary = "[대학생] 완료한 멘토링 목록 조회", description = "대학생이 완료한 멘토링 목록을 조회합니다.")
+    public ResponseDto<AppliedDoneMentoringResponse> getDoneMentorings(@AuthenticationPrincipal User user) {
+        AppliedDoneMentoringResponse mentoringResponse = userInfoUseCase.getDone(user);
         return ResponseDto.create(MENTORING_FIND.getCode(), GET_MENTORING_LIST_INFO.getMessage(), mentoringResponse);
     }
 
     @GetMapping("/me/{mentoringId}")
-    @Operation(summary = "[대학생] 신청한 멘토링 상세조회", description = "대학생이 신청한 멘토링을 상세조회합니다.")
+    @Operation(summary = "[대학생] 신청한 멘토링 상세조회", description = "대학생이 신청한 멘토링을 상세조회합니다. <완료> 상태의 멘토링은 상세조회되지 않습니다.")
     public ResponseDto<AppliedMentoringDetailResponse> getMentoringDetail(@AuthenticationPrincipal User user, @PathVariable Long mentoringId) {
         AppliedMentoringDetailResponse mentoringDetail = userInfoUseCase.getMentoringDetail(user, mentoringId);
         return ResponseDto.create(MENTORING_FIND.getCode(), GET_MENTORING_DETAIL_INFO.getMessage(), mentoringDetail);

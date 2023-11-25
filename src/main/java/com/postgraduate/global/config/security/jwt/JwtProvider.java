@@ -1,7 +1,7 @@
 package com.postgraduate.global.config.security.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.postgraduate.domain.user.application.exception.NotFoundUserException;
+import com.postgraduate.domain.user.exception.UserNotFoundException;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.entity.constant.Role;
 import com.postgraduate.global.auth.AuthDetails;
@@ -75,7 +75,7 @@ public class JwtProvider {
         return refreshToken;
     }
 
-    public Authentication getAuthentication(HttpServletResponse response, String token) throws NotFoundUserException{
+    public Authentication getAuthentication(HttpServletResponse response, String token) throws UserNotFoundException {
         Claims claims = parseClaims(token);
         List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(claims.get(ROLE).toString()));
         User user = getDetails(response, claims).getUser();
@@ -86,7 +86,7 @@ public class JwtProvider {
         try {
             AuthDetails authDetails = authDetailsService.loadUserByUsername(claims.getSubject());
             return authDetails;
-        } catch (NotFoundUserException ex) {
+        } catch (UserNotFoundException ex) {
             jwtExceptionHandler(response, ex);
             throw ex;
         }

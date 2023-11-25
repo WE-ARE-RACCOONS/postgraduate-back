@@ -5,6 +5,7 @@ import com.postgraduate.domain.user.application.dto.req.UserInfoRequest;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.entity.constant.Role;
 import com.postgraduate.domain.user.domain.repository.UserRepository;
+import com.postgraduate.domain.user.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,12 +15,12 @@ public class UserUpdateService {
     private final UserRepository userRepository;
 
     public void updateRole(Long userId, Role role) {
-        User user = userRepository.findById(userId).get();
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         user.updateRole(role);
     }
 
     public void updateInfo(Long userId, UserInfoRequest userInfoRequest) {
-        User user = userRepository.findById(userId).get();
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         user.updateInfo(
                 userInfoRequest.getProfile(),
                 userInfoRequest.getNickName(),
