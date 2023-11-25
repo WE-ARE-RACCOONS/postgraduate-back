@@ -18,20 +18,20 @@ public class SeniorMapper {
         return Senior.builder()
                 .user(user)
                 .info(mapToInfo(request))
-                .certification(request.getCertification())
+                .certification(request.certification())
                 .build();
     }
 
     public static Info mapToInfo(SeniorSignUpRequest request) {
         return Info.builder()
-                .major(request.getMajor())
-                .postgradu(request.getPostgradu())
-                .professor(request.getProfessor())
-                .lab(request.getLab())
-                .keyword(request.getKeyword())
-                .field(request.getField())
-                .totalInfo(request.getMajor() + request.getLab() + request.getField()
-                        + request.getProfessor() + request.getPostgradu())
+                .major(request.major())
+                .postgradu(request.postgradu())
+                .professor(request.professor())
+                .lab(request.lab())
+                .keyword(request.keyword())
+                .field(request.field())
+                .totalInfo(request.major() + request.lab() + request.field()
+                        + request.professor() + request.postgradu() + request.field())
                 .build();
     }
 
@@ -59,20 +59,20 @@ public class SeniorMapper {
         return Senior.builder()
                 .user(user)
                 .info(mapToInfo(request))
-                .certification(request.getCertification())
+                .certification(request.certification())
                 .build();
     }
 
     public static Info mapToInfo(SeniorChangeRequest request) {
         return Info.builder()
-                .major(request.getMajor())
-                .postgradu(request.getPostgradu())
-                .professor(request.getProfessor())
-                .lab(request.getLab())
-                .keyword(request.getKeyword())
-                .field(request.getField())
-                .totalInfo(request.getMajor() + request.getLab() + request.getField()
-                        + request.getProfessor() + request.getPostgradu())
+                .major(request.major())
+                .postgradu(request.postgradu())
+                .professor(request.professor())
+                .lab(request.lab())
+                .keyword(request.keyword())
+                .field(request.field())
+                .totalInfo(request.major() + request.lab() + request.field()
+                        + request.professor() + request.postgradu() + request.keyword())
                 .build();
     }
 

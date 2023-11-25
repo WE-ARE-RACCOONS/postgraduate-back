@@ -35,10 +35,10 @@ public class UserMapper {
 
     public static User mapToUser(SeniorSignUpRequest request) {
         return User.builder()
-                .socialId(request.getSocialId())
-                .nickName(request.getNickName())
-                .phoneNumber(request.getPhoneNumber())
-                .marketingReceive(request.getMarketingReceive())
+                .socialId(request.socialId())
+                .nickName(request.nickName())
+                .phoneNumber(request.phoneNumber())
+                .marketingReceive(request.marketingReceive())
                 .role(SENIOR)
                 .build();
     }
