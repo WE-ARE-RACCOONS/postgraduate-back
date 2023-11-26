@@ -102,4 +102,13 @@ public class SeniorController {
         AllSeniorSearchResponse searchSenior = seniorInfoUseCase.getSearchSenior(find, page, sort);
         return ResponseDto.create(SENIOR_FIND.getCode(), GET_SENIOR_LIST_INFO.getMessage(), searchSenior);
     }
+
+    @GetMapping("/field")
+    @Operation(summary = "대학원생 필드 검색")
+    public ResponseDto<AllSeniorSearchResponse> getFieldSenior(@RequestParam String field,
+                                                                @RequestParam(required = false) String postgradu,
+                                                                @RequestParam(required = false) Integer page) {
+        AllSeniorSearchResponse searchSenior = seniorInfoUseCase.getFieldSenior(field, postgradu, page);
+        return ResponseDto.create(SENIOR_FIND.getCode(), GET_SENIOR_LIST_INFO.getMessage(), searchSenior);
+    }
 }

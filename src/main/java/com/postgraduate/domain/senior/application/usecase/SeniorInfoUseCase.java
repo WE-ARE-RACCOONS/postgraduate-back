@@ -38,4 +38,13 @@ public class SeniorInfoUseCase {
         }
         return new AllSeniorSearchResponse(selectSeniors);
     }
+
+    public AllSeniorSearchResponse getFieldSenior(String field, String postgradu, Integer page) {
+        Page<Senior> allSeniors = seniorGetService.byField(field, postgradu, page);
+        List<SeniorSearchResponse> selectSeniors = new ArrayList<>();
+        for (Senior senior : allSeniors.getContent()) {
+            selectSeniors.add(mapToSeniorSearch(senior));
+        }
+        return new AllSeniorSearchResponse(selectSeniors);
+    }
 }
