@@ -1,6 +1,5 @@
 package com.postgraduate.domain.user.domain.entity;
 
-import com.postgraduate.domain.senior.application.dto.req.SeniorMyPageUserAccountRequest;
 import com.postgraduate.domain.user.domain.entity.constant.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

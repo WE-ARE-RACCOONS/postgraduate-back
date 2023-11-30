@@ -7,6 +7,7 @@ import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.wish.domain.entity.Wish;
 
 public class AdminMapper {
 
@@ -36,16 +37,19 @@ public class AdminMapper {
                 .build();
     }
 
-//    public static UserResponse mapToUserResponse(User user) {
-//        return UserResponse.builder()
-//                .userId(user.getUserId())
-//                .nickName(user.getNickName())
-//                .marketingReceive(user.getMarketingReceive())
-//                .matchingReceive(user.getHope().getMatchingReceive())
-//                .createdAt(user.getCreatedAt())
-//                .build();
-//    }
-
+    public static UserResponse mapToUserResponse(User user, Wish wish) {
+        return UserResponse.builder()
+                .userId(user.getUserId())
+                .nickName(user.getNickName())
+                .phoneNumber(user.getPhoneNumber())
+                .createdAt(user.getCreatedAt())
+                .marketingReceive(user.getMarketingReceive())
+                .matchingReceive(wish.getMatchingReceive())
+                .wishId(wish.getWishId())
+                .role(user.getRole())
+                .build();
+    }
+//
 //    public static UserWithSeniorResponse mapToUserWithSeniorResponse(User user, Long seniorId) {
 //        return UserWithSeniorResponse.builder()
 //                .userId(user.getUserId())
