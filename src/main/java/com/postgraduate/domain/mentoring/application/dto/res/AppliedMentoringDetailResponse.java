@@ -14,6 +14,7 @@ public class AppliedMentoringDetailResponse {
         private String postgradu;
         private String major;
         private String lab;
+        private int term;
         private String topic;
         private String question;
         private String[] dates;

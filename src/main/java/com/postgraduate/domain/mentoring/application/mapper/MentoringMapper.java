@@ -64,6 +64,7 @@ public class MentoringMapper {
                 .postgradu(senior.getInfo().getPostgradu())
                 .major(senior.getInfo().getMajor())
                 .lab(senior.getInfo().getLab())
+                .term(senior.getProfile().getTerm())
                 .topic(mentoring.getTopic())
                 .question(mentoring.getQuestion())
                 .dates(dates)
