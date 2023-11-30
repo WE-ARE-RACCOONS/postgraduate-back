@@ -6,6 +6,8 @@ import com.postgraduate.domain.admin.application.usecase.MentoringManageByAdminU
 import com.postgraduate.domain.admin.application.usecase.PaymentManageByAdminUseCase;
 import com.postgraduate.domain.admin.application.usecase.SeniorManageByAdminUseCase;
 import com.postgraduate.domain.admin.application.usecase.UserManageByAdminUseCase;
+import com.postgraduate.domain.wish.application.mapper.dto.res.WishResponse;
+import com.postgraduate.domain.wish.application.usecase.WishInfoUseCase;
 import com.postgraduate.global.dto.ResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,6 +25,8 @@ import static com.postgraduate.domain.senior.presentation.constant.SeniorRespons
 import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseMessage.*;
 import static com.postgraduate.domain.user.presentation.constant.UserResponseCode.USER_FIND;
 import static com.postgraduate.domain.user.presentation.constant.UserResponseMessage.GET_USER_LIST_INFO;
+import static com.postgraduate.domain.wish.presentation.constant.WishResponseCode.WISH_FIND;
+import static com.postgraduate.domain.wish.presentation.constant.WishResponseMessage.*;
 
 
 @RestController
@@ -34,6 +38,7 @@ public class AdminController {
     private final UserManageByAdminUseCase userManageUseCase;
     private final MentoringManageByAdminUseCase mentoringManageUseCase;
     private final PaymentManageByAdminUseCase paymentManageUseCase;
+    private final WishInfoUseCase wishInfoUseCase;
 
     @GetMapping("/certification/{seniorId}")
     @Operation(summary = "[관리자] 선배 프로필 승인 요청 조회", description = "선배 신청 시 작성한 사전 작성정보 및 첨부사진을 조회합니다.")
@@ -61,6 +66,13 @@ public class AdminController {
     public ResponseDto<List<UserResponse>> getUsers() {
         List<UserResponse> users = userManageUseCase.getUsers();
         return ResponseDto.create(USER_FIND.getCode(), GET_USER_LIST_INFO.getMessage(), users);
+    }
+
+    @GetMapping("/wish/{wishId}")
+    @Operation(summary = "[관리자] 후배 매칭 지원 정보", description = "대학생 후배 매칭 지원 정보를 상세 조회합니다.")
+    public ResponseDto<WishResponse> getWish(@PathVariable Long wishId) {
+        WishResponse wish = wishInfoUseCase.getWish(wishId);
+        return ResponseDto.create(WISH_FIND.getCode(), GET_WISH_INFO.getMessage(), wish);
     }
 
     @GetMapping("/seniors")
