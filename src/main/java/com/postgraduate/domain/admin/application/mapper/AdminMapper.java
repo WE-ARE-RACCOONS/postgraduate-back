@@ -61,11 +61,15 @@ public class AdminMapper {
 //                .build();
 //    }
 
-    public static SeniorResponse mapToSeniorResponse(Senior senior) {
+    public static SeniorResponse mapToSeniorResponse(Senior senior, String salaryStatus) {
+        User user = senior.getUser();
         return SeniorResponse.builder()
                 .seniorId(senior.getSeniorId())
-                .nickName(senior.getUser().getNickName())
-                .createdAt(senior.getCreatedAt())
+                .nickName(user.getNickName())
+                .phoneNumber(user.getPhoneNumber())
+                .status(senior.getStatus())
+                .salaryStatus(salaryStatus)
+                .marketingReceive(user.getMarketingReceive())
                 .build();
     }
 
