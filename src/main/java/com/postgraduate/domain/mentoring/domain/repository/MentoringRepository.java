@@ -15,4 +15,6 @@ public interface MentoringRepository extends JpaRepository<Mentoring, Long> {
     List<Mentoring> findAllByUserAndStatus(User user, Status status);
     List<Mentoring> findAllBySeniorAndStatus(Senior senior, Status status);
     List<Mentoring> findAllByStatusAndCreatedAtIsBefore(Status status, LocalDate now);
+    List<Mentoring> findAllByUser_UserId(Long userId);
+    List<Mentoring> findAllBySenior_SeniorId(Long seniorId);
 }

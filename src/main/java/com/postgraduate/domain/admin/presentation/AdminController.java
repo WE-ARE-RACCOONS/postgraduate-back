@@ -82,12 +82,19 @@ public class AdminController {
         return ResponseDto.create(SENIOR_FIND.getCode(), GET_SENIOR_LIST_INFO.getMessage(), seniors);
     }
 
-//    @GetMapping("/mentorings")
-//    @Operation(summary = "[관리자] 매칭 정보 목록", description = "매칭 정보 목록을 조회합니다.")
-//    public ResponseDto<List<MentoringResponse>> getMentorings() {
-//        List<MentoringResponse> mentorings = mentoringManageUseCase.getMentorings();
-//        return ResponseDto.create(MENTORING_FIND.getCode(), GET_MENTORING_LIST_INFO.getMessage(), mentorings);
-//    }
+    @GetMapping("/user/{userId}/mentoring")
+    @Operation(summary = "[관리자] 유저 멘토링 조회", description = "유저의 멘토링 목록을 조회합니다.")
+    public ResponseDto<List<MentoringResponse>> getUserMentorings(@PathVariable Long userId) {
+        List<MentoringResponse> mentorings = mentoringManageUseCase.getUserMentorings(userId);
+        return ResponseDto.create(MENTORING_FIND.getCode(), GET_MENTORING_LIST_INFO.getMessage(), mentorings);
+    }
+
+    @GetMapping("/senior/{seniorId}/mentoring")
+    @Operation(summary = "[관리자] 유저 멘토링 조회", description = "유저의 멘토링 목록을 조회합니다.")
+    public ResponseDto<List<MentoringResponse>> getSeniorMentorings(@PathVariable Long seniorId) {
+        List<MentoringResponse> mentorings = mentoringManageUseCase.getSeniorMentorings(seniorId);
+        return ResponseDto.create(MENTORING_FIND.getCode(), GET_MENTORING_LIST_INFO.getMessage(), mentorings);
+    }
 
     @GetMapping("/payments")
     @Operation(summary = "[관리자] 결제 정보 목록", description = "결제 정보 목록을 조회합니다.")

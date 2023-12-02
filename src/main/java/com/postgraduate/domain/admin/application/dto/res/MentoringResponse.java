@@ -14,8 +14,7 @@ public class MentoringResponse {
     private Long mentoringId;
     private Status status;
     private String userNickName;
-    private Long seniorId;
+    private String userPhoneNumber;
     private String seniorNickName;
-    private LocalDate createdAt;
-    private String date;
+    private String seniorPhoneNumber;
 }

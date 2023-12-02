@@ -15,8 +15,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MentoringManageByAdminUseCase {
     private final MentoringGetService mentoringGetService;
-//    public List<MentoringResponse> getMentorings() {
-//        List<Mentoring> mentorings = mentoringGetService.all();
-//        return mentorings.stream().map(AdminMapper::mapToMentoringResponse).toList();
-//    }
+    public List<MentoringResponse> getUserMentorings(Long userId) {
+        List<Mentoring> mentorings = mentoringGetService.byUserId(userId);
+        return mentorings.stream().map(AdminMapper::mapToMentoringResponse).toList();
+    }
+    public List<MentoringResponse> getSeniorMentorings(Long seniorId) {
+        List<Mentoring> mentorings = mentoringGetService.bySeniorId(seniorId);
+        return mentorings.stream().map(AdminMapper::mapToMentoringResponse).toList();
+    }
 }

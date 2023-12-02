@@ -32,4 +32,12 @@ public class MentoringGetService {
     public List<Mentoring> byStatusAndCreatedAt(Status status, LocalDate now) {
         return mentoringRepository.findAllByStatusAndCreatedAtIsBefore(status, now);
     }
+
+    public List<Mentoring> byUserId(Long userId) {
+        return mentoringRepository.findAllByUser_UserId(userId);
+    }
+
+    public List<Mentoring> bySeniorId(Long seniorId) {
+        return mentoringRepository.findAllBySenior_SeniorId(seniorId);
+    }
 }

@@ -74,14 +74,15 @@ public class AdminMapper {
     }
 
     public static MentoringResponse mapToMentoringResponse(Mentoring mentoring) {
+         User user = mentoring.getUser();
+        Senior senior = mentoring.getSenior();
         return MentoringResponse.builder()
                 .mentoringId(mentoring.getMentoringId())
                 .status(mentoring.getStatus())
-                .userNickName(mentoring.getUser().getNickName())
-                .seniorId(mentoring.getSenior().getSeniorId())
-                .seniorNickName(mentoring.getSenior().getUser().getNickName())
-                .createdAt(mentoring.getCreatedAt())
-                .date(mentoring.getDate())
+                .userNickName(user.getNickName())
+                .userPhoneNumber(user.getPhoneNumber())
+                .seniorNickName(senior.getUser().getNickName())
+                .seniorPhoneNumber(senior.getUser().getPhoneNumber())
                 .build();
     }
 
