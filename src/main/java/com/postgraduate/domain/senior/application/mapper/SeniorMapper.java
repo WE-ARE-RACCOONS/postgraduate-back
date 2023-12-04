@@ -148,4 +148,11 @@ public class SeniorMapper {
                 info.getPostgradu(), info.getMajor(), info.getLab(),
                 profile.getOneLiner(), keyword);
     }
+
+    public static SeniorFieldResponse mapToSeniorField(Senior senior) {
+        User user = senior.getUser();
+        Info info = senior.getInfo();
+        return new SeniorFieldResponse(user.getProfile(), user.getNickName(),
+                info.getPostgradu(), info.getMajor(), info.getLab());
+    }
 }
