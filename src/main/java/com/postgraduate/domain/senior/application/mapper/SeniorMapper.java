@@ -109,12 +109,8 @@ public class SeniorMapper {
                 break;
             }
         }
-        for (String postgradu : postgraduNames) {
-            if (!postgraduNames.contains(postgradu)) {
-                infoBuilder.etcPostgradu(true);
-                break;
-            }
-        }
+        if (!postgraduNames.contains(request.postgradu()))
+            infoBuilder.etcPostgradu(true);
         return infoBuilder.build();
     }
 
