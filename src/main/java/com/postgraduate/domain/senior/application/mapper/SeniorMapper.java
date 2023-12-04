@@ -4,13 +4,17 @@ import com.postgraduate.domain.account.domain.entity.Account;
 import com.postgraduate.domain.auth.application.dto.req.SeniorChangeRequest;
 import com.postgraduate.domain.auth.application.dto.req.SeniorSignUpRequest;
 import com.postgraduate.domain.senior.application.dto.req.SeniorMyPageProfileRequest;
-import com.postgraduate.domain.senior.application.dto.res.*;
 import com.postgraduate.domain.senior.application.dto.req.SeniorProfileRequest;
+import com.postgraduate.domain.senior.application.dto.res.*;
 import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
+import com.postgraduate.domain.senior.domain.entity.constant.Field;
+import com.postgraduate.domain.senior.domain.entity.constant.Postgradu;
 import com.postgraduate.domain.senior.domain.entity.constant.Status;
 import com.postgraduate.domain.user.domain.entity.User;
+
+import java.util.HashSet;
 
 public class SeniorMapper {
 
@@ -23,16 +27,35 @@ public class SeniorMapper {
     }
 
     public static Info mapToInfo(SeniorSignUpRequest request) {
-        return Info.builder()
+        String[] fields = request.field().split(",");
+        HashSet<String> fieldNames = Field.fieldNames();
+        HashSet<String> postgraduNames = Postgradu.postgraduNames();
+
+        Info.InfoBuilder infoBuilder = Info.builder()
                 .major(request.major())
                 .postgradu(request.postgradu())
                 .professor(request.professor())
                 .lab(request.lab())
                 .keyword(request.keyword())
                 .field(request.field())
+                .etcPostgradu(false)
+                .etcPostgradu(false)
                 .totalInfo(request.major() + request.lab() + request.field()
-                        + request.professor() + request.postgradu() + request.field())
-                .build();
+                        + request.professor() + request.postgradu() + request.field());
+
+        for (String field : fields) {
+            if (!fieldNames.contains(field)) {
+                infoBuilder.etcField(true);
+                break;
+            }
+        }
+        for (String postgradu : postgraduNames) {
+            if (!postgraduNames.contains(postgradu)) {
+                infoBuilder.etcPostgradu(true);
+                break;
+            }
+        }
+        return infoBuilder.build();
     }
 
     public static Profile mapToProfile(SeniorProfileRequest profileRequest) {
@@ -64,16 +87,35 @@ public class SeniorMapper {
     }
 
     public static Info mapToInfo(SeniorChangeRequest request) {
-        return Info.builder()
+        String[] fields = request.field().split(",");
+        HashSet<String> fieldNames = Field.fieldNames();
+        HashSet<String> postgraduNames = Postgradu.postgraduNames();
+
+        Info.InfoBuilder infoBuilder = Info.builder()
                 .major(request.major())
                 .postgradu(request.postgradu())
                 .professor(request.professor())
                 .lab(request.lab())
                 .keyword(request.keyword())
                 .field(request.field())
+                .etcPostgradu(false)
+                .etcPostgradu(false)
                 .totalInfo(request.major() + request.lab() + request.field()
-                        + request.professor() + request.postgradu() + request.keyword())
-                .build();
+                        + request.professor() + request.postgradu() + request.field());
+
+        for (String field : fields) {
+            if (!fieldNames.contains(field)) {
+                infoBuilder.etcField(true);
+                break;
+            }
+        }
+        for (String postgradu : postgraduNames) {
+            if (!postgraduNames.contains(postgradu)) {
+                infoBuilder.etcPostgradu(true);
+                break;
+            }
+        }
+        return infoBuilder.build();
     }
 
     public static SeniorMyPageResponse mapToSeniorMyPageInfo(Senior senior, Status certificationRegister, boolean profileRegister) {
