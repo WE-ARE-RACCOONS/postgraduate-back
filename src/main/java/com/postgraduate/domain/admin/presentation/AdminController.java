@@ -2,10 +2,7 @@ package com.postgraduate.domain.admin.presentation;
 
 import com.postgraduate.domain.admin.application.dto.req.SeniorStatusRequest;
 import com.postgraduate.domain.admin.application.dto.res.*;
-import com.postgraduate.domain.admin.application.usecase.MentoringManageByAdminUseCase;
-import com.postgraduate.domain.admin.application.usecase.PaymentManageByAdminUseCase;
-import com.postgraduate.domain.admin.application.usecase.SeniorManageByAdminUseCase;
-import com.postgraduate.domain.admin.application.usecase.UserManageByAdminUseCase;
+import com.postgraduate.domain.admin.application.usecase.*;
 import com.postgraduate.domain.wish.application.mapper.dto.res.WishResponse;
 import com.postgraduate.domain.wish.application.usecase.WishInfoUseCase;
 import com.postgraduate.global.dto.ResponseDto;
@@ -20,13 +17,15 @@ import static com.postgraduate.domain.mentoring.presentation.constant.MentoringR
 import static com.postgraduate.domain.mentoring.presentation.constant.MentoringResponseMessage.GET_MENTORING_LIST_INFO;
 import static com.postgraduate.domain.payment.presentation.constant.PaymentResponseCode.PAYMENT_FIND;
 import static com.postgraduate.domain.payment.presentation.constant.PaymentResponseMessage.GET_PAYMENT_LIST_INFO;
+import static com.postgraduate.domain.salary.presentation.constant.SalaryResponseCode.SALARY_FIND;
+import static com.postgraduate.domain.salary.presentation.constant.SalaryResponseMessage.GET_SALARY_INFO;
 import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseCode.SENIOR_FIND;
 import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseCode.SENIOR_UPDATE;
 import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseMessage.*;
 import static com.postgraduate.domain.user.presentation.constant.UserResponseCode.USER_FIND;
 import static com.postgraduate.domain.user.presentation.constant.UserResponseMessage.GET_USER_LIST_INFO;
 import static com.postgraduate.domain.wish.presentation.constant.WishResponseCode.WISH_FIND;
-import static com.postgraduate.domain.wish.presentation.constant.WishResponseMessage.*;
+import static com.postgraduate.domain.wish.presentation.constant.WishResponseMessage.GET_WISH_INFO;
 
 
 @RestController
@@ -39,6 +38,7 @@ public class AdminController {
     private final MentoringManageByAdminUseCase mentoringManageUseCase;
     private final PaymentManageByAdminUseCase paymentManageUseCase;
     private final WishInfoUseCase wishInfoUseCase;
+    private final SalaryManageByAdminUseCase salaryManageUseCase;
 
     @GetMapping("/certification/{seniorId}")
     @Operation(summary = "[관리자] 선배 프로필 승인 요청 조회", description = "선배 신청 시 작성한 사전 작성정보 및 첨부사진을 조회합니다.")
@@ -47,12 +47,12 @@ public class AdminController {
         return ResponseDto.create(SENIOR_FIND.getCode(), GET_SENIOR_PROFILE.getMessage(), certification);
     }
 
-    @GetMapping("/certification")
-    @Operation(summary = "[관리자] 선배 프로필 승인 대기 목록", description = "선배 프로필 승인 신청한 유저 목록을 조회합니다.")
-    public ResponseDto<List<CertificationResponse>> getCertifications() {
-        List<CertificationResponse> certifications = seniorManageUseCase.getCertifications();
-        return ResponseDto.create(SENIOR_FIND.getCode(), GET_SENIOR_LIST_INFO.getMessage(), certifications);
-    }
+//    @GetMapping("/certification")
+//    @Operation(summary = "[관리자] 선배 프로필 승인 대기 목록", description = "선배 프로필 승인 신청한 유저 목록을 조회합니다.")
+//    public ResponseDto<List<CertificationResponse>> getCertifications() {
+//        List<CertificationResponse> certifications = seniorManageUseCase.getCertifications();
+//        return ResponseDto.create(SENIOR_FIND.getCode(), GET_SENIOR_LIST_INFO.getMessage(), certifications);
+//    }
 
     @PatchMapping("/certification/{seniorId}")
     @Operation(summary = "[관리자] 선배 프로필 승인 요청 응답", description = "선배 승인 신청한 유저를 승인 또는 거부합니다.")
@@ -80,6 +80,13 @@ public class AdminController {
     public ResponseDto<List<SeniorResponse>> getSeniors() {
         List<SeniorResponse> seniors = seniorManageUseCase.getSeniors();
         return ResponseDto.create(SENIOR_FIND.getCode(), GET_SENIOR_LIST_INFO.getMessage(), seniors);
+    }
+
+    @GetMapping("/salary/{seniorId}")
+    @Operation(summary = "[관리자] 선배 정산 상세 정보", description = "대학원생 선배 정산 상세 정보를 조회합니다.")
+    public ResponseDto<SalaryResponse> getSalary(@PathVariable Long seniorId) {
+        SalaryResponse salary = salaryManageUseCase.getSalary(seniorId);
+        return ResponseDto.create(SALARY_FIND.getCode(), GET_SALARY_INFO.getMessage(), salary);
     }
 
     @GetMapping("/user/{userId}/mentoring")
