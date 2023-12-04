@@ -1,5 +1,6 @@
 package com.postgraduate.domain.admin.application.mapper;
 
+import com.postgraduate.domain.account.domain.entity.Account;
 import com.postgraduate.domain.admin.application.dto.CertificationInfo;
 import com.postgraduate.domain.admin.application.dto.CertificationProfile;
 import com.postgraduate.domain.admin.application.dto.res.*;
@@ -61,7 +62,7 @@ public class AdminMapper {
 //                .build();
 //    }
 
-    public static SeniorResponse mapToSeniorResponse(Senior senior, String salaryStatus) {
+    public static SeniorResponse mapToSeniorResponse(Senior senior, Boolean salaryStatus) {
         User user = senior.getUser();
         return SeniorResponse.builder()
                 .seniorId(senior.getSeniorId())
@@ -95,5 +96,19 @@ public class AdminMapper {
                 .createdAt(payment.getCreatedAt())
                 .pay(payment.getMentoring().getPay())
                 .build();
+    }
+
+    public static SalaryResponse mapToSalaryResponse(Account account, int totalAmount, Boolean status) {
+        Senior senior = account.getSenior();
+        User user = senior.getUser();
+        return new SalaryResponse(
+                user.getNickName(),
+                user.getPhoneNumber(),
+                totalAmount,
+                account.getAccountHolder(),
+                account.getBank(),
+                account.getAccountNumber(),
+                status
+        );
     }
 }

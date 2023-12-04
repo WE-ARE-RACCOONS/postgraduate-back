@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 
+import static com.postgraduate.domain.salary.util.SalaryUtil.getAmount;
 import static com.postgraduate.domain.salary.util.SalaryUtil.getSalaryDate;
 
 @Service
@@ -30,13 +31,6 @@ public class SalaryInfoUseCase {
         List<Salary> salaries = salaryGetService.bySeniorAndSalaryDate(senior, salaryDate);
         int amount = getAmount(salaries);
         return new SalaryInfoResponse(salaryDate, amount); //TODO 수수료
-    }
-
-    private int getAmount(List<Salary> salaries) {
-        return salaries.stream()
-                .map(salary -> salary.getMentoring().getPay())
-                .mapToInt(Integer::intValue)
-                .sum();
     }
 
     public List<SalaryDetailResponse> getSalaryDetail(User user, Boolean status) {

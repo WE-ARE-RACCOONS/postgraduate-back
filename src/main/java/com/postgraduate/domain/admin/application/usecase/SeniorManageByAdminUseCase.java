@@ -64,23 +64,9 @@ public class SeniorManageByAdminUseCase {
         return seniors.stream()
                 .map(senior -> {
                     List<Salary> salaries = salaryGetService.bySeniorAndSalaryDate(senior, getSalaryDate());
-                    String salaryStatus = getSalaryStatus(salaries);
+                    Boolean salaryStatus = getStatus(salaries);
                     return AdminMapper.mapToSeniorResponse(senior, salaryStatus);
                 })
                 .toList();
-    }
-
-    private String getSalaryStatus(List<Salary> salaries) {
-        long count = salaries.stream()
-                .filter(Salary::getStatus)
-                .count();
-
-        if (count == salaries.size()) {
-            return "O";
-        }
-        if (count == 0) {
-            return "X";
-        }
-        return "-";
     }
 }

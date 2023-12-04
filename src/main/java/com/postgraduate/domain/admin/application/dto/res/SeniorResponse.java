@@ -11,7 +11,7 @@ public class SeniorResponse {
     private String nickName;
     private String phoneNumber;
     private Status status;
-    private String salaryStatus;
+    private Boolean salaryStatus;
     private Boolean marketingReceive;
     // 후배 회원 가입
 }
