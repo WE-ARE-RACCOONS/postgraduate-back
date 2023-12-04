@@ -74,12 +74,7 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
     private BooleanExpression fieldSpecifier(String field) {
         if (field.equals("others"))
             return senior.info.etcField.isTrue();
-
-        String[] fields = field.split(",");
-        return Arrays.stream(fields)
-                .map(fieldName -> senior.info.field.like("%"+fieldName+"%"))
-                .reduce(BooleanExpression::or)
-                .orElse(FALSE);
+        return senior.info.field.like("%"+field+"%");
     }
 
     private BooleanExpression postgraduSpecifier(String postgradu) {
