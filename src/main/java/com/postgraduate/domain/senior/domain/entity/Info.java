@@ -38,7 +38,11 @@ public class Info {
 
     @Column(nullable = false)
     @Builder.Default
-    private Boolean etc = false;
+    private Boolean etcField = false;
+
+    @Column(nullable = false)
+    @Builder.Default
+    private Boolean etcPostgradu = false;
 
     @Column(nullable = false)
     private String totalInfo; // 모든 Info정보 String으로 가지는 컬럼 - 검색시 사용
@@ -48,13 +52,6 @@ public class Info {
         this.lab = request.getLab();
         this.field = request.getField();
         combineTotalInfo();
-    }
-
-    public boolean checkEtc(String fields) {
-        String[] field = fields.split(",");
-        if (stream(field).anyMatch(fieldNames()::contains))
-            return false;
-        return true;
     }
 
     private void combineTotalInfo() {
