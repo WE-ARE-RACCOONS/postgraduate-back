@@ -95,7 +95,7 @@ public class SeniorController {
     }
 
     @GetMapping("/search")
-    @Operation(summary = "대학원생 검색어 검색")
+    @Operation(summary = "대학원생 검색어 검색", description = "find 필수, sort 선택 - 안보낼 경우 아예 파라미터 추가x (조회수 낮은순 low, 높은순 high), page선택 (안보내면 기본 1페이지)")
     public ResponseDto<AllSeniorSearchResponse> getSearchSenior(@RequestParam String find,
                                                                 @RequestParam(required = false) String sort,
                                                                 @RequestParam(required = false) Integer page) {
@@ -104,9 +104,9 @@ public class SeniorController {
     }
 
     @GetMapping("/field")
-    @Operation(summary = "대학원생 필드 검색")
+    @Operation(summary = "대학원생 필드 검색", description = "분야 (분야1,분야2 이런식으로, 다른분야 : others), 대학원 필수 (대학원1,대학원2 이런식으로, 다른학교 : others, 전체 : all), 페이지 선택 ")
     public ResponseDto<AllSeniorFieldResponse> getFieldSenior(@RequestParam String field,
-                                                                @RequestParam(required = false) String postgradu,
+                                                                @RequestParam String postgradu,
                                                                 @RequestParam(required = false) Integer page) {
         AllSeniorFieldResponse fieldSenior = seniorInfoUseCase.getFieldSenior(field, postgradu, page);
         return ResponseDto.create(SENIOR_FIND.getCode(), GET_SENIOR_LIST_INFO.getMessage(), fieldSenior);
