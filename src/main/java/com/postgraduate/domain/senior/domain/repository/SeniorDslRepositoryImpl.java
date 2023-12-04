@@ -73,7 +73,7 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
 
     private BooleanExpression fieldSpecifier(String field) {
         if (field.equals("others"))
-            return senior.info.etc.isTrue();
+            return senior.info.etcField.isTrue();
 
         String[] fields = field.split(",");
         return Arrays.stream(fields)
@@ -83,10 +83,19 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
     }
 
     private BooleanExpression postgraduSpecifier(String postgradu) {
-        if (postgradu.equals("all"))
+        if (postgradu.contains("all"))
             return TRUE;
 
         String[] postgradus = postgradu.split(",");
+
+        if (postgradu.contains("others")) {
+            return Arrays.stream(postgradus)
+                    .map(postgraduName -> senior.info.etcPostgradu.isTrue()
+                            .or(senior.info.postgradu.like("%"+postgraduName+"%")))
+                    .reduce(BooleanExpression::or)
+                    .orElse(FALSE);
+        }
+
         return Arrays.stream(postgradus)
                 .map(postgraduName -> senior.info.postgradu.like("%"+postgraduName+"%"))
                 .reduce(BooleanExpression::or)
