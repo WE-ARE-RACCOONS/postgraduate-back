@@ -17,6 +17,7 @@ import java.util.List;
 
 import static com.postgraduate.domain.senior.domain.entity.QSenior.senior;
 import static com.postgraduate.domain.senior.domain.entity.constant.Status.APPROVE;
+import static com.querydsl.core.types.dsl.Expressions.FALSE;
 import static com.querydsl.core.types.dsl.Expressions.TRUE;
 
 @RequiredArgsConstructor
@@ -53,13 +54,10 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
 
     @Override
     public Page<Senior> findAllByFieldSenior(String field, String postgradu, Pageable pageable) {
-        String[] fields = field.split(",");
-        String[] postgradus = postgradu.split(",");
-
         JPAQuery<Senior> query = queryFactory.selectFrom(senior)
                 .where(
-                        fieldSpecifier(fields),
-                        postgraduSpecifier(postgradus),
+                        fieldSpecifier(field),
+                        postgraduSpecifier(postgradu),
                         senior.status.eq(APPROVE)
                 )
                 .orderBy(senior.hit.desc());
@@ -73,20 +71,25 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
         return new PageImpl<>(seniors, pageable, total);
     }
 
-    private BooleanExpression fieldSpecifier(String[] fields) {
+    private BooleanExpression fieldSpecifier(String field) {
+        if (field.equals("others"))
+            return senior.info.etc.isTrue();
+
+        String[] fields = field.split(",");
         return Arrays.stream(fields)
-                .map(field -> senior.info.field.like("%" + field + "%"))
+                .map(fieldName -> senior.info.field.like("%"+fieldName+"%"))
                 .reduce(BooleanExpression::or)
-                .orElse(TRUE);
+                .orElse(FALSE);
     }
 
-    private BooleanExpression postgraduSpecifier(String[] postgrauds) {
-        if (postgrauds[0].equals("전체")) {
+    private BooleanExpression postgraduSpecifier(String postgradu) {
+        if (postgradu.equals("all"))
             return TRUE;
-        }
-        return Arrays.stream(postgrauds)
-                .map(postgradu -> senior.info.postgradu.like("%" + postgradu + "%"))
+
+        String[] postgradus = postgradu.split(",");
+        return Arrays.stream(postgradus)
+                .map(postgraduName -> senior.info.postgradu.like("%"+postgraduName+"%"))
                 .reduce(BooleanExpression::or)
-                .orElse(TRUE);
+                .orElse(FALSE);
     }
 }
