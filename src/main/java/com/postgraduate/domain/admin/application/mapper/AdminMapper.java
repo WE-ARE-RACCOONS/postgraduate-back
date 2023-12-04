@@ -105,7 +105,7 @@ public class AdminMapper {
                 .build();
     }
 
-    public static SalaryResponse mapToSalaryResponse(Account account, int totalAmount, Boolean status) {
+    public static SalaryResponse mapToSalaryResponse(Account account, String accountNumber, int totalAmount, Boolean status) {
         Senior senior = account.getSenior();
         User user = senior.getUser();
         return new SalaryResponse(
@@ -114,7 +114,7 @@ public class AdminMapper {
                 totalAmount,
                 account.getAccountHolder(),
                 account.getBank(),
-                account.getAccountNumber(),
+                accountNumber,
                 status
         );
     }

@@ -9,6 +9,7 @@ import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.salary.domain.service.SalaryGetService;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
+import com.postgraduate.global.config.security.util.EncryptorUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,13 +23,15 @@ public class SalaryManageByAdminUseCase {
     private final SeniorGetService seniorGetService;
     private final AccountGetService accountGetService;
     private final SalaryGetService salaryGetService;
+    private final EncryptorUtils encryptorUtils;
 
     public SalaryResponse getSalary(Long seniorId) {
         Senior senior = seniorGetService.bySeniorId(seniorId);
         Account account = accountGetService.bySenior(senior).orElseThrow(AccountNotFoundException::new);
+        String accountNumber = encryptorUtils.decryptData(account.getAccountNumber());
         List<Salary> salaries = salaryGetService.bySeniorAndSalaryDate(senior, getSalaryDate());
         int totalAmount = getAmount(salaries);
         Boolean status = getStatus(salaries);
-        return AdminMapper.mapToSalaryResponse(account, totalAmount, status);
+        return AdminMapper.mapToSalaryResponse(account, accountNumber, totalAmount, status);
     }
 }
