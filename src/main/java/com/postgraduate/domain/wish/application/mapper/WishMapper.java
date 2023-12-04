@@ -17,8 +17,7 @@ public class WishMapper {
 
     public static WishResponse mapToWish(Wish wish) {
         User user = wish.getUser();
-        String[] field = wish.getField().split(",");
         return new WishResponse(user.getNickName(), user.getPhoneNumber(), user.getCreatedAt(), user.getMarketingReceive(),
-                wish.getMatchingReceive(), wish.getMajor(), field);
+                wish.getMatchingReceive(), wish.getMajor(), wish.getField());
     }
 }

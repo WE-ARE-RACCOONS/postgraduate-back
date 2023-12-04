@@ -69,7 +69,7 @@ public class AdminMapper {
 //                .build();
 //    }
 
-    public static SeniorResponse mapToSeniorResponse(Senior senior, Boolean salaryStatus) {
+    public static SeniorResponse mapToSeniorResponse(Senior senior, Boolean salaryStatus, Boolean isUser) {
         User user = senior.getUser();
         return SeniorResponse.builder()
                 .seniorId(senior.getSeniorId())
@@ -78,6 +78,7 @@ public class AdminMapper {
                 .status(senior.getStatus())
                 .salaryStatus(salaryStatus)
                 .marketingReceive(user.getMarketingReceive())
+                .isUser(isUser)
                 .build();
     }
 

@@ -13,5 +13,5 @@ public class SeniorResponse {
     private Status status;
     private Boolean salaryStatus;
     private Boolean marketingReceive;
-    // 후배 회원 가입
+    private Boolean isUser;
 }

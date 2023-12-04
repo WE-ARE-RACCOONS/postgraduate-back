@@ -15,11 +15,14 @@ import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.entity.constant.Role;
 import com.postgraduate.domain.user.domain.service.UserUpdateService;
+import com.postgraduate.domain.wish.domain.entity.Wish;
+import com.postgraduate.domain.wish.domain.service.WishGetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.postgraduate.domain.salary.util.SalaryUtil.getSalaryDate;
 import static com.postgraduate.domain.salary.util.SalaryUtil.getStatus;
@@ -31,6 +34,7 @@ public class SeniorManageByAdminUseCase {
     private final SeniorGetService seniorGetService;
     private final UserUpdateService userUpdateService;
     private final SalaryGetService salaryGetService;
+    private final WishGetService wishGetService;
 
     public CertificationDetailsResponse getCertificationDetails(Long seniorId) {
         Senior senior = seniorGetService.bySeniorId(seniorId);
@@ -61,7 +65,8 @@ public class SeniorManageByAdminUseCase {
                 .map(senior -> {
                     List<Salary> salaries = salaryGetService.bySeniorAndSalaryDate(senior, getSalaryDate());
                     Boolean salaryStatus = getStatus(salaries);
-                    return AdminMapper.mapToSeniorResponse(senior, salaryStatus);
+                    Optional<Wish> wish = wishGetService.byUser(senior.getUser());
+                    return AdminMapper.mapToSeniorResponse(senior, salaryStatus, wish.isPresent());
                 })
                 .toList();
     }
