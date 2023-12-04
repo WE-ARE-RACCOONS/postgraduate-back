@@ -6,6 +6,7 @@ import com.postgraduate.domain.admin.application.dto.CertificationProfile;
 import com.postgraduate.domain.admin.application.dto.res.*;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.payment.domain.entity.Payment;
+import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.wish.domain.entity.Wish;
@@ -13,12 +14,18 @@ import com.postgraduate.domain.wish.domain.entity.Wish;
 public class AdminMapper {
 
     public static CertificationInfo mapToCertificationInfo(Senior senior) {
+        User user = senior.getUser();
+        Info info = senior.getInfo();
         return CertificationInfo.builder()
                 .certification(senior.getCertification())
-                .nickName(senior.getUser().getNickName())
-                .postgradu(senior.getInfo().getPostgradu())
-                .field(senior.getInfo().getField())
-                .professor(senior.getInfo().getProfessor())
+                .nickName(user.getNickName())
+                .phoneNumber(user.getPhoneNumber())
+                .postgradu(info.getPostgradu())
+                .major(info.getMajor())
+                .field(info.getField())
+                .lab(info.getLab())
+                .professor(info.getProfessor())
+                .keyword(info.getKeyword())
                 .build();
     }
 

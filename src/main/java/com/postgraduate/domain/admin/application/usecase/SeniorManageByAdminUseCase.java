@@ -1,7 +1,6 @@
 package com.postgraduate.domain.admin.application.usecase;
 
 import com.postgraduate.domain.admin.application.dto.CertificationInfo;
-import com.postgraduate.domain.admin.application.dto.CertificationProfile;
 import com.postgraduate.domain.admin.application.dto.req.SeniorStatusRequest;
 import com.postgraduate.domain.admin.application.dto.res.CertificationDetailsResponse;
 import com.postgraduate.domain.admin.application.dto.res.CertificationResponse;
@@ -23,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static com.postgraduate.domain.salary.util.SalaryUtil.getSalaryDate;
+import static com.postgraduate.domain.salary.util.SalaryUtil.getStatus;
 
 @Service
 @Transactional
@@ -37,12 +37,8 @@ public class SeniorManageByAdminUseCase {
         if (senior.getStatus() != Status.WAITING) {
             throw new SeniorNotWaitingException();
         }
-        CertificationProfile certificationProfile = null;
-        if (senior.getProfile() != null) {
-            certificationProfile = AdminMapper.mapToCertificationProfile(senior);
-        }
         CertificationInfo certificationInfo = AdminMapper.mapToCertificationInfo(senior);
-        return new CertificationDetailsResponse(certificationInfo, certificationProfile);
+        return new CertificationDetailsResponse(certificationInfo);
     }
 
     public List<CertificationResponse> getCertifications() {

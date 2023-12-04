@@ -8,9 +8,14 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class CertificationInfo {
-    private String nickName;
     private String certification;
+    private String nickName;
+    private String phoneNumber;
+    //인증 신청 날짜
     private String postgradu;
+    private String major;
     private String field;
+    private String lab;
     private String professor;
+    private String keyword;
 }
