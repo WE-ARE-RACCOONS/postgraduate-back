@@ -49,12 +49,9 @@ public class SeniorMapper {
                 break;
             }
         }
-        for (String postgradu : postgraduNames) {
-            if (!postgraduNames.contains(postgradu)) {
-                infoBuilder.etcPostgradu(true);
-                break;
-            }
-        }
+        if (!postgraduNames.contains(request.postgradu()))
+            infoBuilder.etcPostgradu(true);
+
         return infoBuilder.build();
     }
 
@@ -115,12 +112,8 @@ public class SeniorMapper {
     }
 
     public static SeniorMyPageResponse mapToSeniorMyPageInfo(Senior senior, Status certificationRegister, boolean profileRegister) {
-        return SeniorMyPageResponse.builder()
-                .nickName(senior.getUser().getNickName())
-                .profile(senior.getUser().getProfile())
-                .certificationRegister(certificationRegister)
-                .profileRegister(profileRegister)
-                .build();
+        User user = senior.getUser();
+        return new SeniorMyPageResponse(senior.getSeniorId(), user.getNickName(), user.getProfile(), certificationRegister, profileRegister);
     }
 
     public static SeniorMyPageProfileResponse mapToMyPageProfile(Senior senior) {
@@ -182,7 +175,7 @@ public class SeniorMapper {
         Profile profile = senior.getProfile();
         String[] keyword = info.getKeyword().split(",");
 
-        return new SeniorSearchResponse(user.getProfile(), user.getNickName(),
+        return new SeniorSearchResponse(senior.getSeniorId(), user.getProfile(), user.getNickName(),
                 info.getPostgradu(), info.getMajor(), info.getLab(),
                 profile.getOneLiner(), keyword);
     }
@@ -190,7 +183,7 @@ public class SeniorMapper {
     public static SeniorFieldResponse mapToSeniorField(Senior senior) {
         User user = senior.getUser();
         Info info = senior.getInfo();
-        return new SeniorFieldResponse(user.getProfile(), user.getNickName(),
+        return new SeniorFieldResponse(senior.getSeniorId(), user.getProfile(), user.getNickName(),
                 info.getPostgradu(), info.getMajor(), info.getLab());
     }
 }

@@ -4,6 +4,8 @@ import jakarta.validation.constraints.NotNull;
 
 public record SeniorSearchResponse(
         @NotNull
+        Long seniorId,
+        @NotNull
         String profile,
         @NotNull
         String nickName,
