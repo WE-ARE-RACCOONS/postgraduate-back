@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Builder
@@ -32,4 +33,7 @@ public class Salary {
 
     @Column(nullable = false)
     private LocalDate salaryDate;
+
+    @Column
+    private LocalDateTime salaryDoneDate;
 }
