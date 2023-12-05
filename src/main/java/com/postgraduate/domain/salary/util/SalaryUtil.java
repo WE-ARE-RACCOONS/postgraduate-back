@@ -4,6 +4,7 @@ import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.salary.domain.entity.constant.SalaryStatus;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -38,5 +39,9 @@ public class SalaryUtil {
             return SalaryStatus.DONE;
         }
         return SalaryStatus.YET;
+    }
+
+    public static LocalDateTime getDoneDate(List<Salary> salaries) {
+        return salaries.get(0).getSalaryDoneDate();
     }
 }

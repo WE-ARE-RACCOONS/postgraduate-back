@@ -82,6 +82,13 @@ public class AdminController {
         return ResponseDto.create(SENIOR_FIND.getCode(), GET_SENIOR_LIST_INFO.getMessage(), seniors);
     }
 
+    @GetMapping("/salary")
+    @Operation(summary = "[관리자] 정산 목록 조회", description = "한 달 기준으로 정산 목록을 조회합니다. 기준일은 [11일 ~ 내월 10일]입니다.")
+    public ResponseDto<AllSalariesResponse> getSalaries() {
+        AllSalariesResponse salaries = salaryManageUseCase.getSalaries();
+        return ResponseDto.create(SALARY_FIND.getCode(), GET_SALARY_INFO.getMessage(), salaries);
+    }
+
     @GetMapping("/salary/{seniorId}")
     @Operation(summary = "[관리자] 선배 정산 상세 정보", description = "대학원생 선배 정산 상세 정보를 조회합니다.")
     public ResponseDto<SalaryDetailsResponse> getSalary(@PathVariable Long seniorId) {

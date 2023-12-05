@@ -16,8 +16,11 @@ import com.postgraduate.global.config.security.util.EncryptorUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
+import static com.postgraduate.domain.salary.domain.entity.constant.SalaryStatus.DONE;
 import static com.postgraduate.domain.salary.util.SalaryUtil.*;
 
 @Service
@@ -37,5 +40,23 @@ public class SalaryManageByAdminUseCase {
         int totalAmount = getAmount(salaries);
         SalaryStatus status = getStatus(salaries);
         return AdminMapper.mapToSalaryResponse(senior, account, accountNumber, totalAmount, status);
+    }
+
+    public AllSalariesResponse getSalaries() {
+        List<SalariesResponse> responses = new ArrayList<>();
+        List<Senior> seniors = seniorGetService.getAll();
+        for (Senior senior : seniors) {
+            List<Salary> salaries = salaryGetService.bySeniorAndSalaryDateAndStatus(senior, getSalaryDate(), true);
+            if (getStatus(salaries) != DONE) {
+                continue;
+            }
+            Account account = accountGetService.bySenior(senior).orElse(accountUtil.createDummyAccount());
+            String accountNumber = encryptorUtils.decryptData(account.getAccountNumber());
+            int totalAmount = getAmount(salaries);
+            LocalDateTime salaryDoneDate = getDoneDate(salaries);
+            SalariesResponse response = AdminMapper.mapToSalaryResponse(senior, account, accountNumber, totalAmount, salaryDoneDate);
+            responses.add(response);
+        }
+        return new AllSalariesResponse(responses);
     }
 }

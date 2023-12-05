@@ -12,6 +12,8 @@ import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.wish.domain.entity.Wish;
 
+import java.time.LocalDateTime;
+
 public class AdminMapper {
 
     public static CertificationInfo mapToCertificationInfo(Senior senior) {
@@ -109,14 +111,14 @@ public class AdminMapper {
 
     public static SalariesResponse mapToSalaryResponse(Senior senior, Account account, String accountNumber, int totalAmount, LocalDateTime salaryDoneDate) {
         User user = senior.getUser();
-        return new SalaryResponse(
+        return new SalariesResponse(
                 user.getNickName(),
                 user.getPhoneNumber(),
                 totalAmount,
                 account.getAccountHolder(),
                 account.getBank(),
                 accountNumber,
-                status
+                salaryDoneDate
         );
     }
 
