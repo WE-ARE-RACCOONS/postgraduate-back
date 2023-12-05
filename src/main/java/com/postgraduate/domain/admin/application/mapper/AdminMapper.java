@@ -13,6 +13,7 @@ import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.wish.domain.entity.Wish;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 public class AdminMapper {
 
@@ -48,15 +49,17 @@ public class AdminMapper {
                 .build();
     }
 
-    public static UserResponse mapToUserResponse(User user, Wish wish) {
+    public static UserResponse mapToUserResponse(User user, Optional<Wish> wish) {
+        Long wishId = wish.map(Wish::getWishId).orElse(null);
+        Boolean matchingReceive = wish.map(Wish::getMatchingReceive).orElse(null);
         return UserResponse.builder()
                 .userId(user.getUserId())
                 .nickName(user.getNickName())
                 .phoneNumber(user.getPhoneNumber())
                 .createdAt(user.getCreatedAt())
                 .marketingReceive(user.getMarketingReceive())
-                .matchingReceive(wish.getMatchingReceive())
-                .wishId(wish.getWishId())
+                .matchingReceive(matchingReceive)
+                .wishId(wishId)
                 .role(user.getRole())
                 .build();
     }

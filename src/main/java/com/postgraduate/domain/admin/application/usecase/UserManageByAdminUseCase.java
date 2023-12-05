@@ -6,12 +6,12 @@ import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.service.UserGetService;
 import com.postgraduate.domain.wish.domain.entity.Wish;
 import com.postgraduate.domain.wish.domain.repository.WishRepository;
-import com.postgraduate.domain.wish.exception.WishNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.postgraduate.domain.user.domain.entity.constant.Role.ADMIN;
 
@@ -26,7 +26,7 @@ public class UserManageByAdminUseCase {
         return users.stream()
                 .filter(user -> user.getRole() != ADMIN)
                 .map(user -> {
-                    Wish wish = wishRepository.findByUser(user).orElseThrow(WishNotFoundException::new);
+                    Optional<Wish> wish = wishRepository.findByUser(user);
                     return AdminMapper.mapToUserResponse(user, wish);
                 })
                 .toList();
