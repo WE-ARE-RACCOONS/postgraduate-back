@@ -19,4 +19,8 @@ public class PaymentGetService {
     public Boolean existsByMentoring(Mentoring mentoring) {
         return paymentRepository.existsByMentoring(mentoring);
     }
+
+    public Payment byMentoring(Mentoring mentoring) {
+        return paymentRepository.findByMentoring(mentoring);
+    }
 }

@@ -6,4 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
     Boolean existsByMentoring(Mentoring mentoring);
+    Payment findByMentoring(Mentoring mentoring);
 }
