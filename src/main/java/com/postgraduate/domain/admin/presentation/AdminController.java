@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 import static com.postgraduate.domain.mentoring.presentation.constant.MentoringResponseCode.MENTORING_FIND;
+import static com.postgraduate.domain.mentoring.presentation.constant.MentoringResponseMessage.*;
 import static com.postgraduate.domain.mentoring.presentation.constant.MentoringResponseMessage.GET_MENTORING_LIST_INFO;
 import static com.postgraduate.domain.payment.presentation.constant.PaymentResponseCode.PAYMENT_FIND;
 import static com.postgraduate.domain.payment.presentation.constant.PaymentResponseMessage.GET_PAYMENT_LIST_INFO;
@@ -115,5 +116,12 @@ public class AdminController {
     public ResponseDto<List<PaymentResponse>> getPayments() {
         List<PaymentResponse> payments = paymentManageUseCase.getPayments();
         return ResponseDto.create(PAYMENT_FIND.getCode(), GET_PAYMENT_LIST_INFO.getMessage(), payments);
+    }
+
+    @GetMapping("/payments/{mentoringId}")
+    @Operation(summary = "[관리자] 결제된 멘토링 정보", description = "결제된 멘토링 정보를 조회합니다.")
+    public ResponseDto<MentoringWithPaymentResponse> getPayments(@PathVariable Long mentoringId) {
+        MentoringWithPaymentResponse mentoringWithPayment = mentoringManageUseCase.getMentoringWithPayment(mentoringId);
+        return ResponseDto.create(MENTORING_FIND.getCode(), GET_MENTORING_DETAIL_INFO.getMessage(), mentoringWithPayment);
     }
 }
