@@ -41,6 +41,14 @@ public class SeniorGetService {
         if (page == null)
             page = 1;
         Pageable pageable = PageRequest.of(page-1, SENIOR_PAGE_SIZE);
-        return seniorRepository.findAllSenior(search, sort, pageable);
+        return seniorRepository.findAllBySearchSenior(search, sort, pageable);
+    }
+
+    public Page<Senior> byField(String field, String postgradu, Integer page) {
+        if (page == null)
+            page = 1;
+        Pageable pageable = PageRequest.of(page-1, SENIOR_PAGE_SIZE);
+        Page<Senior> allByFieldSenior = seniorRepository.findAllByFieldSenior(field, postgradu, pageable);
+        return allByFieldSenior;
     }
 }
