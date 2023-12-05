@@ -1,9 +1,7 @@
 package com.postgraduate.domain.admin.application.usecase;
 
-import com.postgraduate.domain.admin.application.dto.CertificationInfo;
 import com.postgraduate.domain.admin.application.dto.req.SeniorStatusRequest;
 import com.postgraduate.domain.admin.application.dto.res.CertificationDetailsResponse;
-import com.postgraduate.domain.admin.application.dto.res.CertificationResponse;
 import com.postgraduate.domain.admin.application.dto.res.SeniorResponse;
 import com.postgraduate.domain.admin.application.mapper.AdminMapper;
 import com.postgraduate.domain.admin.exception.SeniorNotWaitingException;
@@ -42,13 +40,7 @@ public class SeniorManageByAdminUseCase {
         if (senior.getStatus() != Status.WAITING) {
             throw new SeniorNotWaitingException();
         }
-        CertificationInfo certificationInfo = AdminMapper.mapToCertificationInfo(senior);
-        return new CertificationDetailsResponse(certificationInfo);
-    }
-
-    public List<CertificationResponse> getCertifications() {
-        List<Senior> seniors = seniorGetService.byStatus(Status.WAITING);
-        return seniors.stream().map(AdminMapper::mapToCertification).toList();
+        return AdminMapper.mapToCertificationInfo(senior);
     }
 
     public void updateSeniorStatus(Long seniorId, SeniorStatusRequest request) {

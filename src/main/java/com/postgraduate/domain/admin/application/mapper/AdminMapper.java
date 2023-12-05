@@ -17,20 +17,20 @@ import java.util.Optional;
 
 public class AdminMapper {
 
-    public static CertificationInfo mapToCertificationInfo(Senior senior) {
+    public static CertificationDetailsResponse mapToCertificationInfo(Senior senior) {
         User user = senior.getUser();
         Info info = senior.getInfo();
-        return CertificationInfo.builder()
-                .certification(senior.getCertification())
-                .nickName(user.getNickName())
-                .phoneNumber(user.getPhoneNumber())
-                .postgradu(info.getPostgradu())
-                .major(info.getMajor())
-                .field(info.getField())
-                .lab(info.getLab())
-                .professor(info.getProfessor())
-                .keyword(info.getKeyword())
-                .build();
+        return new CertificationDetailsResponse(
+                senior.getCertification(),
+                user.getNickName(),
+                user.getPhoneNumber(),
+                info.getPostgradu(),
+                info.getMajor(),
+                info.getField(),
+                info.getLab(),
+                info.getProfessor(),
+                info.getKeyword()
+        );
     }
 
     public static CertificationProfile mapToCertificationProfile(Senior senior) {
