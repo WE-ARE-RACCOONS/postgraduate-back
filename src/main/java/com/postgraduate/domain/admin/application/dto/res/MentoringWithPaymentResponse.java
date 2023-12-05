@@ -4,6 +4,8 @@ import jakarta.validation.constraints.NotNull;
 
 public record MentoringWithPaymentResponse(
         @NotNull
+        Long paymentId,
+        @NotNull
         String userNickname,
         @NotNull
         String userPhoneNumber,

@@ -5,6 +5,7 @@ import com.postgraduate.domain.admin.application.dto.res.MentoringWithPaymentRes
 import com.postgraduate.domain.admin.application.mapper.AdminMapper;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
+import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.payment.domain.service.PaymentGetService;
 import com.postgraduate.domain.payment.exception.PaymentNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,7 @@ public class MentoringManageByAdminUseCase {
         if (!paymentGetService.existsByMentoring(mentoring)) {
             throw new PaymentNotFoundException();
         }
-        return AdminMapper.mapToMentoringWithPaymentResponse(mentoring);
+        Payment payment = paymentGetService.byMentoring(mentoring);
+        return AdminMapper.mapToMentoringWithPaymentResponse(payment.getPaymentId(), mentoring);
     }
 }
