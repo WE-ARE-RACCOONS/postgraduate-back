@@ -8,6 +8,7 @@ import com.postgraduate.domain.admin.application.dto.res.SeniorResponse;
 import com.postgraduate.domain.admin.application.mapper.AdminMapper;
 import com.postgraduate.domain.admin.exception.SeniorNotWaitingException;
 import com.postgraduate.domain.salary.domain.entity.Salary;
+import com.postgraduate.domain.salary.domain.entity.constant.SalaryStatus;
 import com.postgraduate.domain.salary.domain.service.SalaryGetService;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.entity.constant.Status;
@@ -64,7 +65,7 @@ public class SeniorManageByAdminUseCase {
         return seniors.stream()
                 .map(senior -> {
                     List<Salary> salaries = salaryGetService.bySeniorAndSalaryDate(senior, getSalaryDate());
-                    Boolean salaryStatus = getStatus(salaries);
+                    SalaryStatus salaryStatus = getStatus(salaries);
                     Optional<Wish> wish = wishGetService.byUser(senior.getUser());
                     return AdminMapper.mapToSeniorResponse(senior, salaryStatus, wish.isPresent());
                 })

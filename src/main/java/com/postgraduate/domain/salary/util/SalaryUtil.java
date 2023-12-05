@@ -1,6 +1,7 @@
 package com.postgraduate.domain.salary.util;
 
 import com.postgraduate.domain.salary.domain.entity.Salary;
+import com.postgraduate.domain.salary.domain.entity.constant.SalaryStatus;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -26,16 +27,16 @@ public class SalaryUtil {
                 .sum();
     }
 
-    public static Boolean getStatus(List<Salary> salaries) {
+    public static SalaryStatus getStatus(List<Salary> salaries) {
         long count = salaries.stream()
                 .filter(Salary::getStatus)
                 .count();
+        if (count == 0) {
+            return SalaryStatus.NONE;
+        }
         if (count == salaries.size()) {
-            return true;
+            return SalaryStatus.DONE;
         }
-        if (count != salaries.size()) {
-            return false;
-        }
-        return null;
+        return SalaryStatus.YET;
     }
 }

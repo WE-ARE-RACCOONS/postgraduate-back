@@ -6,6 +6,7 @@ import com.postgraduate.domain.admin.application.dto.CertificationProfile;
 import com.postgraduate.domain.admin.application.dto.res.*;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.payment.domain.entity.Payment;
+import com.postgraduate.domain.salary.domain.entity.constant.SalaryStatus;
 import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.user.domain.entity.User;
@@ -69,7 +70,7 @@ public class AdminMapper {
 //                .build();
 //    }
 
-    public static SeniorResponse mapToSeniorResponse(Senior senior, Boolean salaryStatus, Boolean isUser) {
+    public static SeniorResponse mapToSeniorResponse(Senior senior, SalaryStatus salaryStatus, Boolean isUser) {
         User user = senior.getUser();
         return SeniorResponse.builder()
                 .seniorId(senior.getSeniorId())
@@ -106,8 +107,7 @@ public class AdminMapper {
                 .build();
     }
 
-    public static SalaryResponse mapToSalaryResponse(Account account, String accountNumber, int totalAmount, Boolean status) {
-        Senior senior = account.getSenior();
+    public static SalariesResponse mapToSalaryResponse(Senior senior, Account account, String accountNumber, int totalAmount, LocalDateTime salaryDoneDate) {
         User user = senior.getUser();
         return new SalaryResponse(
                 user.getNickName(),
