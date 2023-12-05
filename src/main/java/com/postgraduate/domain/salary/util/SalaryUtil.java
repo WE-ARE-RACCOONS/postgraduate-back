@@ -32,7 +32,7 @@ public class SalaryUtil {
         long count = salaries.stream()
                 .filter(Salary::getStatus)
                 .count();
-        if (count == 0) {
+        if (salaries.size() == 0) {
             return SalaryStatus.NONE;
         }
         if (count == salaries.size()) {
