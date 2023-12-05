@@ -39,9 +39,9 @@ public class SeniorMapper {
                 .keyword(request.keyword())
                 .field(request.field())
                 .etcPostgradu(false)
-                .etcPostgradu(false)
+                .etcField(false)
                 .totalInfo(request.major() + request.lab() + request.field()
-                        + request.professor() + request.postgradu() + request.field());
+                        + request.professor() + request.postgradu() + request.keyword());
 
         for (String field : fields) {
             if (!fieldNames.contains(field)) {
@@ -99,9 +99,9 @@ public class SeniorMapper {
                 .keyword(request.keyword())
                 .field(request.field())
                 .etcPostgradu(false)
-                .etcPostgradu(false)
+                .etcField(false)
                 .totalInfo(request.major() + request.lab() + request.field()
-                        + request.professor() + request.postgradu() + request.field());
+                        + request.professor() + request.postgradu() + request.keyword());
 
         for (String field : fields) {
             if (!fieldNames.contains(field)) {
