@@ -1,8 +1,6 @@
 package com.postgraduate.domain.senior.application.usecase;
 
-import com.postgraduate.domain.senior.application.dto.res.AllSeniorSearchResponse;
-import com.postgraduate.domain.senior.application.dto.res.SeniorDetailResponse;
-import com.postgraduate.domain.senior.application.dto.res.SeniorSearchResponse;
+import com.postgraduate.domain.senior.application.dto.res.*;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.domain.senior.domain.service.SeniorUpdateService;
@@ -14,8 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.postgraduate.domain.senior.application.mapper.SeniorMapper.mapToSeniorDetail;
-import static com.postgraduate.domain.senior.application.mapper.SeniorMapper.mapToSeniorSearch;
+import static com.postgraduate.domain.senior.application.mapper.SeniorMapper.*;
 
 @Service
 @Transactional
@@ -37,5 +34,14 @@ public class SeniorInfoUseCase {
             selectSeniors.add(mapToSeniorSearch(senior));
         }
         return new AllSeniorSearchResponse(selectSeniors);
+    }
+
+    public AllSeniorFieldResponse getFieldSenior(String field, String postgradu, Integer page) {
+        Page<Senior> allSeniors = seniorGetService.byField(field, postgradu, page);
+        List<SeniorFieldResponse> selectSeniors = new ArrayList<>();
+        for (Senior senior : allSeniors.getContent()) {
+            selectSeniors.add(mapToSeniorField(senior));
+        }
+        return new AllSeniorFieldResponse(selectSeniors);
     }
 }

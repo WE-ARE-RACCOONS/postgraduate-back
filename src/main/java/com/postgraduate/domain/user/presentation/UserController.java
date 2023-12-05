@@ -3,6 +3,7 @@ package com.postgraduate.domain.user.presentation;
 import com.postgraduate.domain.user.application.dto.req.UserInfoRequest;
 import com.postgraduate.domain.user.application.dto.res.UserInfoResponse;
 import com.postgraduate.domain.user.application.dto.res.UserMyPageResponse;
+import com.postgraduate.domain.user.application.dto.res.UserPossibleResponse;
 import com.postgraduate.domain.user.application.usecase.UserManageUseCase;
 import com.postgraduate.domain.user.application.usecase.UserMyPageUseCase;
 import com.postgraduate.domain.user.domain.entity.User;
@@ -48,9 +49,9 @@ public class UserController {
 
     @GetMapping("/me/role")
     @Operation(summary = "선배 전환시 가능 여부 확인", description = "true-가능, false-불가능")
-    public ResponseDto<Boolean> checkRole(@AuthenticationPrincipal User user) {
-        boolean isOk = myPageUseCase.checkSenior(user);
-        return ResponseDto.create(USER_FIND.getCode(), GET_SENIOR_CHECK.getMessage(), isOk);
+    public ResponseDto<UserPossibleResponse> checkRole(@AuthenticationPrincipal User user) {
+        UserPossibleResponse possibleResponse = myPageUseCase.checkSenior(user);
+        return ResponseDto.create(USER_FIND.getCode(), GET_SENIOR_CHECK.getMessage(), possibleResponse);
     }
 
     @GetMapping("/nickname")

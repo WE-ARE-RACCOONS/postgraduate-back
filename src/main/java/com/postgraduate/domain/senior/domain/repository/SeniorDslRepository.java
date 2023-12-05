@@ -5,5 +5,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface SeniorDslRepository {
-    Page<Senior> findAllSenior(String search, String sort, Pageable pageable);
+    Page<Senior> findAllBySearchSenior(String search, String sort, Pageable pageable);
+    Page<Senior> findAllByFieldSenior(String field, String postgradu, Pageable pageable);
 }

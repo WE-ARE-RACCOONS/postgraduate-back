@@ -2,6 +2,7 @@ package com.postgraduate.domain.user.application.usecase;
 
 import com.postgraduate.domain.user.application.dto.res.UserInfoResponse;
 import com.postgraduate.domain.user.application.dto.res.UserMyPageResponse;
+import com.postgraduate.domain.user.application.dto.res.UserPossibleResponse;
 import com.postgraduate.domain.user.application.mapper.UserMapper;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.entity.constant.Role;
@@ -24,10 +25,10 @@ public class UserMyPageUseCase {
         return mapToInfo(user);
     }
 
-    public boolean checkSenior(User user) {
+    public UserPossibleResponse checkSenior(User user) {
         Role role = user.getRole();
         if (role.equals(SENIOR))
-            return true;
-        return false;
+            return new UserPossibleResponse(true, user.getSocialId());
+        return new UserPossibleResponse(false, user.getSocialId());
     }
 }
