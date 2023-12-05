@@ -119,4 +119,17 @@ public class AdminMapper {
                 status
         );
     }
+
+    public static SalaryDetailsResponse mapToSalaryResponse(Senior senior, Account account, String accountNumber, int totalAmount, SalaryStatus status) {
+        User user = senior.getUser();
+        return new SalaryDetailsResponse(
+                user.getNickName(),
+                user.getPhoneNumber(),
+                totalAmount,
+                account.getAccountHolder(),
+                account.getBank(),
+                accountNumber,
+                status
+        );
+    }
 }

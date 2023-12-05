@@ -84,8 +84,8 @@ public class AdminController {
 
     @GetMapping("/salary/{seniorId}")
     @Operation(summary = "[관리자] 선배 정산 상세 정보", description = "대학원생 선배 정산 상세 정보를 조회합니다.")
-    public ResponseDto<SalaryResponse> getSalary(@PathVariable Long seniorId) {
-        SalaryResponse salary = salaryManageUseCase.getSalary(seniorId);
+    public ResponseDto<SalaryDetailsResponse> getSalary(@PathVariable Long seniorId) {
+        SalaryDetailsResponse salary = salaryManageUseCase.getSalary(seniorId);
         return ResponseDto.create(SALARY_FIND.getCode(), GET_SALARY_INFO.getMessage(), salary);
     }
 
