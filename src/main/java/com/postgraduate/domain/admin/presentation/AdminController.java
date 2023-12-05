@@ -19,7 +19,9 @@ import static com.postgraduate.domain.mentoring.presentation.constant.MentoringR
 import static com.postgraduate.domain.payment.presentation.constant.PaymentResponseCode.PAYMENT_FIND;
 import static com.postgraduate.domain.payment.presentation.constant.PaymentResponseMessage.GET_PAYMENT_LIST_INFO;
 import static com.postgraduate.domain.salary.presentation.constant.SalaryResponseCode.SALARY_FIND;
+import static com.postgraduate.domain.salary.presentation.constant.SalaryResponseCode.SALARY_UPDATE;
 import static com.postgraduate.domain.salary.presentation.constant.SalaryResponseMessage.GET_SALARY_INFO;
+import static com.postgraduate.domain.salary.presentation.constant.SalaryResponseMessage.UPDATE_SALARY_STATUS;
 import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseCode.SENIOR_FIND;
 import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseCode.SENIOR_UPDATE;
 import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseMessage.*;
@@ -95,6 +97,13 @@ public class AdminController {
     public ResponseDto<SalaryDetailsResponse> getSalary(@PathVariable Long seniorId) {
         SalaryDetailsResponse salary = salaryManageUseCase.getSalary(seniorId);
         return ResponseDto.create(SALARY_FIND.getCode(), GET_SALARY_INFO.getMessage(), salary);
+    }
+
+    @PatchMapping("/salary/{seniorId}")
+    @Operation(summary = "[관리자] 정산 상태 변경", description = "대학원생 선배 정산 상태를 변경합니다.")
+    public ResponseDto updateSalaryStatus(@PathVariable Long seniorId, @RequestParam Boolean status) {
+        salaryManageUseCase.updateSalaryStatus(seniorId, status);
+        return ResponseDto.create(SALARY_UPDATE.getCode(), UPDATE_SALARY_STATUS.getMessage());
     }
 
     @GetMapping("/user/{userId}/mentoring")

@@ -10,6 +10,7 @@ import com.postgraduate.domain.admin.application.mapper.AdminMapper;
 import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.salary.domain.entity.constant.SalaryStatus;
 import com.postgraduate.domain.salary.domain.service.SalaryGetService;
+import com.postgraduate.domain.salary.domain.service.SalaryUpdateService;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.global.config.security.util.EncryptorUtils;
@@ -31,6 +32,7 @@ public class SalaryManageByAdminUseCase {
     private final SalaryGetService salaryGetService;
     private final EncryptorUtils encryptorUtils;
     private final AccountUtil accountUtil;
+    private final SalaryUpdateService salaryUpdateService;
 
     public SalaryDetailsResponse getSalary(Long seniorId) {
         Senior senior = seniorGetService.bySeniorId(seniorId);
@@ -58,5 +60,13 @@ public class SalaryManageByAdminUseCase {
             responses.add(response);
         }
         return new AllSalariesResponse(responses);
+    }
+
+    public void updateSalaryStatus(Long seniorId, Boolean status) {
+        Senior senior = seniorGetService.bySeniorId(seniorId);
+        List<Salary> salaries = salaryGetService.bySeniorAndSalaryDate(senior, getSalaryDate());
+        for (Salary salary : salaries) {
+            salaryUpdateService.updateStatus(salary, status);
+        }
     }
 }

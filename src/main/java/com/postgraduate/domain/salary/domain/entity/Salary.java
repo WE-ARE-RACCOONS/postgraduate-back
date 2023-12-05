@@ -36,4 +36,9 @@ public class Salary {
 
     @Column
     private LocalDateTime salaryDoneDate;
+
+    public void updateStatus(Boolean status) {
+        this.status = status;
+        this.salaryDoneDate = LocalDateTime.now();
+    }
 }

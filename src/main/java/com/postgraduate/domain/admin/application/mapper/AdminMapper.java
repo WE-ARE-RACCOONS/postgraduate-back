@@ -1,7 +1,6 @@
 package com.postgraduate.domain.admin.application.mapper;
 
 import com.postgraduate.domain.account.domain.entity.Account;
-import com.postgraduate.domain.admin.application.dto.CertificationInfo;
 import com.postgraduate.domain.admin.application.dto.CertificationProfile;
 import com.postgraduate.domain.admin.application.dto.res.*;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
