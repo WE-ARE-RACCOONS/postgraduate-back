@@ -123,7 +123,20 @@ public class AdminMapper {
         );
     }
 
-    public static SalaryDetailsResponse mapToSalaryResponse(Senior senior, Account account, String accountNumber, int totalAmount, SalaryStatus status) {
+    public static SalariesResponse mapToSalaryResponse(Senior senior, int totalAmount, LocalDateTime salaryDoneDate) {
+        User user = senior.getUser();
+        return new SalariesResponse(
+                user.getNickName(),
+                user.getPhoneNumber(),
+                totalAmount,
+                null,
+                null,
+                null,
+                salaryDoneDate
+        );
+    }
+
+    public static SalaryDetailsResponse mapToSalaryDetailsResponse(Senior senior, Account account, String accountNumber, int totalAmount, SalaryStatus status) {
         User user = senior.getUser();
         return new SalaryDetailsResponse(
                 user.getNickName(),
@@ -132,6 +145,19 @@ public class AdminMapper {
                 account.getAccountHolder(),
                 account.getBank(),
                 accountNumber,
+                status
+        );
+    }
+
+    public static SalaryDetailsResponse mapToSalaryDetailsResponse(Senior senior, int totalAmount, SalaryStatus status) {
+        User user = senior.getUser();
+        return new SalaryDetailsResponse(
+                user.getNickName(),
+                user.getPhoneNumber(),
+                totalAmount,
+                null,
+                null,
+                null,
                 status
         );
     }

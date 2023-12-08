@@ -2,7 +2,6 @@ package com.postgraduate.domain.admin.application.usecase;
 
 import com.postgraduate.domain.account.domain.entity.Account;
 import com.postgraduate.domain.account.domain.service.AccountGetService;
-import com.postgraduate.domain.account.util.AccountUtil;
 import com.postgraduate.domain.admin.application.dto.res.AllSalariesResponse;
 import com.postgraduate.domain.admin.application.dto.res.SalariesResponse;
 import com.postgraduate.domain.admin.application.dto.res.SalaryDetailsResponse;
@@ -20,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static com.postgraduate.domain.salary.domain.entity.constant.SalaryStatus.DONE;
 import static com.postgraduate.domain.salary.util.SalaryUtil.*;
@@ -31,17 +31,21 @@ public class SalaryManageByAdminUseCase {
     private final AccountGetService accountGetService;
     private final SalaryGetService salaryGetService;
     private final EncryptorUtils encryptorUtils;
-    private final AccountUtil accountUtil;
     private final SalaryUpdateService salaryUpdateService;
 
     public SalaryDetailsResponse getSalary(Long seniorId) {
         Senior senior = seniorGetService.bySeniorId(seniorId);
-        Account account = accountGetService.bySenior(senior).orElse(accountUtil.createDummyAccount());
-        String accountNumber = encryptorUtils.decryptData(account.getAccountNumber());
         List<Salary> salaries = salaryGetService.bySeniorAndSalaryDate(senior, getSalaryDate());
         int totalAmount = getAmount(salaries);
         SalaryStatus status = getStatus(salaries);
-        return AdminMapper.mapToSalaryResponse(senior, account, accountNumber, totalAmount, status);
+
+        Optional<Account> optionalAccount = accountGetService.bySenior(senior);
+        if (optionalAccount.isPresent()) {
+            Account account = optionalAccount.get();
+            String accountNumber = encryptorUtils.decryptData(account.getAccountNumber());
+            return AdminMapper.mapToSalaryDetailsResponse(senior, optionalAccount.get(), accountNumber, totalAmount, status);
+        }
+        return AdminMapper.mapToSalaryDetailsResponse(senior, totalAmount, status);
     }
 
     public AllSalariesResponse getSalaries() {
@@ -52,14 +56,23 @@ public class SalaryManageByAdminUseCase {
             if (getStatus(salaries) != DONE) {
                 continue;
             }
-            Account account = accountGetService.bySenior(senior).orElse(accountUtil.createDummyAccount());
-            String accountNumber = encryptorUtils.decryptData(account.getAccountNumber());
-            int totalAmount = getAmount(salaries);
-            LocalDateTime salaryDoneDate = getDoneDate(salaries);
-            SalariesResponse response = AdminMapper.mapToSalaryResponse(senior, account, accountNumber, totalAmount, salaryDoneDate);
+            SalariesResponse response = getSalariesResponse(senior, salaries);
             responses.add(response);
         }
         return new AllSalariesResponse(responses);
+    }
+
+    private SalariesResponse getSalariesResponse(Senior senior, List<Salary> salaries) {
+        int totalAmount = getAmount(salaries);
+        LocalDateTime salaryDoneDate = getDoneDate(salaries);
+
+        Optional<Account> optionalAccount = accountGetService.bySenior(senior);
+        if (optionalAccount.isPresent()) {
+            Account account = optionalAccount.get();
+            String accountNumber = encryptorUtils.decryptData(account.getAccountNumber());
+            return AdminMapper.mapToSalaryResponse(senior, account, accountNumber, totalAmount, salaryDoneDate);
+        }
+        return AdminMapper.mapToSalaryResponse(senior, totalAmount, salaryDoneDate);
     }
 
     public void updateSalaryStatus(Long seniorId, Boolean status) {
