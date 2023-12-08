@@ -108,15 +108,15 @@ public class AdminController {
 
     @GetMapping("/user/{userId}/mentoring")
     @Operation(summary = "[관리자] 후배 멘토링 조회", description = "후배의 멘토링 목록을 조회합니다.")
-    public ResponseDto<List<MentoringResponse>> getUserMentorings(@PathVariable Long userId) {
-        List<MentoringResponse> mentorings = mentoringManageUseCase.getUserMentorings(userId);
+    public ResponseDto<MentoringManageResponse> getUserMentorings(@PathVariable Long userId) {
+        MentoringManageResponse mentorings = mentoringManageUseCase.getUserMentorings(userId);
         return ResponseDto.create(MENTORING_FIND.getCode(), GET_MENTORING_LIST_INFO.getMessage(), mentorings);
     }
 
     @GetMapping("/senior/{seniorId}/mentoring")
     @Operation(summary = "[관리자] 선배 멘토링 조회", description = "선배의 멘토링 목록을 조회합니다.")
-    public ResponseDto<List<MentoringResponse>> getSeniorMentorings(@PathVariable Long seniorId) {
-        List<MentoringResponse> mentorings = mentoringManageUseCase.getSeniorMentorings(seniorId);
+    public ResponseDto<MentoringManageResponse> getSeniorMentorings(@PathVariable Long seniorId) {
+        MentoringManageResponse mentorings = mentoringManageUseCase.getSeniorMentorings(seniorId);
         return ResponseDto.create(MENTORING_FIND.getCode(), GET_MENTORING_LIST_INFO.getMessage(), mentorings);
     }
 

@@ -1,8 +1,8 @@
-package com.postgraduate.domain.admin.application.dto.res;
+package com.postgraduate.domain.admin.application.dto;
 
 import com.postgraduate.domain.mentoring.domain.entity.constant.Status;
 
-public record MentoringResponse(
+public record MentoringInfo(
         Long mentoringId,
         Status status,
         String userNickName,

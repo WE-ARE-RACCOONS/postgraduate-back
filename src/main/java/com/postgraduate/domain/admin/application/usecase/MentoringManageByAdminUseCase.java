@@ -1,6 +1,7 @@
 package com.postgraduate.domain.admin.application.usecase;
 
-import com.postgraduate.domain.admin.application.dto.res.MentoringResponse;
+import com.postgraduate.domain.admin.application.dto.MentoringInfo;
+import com.postgraduate.domain.admin.application.dto.res.MentoringManageResponse;
 import com.postgraduate.domain.admin.application.dto.res.MentoringWithPaymentResponse;
 import com.postgraduate.domain.admin.application.mapper.AdminMapper;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
@@ -19,14 +20,20 @@ import java.util.List;
 public class MentoringManageByAdminUseCase {
     private final MentoringGetService mentoringGetService;
     private final PaymentGetService paymentGetService;
-    public List<MentoringResponse> getUserMentorings(Long userId) {
+    public MentoringManageResponse getUserMentorings(Long userId) {
         List<Mentoring> mentorings = mentoringGetService.byUserId(userId);
-        return mentorings.stream().map(AdminMapper::mapToMentoringResponse).toList();
+        List<MentoringInfo> mentoringInfos = mentorings.stream()
+                .map(AdminMapper::mapToMentoringResponse)
+                .toList();
+        return new MentoringManageResponse(mentoringInfos);
     }
 
-    public List<MentoringResponse> getSeniorMentorings(Long seniorId) {
+    public MentoringManageResponse getSeniorMentorings(Long seniorId) {
         List<Mentoring> mentorings = mentoringGetService.bySeniorId(seniorId);
-        return mentorings.stream().map(AdminMapper::mapToMentoringResponse).toList();
+        List<MentoringInfo> mentoringInfos = mentorings.stream()
+                .map(AdminMapper::mapToMentoringResponse)
+                .toList();
+        return new MentoringManageResponse(mentoringInfos);
     }
 
     public MentoringWithPaymentResponse getMentoringWithPayment(Long mentoringId) {

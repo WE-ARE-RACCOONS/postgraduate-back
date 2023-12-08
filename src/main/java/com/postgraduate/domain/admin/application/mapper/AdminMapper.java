@@ -2,6 +2,7 @@ package com.postgraduate.domain.admin.application.mapper;
 
 import com.postgraduate.domain.account.domain.entity.Account;
 import com.postgraduate.domain.admin.application.dto.CertificationProfile;
+import com.postgraduate.domain.admin.application.dto.MentoringInfo;
 import com.postgraduate.domain.admin.application.dto.res.*;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.payment.domain.entity.Payment;
@@ -86,17 +87,17 @@ public class AdminMapper {
                 .build();
     }
 
-    public static MentoringResponse mapToMentoringResponse(Mentoring mentoring) {
+    public static MentoringInfo mapToMentoringResponse(Mentoring mentoring) {
          User user = mentoring.getUser();
         Senior senior = mentoring.getSenior();
-        return MentoringResponse.builder()
-                .mentoringId(mentoring.getMentoringId())
-                .status(mentoring.getStatus())
-                .userNickName(user.getNickName())
-                .userPhoneNumber(user.getPhoneNumber())
-                .seniorNickName(senior.getUser().getNickName())
-                .seniorPhoneNumber(senior.getUser().getPhoneNumber())
-                .build();
+        return new MentoringInfo(
+                mentoring.getMentoringId(),
+                mentoring.getStatus(),
+                user.getNickName(),
+                user.getPhoneNumber(),
+                senior.getUser().getNickName(),
+                senior.getUser().getPhoneNumber()
+        );
     }
 
     public static PaymentResponse mapToPaymentResponse(Payment payment) {
