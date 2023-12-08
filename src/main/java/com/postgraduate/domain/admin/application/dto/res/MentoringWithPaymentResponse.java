@@ -17,6 +17,8 @@ public record MentoringWithPaymentResponse(
         String date,
         @NotNull
         int term,
+        @NotNull
         int pay,
+        @NotNull
         int charge
 ) { }

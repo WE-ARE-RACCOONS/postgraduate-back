@@ -136,11 +136,11 @@ public class AdminMapper {
         );
     }
 
-    public static MentoringWithPaymentResponse mapToMentoringWithPaymentResponse(Long paymentId, Mentoring mentoring) {
+    public static MentoringWithPaymentResponse mapToMentoringWithPaymentResponse(Payment payment, Mentoring mentoring) {
         User user = mentoring.getUser();
         Senior senior = mentoring.getSenior();
         return new MentoringWithPaymentResponse(
-                paymentId,
+                payment.getPaymentId(),
                 user.getNickName(),
                 user.getPhoneNumber(),
                 senior.getUser().getNickName(),

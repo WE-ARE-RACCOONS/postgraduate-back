@@ -7,7 +7,6 @@ import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
 import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.payment.domain.service.PaymentGetService;
-import com.postgraduate.domain.payment.exception.PaymentNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,10 +31,7 @@ public class MentoringManageByAdminUseCase {
 
     public MentoringWithPaymentResponse getMentoringWithPayment(Long mentoringId) {
         Mentoring mentoring = mentoringGetService.byMentoringId(mentoringId);
-        if (!paymentGetService.existsByMentoring(mentoring)) {
-            throw new PaymentNotFoundException();
-        }
         Payment payment = paymentGetService.byMentoring(mentoring);
-        return AdminMapper.mapToMentoringWithPaymentResponse(payment.getPaymentId(), mentoring);
+        return AdminMapper.mapToMentoringWithPaymentResponse(payment, mentoring);
     }
 }
