@@ -6,6 +6,7 @@ import com.postgraduate.domain.wish.domain.repository.WishRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -18,5 +19,9 @@ public class WishGetService {
 
     public Optional<Wish> byUser(User user) {
         return wishRepository.findByUser(user);
+    }
+
+    public List<Wish> all() {
+        return wishRepository.findAll();
     }
 }
