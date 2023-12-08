@@ -12,7 +12,7 @@ public record SeniorInfo(
         @NotNull
         String phoneNumber,
         @NotNull
-        Status status,
+        Status certificationStatus,
         @NotNull
         SalaryStatus salaryStatus,
         @NotNull
