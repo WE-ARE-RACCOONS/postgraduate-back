@@ -11,8 +11,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 import static com.postgraduate.domain.mentoring.presentation.constant.MentoringResponseCode.MENTORING_FIND;
 import static com.postgraduate.domain.mentoring.presentation.constant.MentoringResponseMessage.GET_MENTORING_DETAIL_INFO;
 import static com.postgraduate.domain.mentoring.presentation.constant.MentoringResponseMessage.GET_MENTORING_LIST_INFO;
@@ -87,8 +85,8 @@ public class AdminController {
 
     @GetMapping("/salary")
     @Operation(summary = "[관리자] 정산 목록 조회", description = "한 달 기준으로 정산 목록을 조회합니다. 기준일은 [11일 ~ 내월 10일]입니다.")
-    public ResponseDto<AllSalariesResponse> getSalaries() {
-        AllSalariesResponse salaries = salaryManageUseCase.getSalaries();
+    public ResponseDto<SalaryManageResponse> getSalaries() {
+        SalaryManageResponse salaries = salaryManageUseCase.getSalaries();
         return ResponseDto.create(SALARY_FIND.getCode(), GET_SALARY_INFO.getMessage(), salaries);
     }
 
@@ -122,8 +120,8 @@ public class AdminController {
 
     @GetMapping("/payments")
     @Operation(summary = "[관리자] 결제 정보 목록", description = "결제 정보 목록을 조회합니다.")
-    public ResponseDto<List<PaymentResponse>> getPayments() {
-        List<PaymentResponse> payments = paymentManageUseCase.getPayments();
+    public ResponseDto<PaymentManageResponse> getPayments() {
+        PaymentManageResponse payments = paymentManageUseCase.getPayments();
         return ResponseDto.create(PAYMENT_FIND.getCode(), GET_PAYMENT_LIST_INFO.getMessage(), payments);
     }
 

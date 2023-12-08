@@ -2,8 +2,8 @@ package com.postgraduate.domain.admin.application.usecase;
 
 import com.postgraduate.domain.account.domain.entity.Account;
 import com.postgraduate.domain.account.domain.service.AccountGetService;
-import com.postgraduate.domain.admin.application.dto.res.AllSalariesResponse;
-import com.postgraduate.domain.admin.application.dto.res.SalariesResponse;
+import com.postgraduate.domain.admin.application.dto.res.SalaryManageResponse;
+import com.postgraduate.domain.admin.application.dto.SalaryInfo;
 import com.postgraduate.domain.admin.application.dto.res.SalaryDetailsResponse;
 import com.postgraduate.domain.admin.application.mapper.AdminMapper;
 import com.postgraduate.domain.salary.domain.entity.Salary;
@@ -48,21 +48,21 @@ public class SalaryManageByAdminUseCase {
         return AdminMapper.mapToSalaryDetailsResponse(senior, totalAmount, status);
     }
 
-    public AllSalariesResponse getSalaries() {
-        List<SalariesResponse> responses = new ArrayList<>();
+    public SalaryManageResponse getSalaries() {
+        List<SalaryInfo> responses = new ArrayList<>();
         List<Senior> seniors = seniorGetService.getAll();
         for (Senior senior : seniors) {
             List<Salary> salaries = salaryGetService.bySeniorAndSalaryDateAndStatus(senior, getSalaryDate(), true);
             if (getStatus(salaries) != DONE) {
                 continue;
             }
-            SalariesResponse response = getSalariesResponse(senior, salaries);
+            SalaryInfo response = getSalariesResponse(senior, salaries);
             responses.add(response);
         }
-        return new AllSalariesResponse(responses);
+        return new SalaryManageResponse(responses);
     }
 
-    private SalariesResponse getSalariesResponse(Senior senior, List<Salary> salaries) {
+    private SalaryInfo getSalariesResponse(Senior senior, List<Salary> salaries) {
         int totalAmount = getAmount(salaries);
         LocalDateTime salaryDoneDate = getDoneDate(salaries);
 

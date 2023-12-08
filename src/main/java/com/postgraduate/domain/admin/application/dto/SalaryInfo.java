@@ -1,10 +1,10 @@
-package com.postgraduate.domain.admin.application.dto.res;
+package com.postgraduate.domain.admin.application.dto;
 
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
 
-public record SalariesResponse(
+public record SalaryInfo(
         @NotNull
         String nickName,
         @NotNull

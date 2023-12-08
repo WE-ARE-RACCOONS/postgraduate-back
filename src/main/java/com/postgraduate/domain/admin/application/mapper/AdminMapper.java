@@ -1,10 +1,7 @@
 package com.postgraduate.domain.admin.application.mapper;
 
 import com.postgraduate.domain.account.domain.entity.Account;
-import com.postgraduate.domain.admin.application.dto.CertificationProfile;
-import com.postgraduate.domain.admin.application.dto.MentoringInfo;
-import com.postgraduate.domain.admin.application.dto.SeniorInfo;
-import com.postgraduate.domain.admin.application.dto.UserInfo;
+import com.postgraduate.domain.admin.application.dto.*;
 import com.postgraduate.domain.admin.application.dto.res.*;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.payment.domain.entity.Payment;
@@ -102,20 +99,21 @@ public class AdminMapper {
         );
     }
 
-    public static PaymentResponse mapToPaymentResponse(Payment payment) {
-        return PaymentResponse.builder()
-                .paymentId(payment.getPaymentId())
-                .mentoringId(payment.getMentoring().getMentoringId())
-                .userNickName(payment.getMentoring().getUser().getNickName())
-                .seniorNickName(payment.getMentoring().getSenior().getUser().getNickName())
-                .createdAt(payment.getCreatedAt())
-                .pay(payment.getMentoring().getPay())
-                .build();
+    public static PaymentInfo mapToPaymentInfo(Payment payment) {
+        Mentoring mentoring = payment.getMentoring();
+        return new PaymentInfo(
+                payment.getPaymentId(),
+                mentoring.getMentoringId(),
+                mentoring.getUser().getNickName(),
+                mentoring.getSenior().getUser().getNickName(),
+                payment.getCreatedAt(),
+                mentoring.getPay()
+        );
     }
 
-    public static SalariesResponse mapToSalaryResponse(Senior senior, Account account, String accountNumber, int totalAmount, LocalDateTime salaryDoneDate) {
+    public static SalaryInfo mapToSalaryResponse(Senior senior, Account account, String accountNumber, int totalAmount, LocalDateTime salaryDoneDate) {
         User user = senior.getUser();
-        return new SalariesResponse(
+        return new SalaryInfo(
                 user.getNickName(),
                 user.getPhoneNumber(),
                 totalAmount,
@@ -126,9 +124,9 @@ public class AdminMapper {
         );
     }
 
-    public static SalariesResponse mapToSalaryResponse(Senior senior, int totalAmount, LocalDateTime salaryDoneDate) {
+    public static SalaryInfo mapToSalaryResponse(Senior senior, int totalAmount, LocalDateTime salaryDoneDate) {
         User user = senior.getUser();
-        return new SalariesResponse(
+        return new SalaryInfo(
                 user.getNickName(),
                 user.getPhoneNumber(),
                 totalAmount,
