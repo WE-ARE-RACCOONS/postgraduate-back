@@ -1,6 +1,7 @@
 package com.postgraduate.domain.admin.application.usecase;
 
-import com.postgraduate.domain.admin.application.dto.res.UserResponse;
+import com.postgraduate.domain.admin.application.dto.UserInfo;
+import com.postgraduate.domain.admin.application.dto.res.UserManageResponse;
 import com.postgraduate.domain.admin.application.mapper.AdminMapper;
 import com.postgraduate.domain.wish.domain.entity.Wish;
 import com.postgraduate.domain.wish.domain.service.WishGetService;
@@ -15,11 +16,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserManageByAdminUseCase {
     private final WishGetService wishGetService;
-    public List<UserResponse> getUsers() {
+    public UserManageResponse getUsers() {
         List<Wish> wishes = wishGetService.all();
-
-        return wishes.stream()
-                .map(AdminMapper::mapToUserResponse)
+        List<UserInfo> userInfos = wishes.stream()
+                .map(AdminMapper::mapToUserInfo)
                 .toList();
+        return new UserManageResponse(userInfos);
     }
 }

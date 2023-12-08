@@ -3,6 +3,8 @@ package com.postgraduate.domain.admin.application.mapper;
 import com.postgraduate.domain.account.domain.entity.Account;
 import com.postgraduate.domain.admin.application.dto.CertificationProfile;
 import com.postgraduate.domain.admin.application.dto.MentoringInfo;
+import com.postgraduate.domain.admin.application.dto.SeniorInfo;
+import com.postgraduate.domain.admin.application.dto.UserInfo;
 import com.postgraduate.domain.admin.application.dto.res.*;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.payment.domain.entity.Payment;
@@ -48,9 +50,9 @@ public class AdminMapper {
                 .build();
     }
 
-    public static UserResponse mapToUserResponse(Wish wish) {
+    public static UserInfo mapToUserInfo(Wish wish) {
         User user = wish.getUser();
-        return new UserResponse(
+        return new UserInfo(
                 user.getUserId(),
                 user.getNickName(),
                 user.getPhoneNumber(),
@@ -74,20 +76,20 @@ public class AdminMapper {
 //                .build();
 //    }
 
-    public static SeniorResponse mapToSeniorResponse(Senior senior, SalaryStatus salaryStatus, Boolean isUser) {
+    public static SeniorInfo mapToSeniorInfo(Senior senior, SalaryStatus salaryStatus, Boolean isUser) {
         User user = senior.getUser();
-        return SeniorResponse.builder()
-                .seniorId(senior.getSeniorId())
-                .nickName(user.getNickName())
-                .phoneNumber(user.getPhoneNumber())
-                .status(senior.getStatus())
-                .salaryStatus(salaryStatus)
-                .marketingReceive(user.getMarketingReceive())
-                .isUser(isUser)
-                .build();
+        return new SeniorInfo(
+                senior.getSeniorId(),
+                user.getNickName(),
+                user.getPhoneNumber(),
+                senior.getStatus(),
+                salaryStatus,
+                user.getMarketingReceive(),
+                isUser
+        );
     }
 
-    public static MentoringInfo mapToMentoringResponse(Mentoring mentoring) {
+    public static MentoringInfo mapToMentoringInfo(Mentoring mentoring) {
          User user = mentoring.getUser();
         Senior senior = mentoring.getSenior();
         return new MentoringInfo(

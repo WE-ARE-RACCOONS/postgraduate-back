@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 import static com.postgraduate.domain.mentoring.presentation.constant.MentoringResponseCode.MENTORING_FIND;
-import static com.postgraduate.domain.mentoring.presentation.constant.MentoringResponseMessage.*;
+import static com.postgraduate.domain.mentoring.presentation.constant.MentoringResponseMessage.GET_MENTORING_DETAIL_INFO;
 import static com.postgraduate.domain.mentoring.presentation.constant.MentoringResponseMessage.GET_MENTORING_LIST_INFO;
 import static com.postgraduate.domain.payment.presentation.constant.PaymentResponseCode.PAYMENT_FIND;
 import static com.postgraduate.domain.payment.presentation.constant.PaymentResponseMessage.GET_PAYMENT_LIST_INFO;
@@ -66,8 +66,8 @@ public class AdminController {
 
     @GetMapping("/users")
     @Operation(summary = "[관리자] 후배 정보 목록", description = "대학생 후배 정보 목록을 조회합니다.")
-    public ResponseDto<List<UserResponse>> getUsers() {
-        List<UserResponse> users = userManageUseCase.getUsers();
+    public ResponseDto<UserManageResponse> getUsers() {
+        UserManageResponse users = userManageUseCase.getUsers();
         return ResponseDto.create(USER_FIND.getCode(), GET_USER_LIST_INFO.getMessage(), users);
     }
 
@@ -80,8 +80,8 @@ public class AdminController {
 
     @GetMapping("/seniors")
     @Operation(summary = "[관리자] 선배 정보 목록", description = "대학원생 선배 정보 목록을 조회합니다.")
-    public ResponseDto<List<SeniorResponse>> getSeniors() {
-        List<SeniorResponse> seniors = seniorManageUseCase.getSeniors();
+    public ResponseDto<SeniorManageResponse> getSeniors() {
+        SeniorManageResponse seniors = seniorManageUseCase.getSeniors();
         return ResponseDto.create(SENIOR_FIND.getCode(), GET_SENIOR_LIST_INFO.getMessage(), seniors);
     }
 

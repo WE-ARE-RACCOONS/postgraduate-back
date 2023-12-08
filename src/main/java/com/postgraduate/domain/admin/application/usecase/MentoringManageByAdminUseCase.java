@@ -23,7 +23,7 @@ public class MentoringManageByAdminUseCase {
     public MentoringManageResponse getUserMentorings(Long userId) {
         List<Mentoring> mentorings = mentoringGetService.byUserId(userId);
         List<MentoringInfo> mentoringInfos = mentorings.stream()
-                .map(AdminMapper::mapToMentoringResponse)
+                .map(AdminMapper::mapToMentoringInfo)
                 .toList();
         return new MentoringManageResponse(mentoringInfos);
     }
@@ -31,7 +31,7 @@ public class MentoringManageByAdminUseCase {
     public MentoringManageResponse getSeniorMentorings(Long seniorId) {
         List<Mentoring> mentorings = mentoringGetService.bySeniorId(seniorId);
         List<MentoringInfo> mentoringInfos = mentorings.stream()
-                .map(AdminMapper::mapToMentoringResponse)
+                .map(AdminMapper::mapToMentoringInfo)
                 .toList();
         return new MentoringManageResponse(mentoringInfos);
     }

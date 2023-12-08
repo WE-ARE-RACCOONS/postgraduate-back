@@ -2,7 +2,8 @@ package com.postgraduate.domain.admin.application.usecase;
 
 import com.postgraduate.domain.admin.application.dto.req.SeniorStatusRequest;
 import com.postgraduate.domain.admin.application.dto.res.CertificationDetailsResponse;
-import com.postgraduate.domain.admin.application.dto.res.SeniorResponse;
+import com.postgraduate.domain.admin.application.dto.SeniorInfo;
+import com.postgraduate.domain.admin.application.dto.res.SeniorManageResponse;
 import com.postgraduate.domain.admin.application.mapper.AdminMapper;
 import com.postgraduate.domain.admin.exception.SeniorNotWaitingException;
 import com.postgraduate.domain.salary.domain.entity.Salary;
@@ -52,15 +53,16 @@ public class SeniorManageByAdminUseCase {
         }
     }
 
-    public List<SeniorResponse> getSeniors() {
+    public SeniorManageResponse getSeniors() {
         List<Senior> seniors = seniorGetService.getAll();
-        return seniors.stream()
+        List<SeniorInfo> seniorInfos = seniors.stream()
                 .map(senior -> {
                     List<Salary> salaries = salaryGetService.bySeniorAndSalaryDate(senior, getSalaryDate());
                     SalaryStatus salaryStatus = getStatus(salaries);
                     Optional<Wish> wish = wishGetService.byUser(senior.getUser());
-                    return AdminMapper.mapToSeniorResponse(senior, salaryStatus, wish.isPresent());
+                    return AdminMapper.mapToSeniorInfo(senior, salaryStatus, wish.isPresent());
                 })
                 .toList();
+        return new SeniorManageResponse(seniorInfos);
     }
 }
