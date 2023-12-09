@@ -4,7 +4,6 @@ import com.postgraduate.domain.admin.application.dto.req.SeniorStatusRequest;
 import com.postgraduate.domain.admin.application.dto.res.*;
 import com.postgraduate.domain.admin.application.usecase.*;
 import com.postgraduate.domain.wish.application.mapper.dto.res.WishResponse;
-import com.postgraduate.domain.wish.application.usecase.WishInfoUseCase;
 import com.postgraduate.global.dto.ResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -38,7 +37,6 @@ public class AdminController {
     private final UserManageByAdminUseCase userManageUseCase;
     private final MentoringManageByAdminUseCase mentoringManageUseCase;
     private final PaymentManageByAdminUseCase paymentManageUseCase;
-    private final WishInfoUseCase wishInfoUseCase;
     private final SalaryManageByAdminUseCase salaryManageUseCase;
 
     @GetMapping("/certification/{seniorId}")
@@ -72,7 +70,7 @@ public class AdminController {
     @GetMapping("/wish/{wishId}")
     @Operation(summary = "[관리자] 후배 매칭 지원 정보", description = "대학생 후배 매칭 지원 정보를 상세 조회합니다.")
     public ResponseDto<WishResponse> getWish(@PathVariable Long wishId) {
-        WishResponse wish = wishInfoUseCase.getWish(wishId);
+        WishResponse wish = userManageUseCase.getWish(wishId);
         return ResponseDto.create(WISH_FIND.getCode(), GET_WISH_INFO.getMessage(), wish);
     }
 

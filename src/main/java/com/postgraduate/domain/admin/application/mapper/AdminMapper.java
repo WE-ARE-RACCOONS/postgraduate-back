@@ -9,6 +9,7 @@ import com.postgraduate.domain.salary.domain.entity.constant.SalaryStatus;
 import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.wish.application.mapper.dto.res.WishResponse;
 import com.postgraduate.domain.wish.domain.entity.Wish;
 
 import java.time.LocalDateTime;
@@ -177,5 +178,17 @@ public class AdminMapper {
                 (int) (mentoring.getPay() * 1.2),
                 (int) (mentoring.getPay() * 0.2)
         );
+    }
+
+    public static WishResponse mapToWishResponse(Wish wish) {
+        User user = wish.getUser();
+        return new WishResponse(
+                user.getNickName(),
+                user.getPhoneNumber(),
+                user.getCreatedAt(),
+                user.getMarketingReceive(),
+                wish.getMatchingReceive(),
+                wish.getMajor(),
+                wish.getField());
     }
 }
