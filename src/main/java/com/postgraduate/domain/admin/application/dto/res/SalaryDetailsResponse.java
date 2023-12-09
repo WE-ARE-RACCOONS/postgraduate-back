@@ -1,6 +1,6 @@
 package com.postgraduate.domain.admin.application.dto.res;
 
-import com.postgraduate.domain.salary.domain.entity.constant.SalaryStatus;
+import com.postgraduate.domain.admin.presentation.constant.SalaryStatus;
 import jakarta.validation.constraints.NotNull;
 
 public record SalaryDetailsResponse(

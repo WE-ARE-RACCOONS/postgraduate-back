@@ -1,12 +1,14 @@
 package com.postgraduate.domain.salary.util;
 
 import com.postgraduate.domain.salary.domain.entity.Salary;
-import com.postgraduate.domain.salary.domain.entity.constant.SalaryStatus;
+import com.postgraduate.domain.admin.presentation.constant.SalaryStatus;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+
+import static com.postgraduate.domain.admin.presentation.constant.SalaryStatus.*;
 
 public class SalaryUtil {
     private static final int SALARY_DATE = 10;
@@ -33,12 +35,12 @@ public class SalaryUtil {
                 .filter(Salary::getStatus)
                 .count();
         if (salaries.size() == 0) {
-            return SalaryStatus.NONE;
+            return NONE;
         }
         if (count == salaries.size()) {
-            return SalaryStatus.DONE;
+            return DONE;
         }
-        return SalaryStatus.YET;
+        return YET;
     }
 
     public static LocalDateTime getDoneDate(List<Salary> salaries) {

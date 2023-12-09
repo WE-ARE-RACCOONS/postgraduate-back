@@ -7,7 +7,7 @@ import com.postgraduate.domain.admin.application.dto.res.SeniorManageResponse;
 import com.postgraduate.domain.admin.application.mapper.AdminMapper;
 import com.postgraduate.domain.admin.exception.SeniorNotWaitingException;
 import com.postgraduate.domain.salary.domain.entity.Salary;
-import com.postgraduate.domain.salary.domain.entity.constant.SalaryStatus;
+import com.postgraduate.domain.admin.presentation.constant.SalaryStatus;
 import com.postgraduate.domain.salary.domain.service.SalaryGetService;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.entity.constant.Status;

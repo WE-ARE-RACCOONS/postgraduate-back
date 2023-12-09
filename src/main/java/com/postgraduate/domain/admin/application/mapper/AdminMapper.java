@@ -5,7 +5,7 @@ import com.postgraduate.domain.admin.application.dto.*;
 import com.postgraduate.domain.admin.application.dto.res.*;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.payment.domain.entity.Payment;
-import com.postgraduate.domain.salary.domain.entity.constant.SalaryStatus;
+import com.postgraduate.domain.admin.presentation.constant.SalaryStatus;
 import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.user.domain.entity.User;

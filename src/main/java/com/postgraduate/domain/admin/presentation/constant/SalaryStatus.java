@@ -1,10 +1,10 @@
-package com.postgraduate.domain.salary.domain.entity.constant;
+package com.postgraduate.domain.admin.presentation.constant;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
 @Getter
+@RequiredArgsConstructor
 public enum SalaryStatus {
     DONE, YET, NONE
 }
