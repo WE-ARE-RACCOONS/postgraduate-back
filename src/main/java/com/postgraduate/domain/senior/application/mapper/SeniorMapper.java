@@ -190,7 +190,7 @@ public class SeniorMapper {
     }
 
     public static SeniorProfileResponse mapToSeniorProfile(Senior senior) {
-        User user = new User();
+        User user = senior.getUser();
         Info info = senior.getInfo();
         return new SeniorProfileResponse(user.getNickName(), user.getProfile(),
                 info.getPostgradu(), info.getMajor(), info.getLab());
