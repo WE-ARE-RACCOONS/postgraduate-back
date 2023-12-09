@@ -2,6 +2,8 @@ package com.postgraduate.domain.admin.application.dto.res;
 
 import jakarta.validation.constraints.NotNull;
 
+import java.time.LocalDate;
+
 public record CertificationDetailsResponse(
         @NotNull
         String certification,
@@ -9,7 +11,8 @@ public record CertificationDetailsResponse(
         String nickName,
         @NotNull
         String phoneNumber,
-        //인증 신청 날짜
+        @NotNull
+        LocalDate createdAt,
         @NotNull
         String postgradu,
         @NotNull

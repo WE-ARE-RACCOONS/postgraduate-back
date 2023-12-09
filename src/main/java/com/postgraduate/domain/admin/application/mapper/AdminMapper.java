@@ -23,6 +23,7 @@ public class AdminMapper {
                 senior.getCertification(),
                 user.getNickName(),
                 user.getPhoneNumber(),
+                senior.getCreatedAt(),
                 info.getPostgradu(),
                 info.getMajor(),
                 info.getField(),
