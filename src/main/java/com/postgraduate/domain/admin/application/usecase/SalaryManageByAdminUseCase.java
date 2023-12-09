@@ -52,7 +52,7 @@ public class SalaryManageByAdminUseCase {
 
     public SalaryManageResponse getSalaries() {
         List<SalaryInfo> responses = new ArrayList<>();
-        List<Senior> seniors = seniorGetService.getAll();
+        List<Senior> seniors = seniorGetService.all();
         for (Senior senior : seniors) {
             List<Salary> salaries = salaryGetService.bySeniorAndSalaryDateAndStatus(senior, getSalaryDate(), true);
             if (getStatus(salaries) != DONE) {

@@ -37,7 +37,7 @@ public class SeniorGetService {
         return seniorRepository.findAllByStatus(status);
     }
 
-    public List<Senior> getAll() {
+    public List<Senior> all() {
         return seniorRepository.findAll();
     }
 

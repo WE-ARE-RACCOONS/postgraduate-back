@@ -48,7 +48,7 @@ public class SeniorManageByAdminUseCase {
     }
 
     public SeniorManageResponse getSeniors() {
-        List<Senior> seniors = seniorGetService.getAll();
+        List<Senior> seniors = seniorGetService.all();
         List<SeniorInfo> seniorInfos = seniors.stream()
                 .map(senior -> {
                     List<Salary> salaries = salaryGetService.bySeniorAndSalaryDate(senior, getSalaryDate());
