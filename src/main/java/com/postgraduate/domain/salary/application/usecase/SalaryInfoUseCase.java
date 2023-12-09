@@ -15,11 +15,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 
+import static com.postgraduate.domain.salary.util.SalaryUtil.getAmount;
+import static com.postgraduate.domain.salary.util.SalaryUtil.getSalaryDate;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class SalaryInfoUseCase {
-    private static final int SALARY_DATE = 10;
     private final SeniorGetService seniorGetService;
     private final SalaryGetService salaryGetService;
 
@@ -31,23 +33,11 @@ public class SalaryInfoUseCase {
         return new SalaryInfoResponse(salaryDate, amount); //TODO 수수료
     }
 
-    private LocalDate getSalaryDate() {
-        LocalDate now = LocalDate.now();
-        return now.getDayOfMonth() <= SALARY_DATE
-                ? now.withDayOfMonth(SALARY_DATE)
-                : now.plusMonths(1).withDayOfMonth(SALARY_DATE);
-    }
-
-    private int getAmount(List<Salary> salaries) {
-        return salaries.stream()
-                .map(salary -> salary.getMentoring().getPay())
-                .mapToInt(Integer::intValue)
-                .sum();
-    }
-
     public List<SalaryDetailResponse> getSalaryDetail(User user, Boolean status) {
         Senior senior = seniorGetService.byUser(user);
         List<Salary> salaries = salaryGetService.bySeniorAndStatus(senior, status);
-        return salaries.stream().map(SalaryMapper::mapToSalaryDetail).toList();
+        return salaries.stream()
+                .map(SalaryMapper::mapToSalaryDetail)
+                .toList();
     }
 }

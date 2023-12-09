@@ -37,6 +37,10 @@ public class SeniorGetService {
         return seniorRepository.findAllByStatus(status);
     }
 
+    public List<Senior> all() {
+        return seniorRepository.findAll();
+    }
+
     public Page<Senior> bySearch(String search, Integer page, String sort) {
         if (page == null)
             page = 1;
