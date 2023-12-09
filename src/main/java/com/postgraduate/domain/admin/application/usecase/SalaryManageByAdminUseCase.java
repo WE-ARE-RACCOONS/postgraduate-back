@@ -15,6 +15,7 @@ import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.global.config.security.util.EncryptorUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ import static com.postgraduate.domain.salary.domain.entity.constant.SalaryStatus
 import static com.postgraduate.domain.salary.util.SalaryUtil.*;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class SalaryManageByAdminUseCase {
     private final SeniorGetService seniorGetService;
@@ -43,7 +45,7 @@ public class SalaryManageByAdminUseCase {
         if (optionalAccount.isPresent()) {
             Account account = optionalAccount.get();
             String accountNumber = encryptorUtils.decryptData(account.getAccountNumber());
-            return AdminMapper.mapToSalaryDetailsResponse(senior, optionalAccount.get(), accountNumber, totalAmount, status);
+            return AdminMapper.mapToSalaryDetailsResponse(senior, account, accountNumber, totalAmount, status);
         }
         return AdminMapper.mapToSalaryDetailsResponse(senior, totalAmount, status);
     }
@@ -56,13 +58,13 @@ public class SalaryManageByAdminUseCase {
             if (getStatus(salaries) != DONE) {
                 continue;
             }
-            SalaryInfo response = getSalariesResponse(senior, salaries);
+            SalaryInfo response = getSalaryInfo(senior, salaries);
             responses.add(response);
         }
         return new SalaryManageResponse(responses);
     }
 
-    private SalaryInfo getSalariesResponse(Senior senior, List<Salary> salaries) {
+    private SalaryInfo getSalaryInfo(Senior senior, List<Salary> salaries) {
         int totalAmount = getAmount(salaries);
         LocalDateTime salaryDoneDate = getDoneDate(salaries);
 
