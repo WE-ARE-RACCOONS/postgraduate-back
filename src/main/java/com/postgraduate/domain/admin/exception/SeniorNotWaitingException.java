@@ -1,11 +1,10 @@
 package com.postgraduate.domain.admin.exception;
 
-import static com.postgraduate.domain.mentoring.presentation.constant.MentoringResponseCode.MENTORING_NOT_WAITING;
-import static com.postgraduate.domain.mentoring.presentation.constant.MentoringResponseMessage.NOT_WAITING_MENTORING;
+import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseCode.NONE_SENIOR;
+import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseMessage.NOT_WAITING_STATUS;
 
 public class SeniorNotWaitingException extends SeniorException{
     public SeniorNotWaitingException() {
-        super(NOT_WAITING_MENTORING.getMessage(), MENTORING_NOT_WAITING.getCode());
-        //TODO: 메시지, 코드 변경
+        super(NOT_WAITING_STATUS.getMessage(), NONE_SENIOR.getCode());
     }
 }

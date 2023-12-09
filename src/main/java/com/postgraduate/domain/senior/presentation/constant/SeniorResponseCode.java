@@ -12,6 +12,7 @@ public enum SeniorResponseCode {
     SENIOR_DELETE("SNR203"),
 
     NONE_SENIOR("EX400"),
-    NONE_ACCOUNT("EX401");
+    NONE_ACCOUNT("EX401"),
+    NOT_WAITING_STATUS("EX402");
     private final String code;
 }
