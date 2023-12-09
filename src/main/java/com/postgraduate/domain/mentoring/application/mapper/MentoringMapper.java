@@ -6,53 +6,60 @@ import com.postgraduate.domain.mentoring.application.dto.res.AppliedMentoringDet
 import com.postgraduate.domain.mentoring.application.dto.res.SeniorMentoringDetailResponse;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.salary.domain.entity.Salary;
+import com.postgraduate.domain.senior.domain.entity.Info;
+import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.user.domain.entity.User;
 
 public class MentoringMapper {
     public static ExpectedMentoringInfo mapToExpectedInfo(Mentoring mentoring) {
         Senior senior = mentoring.getSenior();
-        return ExpectedMentoringInfo.builder()
-                .mentoringId(mentoring.getMentoringId())
-                .seniorId(senior.getSeniorId())
-                .profile(senior.getUser().getProfile())
-                .nickName(senior.getUser().getNickName())
-                .postgradu(senior.getInfo().getPostgradu())
-                .lab(senior.getInfo().getLab())
-                .major(senior.getInfo().getMajor())
-                .term(senior.getProfile().getTerm())
-                .date(mentoring.getDate())
-                .chatLink(senior.getProfile().getChatLink())
-                .build();
+        User user = senior.getUser();
+        Info info = senior.getInfo();
+        Profile profile = senior.getProfile();
+        return new ExpectedMentoringInfo(
+                mentoring.getMentoringId(),
+                senior.getSeniorId(),
+                user.getProfile(),
+                user.getNickName(),
+                info.getPostgradu(),
+                info.getMajor(),
+                info.getLab(),
+                mentoring.getDate(),
+                profile.getTerm(),
+                profile.getChatLink()
+        );
     }
 
     public static DoneMentoringInfo mapToDoneInfo(Mentoring mentoring) {
         Senior senior = mentoring.getSenior();
-        return DoneMentoringInfo.builder()
-                .mentoringId(mentoring.getMentoringId())
-                .seniorId(senior.getSeniorId())
-                .profile(senior.getUser().getProfile())
-                .nickName(senior.getUser().getNickName())
-                .postgradu(senior.getInfo().getPostgradu())
-                .lab(senior.getInfo().getLab())
-                .major(senior.getInfo().getMajor())
-                .term(senior.getProfile().getTerm())
-                .date(mentoring.getDate())
-                .build();
+        User user = senior.getUser();
+        Info info = senior.getInfo();
+        Profile profile = senior.getProfile();
+        return new DoneMentoringInfo(
+                mentoring.getMentoringId(),
+                senior.getSeniorId(),
+                user.getProfile(),
+                user.getNickName(),
+                info.getPostgradu(),
+                info.getMajor(),
+                info.getLab(),
+                mentoring.getDate(),
+                profile.getTerm()
+        );
     }
 
     public static WaitingMentoringInfo mapToWaitingInfo(Mentoring mentoring) {
         Senior senior = mentoring.getSenior();
-        return WaitingMentoringInfo.builder()
-                .mentoringId(mentoring.getMentoringId())
-                .seniorId(senior.getSeniorId())
-                .profile(senior.getUser().getProfile())
-                .nickName(senior.getUser().getNickName())
-                .postgradu(senior.getInfo().getPostgradu())
-                .lab(senior.getInfo().getLab())
-                .major(senior.getInfo().getMajor())
-                .term(senior.getProfile().getTerm())
-                .build();
+        User user = senior.getUser();
+        Info info = senior.getInfo();
+        Profile profile = senior.getProfile();
+        return new WaitingMentoringInfo(
+                mentoring.getMentoringId(),
+                senior.getSeniorId(),
+                user.getProfile(), user.getNickName(),
+                info.getPostgradu(), info.getMajor(), info.getLab(),
+                profile.getTerm());
     }
     public static AppliedMentoringDetailResponse mapToAppliedDetailInfo(Mentoring mentoring) {
         Senior senior = mentoring.getSenior();
@@ -81,48 +88,43 @@ public class MentoringMapper {
     }
 
     public static WaitingSeniorMentoringInfo mapToSeniorWaitingInfo(Mentoring mentoring, long remainTime) {
-        return WaitingSeniorMentoringInfo.builder()
-                .mentoringId(mentoring.getMentoringId())
-                .profile(mentoring.getUser().getProfile())
-                .nickname(mentoring.getUser().getNickName())
-                .term(mentoring.getSenior().getProfile().getTerm())
-                .remainTime(remainTime)
-                .build();
+        User user = mentoring.getUser();
+        Senior senior = mentoring.getSenior();
+        return new WaitingSeniorMentoringInfo(
+                mentoring.getMentoringId(),
+                user.getProfile(), user.getNickName(),
+                senior.getProfile().getTerm(),
+                remainTime);
     }
 
     public static ExpectedSeniorMentoringInfo mapToSeniorExpectedInfo(Mentoring mentoring) {
-        return ExpectedSeniorMentoringInfo.builder()
-                .mentoringId(mentoring.getMentoringId())
-                .profile(mentoring.getUser().getProfile())
-                .nickname(mentoring.getUser().getNickName())
-                .date(mentoring.getDate())
-                .term(mentoring.getSenior().getProfile().getTerm())
-                .build();
+        User user = mentoring.getUser();
+        Senior senior = mentoring.getSenior();
+        return new ExpectedSeniorMentoringInfo(mentoring.getMentoringId(),
+                user.getProfile(), user.getNickName(),
+                senior.getProfile().getTerm(),
+                mentoring.getDate());
     }
 
     public static DoneSeniorMentoringInfo mapToSeniorDoneInfo(Mentoring mentoring, Salary salary) {
-        return DoneSeniorMentoringInfo.builder()
-                .mentoringId(mentoring.getMentoringId())
-                .profile(mentoring.getUser().getProfile())
-                .nickname(mentoring.getUser().getNickName())
-                .date(mentoring.getDate())
-                .term(mentoring.getSenior().getProfile().getTerm())
-                .salaryDate(salary.getSalaryDate())
-                .status(salary.getStatus())
-                .build();
+        User user = mentoring.getUser();
+        Senior senior = mentoring.getSenior();
+        return new DoneSeniorMentoringInfo(mentoring.getMentoringId(),
+                user.getProfile(), user.getNickName(),
+                senior.getProfile().getTerm(),
+                mentoring.getDate(),
+                salary.getSalaryDate(), salary.getStatus());
     }
 
     public static SeniorMentoringDetailResponse mapToSeniorMentoringDetail(Mentoring mentoring) {
         String[] dates = mentoring.getDate().split(",");
         User user = mentoring.getUser();
         Senior senior = mentoring.getSenior();
-        return SeniorMentoringDetailResponse.builder()
-                .profile(user.getProfile())
-                .nickName(user.getNickName())
-                .topic(mentoring.getTopic())
-                .question(mentoring.getQuestion())
-                .dates(dates)
-                .term(senior.getProfile().getTerm())
-                .build();
+        return new SeniorMentoringDetailResponse(
+                user.getProfile(), user.getNickName(),
+                mentoring.getTopic(), mentoring.getQuestion(),
+                dates,
+                senior.getProfile().getTerm()
+        );
     }
 }
