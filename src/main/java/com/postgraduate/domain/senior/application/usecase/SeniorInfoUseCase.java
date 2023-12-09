@@ -37,13 +37,13 @@ public class SeniorInfoUseCase {
         return new AllSeniorSearchResponse(selectSeniors);
     }
 
-    public AllSeniorFieldResponse getFieldSenior(String field, String postgradu, Integer page) {
+    public AllSeniorSearchResponse getFieldSenior(String field, String postgradu, Integer page) {
         Page<Senior> allSeniors = seniorGetService.byField(field, postgradu, page);
-        List<SeniorFieldResponse> selectSeniors = new ArrayList<>();
+        List<SeniorSearchResponse> selectSeniors = new ArrayList<>();
         for (Senior senior : allSeniors.getContent()) {
-            selectSeniors.add(mapToSeniorField(senior));
+            selectSeniors.add(mapToSeniorSearch(senior));
         }
-        return new AllSeniorFieldResponse(selectSeniors);
+        return new AllSeniorSearchResponse(selectSeniors);
     }
 
     public SeniorProfileResponse getSeniorProfile(Long seniorId) {

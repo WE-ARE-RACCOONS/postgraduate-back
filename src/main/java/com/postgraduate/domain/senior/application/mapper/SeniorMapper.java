@@ -96,19 +96,19 @@ public class SeniorMapper {
                 .lab(request.lab())
                 .keyword(request.keyword())
                 .field(request.field())
-                .etcPostgradu(false)
-                .etcField(false)
+                .etcPostgradu(true)
+                .etcField(true)
                 .totalInfo(request.major() + request.lab() + request.field()
                         + request.professor() + request.postgradu() + request.keyword());
 
         for (String field : fields) {
-            if (!fieldNames.contains(field)) {
-                infoBuilder.etcField(true);
+            if (fieldNames.contains(field)) {
+                infoBuilder.etcField(false);
                 break;
             }
         }
-        if (!postgraduNames.contains(request.postgradu()))
-            infoBuilder.etcPostgradu(true);
+        if (postgraduNames.contains(request.postgradu()))
+            infoBuilder.etcPostgradu(false);
         return infoBuilder.build();
     }
 
