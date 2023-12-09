@@ -33,22 +33,6 @@ public class AdminMapper {
         );
     }
 
-    public static CertificationProfile mapToCertificationProfile(Senior senior) {
-        return CertificationProfile.builder()
-                .time(senior.getProfile().getTime())
-                .term(senior.getProfile().getTerm())
-                .info(senior.getProfile().getInfo())
-                .build();
-    }
-
-    public static CertificationResponse mapToCertification(Senior senior) {
-        return CertificationResponse.builder()
-                .seniorId(senior.getSeniorId())
-                .nickName(senior.getUser().getNickName())
-                .createdAt(senior.getCreatedAt())
-                .build();
-    }
-
     public static UserInfo mapToUserInfo(Wish wish) {
         User user = wish.getUser();
         return new UserInfo(
@@ -62,18 +46,6 @@ public class AdminMapper {
                 user.getRole()
         );
     }
-
-//
-//    public static UserWithSeniorResponse mapToUserWithSeniorResponse(User user, Long seniorId) {
-//        return UserWithSeniorResponse.builder()
-//                .userId(user.getUserId())
-//                .nickName(user.getNickName())
-//                .marketingReceive(user.getMarketingReceive())
-//                .matchingReceive(user.getHope().getMatchingReceive())
-//                .createdAt(user.getCreatedAt())
-//                .seniorId(seniorId)
-//                .build();
-//    }
 
     public static SeniorInfo mapToSeniorInfo(Senior senior, SalaryStatus salaryStatus, Boolean isUser) {
         User user = senior.getUser();
