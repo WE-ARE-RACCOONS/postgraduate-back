@@ -44,11 +44,11 @@ public class AuthController {
         return ResponseDto.create(AUTH_ALREADY.getCode(), SUCCESS_AUTH.getMessage(), jwtToken);
     }
 
-    @PostMapping("/logout")
-    @Operation(summary = "로그아웃", description = "토큰 같이 보내주세요")
-    public ResponseDto logout() {
-        return ResponseDto.create(AUTH_CREATE.getCode(), SUCCESS_AUTH.getMessage());
-    }
+//    @PostMapping("/logout")
+//    @Operation(summary = "로그아웃", description = "토큰 같이 보내주세요")
+//    public ResponseDto logout() {
+//        return ResponseDto.create(AUTH_CREATE.getCode(), SUCCESS_AUTH.getMessage());
+//    }
 
     @PostMapping("/user/signup")
     @Operation(summary = "대학생 회원가입", description = "로그인 API에서 반환한 socialId, 닉네임, 번호, 마케팅 수신여부, 희망 학과, 희망 분야, 매칭 희망 여부")
