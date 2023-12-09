@@ -24,6 +24,10 @@ public class SalaryGetService {
         return salaryRepository.findAllBySeniorAndSalaryDate(senior, salaryDate);
     }
 
+    public List<Salary> bySeniorAndSalaryDateAndStatus(Senior senior, LocalDate salaryDate, Boolean status) {
+        return salaryRepository.findAllBySeniorAndSalaryDateAndStatus(senior, salaryDate, status);
+    }
+
     public Salary byMentoring(Mentoring mentoring) {
         return salaryRepository.findByMentoring(mentoring).orElseThrow(SalaryNotFoundException::new);
     }

@@ -1,6 +1,7 @@
 package com.postgraduate.domain.admin.application.usecase;
 
-import com.postgraduate.domain.admin.application.dto.res.PaymentResponse;
+import com.postgraduate.domain.admin.application.dto.PaymentInfo;
+import com.postgraduate.domain.admin.application.dto.res.PaymentManageResponse;
 import com.postgraduate.domain.admin.application.mapper.AdminMapper;
 import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.payment.domain.service.PaymentGetService;
@@ -15,8 +16,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PaymentManageByAdminUseCase {
     private final PaymentGetService paymentGetService;
-    public List<PaymentResponse> getPayments() {
+    public PaymentManageResponse getPayments() {
         List<Payment> payments = paymentGetService.all();
-        return payments.stream().map(AdminMapper::mapToPaymentResponse).toList();
+        List<PaymentInfo> paymentInfos = payments.stream()
+                .map(AdminMapper::mapToPaymentInfo)
+                .toList();
+        return new PaymentManageResponse(paymentInfos);
     }
 }

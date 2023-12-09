@@ -15,6 +15,7 @@ import com.postgraduate.domain.refuse.domain.service.RefuseSaveService;
 import com.postgraduate.domain.salary.application.mapper.SalaryMapper;
 import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.salary.domain.service.SalarySaveService;
+import com.postgraduate.domain.salary.util.SalaryUtil;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.domain.user.domain.entity.User;
@@ -33,7 +34,6 @@ import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.*;
 @Transactional
 @RequiredArgsConstructor
 public class MentoringManageUseCase {
-    private static final int SALARY_DATE = 10;
     private final CheckIsMyMentoringUseCase checkIsMyMentoringUseCase;
     private final MentoringUpdateService mentoringUpdateService;
     private final MentoringGetService mentoringGetService;
@@ -57,10 +57,7 @@ public class MentoringManageUseCase {
     }
 
     private void createSalary(Mentoring mentoring) {
-        LocalDate now = LocalDate.now();
-        LocalDate salaryDate = now.getDayOfMonth() < SALARY_DATE
-                ? now.withDayOfMonth(SALARY_DATE)
-                : now.plusMonths(1).withDayOfMonth(SALARY_DATE);
+        LocalDate salaryDate = SalaryUtil.getSalaryDate();
         Salary salary = SalaryMapper.mapToSalary(mentoring, salaryDate);
         salarySaveService.saveSalary(salary);
     }

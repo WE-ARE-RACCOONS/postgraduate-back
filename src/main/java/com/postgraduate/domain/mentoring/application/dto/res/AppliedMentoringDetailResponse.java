@@ -1,20 +1,14 @@
 package com.postgraduate.domain.mentoring.application.dto.res;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-
-@Getter
-@Builder
-@AllArgsConstructor
-public class AppliedMentoringDetailResponse {
-        private Long seniorId;
-        private String profile;
-        private String nickName;
-        private String postgradu;
-        private String major;
-        private String lab;
-        private String topic;
-        private String question;
-        private String[] dates;
+public record AppliedMentoringDetailResponse(
+        Long seniorId,
+        String profile,
+        String nickName,
+        String postgradu,
+        String major,
+        String lab,
+        String topic,
+        String question,
+        String[] dates
+) {
 }

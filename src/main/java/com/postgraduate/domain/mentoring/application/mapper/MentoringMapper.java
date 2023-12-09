@@ -57,17 +57,17 @@ public class MentoringMapper {
     public static AppliedMentoringDetailResponse mapToAppliedDetailInfo(Mentoring mentoring) {
         Senior senior = mentoring.getSenior();
         String[] dates = mentoring.getDate().split(",");
-        return AppliedMentoringDetailResponse.builder()
-                .seniorId(senior.getSeniorId())
-                .profile(senior.getUser().getProfile())
-                .nickName(senior.getUser().getNickName())
-                .postgradu(senior.getInfo().getPostgradu())
-                .major(senior.getInfo().getMajor())
-                .lab(senior.getInfo().getLab())
-                .topic(mentoring.getTopic())
-                .question(mentoring.getQuestion())
-                .dates(dates)
-                .build();
+        return new AppliedMentoringDetailResponse(
+                senior.getSeniorId(),
+                senior.getUser().getProfile(),
+                senior.getUser().getNickName(),
+                senior.getInfo().getPostgradu(),
+                senior.getInfo().getMajor(),
+                senior.getInfo().getLab(),
+                mentoring.getTopic(),
+                mentoring.getQuestion(),
+                dates
+        );
     }
 
     public static Mentoring mapToMentoring(User user, Senior senior, MentoringApplyRequest request) {
