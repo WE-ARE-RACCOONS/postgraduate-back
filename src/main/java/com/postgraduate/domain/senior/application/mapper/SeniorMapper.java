@@ -188,4 +188,11 @@ public class SeniorMapper {
         return new SeniorFieldResponse(senior.getSeniorId(), user.getProfile(), user.getNickName(),
                 info.getPostgradu(), info.getMajor(), info.getLab());
     }
+
+    public static SeniorProfileResponse mapToSeniorProfile(Senior senior) {
+        User user = new User();
+        Info info = senior.getInfo();
+        return new SeniorProfileResponse(user.getNickName(), user.getProfile(),
+                info.getPostgradu(), info.getMajor(), info.getLab());
+    }
 }

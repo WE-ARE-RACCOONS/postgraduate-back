@@ -1,6 +1,7 @@
 package com.postgraduate.domain.senior.application.usecase;
 
 import com.postgraduate.domain.senior.application.dto.res.*;
+import com.postgraduate.domain.senior.application.mapper.SeniorMapper;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.domain.senior.domain.service.SeniorUpdateService;
@@ -43,5 +44,11 @@ public class SeniorInfoUseCase {
             selectSeniors.add(mapToSeniorField(senior));
         }
         return new AllSeniorFieldResponse(selectSeniors);
+    }
+
+    public SeniorProfileResponse getSeniorProfile(Long seniorId) {
+        Senior senior = seniorGetService.bySeniorId(seniorId);
+        SeniorProfileResponse seniorProfileResponse = mapToSeniorProfile(senior);
+        return seniorProfileResponse;
     }
 }

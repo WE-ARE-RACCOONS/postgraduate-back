@@ -94,6 +94,13 @@ public class SeniorController {
         return ResponseDto.create(SENIOR_FIND.getCode(), GET_SENIOR_INFO.getMessage(), seniorDetail);
     }
 
+    @GetMapping("/{seniorId}/profile")
+    @Operation(summary = "대학원생 닉네임~연구실 등 기본 정보 확인", description = "신청서 완료 후 결제시 노출 필요")
+    public ResponseDto<SeniorProfileResponse> getSeniorProfile(@PathVariable Long seniorId) {
+        SeniorProfileResponse seniorProfile = seniorInfoUseCase.getSeniorProfile(seniorId);
+        return ResponseDto.create(SENIOR_FIND.getCode(), GET_SENIOR_INFO.getMessage(), seniorProfile);
+    }
+
     @GetMapping("/search")
     @Operation(summary = "대학원생 검색어 검색", description = "find 필수, sort 선택 - 안보낼 경우 아예 파라미터 추가x (조회수 낮은순 low, 높은순 high), page선택 (안보내면 기본 1페이지)")
     public ResponseDto<AllSeniorSearchResponse> getSearchSenior(@RequestParam String find,
