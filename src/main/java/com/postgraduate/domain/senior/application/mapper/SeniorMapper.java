@@ -14,6 +14,7 @@ import com.postgraduate.domain.senior.domain.entity.constant.Postgradu;
 import com.postgraduate.domain.senior.domain.entity.constant.Status;
 import com.postgraduate.domain.user.domain.entity.User;
 
+import java.util.Arrays;
 import java.util.HashSet;
 
 public class SeniorMapper {
@@ -173,11 +174,13 @@ public class SeniorMapper {
         User user = senior.getUser();
         Info info = senior.getInfo();
         Profile profile = senior.getProfile();
-        String[] keyword = info.getKeyword().split(",");
+        String keyword = info.getKeyword();
+        String[] allKeywords = keyword.split(",");
+        String[] keywords = Arrays.copyOf(allKeywords, Math.min(3, allKeywords.length));
 
         return new SeniorSearchResponse(senior.getSeniorId(), user.getProfile(), user.getNickName(),
                 info.getPostgradu(), info.getMajor(), info.getLab(),
-                profile.getOneLiner(), keyword);
+                profile.getOneLiner(), keywords);
     }
 
     public static SeniorFieldResponse mapToSeniorField(Senior senior) {
