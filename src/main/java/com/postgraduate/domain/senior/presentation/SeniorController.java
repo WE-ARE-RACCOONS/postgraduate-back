@@ -112,10 +112,10 @@ public class SeniorController {
 
     @GetMapping("/field")
     @Operation(summary = "대학원생 필드 검색", description = "분야 (분야1,분야2 이런식으로, 다른분야 : others), 대학원 필수 (대학원1,대학원2 이런식으로, 다른학교 : others, 전체 : all), 페이지 선택 ")
-    public ResponseDto<AllSeniorFieldResponse> getFieldSenior(@RequestParam String field,
+    public ResponseDto<AllSeniorSearchResponse> getFieldSenior(@RequestParam String field,
                                                                 @RequestParam String postgradu,
                                                                 @RequestParam(required = false) Integer page) {
-        AllSeniorFieldResponse fieldSenior = seniorInfoUseCase.getFieldSenior(field, postgradu, page);
-        return ResponseDto.create(SENIOR_FIND.getCode(), GET_SENIOR_LIST_INFO.getMessage(), fieldSenior);
+        AllSeniorSearchResponse searchSenior = seniorInfoUseCase.getFieldSenior(field, postgradu, page);
+        return ResponseDto.create(SENIOR_FIND.getCode(), GET_SENIOR_LIST_INFO.getMessage(), searchSenior);
     }
 }
