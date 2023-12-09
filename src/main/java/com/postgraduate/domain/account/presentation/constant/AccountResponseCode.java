@@ -11,6 +11,6 @@ public enum AccountResponseCode {
     ACCOUNT_CREATE("ACT202"),
     ACCOUNT_DELETE("ACT203"),
 
-    ACCOUNT_NOT_FOUND("AE400");
+    ACCOUNT_NOT_FOUND("EX1000");
     private final String code;
 }
