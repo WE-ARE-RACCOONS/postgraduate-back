@@ -22,7 +22,7 @@ import static com.postgraduate.domain.salary.presentation.constant.SalaryRespons
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/salary")
-@Tag(name = "SALARY Controller")
+@Tag(name = "SALARY Controller", description = "정산의 모든 API는 토큰이 필요합니다.")
 public class SalaryController {
     private final SalaryInfoUseCase salaryInfoUseCase;
 

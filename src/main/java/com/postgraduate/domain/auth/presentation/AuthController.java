@@ -68,7 +68,7 @@ public class AuthController {
     }
 
     @PostMapping("/senior/change")
-    @Operation(summary = "선배로 업데이트", description = "대학생 대학원생으로 변경")
+    @Operation(summary = "선배로 업데이트 | 토큰 필요", description = "대학생 대학원생으로 변경")
     public ResponseDto<JwtTokenResponse> changeSenior(@AuthenticationPrincipal User user,
                                                       @RequestBody @Valid SeniorChangeRequest changeRequest) {
         User changeUser = signUpUseCase.changeSenior(user, changeRequest);
@@ -78,7 +78,7 @@ public class AuthController {
 
 
     @PostMapping("/refresh")
-    @Operation(summary = "토큰 재발급 - 토큰 필요", description = "refreshToken 으로 토큰 재발급")
+    @Operation(summary = "토큰 재발급 | 토큰 필요", description = "refreshToken 으로 토큰 재발급")
     public ResponseDto<JwtTokenResponse> refresh(@AuthenticationPrincipal User user, HttpServletRequest request) {
         JwtTokenResponse jwtToken = jwtUseCase.regenerateToken(user, request);
         return ResponseDto.create(AUTH_UPDATE.getCode(), SUCCESS_REGENERATE_TOKEN.getMessage(), jwtToken);

@@ -28,7 +28,7 @@ public class SeniorController {
     private final SeniorInfoUseCase seniorInfoUseCase;
 
     @PatchMapping("/certification")
-    @Operation(summary = "대학원생 인증", description = "이미지 업로드 이후 url 담아서 요청")
+    @Operation(summary = "대학원생 인증 | 토큰 필요", description = "이미지 업로드 이후 url 담아서 요청")
     public ResponseDto updateCertification(@AuthenticationPrincipal User user,
                                            @RequestBody @Valid SeniorCertificationRequest certificationRequest) {
         seniorManageUseCase.updateCertification(user, certificationRequest);
@@ -36,7 +36,7 @@ public class SeniorController {
     }
 
     @PatchMapping("/profile")
-    @Operation(summary = "대학원생 프로필 등록")
+    @Operation(summary = "대학원생 프로필 등록 | 토큰 필요")
     public ResponseDto singUpSenior(@AuthenticationPrincipal User user,
                                     @RequestBody @Valid SeniorProfileRequest profileRequest) {
         seniorManageUseCase.signUpProfile(user, profileRequest);
@@ -44,7 +44,7 @@ public class SeniorController {
     }
 
     @PostMapping("/account")
-    @Operation(summary = "대학원생 정산 계좌 생성")
+    @Operation(summary = "대학원생 정산 계좌 생성 | 토큰 필요")
     public ResponseDto updateAccount(@AuthenticationPrincipal User user,
                                      @RequestBody @Valid SeniorAccountRequest accountRequest) {
         seniorManageUseCase.saveAccount(user, accountRequest);
@@ -52,21 +52,21 @@ public class SeniorController {
     }
 
     @GetMapping("/me")
-    @Operation(summary = "대학원생 마이페이지 기본 정보 조회", description = "닉네임, 프로필 사진, 인증 여부")
+    @Operation(summary = "대학원생 마이페이지 기본 정보 조회 | 토큰 필요", description = "닉네임, 프로필 사진, 인증 여부")
     public ResponseDto<SeniorMyPageResponse> getSeniorInfo(@AuthenticationPrincipal User user) {
         SeniorMyPageResponse seniorMyPageResponse = seniorMyPageUseCase.getSeniorInfo(user);
         return ResponseDto.create(SENIOR_FIND.getCode(), GET_SENIOR_INFO.getMessage(), seniorMyPageResponse);
     }
 
     @GetMapping("/me/profile")
-    @Operation(summary = "대학원생 마이페이지 프로필 수정시 기존 정보 조회")
+    @Operation(summary = "대학원생 마이페이지 프로필 수정시 기존 정보 조회 | 토큰 필요")
     public ResponseDto<SeniorMyPageProfileResponse> getSeniorProfile(@AuthenticationPrincipal User user) {
         SeniorMyPageProfileResponse myPageProfile = seniorMyPageUseCase.getSeniorMyPageProfile(user);
         return ResponseDto.create(SENIOR_FIND.getCode(), GET_SENIOR_MYPAGE_PROFILE.getMessage(), myPageProfile);
     }
 
     @PatchMapping("/me/profile")
-    @Operation(summary = "대학원생 마이페이지 프로필 수정")
+    @Operation(summary = "대학원생 마이페이지 프로필 수정 | 토큰 필요")
     public ResponseDto updateSeniorProfile(@AuthenticationPrincipal User user,
                                            @RequestBody @Valid SeniorMyPageProfileRequest myPageProfileRequest) {
         seniorManageUseCase.updateSeniorMyPageProfile(user, myPageProfileRequest);
@@ -74,14 +74,14 @@ public class SeniorController {
     }
 
     @GetMapping("/me/account")
-    @Operation(summary = "대학원생 마이페이지 계정 설정시 기존 정보 조회")
+    @Operation(summary = "대학원생 마이페이지 계정 설정시 기존 정보 조회 | 토큰 필요")
     public ResponseDto<SeniorMyPageUserAccountResponse> getSeniorUserAccount(@AuthenticationPrincipal User user) {
         SeniorMyPageUserAccountResponse seniorOriginInfo = seniorMyPageUseCase.getSeniorMyPageUserAccount(user);
         return ResponseDto.create(SENIOR_FIND.getCode(), GET_SENIOR_MYPAGE_ACCOUNT.getMessage(), seniorOriginInfo);
     }
 
     @PatchMapping("/me/account")
-    @Operation(summary = "대학원생 마이페이지 계정 설정")
+    @Operation(summary = "대학원생 마이페이지 계정 설정 | 토큰 필요")
     public ResponseDto updateSeniorUserAccount(@AuthenticationPrincipal User user,
                                                @RequestBody @Valid SeniorMyPageUserAccountRequest myPageUserAccountRequest) {
         seniorManageUseCase.updateSeniorMyPageUserAccount(user, myPageUserAccountRequest);

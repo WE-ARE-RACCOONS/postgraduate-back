@@ -32,7 +32,7 @@ import static com.postgraduate.domain.wish.presentation.constant.WishResponseMes
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/admin")
-@Tag(name = "ADMIN Controller")
+@Tag(name = "ADMIN Controller", description = "관리자의 모든 API는 토큰이 필요합니다.")
 public class AdminController {
     private final SeniorManageByAdminUseCase seniorManageUseCase;
     private final UserManageByAdminUseCase userManageUseCase;
@@ -56,7 +56,8 @@ public class AdminController {
 
     @PatchMapping("/certification/{seniorId}")
     @Operation(summary = "[관리자] 선배 프로필 승인 요청 응답", description = "선배 승인 신청한 유저를 승인 또는 거부합니다.")
-    public ResponseDto updateSeniorStatus(@PathVariable Long seniorId, @RequestBody @Valid SeniorStatusRequest request) {
+    public ResponseDto updateSeniorStatus(@PathVariable Long seniorId,
+                                          @RequestBody @Valid SeniorStatusRequest request) {
         seniorManageUseCase.updateSeniorStatus(seniorId, request);
         return ResponseDto.create(SENIOR_UPDATE.getCode(), UPDATE_STATUS.getMessage());
     }

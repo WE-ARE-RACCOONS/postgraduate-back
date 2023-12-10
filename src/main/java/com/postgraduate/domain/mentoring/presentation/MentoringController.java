@@ -23,7 +23,7 @@ import static com.postgraduate.domain.mentoring.presentation.constant.MentoringR
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("mentoring")
-@Tag(name = "MENTORING Controller")
+@Tag(name = "MENTORING Controller", description = "멘토링의 모든 API는 토큰이 필요합니다.")
 public class MentoringController {
     private final MentoringUserInfoUseCase userInfoUseCase;
     private final MentoringSeniorInfoUseCase seniorInfoUseCase;
