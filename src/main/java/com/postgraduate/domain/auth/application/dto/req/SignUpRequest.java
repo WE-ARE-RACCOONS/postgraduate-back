@@ -1,24 +1,18 @@
 package com.postgraduate.domain.auth.application.dto.req;
 
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
-@Getter
-@AllArgsConstructor
-@NoArgsConstructor
-public class SignUpRequest {
-    @NotNull
-    private Long socialId;
-    @NotNull
-    private String phoneNumber;
-    @NotNull
-    private String nickName;
-    @NotNull
-    private Boolean marketingReceive;
-    private String major;
-    private String field;
-    @NotNull
-    private Boolean matchingReceive;
-}
+public record SignUpRequest(
+        @NotNull
+        Long socialId,
+        @NotNull
+        String phoneNumber,
+        @NotNull
+        String nickName,
+        @NotNull
+        Boolean marketingReceive,
+        String major,
+        String field,
+        @NotNull
+        Boolean matchingReceive
+) { }

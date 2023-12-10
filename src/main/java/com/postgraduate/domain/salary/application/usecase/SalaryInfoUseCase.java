@@ -1,6 +1,7 @@
 package com.postgraduate.domain.salary.application.usecase;
 
-import com.postgraduate.domain.salary.application.dto.res.SalaryDetailResponse;
+import com.postgraduate.domain.salary.application.dto.SalaryDetails;
+import com.postgraduate.domain.salary.application.dto.res.SalaryDetailsResponse;
 import com.postgraduate.domain.salary.application.dto.res.SalaryInfoResponse;
 import com.postgraduate.domain.salary.application.mapper.SalaryMapper;
 import com.postgraduate.domain.salary.domain.entity.Salary;
@@ -33,11 +34,12 @@ public class SalaryInfoUseCase {
         return new SalaryInfoResponse(salaryDate, amount); //TODO 수수료
     }
 
-    public List<SalaryDetailResponse> getSalaryDetail(User user, Boolean status) {
+    public SalaryDetailsResponse getSalaryDetail(User user, Boolean status) {
         Senior senior = seniorGetService.byUser(user);
         List<Salary> salaries = salaryGetService.bySeniorAndStatus(senior, status);
-        return salaries.stream()
+        List<SalaryDetails> salaryDetails = salaries.stream()
                 .map(SalaryMapper::mapToSalaryDetail)
                 .toList();
+        return new SalaryDetailsResponse(salaryDetails);
     }
 }

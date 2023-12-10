@@ -10,26 +10,26 @@ import static com.postgraduate.domain.user.domain.entity.constant.Role.SENIOR;
 
 public class UserMapper {
     public static UserMyPageResponse mapToMyPageInfo(User user) {
-        return UserMyPageResponse.builder()
-                .nickName(user.getNickName())
-                .profile(user.getProfile())
-                .build();
+        return new UserMyPageResponse(
+                user.getNickName(),
+                user.getProfile()
+        );
     }
 
     public static UserInfoResponse mapToInfo(User user) {
-        return UserInfoResponse.builder()
-                .profile(user.getProfile())
-                .nickName(user.getNickName())
-                .phoneNumber(user.getPhoneNumber())
-                .build();
+        return new UserInfoResponse(
+                user.getProfile(),
+                user.getNickName(),
+                user.getPhoneNumber()
+        );
     }
 
     public static User mapToUser(SignUpRequest request) {
         return User.builder()
-                .socialId(request.getSocialId())
-                .nickName(request.getNickName())
-                .phoneNumber(request.getPhoneNumber())
-                .marketingReceive(request.getMarketingReceive())
+                .socialId(request.socialId())
+                .nickName(request.nickName())
+                .phoneNumber(request.phoneNumber())
+                .marketingReceive(request.marketingReceive())
                 .build();
     }
 

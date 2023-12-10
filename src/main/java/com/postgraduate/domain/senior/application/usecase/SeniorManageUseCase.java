@@ -35,7 +35,7 @@ public class SeniorManageUseCase {
 
     public void updateCertification(User user, SeniorCertificationRequest certificationRequest) {
         Senior senior = seniorGetService.byUser(user);
-        seniorUpdateService.updateCertification(senior, certificationRequest.getCertification());
+        seniorUpdateService.updateCertification(senior, certificationRequest.certification());
     }
 
     public void signUpProfile(User user, SeniorProfileRequest profileRequest) {
@@ -46,7 +46,7 @@ public class SeniorManageUseCase {
 
     public void saveAccount(User user, SeniorAccountRequest accountRequest) {
         Senior senior = seniorGetService.byUser(user);
-        String accountNumber = encryptorUtils.encryptData(accountRequest.getAccountNumber());
+        String accountNumber = encryptorUtils.encryptData(accountRequest.accountNumber());
         accountSaveService.saveAccount(mapToAccount(senior, accountRequest, accountNumber));
     }
 

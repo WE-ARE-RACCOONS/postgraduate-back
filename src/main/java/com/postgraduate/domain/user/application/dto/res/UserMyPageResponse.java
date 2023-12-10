@@ -1,13 +1,10 @@
 package com.postgraduate.domain.user.application.dto.res;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
+import jakarta.validation.constraints.NotNull;
 
-@Getter
-@Builder
-@AllArgsConstructor
-public class UserMyPageResponse {
-    private String nickName;
-    private String profile;
-}
+public record UserMyPageResponse(
+        @NotNull
+        String nickName,
+        @NotNull
+        String profile
+) { }

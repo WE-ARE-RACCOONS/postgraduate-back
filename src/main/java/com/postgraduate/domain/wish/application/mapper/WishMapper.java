@@ -8,9 +8,9 @@ public class WishMapper {
     public static Wish mapToWish(User user, SignUpRequest request) {
         return Wish.builder()
                 .user(user)
-                .major(request.getMajor())
-                .field(request.getField())
-                .matchingReceive(request.getMatchingReceive())
+                .major(request.major())
+                .field(request.field())
+                .matchingReceive(request.matchingReceive())
                 .build();
     }
 }

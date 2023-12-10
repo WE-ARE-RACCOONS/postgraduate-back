@@ -44,7 +44,7 @@ public class SeniorManageByAdminUseCase {
 
     public void updateSeniorStatus(Long seniorId, SeniorStatusRequest request) {
         Senior senior = seniorGetService.bySeniorId(seniorId);
-        seniorUpdateService.updateCertificationStatus(senior, request.getStatus());
+        seniorUpdateService.updateCertificationStatus(senior, request.certificationStatus());
     }
 
     public SeniorManageResponse getSeniors() {

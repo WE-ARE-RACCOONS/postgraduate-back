@@ -58,21 +58,21 @@ public class SeniorMapper {
 
     public static Profile mapToProfile(SeniorProfileRequest profileRequest) {
         return Profile.builder()
-                .info(profileRequest.getInfo())
-                .chatLink(profileRequest.getChatLink())
-                .oneLiner(profileRequest.getOneLiner())
-                .target(profileRequest.getTarget())
-                .time(profileRequest.getTime())
+                .info(profileRequest.info())
+                .chatLink(profileRequest.chatLink())
+                .oneLiner(profileRequest.oneLiner())
+                .target(profileRequest.target())
+                .time(profileRequest.time())
                 .build();
     }
 
     public static Profile mapToProfile(SeniorMyPageProfileRequest profileRequest) {
         return Profile.builder()
-                .info(profileRequest.getInfo())
-                .chatLink(profileRequest.getChatLink())
-                .oneLiner(profileRequest.getOneLiner())
-                .target(profileRequest.getTarget())
-                .time(profileRequest.getTime())
+                .info(profileRequest.info())
+                .chatLink(profileRequest.chatLink())
+                .oneLiner(profileRequest.oneLiner())
+                .target(profileRequest.target())
+                .time(profileRequest.time())
                 .build();
     }
 
@@ -122,16 +122,16 @@ public class SeniorMapper {
         Profile profile = senior.getProfile();
         String[] keyword = info.getKeyword().split(",");
         String[] field = info.getField().split(",");
-        return SeniorMyPageProfileResponse.builder()
-                .lab(info.getLab())
-                .keyword(keyword)
-                .field(field)
-                .info(profile.getInfo())
-                .target(profile.getTarget())
-                .chatLink(profile.getChatLink())
-                .oneLiner(profile.getOneLiner())
-                .time(profile.getTime())
-                .build();
+        return new SeniorMyPageProfileResponse(
+                info.getLab(),
+                keyword,
+                profile.getInfo(),
+                profile.getTarget(),
+                profile.getChatLink(),
+                field,
+                profile.getOneLiner(),
+                profile.getTime()
+        );
     }
 
     public static SeniorMyPageUserAccountResponse mapToMyPageUserAccount(Senior senior, Account account, String accountNumber) {
@@ -154,20 +154,22 @@ public class SeniorMapper {
     }
 
     public static SeniorDetailResponse mapToSeniorDetail(Senior senior) {
-        String[] keyword = senior.getInfo().getKeyword().split(",");
-        return SeniorDetailResponse.builder()
-                .nickName(senior.getUser().getNickName())
-                .profile(senior.getUser().getProfile())
-                .postgradu(senior.getInfo().getPostgradu())
-                .major(senior.getInfo().getMajor())
-                .lab(senior.getInfo().getLab())
-                .professor(senior.getInfo().getProfessor())
-                .keyword(keyword)
-                .info(senior.getProfile().getInfo())
-                .oneLiner(senior.getProfile().getOneLiner())
-                .target(senior.getProfile().getTarget())
-                .time(senior.getProfile().getTime())
-                .build();
+        Info info = senior.getInfo();
+        Profile profile = senior.getProfile();
+        String[] keyword = info.getKeyword().split(",");
+        return new SeniorDetailResponse(
+                senior.getUser().getNickName(),
+                senior.getUser().getProfile(),
+                info.getPostgradu(),
+                info.getMajor(),
+                info.getLab(),
+                info.getProfessor(),
+                keyword,
+                profile.getInfo(),
+                profile.getOneLiner(),
+                profile.getTarget(),
+                profile.getTime()
+        );
     }
 
     public static SeniorSearchResponse mapToSeniorSearch(Senior senior) {

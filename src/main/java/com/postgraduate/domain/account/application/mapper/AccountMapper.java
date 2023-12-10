@@ -10,8 +10,8 @@ public class AccountMapper {
         return Account.builder()
                 .senior(senior)
                 .accountNumber(accountNumber)
-                .accountHolder(accountRequest.getAccountHolder())
-                .bank(accountRequest.getBank())
+                .accountHolder(accountRequest.accountHolder())
+                .bank(accountRequest.bank())
                 .build();
     }
 
