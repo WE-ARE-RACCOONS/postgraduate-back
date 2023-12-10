@@ -81,9 +81,9 @@ public class MentoringMapper {
         return Mentoring.builder()
                 .user(user)
                 .senior(senior)
-                .topic(request.getTopic())
-                .question(request.getQuestion())
-                .date(request.getDate())
+                .topic(request.topic())
+                .question(request.question())
+                .date(request.date())
                 .build();
     }
 
