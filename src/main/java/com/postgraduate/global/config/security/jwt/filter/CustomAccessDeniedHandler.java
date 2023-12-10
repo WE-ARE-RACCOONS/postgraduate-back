@@ -13,8 +13,8 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
-import static com.postgraduate.domain.auth.presentation.contant.AuthResponseCode.AUTH_DENIED;
-import static com.postgraduate.domain.auth.presentation.contant.AuthResponseMessage.PERMISSION_DENIED;
+import static com.postgraduate.domain.auth.presentation.constant.AuthResponseCode.AUTH_DENIED;
+import static com.postgraduate.domain.auth.presentation.constant.AuthResponseMessage.PERMISSION_DENIED;
 
 @Component
 @RequiredArgsConstructor
