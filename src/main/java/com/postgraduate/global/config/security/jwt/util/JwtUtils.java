@@ -117,9 +117,9 @@ public class JwtUtils {
         try {
             Claims claims = parseClaims(token);
             if (!claims.get(TYPE).equals(type.name()))
-                throw new IllegalArgumentException();
+                throw new InvalidTokenException();
             return true;
-        } catch (SignatureException | UnsupportedJwtException | IllegalArgumentException | MalformedJwtException e) {
+        } catch (ApplicationException | SignatureException | UnsupportedJwtException | IllegalArgumentException | MalformedJwtException e) {
             jwtExceptionHandler(response, new InvalidTokenException());
             return false;
         } catch (ExpiredJwtException e) {
