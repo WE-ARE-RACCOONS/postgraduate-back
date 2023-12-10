@@ -1,9 +1,10 @@
-package com.postgraduate.domain.auth.application.usecase.kakao;
+package com.postgraduate.domain.auth.application.usecase.oauth.kakao;
 
-import com.postgraduate.domain.auth.application.dto.req.KakaoCodeRequest;
+import com.postgraduate.domain.auth.application.dto.req.CodeRequest;
 import com.postgraduate.domain.auth.application.dto.res.AuthUserResponse;
 import com.postgraduate.domain.auth.application.dto.res.KakaoUserInfoResponse;
 import com.postgraduate.domain.auth.application.mapper.AuthMapper;
+import com.postgraduate.domain.auth.application.usecase.SignInUseCase;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.service.UserGetService;
 import lombok.RequiredArgsConstructor;
@@ -15,12 +16,13 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class KakaoSignInUseCase {
+public class KakaoSignInUseCase implements SignInUseCase {
     private final KakaoAccessTokenUseCase kakaoTokenUseCase;
     private final UserGetService userGetService;
 
-    public AuthUserResponse getUser(KakaoCodeRequest codeRequest) {
-        KakaoUserInfoResponse userInfo = kakaoTokenUseCase.getKakaoToken(codeRequest);
+    @Override
+    public AuthUserResponse getUser(CodeRequest codeRequest) {
+        KakaoUserInfoResponse userInfo = kakaoTokenUseCase.getAccessToken(codeRequest);
         Long socialId = userInfo.getId();
         Optional<User> user = userGetService.bySocialId(socialId);
         return AuthMapper.mapToAuthUser(user, socialId);

@@ -14,6 +14,7 @@ import com.postgraduate.domain.senior.domain.entity.constant.Postgradu;
 import com.postgraduate.domain.senior.domain.entity.constant.Status;
 import com.postgraduate.domain.user.domain.entity.User;
 
+import java.util.Arrays;
 import java.util.HashSet;
 
 public class SeniorMapper {
@@ -95,19 +96,19 @@ public class SeniorMapper {
                 .lab(request.lab())
                 .keyword(request.keyword())
                 .field(request.field())
-                .etcPostgradu(false)
-                .etcField(false)
+                .etcPostgradu(true)
+                .etcField(true)
                 .totalInfo(request.major() + request.lab() + request.field()
                         + request.professor() + request.postgradu() + request.keyword());
 
         for (String field : fields) {
-            if (!fieldNames.contains(field)) {
-                infoBuilder.etcField(true);
+            if (fieldNames.contains(field)) {
+                infoBuilder.etcField(false);
                 break;
             }
         }
-        if (!postgraduNames.contains(request.postgradu()))
-            infoBuilder.etcPostgradu(true);
+        if (postgraduNames.contains(request.postgradu()))
+            infoBuilder.etcPostgradu(false);
         return infoBuilder.build();
     }
 
@@ -173,7 +174,8 @@ public class SeniorMapper {
         User user = senior.getUser();
         Info info = senior.getInfo();
         Profile profile = senior.getProfile();
-        String[] keyword = info.getKeyword().split(",");
+        String[] allKeywords = info.getKeyword().split(",");
+        String[] keyword = Arrays.copyOf(allKeywords, Math.min(3, allKeywords.length));
 
         return new SeniorSearchResponse(senior.getSeniorId(), user.getProfile(), user.getNickName(),
                 info.getPostgradu(), info.getMajor(), info.getLab(),
@@ -184,6 +186,13 @@ public class SeniorMapper {
         User user = senior.getUser();
         Info info = senior.getInfo();
         return new SeniorFieldResponse(senior.getSeniorId(), user.getProfile(), user.getNickName(),
+                info.getPostgradu(), info.getMajor(), info.getLab());
+    }
+
+    public static SeniorProfileResponse mapToSeniorProfile(Senior senior) {
+        User user = senior.getUser();
+        Info info = senior.getInfo();
+        return new SeniorProfileResponse(user.getNickName(), user.getProfile(),
                 info.getPostgradu(), info.getMajor(), info.getLab());
     }
 }

@@ -95,6 +95,13 @@ public class SeniorController {
         return ResponseDto.create(SENIOR_FIND.getCode(), GET_SENIOR_INFO.getMessage(), seniorDetail);
     }
 
+    @GetMapping("/{seniorId}/profile")
+    @Operation(summary = "대학원생 닉네임~연구실 등 기본 정보 확인", description = "신청서 완료 후 결제시 노출 필요")
+    public ResponseDto<SeniorProfileResponse> getSeniorProfile(@PathVariable Long seniorId) {
+        SeniorProfileResponse seniorProfile = seniorInfoUseCase.getSeniorProfile(seniorId);
+        return ResponseDto.create(SENIOR_FIND.getCode(), GET_SENIOR_INFO.getMessage(), seniorProfile);
+    }
+
     @GetMapping("/search")
     @Operation(summary = "대학원생 검색어 검색", description = "find 필수, sort 선택 - 안보낼 경우 아예 파라미터 추가x (조회수 낮은순 low, 높은순 high), page선택 (안보내면 기본 1페이지)")
     public ResponseDto<AllSeniorSearchResponse> getSearchSenior(@RequestParam String find,
@@ -106,10 +113,10 @@ public class SeniorController {
 
     @GetMapping("/field")
     @Operation(summary = "대학원생 필드 검색", description = "분야 (분야1,분야2 이런식으로, 다른분야 : others), 대학원 필수 (대학원1,대학원2 이런식으로, 다른학교 : others, 전체 : all), 페이지 선택 ")
-    public ResponseDto<AllSeniorFieldResponse> getFieldSenior(@RequestParam String field,
+    public ResponseDto<AllSeniorSearchResponse> getFieldSenior(@RequestParam String field,
                                                                 @RequestParam String postgradu,
                                                                 @RequestParam(required = false) Integer page) {
-        AllSeniorFieldResponse fieldSenior = seniorInfoUseCase.getFieldSenior(field, postgradu, page);
-        return ResponseDto.create(SENIOR_FIND.getCode(), GET_SENIOR_LIST_INFO.getMessage(), fieldSenior);
+        AllSeniorSearchResponse searchSenior = seniorInfoUseCase.getFieldSenior(field, postgradu, page);
+        return ResponseDto.create(SENIOR_FIND.getCode(), GET_SENIOR_LIST_INFO.getMessage(), searchSenior);
     }
 }
