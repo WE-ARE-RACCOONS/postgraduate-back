@@ -15,8 +15,4 @@ public class SeniorAccountRequest {
     private String bank;
     @NotNull
     private String accountHolder;
-    @NotNull
-    private String name;
-    @NotNull
-    private String rrn;
 }

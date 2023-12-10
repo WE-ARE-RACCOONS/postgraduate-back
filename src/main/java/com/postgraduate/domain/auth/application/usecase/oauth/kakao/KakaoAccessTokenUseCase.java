@@ -1,6 +1,6 @@
-package com.postgraduate.domain.auth.application.usecase.kakao;
+package com.postgraduate.domain.auth.application.usecase.oauth.kakao;
 
-import com.postgraduate.domain.auth.application.dto.req.KakaoCodeRequest;
+import com.postgraduate.domain.auth.application.dto.req.CodeRequest;
 import com.postgraduate.domain.auth.application.dto.res.KakaoTokenInfoResponse;
 import com.postgraduate.domain.auth.application.dto.res.KakaoUserInfoResponse;
 import com.postgraduate.domain.auth.exception.KakaoCodeException;
@@ -31,8 +31,8 @@ public class KakaoAccessTokenUseCase {
     private static final String KAKAO_TOKEN_URI = "https://kauth.kakao.com/oauth/token";
     private static final String USER_INFO_URI = "https://kapi.kakao.com/v2/user/me";
 
-    public KakaoUserInfoResponse getKakaoToken(KakaoCodeRequest codeRequest) {
-        MultiValueMap<String, String> requestBody = getRequestBody(codeRequest.getCode());
+    public KakaoUserInfoResponse getAccessToken (CodeRequest codeRequest) {
+        MultiValueMap<String, String> requestBody = getRequestBody(codeRequest.code());
         try {
             KakaoTokenInfoResponse tokenInfoResponse = webClient.post()
                     .uri(KAKAO_TOKEN_URI)

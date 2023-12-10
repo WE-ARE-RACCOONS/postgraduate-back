@@ -1,14 +1,15 @@
 package com.postgraduate.domain.auth.presentation;
 
-import com.postgraduate.domain.auth.application.dto.req.KakaoCodeRequest;
+import com.postgraduate.domain.auth.application.dto.req.CodeRequest;
 import com.postgraduate.domain.auth.application.dto.req.SeniorChangeRequest;
 import com.postgraduate.domain.auth.application.dto.req.SeniorSignUpRequest;
 import com.postgraduate.domain.auth.application.dto.req.SignUpRequest;
 import com.postgraduate.domain.auth.application.dto.res.AuthUserResponse;
 import com.postgraduate.domain.auth.application.dto.res.JwtTokenResponse;
+import com.postgraduate.domain.auth.application.usecase.oauth.SelectOauth;
 import com.postgraduate.domain.auth.application.usecase.SignUpUseCase;
 import com.postgraduate.domain.auth.application.usecase.jwt.JwtUseCase;
-import com.postgraduate.domain.auth.application.usecase.kakao.KakaoSignInUseCase;
+import com.postgraduate.domain.auth.application.usecase.SignInUseCase;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.global.dto.ResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,19 +29,26 @@ import static com.postgraduate.domain.senior.presentation.constant.SeniorRespons
 @RequestMapping("/auth")
 @Tag(name = "AUTH Controller")
 public class AuthController {
-    private final KakaoSignInUseCase kakaoSignInUseCase;
+    private final SelectOauth selectOauth;
     private final SignUpUseCase signUpUseCase;
     private final JwtUseCase jwtUseCase;
 
-    @PostMapping("/login")
-    @Operation(summary = "카카오 로그인", description = "회원인 경우 JWT를, 회원이 아닌 경우 socialId를 반환합니다(회원가입은 진행하지 않습니다).")
-    public ResponseDto<?> authLogin(@RequestBody KakaoCodeRequest request) {
-        AuthUserResponse authUser = kakaoSignInUseCase.getUser(request);
+    @PostMapping("/login/{provider}")
+    @Operation(summary = "소셜 로그인", description = "회원인 경우 JWT를, 회원이 아닌 경우 socialId를 반환합니다(회원가입은 진행하지 않습니다).")
+    public ResponseDto<?> authLogin(@RequestBody CodeRequest request, @PathVariable String provider) {
+        SignInUseCase signInUseCase = selectOauth.selectStrategy(provider);
+        AuthUserResponse authUser = signInUseCase.getUser(request);
         if (authUser.getUser().isEmpty())
             return ResponseDto.create(AUTH_NONE.getCode(), NOT_REGISTERED_USER.getMessage(), authUser);
         JwtTokenResponse jwtToken = jwtUseCase.signIn(authUser.getUser().get());
         return ResponseDto.create(AUTH_ALREADY.getCode(), SUCCESS_AUTH.getMessage(), jwtToken);
     }
+
+//    @PostMapping("/logout")
+//    @Operation(summary = "로그아웃", description = "토큰 같이 보내주세요")
+//    public ResponseDto logout() {
+//        return ResponseDto.create(AUTH_CREATE.getCode(), SUCCESS_AUTH.getMessage());
+//    }
 
     @PostMapping("/user/signup")
     @Operation(summary = "대학생 회원가입", description = "로그인 API에서 반환한 socialId, 닉네임, 번호, 마케팅 수신여부, 희망 학과, 희망 분야, 매칭 희망 여부")

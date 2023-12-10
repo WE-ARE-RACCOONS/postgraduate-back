@@ -17,6 +17,8 @@ import java.util.List;
 
 import static com.postgraduate.domain.senior.domain.entity.QSenior.senior;
 import static com.postgraduate.domain.senior.domain.entity.constant.Status.APPROVE;
+import static com.querydsl.core.types.Order.ASC;
+import static com.querydsl.core.types.Order.DESC;
 import static com.querydsl.core.types.dsl.Expressions.FALSE;
 import static com.querydsl.core.types.dsl.Expressions.TRUE;
 
@@ -32,7 +34,8 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
                         senior.info.totalInfo.like("%" + search + "%"),
                         senior.status.eq(APPROVE)
                 )
-                .orderBy(orderSpecifier(sort));
+                .orderBy(orderSpecifier(sort))
+                .orderBy(senior.user.nickName.asc());
 
         List<Senior> seniors = query.offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -45,11 +48,10 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
 
     private OrderSpecifier<?> orderSpecifier(String sort) {
         if (sort == null)
-            return new OrderSpecifier<>(Order.DESC, senior.hit);
-        return switch (sort) {
-            case "low" -> new OrderSpecifier<>(Order.ASC, senior.hit);
-            default -> new OrderSpecifier<>(Order.DESC, senior.hit);
-        };
+            return new OrderSpecifier<>(DESC, senior.hit);
+        if (sort.equals("low"))
+            return new OrderSpecifier<>(ASC, senior.hit);
+        return new OrderSpecifier<>(DESC, senior.hit);
     }
 
     @Override
@@ -60,7 +62,8 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
                         postgraduSpecifier(postgradu),
                         senior.status.eq(APPROVE)
                 )
-                .orderBy(senior.hit.desc());
+                .orderBy(senior.hit.desc())
+                .orderBy(senior.user.nickName.asc());
 
         List<Senior> seniors = query.offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
