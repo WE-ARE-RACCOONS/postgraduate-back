@@ -9,6 +9,7 @@ import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.global.dto.ResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +30,7 @@ public class SeniorController {
     @PatchMapping("/certification")
     @Operation(summary = "대학원생 인증", description = "이미지 업로드 이후 url 담아서 요청")
     public ResponseDto updateCertification(@AuthenticationPrincipal User user,
-                                           @RequestBody SeniorCertificationRequest certificationRequest) {
+                                           @RequestBody @Valid SeniorCertificationRequest certificationRequest) {
         seniorManageUseCase.updateCertification(user, certificationRequest);
         return ResponseDto.create(SENIOR_UPDATE.getCode(), UPDATE_CERTIFICATION.getMessage());
     }
@@ -37,7 +38,7 @@ public class SeniorController {
     @PatchMapping("/profile")
     @Operation(summary = "대학원생 프로필 등록")
     public ResponseDto singUpSenior(@AuthenticationPrincipal User user,
-                                    @RequestBody SeniorProfileRequest profileRequest) {
+                                    @RequestBody @Valid SeniorProfileRequest profileRequest) {
         seniorManageUseCase.signUpProfile(user, profileRequest);
         return ResponseDto.create(SENIOR_UPDATE.getCode(), UPDATE_PROFILE.getMessage());
     }
@@ -45,7 +46,7 @@ public class SeniorController {
     @PostMapping("/account")
     @Operation(summary = "대학원생 정산 계좌 생성")
     public ResponseDto updateAccount(@AuthenticationPrincipal User user,
-                                     @RequestBody SeniorAccountRequest accountRequest) {
+                                     @RequestBody @Valid SeniorAccountRequest accountRequest) {
         seniorManageUseCase.saveAccount(user, accountRequest);
         return ResponseDto.create(SENIOR_CREATE.getCode(), CREATE_ACCOUNT.getMessage());
     }
@@ -67,7 +68,7 @@ public class SeniorController {
     @PatchMapping("/me/profile")
     @Operation(summary = "대학원생 마이페이지 프로필 수정")
     public ResponseDto updateSeniorProfile(@AuthenticationPrincipal User user,
-                                        @RequestBody SeniorMyPageProfileRequest myPageProfileRequest) {
+                                           @RequestBody @Valid SeniorMyPageProfileRequest myPageProfileRequest) {
         seniorManageUseCase.updateSeniorMyPageProfile(user, myPageProfileRequest);
         return ResponseDto.create(SENIOR_UPDATE.getCode(), UPDATE_MYPAGE_PROFILE.getMessage());
     }
@@ -82,7 +83,7 @@ public class SeniorController {
     @PatchMapping("/me/account")
     @Operation(summary = "대학원생 마이페이지 계정 설정")
     public ResponseDto updateSeniorUserAccount(@AuthenticationPrincipal User user,
-                                           @RequestBody SeniorMyPageUserAccountRequest myPageUserAccountRequest) {
+                                               @RequestBody @Valid SeniorMyPageUserAccountRequest myPageUserAccountRequest) {
         seniorManageUseCase.updateSeniorMyPageUserAccount(user, myPageUserAccountRequest);
         return ResponseDto.create(SENIOR_UPDATE.getCode(), UPDATE_MYPAGE_ACCOOUNT.getMessage());
     }

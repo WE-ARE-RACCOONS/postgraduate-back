@@ -12,6 +12,7 @@ import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.global.dto.ResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -52,14 +53,16 @@ public class MentoringController {
 
     @GetMapping("/me/{mentoringId}")
     @Operation(summary = "[대학생] 신청한 멘토링 상세조회", description = "대학생이 신청한 멘토링을 상세조회합니다. <완료> 상태의 멘토링은 상세조회되지 않습니다.")
-    public ResponseDto<AppliedMentoringDetailResponse> getMentoringDetail(@AuthenticationPrincipal User user, @PathVariable Long mentoringId) {
+    public ResponseDto<AppliedMentoringDetailResponse> getMentoringDetail(@AuthenticationPrincipal User user,
+                                                                          @PathVariable Long mentoringId) {
         AppliedMentoringDetailResponse mentoringDetail = userInfoUseCase.getMentoringDetail(user, mentoringId);
         return ResponseDto.create(MENTORING_FIND.getCode(), GET_MENTORING_DETAIL_INFO.getMessage(), mentoringDetail);
     }
 
     @PostMapping("/applying")
     @Operation(summary = "[대학생] 멘토링 신청", description = "대학생이 멘토링을 신청합니다.")
-    public ResponseDto applyMentoring(@AuthenticationPrincipal User user, @RequestBody MentoringApplyRequest request) {
+    public ResponseDto applyMentoring(@AuthenticationPrincipal User user,
+                                      @RequestBody @Valid MentoringApplyRequest request) {
         applyUseCase.applyMentoring(user, request);
         return ResponseDto.create(MENTORING_CREATE.getCode(), CREATE_MENTORING.getMessage());
     }
@@ -103,7 +106,8 @@ public class MentoringController {
 
     @GetMapping("/senior/me/{mentoringId}")
     @Operation(summary = "[대학원생] 신청받은 멘토링 상세조회", description = "대학원생이 신청받은 멘토링을 상세조회합니다. <완료> 상태의 멘토링은 상세조회되지 않습니다.")
-    public ResponseDto<SeniorMentoringDetailResponse> getSeniorMentoringDetail(@AuthenticationPrincipal User user, @PathVariable Long mentoringId) {
+    public ResponseDto<SeniorMentoringDetailResponse> getSeniorMentoringDetail(@AuthenticationPrincipal User user,
+                                                                               @PathVariable Long mentoringId) {
         SeniorMentoringDetailResponse seniorMentoringDetail = seniorInfoUseCase.getSeniorMentoringDetail(user, mentoringId);
         return ResponseDto.create(MENTORING_FIND.getCode(), GET_MENTORING_DETAIL_INFO.getMessage(), seniorMentoringDetail);
     }
@@ -112,7 +116,7 @@ public class MentoringController {
     @Operation(summary = "[대학원생] 멘토링 상태 업데이트(예정된 멘토링)", description = "대학원생이 멘토링을 수락합니다.")
     public ResponseDto updateMentoringExpected(@AuthenticationPrincipal User user,
                                                @PathVariable Long mentoringId,
-                                               @RequestBody MentoringDateRequest dateRequest) {
+                                               @RequestBody @Valid MentoringDateRequest dateRequest) {
         Boolean accountPresent = manageUseCase.updateExpected(user, mentoringId, dateRequest);
         return ResponseDto.create(MENTORING_UPDATE.getCode(), UPDATE_MENTORING.getMessage(), accountPresent);
     }
@@ -121,7 +125,7 @@ public class MentoringController {
     @Operation(summary = "[대학원생] 멘토링 상태 업데이트(거절)", description = "대학원생이 멘토링을 거절하고 거절사유를 변경합니다.")
     public ResponseDto updateMentoringCancel(@AuthenticationPrincipal User user,
                                              @PathVariable Long mentoringId,
-                                             @RequestBody MentoringRefuseRequest request) {
+                                             @RequestBody @Valid MentoringRefuseRequest request) {
         manageUseCase.updateRefuse(user, mentoringId, request);
         return ResponseDto.create(MENTORING_UPDATE.getCode(), UPDATE_MENTORING.getMessage());
     }

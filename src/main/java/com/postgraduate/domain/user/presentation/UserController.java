@@ -10,6 +10,7 @@ import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.global.dto.ResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -41,8 +42,9 @@ public class UserController {
     }
 
     @PatchMapping("/me/info")
-    @Operation(summary = "대학생 마이페이지 정보 수정", description = "프로필사진, 닉네임, 번호")
-    public ResponseDto updateInfo(@AuthenticationPrincipal User user, @RequestBody UserInfoRequest userInfoRequest) {
+    @Operation(summary = "대학생 마이페이지 정보 수정 | 토큰 필요", description = "프로필사진, 닉네임, 번호")
+    public ResponseDto updateInfo(@AuthenticationPrincipal User user,
+                                  @RequestBody @Valid UserInfoRequest userInfoRequest) {
         manageUseCase.updateInfo(user, userInfoRequest);
         return ResponseDto.create(USER_UPDATE.getCode(), UPDATE_USER_INFO.getMessage());
     }
