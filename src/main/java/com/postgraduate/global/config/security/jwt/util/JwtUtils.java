@@ -1,4 +1,4 @@
-package com.postgraduate.global.config.security.jwt;
+package com.postgraduate.global.config.security.jwt.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.postgraduate.domain.user.exception.UserNotFoundException;
@@ -6,6 +6,7 @@ import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.entity.constant.Role;
 import com.postgraduate.global.auth.AuthDetails;
 import com.postgraduate.global.auth.AuthDetailsService;
+import com.postgraduate.global.config.security.jwt.constant.Type;
 import com.postgraduate.global.config.security.jwt.exception.InvalidRefreshTokenException;
 import com.postgraduate.global.config.security.jwt.exception.InvalidTokenException;
 import com.postgraduate.global.config.redis.RedisRepository;
@@ -35,10 +36,13 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import static com.postgraduate.global.config.security.jwt.constant.Type.ACCESS;
+import static com.postgraduate.global.config.security.jwt.constant.Type.REFRESH;
+
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class JwtProvider {
+public class JwtUtils {
     private final AuthDetailsService authDetailsService;
     private final RedisRepository redisRepository;
     private final LogService logService;
@@ -49,14 +53,18 @@ public class JwtProvider {
     private int refreshExpiration;
     @Value("${jwt.accessExpiration}")
     private int accessExpiration;
-    private final String ROLE = "role";
-    private final String REFRESH = "refresh";
-    private final String AUTHORIZATION = "Authorization";
+    private static final String ROLE = "role";
+    private static final String TYPE = "type";
+    private static final String AUTHORIZATION = "Authorization";
+    private static final int STATUS = 500;
+    private static final String CONTENT_TYPE = "application/json";
+    private static final String CHARACTER_ENCODING = "UTF-8";
 
     public String generateAccessToken(Long id, Role role) {
         Instant accessDate = LocalDateTime.now().plusSeconds(accessExpiration).atZone(ZoneId.systemDefault()).toInstant();
         return Jwts.builder()
                 .claim(ROLE, role)
+                .claim(TYPE, ACCESS)
                 .setSubject(String.valueOf(id))
                 .setExpiration(Date.from(accessDate))
                 .signWith(SignatureAlgorithm.HS256, secret)
@@ -67,12 +75,25 @@ public class JwtProvider {
         Instant refreshDate = LocalDateTime.now().plusSeconds(refreshExpiration).atZone(ZoneId.systemDefault()).toInstant();
         String refreshToken = Jwts.builder()
                 .claim(ROLE, role)
+                .claim(TYPE, REFRESH)
                 .setSubject(String.valueOf(id))
                 .setExpiration(Date.from(refreshDate))
                 .signWith(SignatureAlgorithm.HS256, secret)
                 .compact();
-        redisRepository.setValues(REFRESH + id, refreshToken, Duration.ofSeconds(refreshExpiration));
+        redisRepository.setValues(REFRESH.toString() + id, refreshToken, Duration.ofSeconds(refreshExpiration));
         return refreshToken;
+    }
+
+    public void checkRedis(Long id, HttpServletRequest request) {
+        String refreshToken = request.getHeader(AUTHORIZATION).split(" ")[1];
+        String redisToken = redisRepository.getValues(REFRESH.toString() + id)
+                .orElseThrow(NoneRefreshTokenException::new);
+        if (!redisToken.equals(refreshToken))
+            throw new InvalidRefreshTokenException();
+    }
+
+    public void makeExpired(Long id) {
+        redisRepository.deleteValues(REFRESH.toString() + id);
     }
 
     public Authentication getAuthentication(HttpServletResponse response, String token) throws UserNotFoundException {
@@ -92,9 +113,11 @@ public class JwtProvider {
         }
     }
 
-    public boolean validateToken(HttpServletResponse response, String token) {
+    public boolean validateToken(HttpServletResponse response, String token, Type type) {
         try {
-            parseClaims(token);
+            Claims claims = parseClaims(token);
+            if (!claims.get(TYPE).equals(type.name()))
+                throw new IllegalArgumentException();
             return true;
         } catch (SignatureException | UnsupportedJwtException | IllegalArgumentException | MalformedJwtException e) {
             jwtExceptionHandler(response, new InvalidTokenException());
@@ -105,23 +128,15 @@ public class JwtProvider {
         }
     }
 
-    public void checkRedis(Long id, HttpServletRequest request) {
-        String refreshToken = request.getHeader(AUTHORIZATION).split(" ")[1];
-        String redisToken = redisRepository.getValues(REFRESH + id)
-                .orElseThrow(NoneRefreshTokenException::new);
-        if (!redisToken.equals(refreshToken))
-            throw new InvalidRefreshTokenException();
-    }
-
-    public Claims parseClaims(String token) {
+    private Claims parseClaims(String token) {
         JwtParser parser = Jwts.parser().setSigningKey(secret);
         return parser.parseClaimsJws(token).getBody();
     }
 
     private void jwtExceptionHandler(HttpServletResponse response, ApplicationException ex) {
-        response.setStatus(500);
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
+        response.setStatus(STATUS);
+        response.setContentType(CONTENT_TYPE);
+        response.setCharacterEncoding(CHARACTER_ENCODING);
         try {
             logService.save(new LogRequest(ex.getMessage()));
             String json = new ObjectMapper().writeValueAsString(ResponseDto.create(ex.getErrorCode(), ex.getMessage()));
