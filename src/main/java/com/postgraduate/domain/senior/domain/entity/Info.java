@@ -48,9 +48,9 @@ public class Info {
     private String totalInfo; // 모든 Info정보 String으로 가지는 컬럼 - 검색시 사용
 
     public void updateMyPage(SeniorMyPageProfileRequest request) {
-        this.keyword = request.getKeyword();
-        this.lab = request.getLab();
-        this.field = request.getField();
+        this.keyword = request.keyword();
+        this.lab = request.lab();
+        this.field = request.field();
         combineTotalInfo();
     }
 

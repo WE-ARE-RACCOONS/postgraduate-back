@@ -1,22 +1,28 @@
 package com.postgraduate.domain.senior.application.dto.res;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
+import jakarta.validation.constraints.NotNull;
 
-@Getter
-@Builder
-@AllArgsConstructor
-public class SeniorDetailResponse {
-    private String nickName;
-    private String profile;
-    private String postgradu;
-    private String major;
-    private String lab;
-    private String professor;
-    private String[] keyword;
-    private String info;
-    private String oneLiner;
-    private String target;
-    private String time;
-}
+public record SeniorDetailResponse(
+        @NotNull
+        String nickName,
+        @NotNull
+        String profile,
+        @NotNull
+        String postgradu,
+        @NotNull
+        String major,
+        @NotNull
+        String lab,
+        @NotNull
+        String professor,
+        @NotNull
+        String[] keyword,
+        @NotNull
+        String info,
+        @NotNull
+        String oneLiner,
+        @NotNull
+        String target,
+        @NotNull
+        String time
+) { }

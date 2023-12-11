@@ -1,8 +1,9 @@
 package com.postgraduate.domain.salary.application.mapper;
 
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
-import com.postgraduate.domain.salary.application.dto.res.SalaryDetailResponse;
+import com.postgraduate.domain.salary.application.dto.SalaryDetails;
 import com.postgraduate.domain.salary.domain.entity.Salary;
+import com.postgraduate.domain.user.domain.entity.User;
 
 import java.time.LocalDate;
 
@@ -15,14 +16,16 @@ public class SalaryMapper {
                 .build();
     }
 
-    public static SalaryDetailResponse mapToSalaryDetail(Salary salary) {
-        return SalaryDetailResponse.builder()
-                .profile(salary.getMentoring().getUser().getProfile())
-                .nickName(salary.getMentoring().getUser().getNickName())
-                .date(salary.getMentoring().getDate())
-                .term(salary.getSenior().getProfile().getTerm())
-                .salaryAmount(salary.getMentoring().getPay()) //TODO 수수료
-                .salaryDate(salary.getSalaryDate())
-                .build();
+    public static SalaryDetails mapToSalaryDetail(Salary salary) {
+        Mentoring mentoring = salary.getMentoring();
+        User user = mentoring.getUser();
+        return new SalaryDetails(
+                user.getProfile(),
+                user.getNickName(),
+                mentoring.getDate(),
+                salary.getSenior().getProfile().getTerm(),
+                mentoring.getPay(),
+                salary.getSalaryDate()
+        );
     }
 }
