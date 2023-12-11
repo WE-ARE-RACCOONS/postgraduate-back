@@ -1,4 +1,4 @@
-package com.postgraduate.domain.auth.presentation.contant;
+package com.postgraduate.domain.auth.presentation.constant;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,6 @@
 package com.postgraduate.global.config.security.jwt.filter;
 
-import com.postgraduate.global.config.security.jwt.JwtProvider;
+import com.postgraduate.global.config.security.jwt.util.JwtUtils;
 import com.postgraduate.global.exception.ApplicationException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -15,10 +15,13 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+import static com.postgraduate.global.config.security.jwt.constant.Type.ACCESS;
+import static com.postgraduate.global.config.security.jwt.constant.Type.REFRESH;
+
 @RequiredArgsConstructor
 @Slf4j
 public class JwtFilter extends OncePerRequestFilter {
-    private final JwtProvider jwtProvider;
+    private final JwtUtils jwtProvider;
     private final String AUTHORIZATION = "Authorization";
     private final String BEARER = "Bearer";
 
@@ -27,9 +30,16 @@ public class JwtFilter extends OncePerRequestFilter {
         String token = resolveToken(request);
         if (token != null) {
             log.info("토큰 함께 요청 : {}", token);
-            if (!jwtProvider.validateToken(response, token))
-                return;
             try {
+                if (request.getRequestURI().contains("/refresh")) {
+                    log.info("재발급 진행");
+                    if (!jwtProvider.validateToken(response, token, REFRESH))
+                        return;
+                } else {
+                    log.info("일반 접근");
+                    if (!jwtProvider.validateToken(response, token, ACCESS))
+                        return;
+                }
                 Authentication authentication = jwtProvider.getAuthentication(response, token);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
                 log.info("context 인증 정보 저장 : {}", authentication.getName());
