@@ -10,6 +10,7 @@ import com.postgraduate.domain.auth.application.usecase.oauth.SelectOauth;
 import com.postgraduate.domain.auth.application.usecase.SignUpUseCase;
 import com.postgraduate.domain.auth.application.usecase.jwt.JwtUseCase;
 import com.postgraduate.domain.auth.application.usecase.SignInUseCase;
+import com.postgraduate.domain.auth.presentation.constant.Provider;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.global.dto.ResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,8 +20,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import static com.postgraduate.domain.auth.presentation.contant.AuthResponseCode.*;
-import static com.postgraduate.domain.auth.presentation.contant.AuthResponseMessage.*;
+import static com.postgraduate.domain.auth.presentation.constant.AuthResponseCode.*;
+import static com.postgraduate.domain.auth.presentation.constant.AuthResponseMessage.*;
 import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseCode.SENIOR_CREATE;
 import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseMessage.CREATE_SENIOR;
 
@@ -35,7 +36,7 @@ public class AuthController {
 
     @PostMapping("/login/{provider}")
     @Operation(summary = "소셜 로그인", description = "회원인 경우 JWT를, 회원이 아닌 경우 socialId를 반환합니다(회원가입은 진행하지 않습니다).")
-    public ResponseDto<?> authLogin(@RequestBody CodeRequest request, @PathVariable String provider) {
+    public ResponseDto<?> authLogin(@RequestBody CodeRequest request, @PathVariable Provider provider) {
         SignInUseCase signInUseCase = selectOauth.selectStrategy(provider);
         AuthUserResponse authUser = signInUseCase.getUser(request);
         if (authUser.getUser().isEmpty())
@@ -44,11 +45,12 @@ public class AuthController {
         return ResponseDto.create(AUTH_ALREADY.getCode(), SUCCESS_AUTH.getMessage(), jwtToken);
     }
 
-//    @PostMapping("/logout")
-//    @Operation(summary = "로그아웃", description = "토큰 같이 보내주세요")
-//    public ResponseDto logout() {
-//        return ResponseDto.create(AUTH_CREATE.getCode(), SUCCESS_AUTH.getMessage());
-//    }
+    @PostMapping("/logout")
+    @Operation(summary = "로그아웃", description = "토큰 같이 보내주세요")
+    public ResponseDto logout(@AuthenticationPrincipal User user) {
+        jwtUseCase.logout(user);
+        return ResponseDto.create(AUTH_DELETE.getCode(), LOGOUT_USER.getMessage());
+    }
 
     @PostMapping("/user/signup")
     @Operation(summary = "대학생 회원가입", description = "로그인 API에서 반환한 socialId, 닉네임, 번호, 마케팅 수신여부, 희망 학과, 희망 분야, 매칭 희망 여부")

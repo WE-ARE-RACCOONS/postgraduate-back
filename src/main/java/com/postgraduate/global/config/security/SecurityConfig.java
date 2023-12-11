@@ -4,7 +4,7 @@ import com.postgraduate.domain.user.domain.entity.constant.Role;
 import com.postgraduate.global.config.security.jwt.filter.CustomAccessDeniedHandler;
 import com.postgraduate.global.config.security.jwt.filter.CustomAuthenticationEntryPoint;
 import com.postgraduate.global.config.security.jwt.filter.JwtFilter;
-import com.postgraduate.global.config.security.jwt.JwtProvider;
+import com.postgraduate.global.config.security.jwt.util.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -25,7 +25,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @RequiredArgsConstructor
 public class SecurityConfig {
     private static final String[] PASS = {"/resource/**", "/css/**", "/js/**", "/img/**", "/lib/**"};
-    private final JwtProvider jwtProvider;
+    private final JwtUtils jwtProvider;
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
     @Value("${aesBytesEncryptor.secret}")

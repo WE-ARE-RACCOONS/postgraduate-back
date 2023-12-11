@@ -1,7 +1,7 @@
 package com.postgraduate.domain.auth.exception;
 
-import static com.postgraduate.domain.auth.presentation.contant.AuthResponseCode.NONE_PROVIDER;
-import static com.postgraduate.domain.auth.presentation.contant.AuthResponseMessage.PROVIDER_NONE;
+import static com.postgraduate.domain.auth.presentation.constant.AuthResponseCode.NONE_PROVIDER;
+import static com.postgraduate.domain.auth.presentation.constant.AuthResponseMessage.PROVIDER_NONE;
 
 public class OauthException extends AuthException{
     public OauthException() {

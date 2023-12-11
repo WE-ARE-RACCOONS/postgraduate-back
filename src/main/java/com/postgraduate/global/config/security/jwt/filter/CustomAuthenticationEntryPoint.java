@@ -14,8 +14,8 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
-import static com.postgraduate.domain.auth.presentation.contant.AuthResponseCode.AUTH_FAILED;
-import static com.postgraduate.domain.auth.presentation.contant.AuthResponseMessage.FAILED_AUTH;
+import static com.postgraduate.domain.auth.presentation.constant.AuthResponseCode.AUTH_FAILED;
+import static com.postgraduate.domain.auth.presentation.constant.AuthResponseMessage.FAILED_AUTH;
 
 @Component
 @RequiredArgsConstructor
