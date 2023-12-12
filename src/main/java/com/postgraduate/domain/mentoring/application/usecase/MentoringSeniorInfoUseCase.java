@@ -4,6 +4,7 @@ import com.postgraduate.domain.mentoring.application.dto.DoneSeniorMentoringInfo
 import com.postgraduate.domain.mentoring.application.dto.ExpectedSeniorMentoringInfo;
 import com.postgraduate.domain.mentoring.application.dto.WaitingSeniorMentoringInfo;
 import com.postgraduate.domain.mentoring.application.dto.res.*;
+import com.postgraduate.domain.mentoring.application.mapper.MentoringMapper;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.entity.constant.Status;
 import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
@@ -45,34 +46,35 @@ public class MentoringSeniorInfoUseCase {
 
     public SeniorMentoringResponse getSeniorWaiting(User user) {
         List<Mentoring> mentorings = getMentorings(user, WAITING);
-        List<WaitingSeniorMentoringInfo> waitingMentoringInfos = new ArrayList<>();
-        for (Mentoring mentoring : mentorings) {
-            LocalDateTime expiredAt = mentoring.getCreatedAt()
-                    .plusDays(2)
-                    .atStartOfDay();
-            LocalDateTime now = LocalDateTime.now();
-            long remain = Duration.between(now, expiredAt).toMinutes();
-            waitingMentoringInfos.add(mapToSeniorWaitingInfo(mentoring, remain));
-        }
+        List<WaitingSeniorMentoringInfo> waitingMentoringInfos = mentorings.stream()
+                .map(mentoring -> {
+                    LocalDateTime expiredAt = mentoring.getCreatedAt()
+                            .plusDays(2)
+                            .atStartOfDay();
+                    LocalDateTime now = LocalDateTime.now();
+                    long remain = Duration.between(now, expiredAt).toMinutes();
+                    return mapToSeniorWaitingInfo(mentoring, remain);
+                })
+                .toList();
         return new SeniorMentoringResponse(waitingMentoringInfos);
     }
 
     public SeniorMentoringResponse getSeniorExpected(User user) {
         List<Mentoring> mentorings = getMentorings(user, EXPECTED);
-        List<ExpectedSeniorMentoringInfo> expectedMentoringInfos = new ArrayList<>();
-        for (Mentoring mentoring : mentorings) {
-            expectedMentoringInfos.add(mapToSeniorExpectedInfo(mentoring));
-        }
+        List<ExpectedSeniorMentoringInfo> expectedMentoringInfos = mentorings.stream()
+                .map(MentoringMapper::mapToSeniorExpectedInfo)
+                .toList();
         return new SeniorMentoringResponse(expectedMentoringInfos);
     }
 
     public SeniorMentoringResponse getSeniorDone(User user) {
         List<Mentoring> mentorings = getMentorings(user, DONE);
-        List<DoneSeniorMentoringInfo> doneMentoringInfos = new ArrayList<>();
-        for (Mentoring mentoring : mentorings) {
-            Salary salary = salaryGetService.byMentoring(mentoring);
-            doneMentoringInfos.add(mapToSeniorDoneInfo(mentoring, salary));
-        }
+        List<DoneSeniorMentoringInfo> doneMentoringInfos = mentorings.stream()
+                .map(mentoring -> {
+                    Salary salary = salaryGetService.byMentoring(mentoring);
+                    return mapToSeniorDoneInfo(mentoring, salary);
+                })
+                .toList();
         return new SeniorMentoringResponse(doneMentoringInfos);
     }
 

@@ -29,20 +29,18 @@ public class SeniorInfoUseCase {
     }
 
     public AllSeniorSearchResponse getSearchSenior(String search, Integer page, String sort) {
-        Page<Senior> allSeniors = seniorGetService.bySearch(search, page, sort);
-        List<SeniorSearchResponse> selectSeniors = new ArrayList<>();
-        for (Senior senior : allSeniors.getContent()) {
-            selectSeniors.add(mapToSeniorSearch(senior));
-        }
+        Page<Senior> seniors = seniorGetService.bySearch(search, page, sort);
+        List<SeniorSearchResponse> selectSeniors = seniors.stream()
+                .map(SeniorMapper::mapToSeniorSearch)
+                .toList();
         return new AllSeniorSearchResponse(selectSeniors);
     }
 
     public AllSeniorSearchResponse getFieldSenior(String field, String postgradu, Integer page) {
-        Page<Senior> allSeniors = seniorGetService.byField(field, postgradu, page);
-        List<SeniorSearchResponse> selectSeniors = new ArrayList<>();
-        for (Senior senior : allSeniors.getContent()) {
-            selectSeniors.add(mapToSeniorSearch(senior));
-        }
+        Page<Senior> seniors = seniorGetService.byField(field, postgradu, page);
+        List<SeniorSearchResponse> selectSeniors = seniors.stream()
+                .map(SeniorMapper::mapToSeniorSearch)
+                .toList();
         return new AllSeniorSearchResponse(selectSeniors);
     }
 
