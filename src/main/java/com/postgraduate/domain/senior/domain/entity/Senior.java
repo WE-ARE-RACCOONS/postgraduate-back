@@ -30,7 +30,7 @@ public class Senior {
     @OneToOne
     private User user;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT(1000)")
     private String certification;
 
     @Column(nullable = false)

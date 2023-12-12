@@ -1,6 +1,6 @@
 package com.postgraduate.domain.senior.domain.entity;
 
-import com.postgraduate.domain.senior.application.dto.req.SeniorMyPageProfileRequest;
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,10 +13,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @Embeddable
 public class Profile {
+    @Column(columnDefinition = "TEXT(1000)")
     private String info;
 
     private String oneLiner;
 
+    @Column(columnDefinition = "TEXT(1000)")
     private String target;
 
     private String chatLink;
