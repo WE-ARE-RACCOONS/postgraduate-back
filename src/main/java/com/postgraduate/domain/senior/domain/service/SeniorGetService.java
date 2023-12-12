@@ -38,7 +38,7 @@ public class SeniorGetService {
     }
 
     public List<Senior> all() {
-        return seniorRepository.findAll();
+        return seniorRepository.findAllByUser_IsDelete(false);
     }
 
     public Page<Senior> bySearch(String search, Integer page, String sort) {
