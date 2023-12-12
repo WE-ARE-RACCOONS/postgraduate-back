@@ -41,7 +41,7 @@ public class KakaoAccessTokenUseCase {
                     .retrieve()
                     .bodyToMono(KakaoTokenInfoResponse.class)
                     .block();
-            return getUserInfo(tokenInfoResponse.getAccess_token());
+            return getUserInfo(tokenInfoResponse.access_token());
         } catch (WebClientResponseException ex) {
             throw new KakaoCodeException();
         }

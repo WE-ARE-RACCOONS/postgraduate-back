@@ -1,20 +1,7 @@
 package com.postgraduate.domain.auth.application.dto.res;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotNull;
 
-@Builder
-@Getter
-@AllArgsConstructor
-@NoArgsConstructor
-public class KakaoTokenInfoResponse {
-    private String access_token;
-    private String token_type;
-    private String refresh_token;
-    private String id_token;
-    private int expires_in;
-    private String cope;
-    private int refresh_token_expires_in;
+public record KakaoTokenInfoResponse(@NotNull String access_token, @NotNull String token_type, @NotNull String refresh_token, @NotNull String id_token,
+                                     @NotNull int expires_in, @NotNull String cope, @NotNull int refresh_token_expires_in) {
 }
