@@ -1,4 +1,4 @@
-package com.postgraduate.domain.auth.application.usecase;
+package com.postgraduate.domain.auth.application.usecase.oauth;
 
 import com.postgraduate.domain.auth.application.dto.req.SeniorChangeRequest;
 import com.postgraduate.domain.auth.application.dto.req.SeniorSignUpRequest;
