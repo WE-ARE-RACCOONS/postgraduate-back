@@ -159,6 +159,7 @@ public class SeniorMapper {
         String[] keyword = info.getKeyword().split(",");
         return new SeniorDetailResponse(
                 senior.getUser().getNickName(),
+                profile.getTerm(),
                 senior.getUser().getProfile(),
                 info.getPostgradu(),
                 info.getMajor(),
@@ -175,20 +176,12 @@ public class SeniorMapper {
     public static SeniorSearchResponse mapToSeniorSearch(Senior senior) {
         User user = senior.getUser();
         Info info = senior.getInfo();
-        Profile profile = senior.getProfile();
         String[] allKeywords = info.getKeyword().split(",");
         String[] keyword = Arrays.copyOf(allKeywords, Math.min(3, allKeywords.length));
 
         return new SeniorSearchResponse(senior.getSeniorId(), user.getProfile(), user.getNickName(),
                 info.getPostgradu(), info.getMajor(), info.getLab(),
-                profile.getOneLiner(), keyword);
-    }
-
-    public static SeniorFieldResponse mapToSeniorField(Senior senior) {
-        User user = senior.getUser();
-        Info info = senior.getInfo();
-        return new SeniorFieldResponse(senior.getSeniorId(), user.getProfile(), user.getNickName(),
-                info.getPostgradu(), info.getMajor(), info.getLab());
+                keyword);
     }
 
     public static SeniorProfileResponse mapToSeniorProfile(Senior senior) {

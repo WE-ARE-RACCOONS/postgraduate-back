@@ -9,6 +9,8 @@ public record SeniorDetailResponse(
         @NotNull
         String nickName,
         @NotNull
+        int term,
+        @NotNull
         String profile,
         @NotNull
         String postgradu,
