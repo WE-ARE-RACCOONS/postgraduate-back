@@ -2,6 +2,7 @@ package com.postgraduate.domain.auth.application.usecase.jwt;
 
 import com.postgraduate.domain.auth.application.dto.res.JwtTokenResponse;
 import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.user.exception.DeletedUserException;
 import com.postgraduate.global.config.security.jwt.util.JwtUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -26,11 +27,15 @@ public class JwtUseCase {
     }
 
     public JwtTokenResponse regenerateToken(User user, HttpServletRequest request) {
+        if (user.getIsDelete())
+            throw new DeletedUserException();
         jwtUtils.checkRedis(user.getUserId(), request);
         return generateToken(user);
     }
 
     private JwtTokenResponse generateToken(User user) {
+        if (user.getIsDelete())
+            throw new DeletedUserException();
         String accessToken = jwtUtils.generateAccessToken(user.getUserId(), user.getRole());
         String refreshToken = jwtUtils.generateRefreshToken(user.getUserId(), user.getRole());
         return new JwtTokenResponse(accessToken, accessExpiration, refreshToken, refreshExpiration, user.getRole());

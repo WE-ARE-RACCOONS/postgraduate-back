@@ -32,7 +32,8 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
         JPAQuery<Senior> query = queryFactory.selectFrom(senior)
                 .where(
                         senior.info.totalInfo.like("%" + search + "%"),
-                        senior.status.eq(APPROVE)
+                        senior.status.eq(APPROVE),
+                        senior.user.isDelete.eq(FALSE)
                 )
                 .orderBy(orderSpecifier(sort))
                 .orderBy(senior.user.nickName.asc());
@@ -60,7 +61,8 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
                 .where(
                         fieldSpecifier(field),
                         postgraduSpecifier(postgradu),
-                        senior.status.eq(APPROVE)
+                        senior.status.eq(APPROVE),
+                        senior.user.isDelete.eq(FALSE)
                 )
                 .orderBy(senior.hit.desc())
                 .orderBy(senior.user.nickName.asc());

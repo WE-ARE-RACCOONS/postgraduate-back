@@ -1,11 +1,11 @@
 package com.postgraduate.domain.auth.application.usecase.oauth.kakao;
 
-import com.postgraduate.domain.auth.application.dto.res.KakaoUserInfoResponse;
 import com.postgraduate.domain.auth.application.usecase.oauth.SignOutUseCase;
 import com.postgraduate.domain.auth.exception.KakaoException;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.service.UserGetService;
 import com.postgraduate.domain.user.domain.service.UserUpdateService;
+import com.postgraduate.global.config.security.jwt.util.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -24,6 +24,7 @@ public class KakaoSignOutUseCase implements SignOutUseCase {
     private final WebClient webClient;
     private final UserUpdateService userUpdateService;
     private final UserGetService userGetService;
+    private final JwtUtils jwtUtils;
 
     @Value("${admin-id.kakao}")
     private String ADMIN_ID;
@@ -44,6 +45,7 @@ public class KakaoSignOutUseCase implements SignOutUseCase {
                     .bodyToMono(String.class)
                     .block();
             userUpdateService.updateDelete(user.getUserId());
+            jwtUtils.makeExpired(userId);
         } catch (WebClientResponseException ex) {
             throw new KakaoException();
         }

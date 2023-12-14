@@ -53,14 +53,14 @@ public class SalaryManageByAdminUseCase {
     public SalaryManageResponse getSalaries() {
         List<SalaryInfo> responses = new ArrayList<>();
         List<Senior> seniors = seniorGetService.all();
-        for (Senior senior : seniors) {
-            List<Salary> salaries = salaryGetService.bySeniorAndSalaryDateAndStatus(senior, getSalaryDate(), true);
-            if (getStatus(salaries) != DONE) {
-                continue;
-            }
+        seniors.forEach(senior -> {
+            List<Salary> salaries = salaryGetService.bySeniorAndSalaryDateAndStatus(senior, getSalaryDate(), true)
+                    .stream()
+                    .filter(salary -> (salary.getStatus().equals(DONE)))
+                    .toList();
             SalaryInfo response = getSalaryInfo(senior, salaries);
             responses.add(response);
-        }
+        });
         return new SalaryManageResponse(responses);
     }
 
@@ -80,8 +80,6 @@ public class SalaryManageByAdminUseCase {
     public void updateSalaryStatus(Long seniorId, Boolean status) {
         Senior senior = seniorGetService.bySeniorId(seniorId);
         List<Salary> salaries = salaryGetService.bySeniorAndSalaryDate(senior, getSalaryDate());
-        for (Salary salary : salaries) {
-            salaryUpdateService.updateStatus(salary, status);
-        }
+        salaries.forEach(salary -> salaryUpdateService.updateStatus(salary, status));
     }
 }
