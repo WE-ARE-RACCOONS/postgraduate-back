@@ -7,9 +7,10 @@ import com.postgraduate.domain.auth.application.dto.req.SignUpRequest;
 import com.postgraduate.domain.auth.application.dto.res.AuthUserResponse;
 import com.postgraduate.domain.auth.application.dto.res.JwtTokenResponse;
 import com.postgraduate.domain.auth.application.usecase.oauth.SelectOauth;
-import com.postgraduate.domain.auth.application.usecase.SignUpUseCase;
+import com.postgraduate.domain.auth.application.usecase.oauth.SignOutUseCase;
+import com.postgraduate.domain.auth.application.usecase.oauth.SignUpUseCase;
 import com.postgraduate.domain.auth.application.usecase.jwt.JwtUseCase;
-import com.postgraduate.domain.auth.application.usecase.SignInUseCase;
+import com.postgraduate.domain.auth.application.usecase.oauth.SignInUseCase;
 import com.postgraduate.domain.auth.presentation.constant.Provider;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.global.dto.ResponseDto;
@@ -38,7 +39,7 @@ public class AuthController {
     @PostMapping("/login/{provider}")
     @Operation(summary = "소셜 로그인", description = "회원인 경우 JWT를, 회원이 아닌 경우 socialId를 반환합니다(회원가입은 진행하지 않습니다).")
     public ResponseDto<?> authLogin(@RequestBody @Valid CodeRequest request, @PathVariable Provider provider) {
-        SignInUseCase signInUseCase = selectOauth.selectStrategy(provider);
+        SignInUseCase signInUseCase = selectOauth.selectSignIn(provider);
         AuthUserResponse authUser = signInUseCase.getUser(request);
         if (authUser.getUser().isEmpty())
             return ResponseDto.create(AUTH_NONE.getCode(), NOT_REGISTERED_USER.getMessage(), authUser);
@@ -51,6 +52,18 @@ public class AuthController {
     public ResponseDto logout(@AuthenticationPrincipal User user) {
         jwtUseCase.logout(user);
         return ResponseDto.create(AUTH_DELETE.getCode(), LOGOUT_USER.getMessage());
+    }
+
+    /**
+     * 우선 문의를 통해 탈퇴를 시켜준다 했으니 유저 토큰을 받을 수 없다
+     * 다만, userId를 통해 탈퇴를 처리시켜줄 때 그 어떤 보안 장치도 없다면 문제인 것 같으니 관리자의 권한으로 처리한다
+     */
+    @PostMapping("/signout/{provider}/{userId}")
+    @Operation(summary = "회원 탈퇴 | 관리자 토큰 필요", description = "회원 탈퇴 진행")
+    public ResponseDto signOut(@PathVariable Provider provider, @PathVariable Long userId) {
+        SignOutUseCase signOutUseCase = selectOauth.selectSignOut(provider);
+        signOutUseCase.signOut(userId);
+        return ResponseDto.create(AUTH_DELETE.getCode(), SIGNOUT_USER.getMessage());
     }
 
     @PostMapping("/user/signup")

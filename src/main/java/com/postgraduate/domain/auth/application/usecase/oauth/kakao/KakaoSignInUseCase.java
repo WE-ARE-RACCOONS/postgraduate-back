@@ -4,7 +4,7 @@ import com.postgraduate.domain.auth.application.dto.req.CodeRequest;
 import com.postgraduate.domain.auth.application.dto.res.AuthUserResponse;
 import com.postgraduate.domain.auth.application.dto.res.KakaoUserInfoResponse;
 import com.postgraduate.domain.auth.application.mapper.AuthMapper;
-import com.postgraduate.domain.auth.application.usecase.SignInUseCase;
+import com.postgraduate.domain.auth.application.usecase.oauth.SignInUseCase;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.service.UserGetService;
 import lombok.RequiredArgsConstructor;

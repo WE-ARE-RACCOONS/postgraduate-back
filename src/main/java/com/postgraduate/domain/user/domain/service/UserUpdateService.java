@@ -14,6 +14,11 @@ import org.springframework.stereotype.Service;
 public class UserUpdateService {
     private final UserRepository userRepository;
 
+    public void updateDelete(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        user.updateDelete();
+    }
+
     public void updateRole(Long userId, Role role) {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         user.updateRole(role);
