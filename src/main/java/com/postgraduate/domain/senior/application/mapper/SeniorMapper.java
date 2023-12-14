@@ -3,6 +3,7 @@ package com.postgraduate.domain.senior.application.mapper;
 import com.postgraduate.domain.account.domain.entity.Account;
 import com.postgraduate.domain.auth.application.dto.req.SeniorChangeRequest;
 import com.postgraduate.domain.auth.application.dto.req.SeniorSignUpRequest;
+import com.postgraduate.domain.available.application.dto.res.AvailableTimeResponse;
 import com.postgraduate.domain.senior.application.dto.req.SeniorMyPageProfileRequest;
 import com.postgraduate.domain.senior.application.dto.req.SeniorProfileRequest;
 import com.postgraduate.domain.senior.application.dto.res.*;
@@ -16,6 +17,7 @@ import com.postgraduate.domain.user.domain.entity.User;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 
 public class SeniorMapper {
 
@@ -62,7 +64,6 @@ public class SeniorMapper {
                 .chatLink(profileRequest.chatLink())
                 .oneLiner(profileRequest.oneLiner())
                 .target(profileRequest.target())
-                .time(profileRequest.time())
                 .build();
     }
 
@@ -72,7 +73,6 @@ public class SeniorMapper {
                 .chatLink(profileRequest.chatLink())
                 .oneLiner(profileRequest.oneLiner())
                 .target(profileRequest.target())
-                .time(profileRequest.time())
                 .build();
     }
 
@@ -117,7 +117,7 @@ public class SeniorMapper {
         return new SeniorMyPageResponse(senior.getSeniorId(), user.getNickName(), user.getProfile(), certificationRegister, profileRegister);
     }
 
-    public static SeniorMyPageProfileResponse mapToMyPageProfile(Senior senior) {
+    public static SeniorMyPageProfileResponse mapToMyPageProfile(Senior senior, List<AvailableTimeResponse> times) {
         Info info = senior.getInfo();
         Profile profile = senior.getProfile();
         String[] keyword = info.getKeyword().split(",");
@@ -130,7 +130,7 @@ public class SeniorMapper {
                 profile.getChatLink(),
                 field,
                 profile.getOneLiner(),
-                profile.getTime()
+                times
         );
     }
 
@@ -153,7 +153,7 @@ public class SeniorMapper {
                 user.getNickName());
     }
 
-    public static SeniorDetailResponse mapToSeniorDetail(Senior senior) {
+    public static SeniorDetailResponse mapToSeniorDetail(Senior senior, List<AvailableTimeResponse> times) {
         Info info = senior.getInfo();
         Profile profile = senior.getProfile();
         String[] keyword = info.getKeyword().split(",");
@@ -168,7 +168,7 @@ public class SeniorMapper {
                 profile.getInfo(),
                 profile.getOneLiner(),
                 profile.getTarget(),
-                profile.getTime()
+                times
         );
     }
 

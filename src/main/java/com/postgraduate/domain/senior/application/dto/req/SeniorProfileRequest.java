@@ -1,6 +1,9 @@
 package com.postgraduate.domain.senior.application.dto.req;
 
+import com.postgraduate.domain.available.application.dto.req.AvailableCreateRequest;
 import jakarta.validation.constraints.NotNull;
+
+import java.util.List;
 
 public record SeniorProfileRequest(
         @NotNull
@@ -10,8 +13,7 @@ public record SeniorProfileRequest(
         @NotNull
         String chatLink,
         @NotNull
-        String time,
+        String oneLiner,
         @NotNull
-        String oneLiner
-) {
-}
+        List<AvailableCreateRequest> times
+) {}
