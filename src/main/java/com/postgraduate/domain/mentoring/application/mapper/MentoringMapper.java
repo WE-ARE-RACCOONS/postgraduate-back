@@ -26,7 +26,7 @@ public class MentoringMapper {
                 info.getMajor(),
                 info.getLab(),
                 mentoring.getDate(),
-                profile.getTerm(),
+                mentoring.getTerm(),
                 profile.getChatLink()
         );
     }
@@ -35,7 +35,6 @@ public class MentoringMapper {
         Senior senior = mentoring.getSenior();
         User user = senior.getUser();
         Info info = senior.getInfo();
-        Profile profile = senior.getProfile();
         return new DoneMentoringInfo(
                 mentoring.getMentoringId(),
                 senior.getSeniorId(),
@@ -45,7 +44,7 @@ public class MentoringMapper {
                 info.getMajor(),
                 info.getLab(),
                 mentoring.getDate(),
-                profile.getTerm()
+                mentoring.getTerm()
         );
     }
 
@@ -53,13 +52,12 @@ public class MentoringMapper {
         Senior senior = mentoring.getSenior();
         User user = senior.getUser();
         Info info = senior.getInfo();
-        Profile profile = senior.getProfile();
         return new WaitingMentoringInfo(
                 mentoring.getMentoringId(),
                 senior.getSeniorId(),
                 user.getProfile(), user.getNickName(),
                 info.getPostgradu(), info.getMajor(), info.getLab(),
-                profile.getTerm());
+                mentoring.getTerm());
     }
     public static AppliedMentoringDetailResponse mapToAppliedDetailInfo(Mentoring mentoring) {
         Senior senior = mentoring.getSenior();
@@ -89,29 +87,26 @@ public class MentoringMapper {
 
     public static WaitingSeniorMentoringInfo mapToSeniorWaitingInfo(Mentoring mentoring, long remainTime) {
         User user = mentoring.getUser();
-        Senior senior = mentoring.getSenior();
         return new WaitingSeniorMentoringInfo(
                 mentoring.getMentoringId(),
                 user.getProfile(), user.getNickName(),
-                senior.getProfile().getTerm(),
+                mentoring.getTerm(),
                 remainTime);
     }
 
     public static ExpectedSeniorMentoringInfo mapToSeniorExpectedInfo(Mentoring mentoring) {
         User user = mentoring.getUser();
-        Senior senior = mentoring.getSenior();
         return new ExpectedSeniorMentoringInfo(mentoring.getMentoringId(),
                 user.getProfile(), user.getNickName(),
-                senior.getProfile().getTerm(),
+                mentoring.getTerm(),
                 mentoring.getDate());
     }
 
     public static DoneSeniorMentoringInfo mapToSeniorDoneInfo(Mentoring mentoring, Salary salary) {
         User user = mentoring.getUser();
-        Senior senior = mentoring.getSenior();
         return new DoneSeniorMentoringInfo(mentoring.getMentoringId(),
                 user.getProfile(), user.getNickName(),
-                senior.getProfile().getTerm(),
+                mentoring.getTerm(),
                 mentoring.getDate(),
                 salary.getSalaryDate(), salary.getStatus());
     }
@@ -119,12 +114,11 @@ public class MentoringMapper {
     public static SeniorMentoringDetailResponse mapToSeniorMentoringDetail(Mentoring mentoring) {
         String[] dates = mentoring.getDate().split(",");
         User user = mentoring.getUser();
-        Senior senior = mentoring.getSenior();
         return new SeniorMentoringDetailResponse(
                 user.getProfile(), user.getNickName(),
                 mentoring.getTopic(), mentoring.getQuestion(),
                 dates,
-                senior.getProfile().getTerm()
+                mentoring.getTerm()
         );
     }
 }

@@ -40,6 +40,10 @@ public class Mentoring {
 
     @Column(nullable = false)
     @Builder.Default
+    private int term = 40;
+
+    @Column(nullable = false)
+    @Builder.Default
     private int pay = 20000;
 
     @Enumerated(EnumType.STRING)
