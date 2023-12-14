@@ -12,8 +12,8 @@ import java.util.Optional;
 
 public interface MentoringRepository extends JpaRepository<Mentoring, Long> {
     Optional<Mentoring> findByMentoringId(Long mentoringId);
-    List<Mentoring> findAllByUserAndStatus(User user, Status status);
-    List<Mentoring> findAllBySeniorAndStatus(Senior senior, Status status);
+    List<Mentoring> findAllByUserAndStatusAndSenior_User_IsDelete(User user, Status status, Boolean isDelete);
+    List<Mentoring> findAllBySeniorAndStatusAndUser_IsDelete(Senior senior, Status status, Boolean isDelete);
     List<Mentoring> findAllByStatusAndCreatedAtIsBefore(Status status, LocalDate now);
     List<Mentoring> findAllByUser_UserId(Long userId);
     List<Mentoring> findAllBySenior_SeniorId(Long seniorId);

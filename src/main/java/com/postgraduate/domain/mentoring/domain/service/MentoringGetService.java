@@ -12,17 +12,19 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 
+import static java.lang.Boolean.FALSE;
+
 @Service
 @RequiredArgsConstructor
 public class MentoringGetService {
     private final MentoringRepository mentoringRepository;
 
     public List<Mentoring> mentoringByUser(User user, Status status) {
-        return mentoringRepository.findAllByUserAndStatus(user, status);
+        return mentoringRepository.findAllByUserAndStatusAndSenior_User_IsDelete(user, status, FALSE);
     }
 
     public List<Mentoring> mentoringBySenior(Senior senior, Status status) {
-        return mentoringRepository.findAllBySeniorAndStatus(senior, status);
+        return mentoringRepository.findAllBySeniorAndStatusAndUser_IsDelete(senior, status, FALSE);
     }
 
     public Mentoring byMentoringId(Long mentoringId) {

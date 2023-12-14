@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import static com.postgraduate.domain.senior.domain.entity.constant.Status.APPROVE;
+import static java.lang.Boolean.FALSE;
 
 @Service
 @RequiredArgsConstructor
@@ -26,11 +27,11 @@ public class SeniorGetService {
     }
 
     public Senior bySeniorId(Long seniorId) {
-        return seniorRepository.findById(seniorId).orElseThrow(NoneSeniorException::new);
+        return seniorRepository.findBySeniorIdAndUser_IsDelete(seniorId, FALSE).orElseThrow(NoneSeniorException::new);
     }
 
     public Senior bySeniorIdWithCertification(Long seniorId) {
-        return seniorRepository.findBySeniorIdAndProfileNotNullAndStatus(seniorId, APPROVE).orElseThrow(NoneSeniorException::new);
+        return seniorRepository.findBySeniorIdAndProfileNotNullAndStatusAndUser_IsDelete(seniorId, APPROVE, FALSE).orElseThrow(NoneSeniorException::new);
     }
 
     public List<Senior> byStatus(Status status) {
@@ -38,7 +39,7 @@ public class SeniorGetService {
     }
 
     public List<Senior> all() {
-        return seniorRepository.findAllByUser_IsDelete(false);
+        return seniorRepository.findAllByUser_IsDelete(FALSE);
     }
 
     public Page<Senior> bySearch(String search, Integer page, String sort) {

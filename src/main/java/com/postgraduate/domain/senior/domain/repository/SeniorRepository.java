@@ -10,7 +10,8 @@ import java.util.Optional;
 
 public interface SeniorRepository extends JpaRepository<Senior, Long>, SeniorDslRepository {
     Optional<Senior> findByUser(User user);
-    Optional<Senior> findBySeniorIdAndProfileNotNullAndStatus(Long seniorId, Status status);
+    Optional<Senior> findBySeniorIdAndUser_IsDelete(Long seniorId, Boolean isDelete);
+    Optional<Senior> findBySeniorIdAndProfileNotNullAndStatusAndUser_IsDelete(Long seniorId, Status status, Boolean isDelete);
     List<Senior> findAllByStatus(Status status);
-    List<Senior> findAllByUser_IsDelete(boolean isDelete);
+    List<Senior> findAllByUser_IsDelete(Boolean isDelete);
 }
