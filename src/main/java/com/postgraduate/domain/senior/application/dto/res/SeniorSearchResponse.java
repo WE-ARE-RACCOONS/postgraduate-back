@@ -16,7 +16,5 @@ public record SeniorSearchResponse(
         @NotNull
         String lab,
         @NotNull
-        String oneLiner,
-        @NotNull
         String[] keyword
 ) {}
