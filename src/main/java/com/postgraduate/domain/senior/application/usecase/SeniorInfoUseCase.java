@@ -1,6 +1,7 @@
 package com.postgraduate.domain.senior.application.usecase;
 
 import com.postgraduate.domain.available.application.dto.res.AvailableTimeResponse;
+import com.postgraduate.domain.available.application.dto.res.AvailableTimesResponse;
 import com.postgraduate.domain.available.application.mapper.AvailableMapper;
 import com.postgraduate.domain.available.domain.entity.Available;
 import com.postgraduate.domain.available.domain.service.AvailableGetService;
@@ -56,5 +57,14 @@ public class SeniorInfoUseCase {
         Senior senior = seniorGetService.bySeniorId(seniorId);
         SeniorProfileResponse seniorProfileResponse = mapToSeniorProfile(senior);
         return seniorProfileResponse;
+    }
+
+    public AvailableTimesResponse getSeniorTimes(Long seniorId) {
+        Senior senior = seniorGetService.bySeniorId(seniorId);
+        List<Available> availables = availableGetService.bySenior(senior);
+        List<AvailableTimeResponse> times = availables.stream()
+                .map(AvailableMapper::mapToAvailableTimes)
+                .toList();
+        return new AvailableTimesResponse(times);
     }
 }

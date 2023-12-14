@@ -1,5 +1,6 @@
 package com.postgraduate.domain.senior.presentation;
 
+import com.postgraduate.domain.available.application.dto.res.AvailableTimesResponse;
 import com.postgraduate.domain.senior.application.dto.req.*;
 import com.postgraduate.domain.senior.application.dto.res.*;
 import com.postgraduate.domain.senior.application.usecase.SeniorInfoUseCase;
@@ -100,6 +101,13 @@ public class SeniorController {
     public ResponseDto<SeniorProfileResponse> getSeniorProfile(@PathVariable Long seniorId) {
         SeniorProfileResponse seniorProfile = seniorInfoUseCase.getSeniorProfile(seniorId);
         return ResponseDto.create(SENIOR_FIND.getCode(), GET_SENIOR_INFO.getMessage(), seniorProfile);
+    }
+
+    @GetMapping("/{seniorId}/times")
+    @Operation(summary = "대학원생 가능 시간 확인", description = "신청서 작성에서 가능 시간 작성시 노출 필요")
+    public ResponseDto<AvailableTimesResponse> getSeniorTimes(@PathVariable Long seniorId) {
+        AvailableTimesResponse times = seniorInfoUseCase.getSeniorTimes(seniorId);
+        return ResponseDto.create(SENIOR_FIND.getCode(), GET_SENIOR_TIME.getMessage(), times);
     }
 
     @GetMapping("/search")
