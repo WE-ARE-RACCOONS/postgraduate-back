@@ -28,7 +28,8 @@ public class MentoringGetService {
     }
 
     public Mentoring byMentoringId(Long mentoringId) {
-        return mentoringRepository.findByMentoringId(mentoringId).orElseThrow(MentoringNotFoundException::new);
+        return mentoringRepository.findByMentoringIdAndUser_IsDeleteAndSenior_User_IsDelete(mentoringId, FALSE, FALSE)
+                .orElseThrow(MentoringNotFoundException::new);
     }
 
     public List<Mentoring> byStatusAndCreatedAt(Status status, LocalDate now) {
