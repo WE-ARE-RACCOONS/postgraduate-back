@@ -2,7 +2,7 @@ package com.postgraduate.domain.auth.application.usecase.jwt;
 
 import com.postgraduate.domain.auth.application.dto.res.JwtTokenResponse;
 import com.postgraduate.domain.user.domain.entity.User;
-import com.postgraduate.global.config.security.jwt.exception.DeletedUserException;
+import com.postgraduate.domain.user.exception.DeletedUserException;
 import com.postgraduate.global.config.security.jwt.util.JwtUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
