@@ -13,12 +13,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @Embeddable
 public class Profile {
-    @Column(columnDefinition = "TEXT(1000)")
+    @Column(columnDefinition = "TEXT")
     private String info;
 
     private String oneLiner;
 
-    @Column(columnDefinition = "TEXT(1000)")
+    @Column(columnDefinition = "TEXT")
     private String target;
 
     private String chatLink;

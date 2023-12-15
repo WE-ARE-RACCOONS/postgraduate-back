@@ -29,10 +29,10 @@ public class Mentoring {
     @ManyToOne
     private Senior senior;
 
-    @Column(nullable = false, columnDefinition = "TEXT(500)")
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String topic;
 
-    @Column(nullable = false, columnDefinition = "TEXT(500)")
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String question;
 
     @Column(nullable = false)
