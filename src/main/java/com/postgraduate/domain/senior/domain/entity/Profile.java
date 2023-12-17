@@ -21,6 +21,7 @@ public class Profile {
     @Column(columnDefinition = "TEXT")
     private String target;
 
+    @Column(columnDefinition = "TEXT")
     private String chatLink;
 
     private String time;
