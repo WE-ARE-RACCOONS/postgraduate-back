@@ -12,28 +12,38 @@ import static com.postgraduate.domain.available.application.mapper.AvailableMapp
 public class AvailableUtil {
     public static List<Available> sortAvailable(List<AvailableCreateRequest> availableCreateRequests, Senior senior) {
         List<Available> sortedAvailable = availableCreateRequests.stream()
-                .sorted(Comparator.comparing(
-                        availableCreateRequest -> {
-                            String day = availableCreateRequest.day();
-                            if (day.equals("월"))
-                                return 0;
-                            if (day.equals("화"))
-                                return 1;
-                            if (day.equals("수"))
-                                return 2;
-                            if (day.equals("목"))
-                                return 3;
-                            if (day.equals("금"))
-                                return 4;
-                            if (day.equals("토"))
-                                return 5;
-                            if (day.equals("일"))
-                                return 6;
-                            throw new IllegalArgumentException();
-                        }
-                ))
+                .sorted(
+                        Comparator.comparing(
+                                (AvailableCreateRequest availableCreateRequest) -> {
+                                    String day = availableCreateRequest.day();
+                                    if (day.equals("월"))
+                                        return 0;
+                                    if (day.equals("화"))
+                                        return 1;
+                                    if (day.equals("수"))
+                                        return 2;
+                                    if (day.equals("목"))
+                                        return 3;
+                                    if (day.equals("금"))
+                                        return 4;
+                                    if (day.equals("토"))
+                                        return 5;
+                                    if (day.equals("일"))
+                                        return 6;
+                                    throw new IllegalArgumentException();
+                                }
+                        ).thenComparingInt(
+                                availableCreateRequest -> {
+                                    String startTime = availableCreateRequest.startTime();
+                                    String time = startTime.substring(0, 2);
+                                    return Integer.parseInt(time);
+                                }
+                        )
+                )
                 .map(availableCreateRequest -> mapToAvailable(senior, availableCreateRequest))
                 .toList();
+
         return sortedAvailable;
     }
+
 }
