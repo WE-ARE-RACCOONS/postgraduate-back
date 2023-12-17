@@ -31,7 +31,7 @@ public class User {
     @Column(nullable = false)
     private String phoneNumber;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     @Builder.Default //이후에 기본 이미지 생기면 수정이 필요할 듯
     private String profile = "default";
 
