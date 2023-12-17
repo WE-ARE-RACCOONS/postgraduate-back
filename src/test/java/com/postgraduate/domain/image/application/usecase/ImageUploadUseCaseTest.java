@@ -57,6 +57,7 @@ class ImageUploadUseCaseTest {
     }
 
     @Test
+    @DisplayName("Profile 업로드 테스트 기본 이미지 사용시")
     void uploadProfileWithDefaultProfile() {
         User user = new User(-11L, -12345L, "abc.com", "qwe"
                 , " 123123", "default", 0
