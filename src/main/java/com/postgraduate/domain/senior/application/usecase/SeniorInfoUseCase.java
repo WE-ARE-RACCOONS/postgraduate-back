@@ -1,5 +1,10 @@
 package com.postgraduate.domain.senior.application.usecase;
 
+import com.postgraduate.domain.available.application.dto.res.AvailableTimeResponse;
+import com.postgraduate.domain.available.application.dto.res.AvailableTimesResponse;
+import com.postgraduate.domain.available.application.mapper.AvailableMapper;
+import com.postgraduate.domain.available.domain.entity.Available;
+import com.postgraduate.domain.available.domain.service.AvailableGetService;
 import com.postgraduate.domain.senior.application.dto.res.*;
 import com.postgraduate.domain.senior.application.mapper.SeniorMapper;
 import com.postgraduate.domain.senior.domain.entity.Senior;
@@ -20,11 +25,16 @@ import static com.postgraduate.domain.senior.application.mapper.SeniorMapper.*;
 public class SeniorInfoUseCase {
     private final SeniorGetService seniorGetService;
     private final SeniorUpdateService seniorUpdateService;
+    private final AvailableGetService availableGetService;
 
     public SeniorDetailResponse getSeniorDetail(Long seniorId) {
         Senior senior = seniorGetService.bySeniorIdWithCertification(seniorId);
         seniorUpdateService.updateHit(senior);
-        return mapToSeniorDetail(senior);
+        List<Available> availables = availableGetService.bySenior(senior);
+        List<AvailableTimeResponse> times = availables.stream()
+                .map(AvailableMapper::mapToAvailableTimes)
+                .toList();
+        return mapToSeniorDetail(senior, times);
     }
 
     public AllSeniorSearchResponse getSearchSenior(String search, Integer page, String sort) {
@@ -47,5 +57,14 @@ public class SeniorInfoUseCase {
         Senior senior = seniorGetService.bySeniorId(seniorId);
         SeniorProfileResponse seniorProfileResponse = mapToSeniorProfile(senior);
         return seniorProfileResponse;
+    }
+
+    public AvailableTimesResponse getSeniorTimes(Long seniorId) {
+        Senior senior = seniorGetService.bySeniorId(seniorId);
+        List<Available> availables = availableGetService.bySenior(senior);
+        List<AvailableTimeResponse> times = availables.stream()
+                .map(AvailableMapper::mapToAvailableTimes)
+                .toList();
+        return new AvailableTimesResponse(times);
     }
 }

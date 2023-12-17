@@ -147,7 +147,7 @@ public class AdminMapper {
                 senior.getUser().getNickName(),
                 senior.getUser().getPhoneNumber(),
                 mentoring.getDate(),
-                senior.getProfile().getTerm(),
+                mentoring.getTerm(),
                 (int) (mentoring.getPay() * 1.2),
                 (int) (mentoring.getPay() * 0.2)
         );

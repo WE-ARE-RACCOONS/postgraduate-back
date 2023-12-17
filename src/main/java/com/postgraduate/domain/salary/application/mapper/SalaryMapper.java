@@ -23,7 +23,7 @@ public class SalaryMapper {
                 user.getProfile(),
                 user.getNickName(),
                 mentoring.getDate(),
-                salary.getSenior().getProfile().getTerm(),
+                mentoring.getTerm(),
                 mentoring.getPay(),
                 salary.getSalaryDate()
         );

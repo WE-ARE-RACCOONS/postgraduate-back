@@ -1,6 +1,9 @@
 package com.postgraduate.domain.senior.application.dto.req;
 
+import com.postgraduate.domain.available.application.dto.req.AvailableCreateRequest;
 import jakarta.validation.constraints.NotNull;
+
+import java.util.List;
 
 public record SeniorMyPageProfileRequest(
         @NotNull
@@ -18,5 +21,5 @@ public record SeniorMyPageProfileRequest(
         @NotNull
         String oneLiner,
         @NotNull
-        String time
+        List<AvailableCreateRequest> times
 ) { }

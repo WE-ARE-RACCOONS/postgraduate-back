@@ -1,10 +1,15 @@
 package com.postgraduate.domain.senior.application.dto.res;
 
+import com.postgraduate.domain.available.application.dto.res.AvailableTimeResponse;
 import jakarta.validation.constraints.NotNull;
+
+import java.util.List;
 
 public record SeniorDetailResponse(
         @NotNull
         String nickName,
+        @NotNull
+        int term,
         @NotNull
         String profile,
         @NotNull
@@ -24,5 +29,5 @@ public record SeniorDetailResponse(
         @NotNull
         String target,
         @NotNull
-        String time
+        List<AvailableTimeResponse> times
 ) { }
