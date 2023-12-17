@@ -53,6 +53,10 @@ public class User {
     @UpdateTimestamp
     private LocalDate updatedAt;
 
+    @Column(nullable = false)
+    @Builder.Default
+    private Boolean isDelete = false;
+
     public void updateRole(Role role) {
         this.role = role;
     }
@@ -61,5 +65,9 @@ public class User {
         this.profile = profile;
         this.nickName = nickName;
         this.phoneNumber = phoneNumber;
+    }
+
+    public void updateDelete() {
+        this.isDelete = true;
     }
 }

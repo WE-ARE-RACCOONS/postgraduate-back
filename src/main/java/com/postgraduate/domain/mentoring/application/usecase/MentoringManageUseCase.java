@@ -85,11 +85,11 @@ public class MentoringManageUseCase {
     public void updateCancel() {
         LocalDate now = LocalDate.now();
         List<Mentoring> mentorings = mentoringGetService.byStatusAndCreatedAt(WAITING, now);
-        for (Mentoring mentoring : mentorings) {
-            mentoringUpdateService.updateStatus(mentoring, CANCEL);
-            Refuse refuse = RefuseMapper.mapToRefuse(mentoring);
-            refuseSaveService.saveRefuse(refuse);
-            //TODO : 알림 보내거나 나머지 작업
-        }
+        mentorings.forEach(mentoring -> {
+                    mentoringUpdateService.updateStatus(mentoring, CANCEL);
+                    Refuse refuse = RefuseMapper.mapToRefuse(mentoring);
+                    refuseSaveService.saveRefuse(refuse);
+                    //TODO : 알림 보내거나 나머지 작업
+                });
     }
 }

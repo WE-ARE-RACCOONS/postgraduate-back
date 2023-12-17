@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 
+import static java.lang.Boolean.FALSE;
+
 @Service
 @RequiredArgsConstructor
 public class MentoringGetService {
@@ -26,7 +28,8 @@ public class MentoringGetService {
     }
 
     public Mentoring byMentoringId(Long mentoringId) {
-        return mentoringRepository.findByMentoringId(mentoringId).orElseThrow(MentoringNotFoundException::new);
+        return mentoringRepository.findByMentoringIdAndUser_IsDeleteAndSenior_User_IsDelete(mentoringId, FALSE, FALSE)
+                .orElseThrow(MentoringNotFoundException::new);
     }
 
     public List<Mentoring> byStatusAndCreatedAt(Status status, LocalDate now) {

@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @RequiredArgsConstructor
 public class CheckIsMyMentoringUseCase {
-    private final SeniorGetService seniorGetService;
     private final MentoringGetService mentoringGetService;
 
     public Mentoring byUser(User user, Long mentoringId) {

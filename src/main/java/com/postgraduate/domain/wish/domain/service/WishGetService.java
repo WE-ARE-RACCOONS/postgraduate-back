@@ -23,6 +23,6 @@ public class WishGetService {
     }
 
     public List<Wish> all() {
-        return wishRepository.findAll();
+        return wishRepository.findAllByUser_IsDelete(false);
     }
 }
