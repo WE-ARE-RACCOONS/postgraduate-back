@@ -44,7 +44,7 @@ public class Info {
     @Builder.Default
     private Boolean etcPostgradu = false;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String totalInfo; // 모든 Info정보 String으로 가지는 컬럼 - 검색시 사용
 
     public void updateMyPage(SeniorMyPageProfileRequest request) {
