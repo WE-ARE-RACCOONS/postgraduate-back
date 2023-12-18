@@ -69,7 +69,8 @@ public class AdminMapper {
                 user.getNickName(),
                 user.getPhoneNumber(),
                 senior.getUser().getNickName(),
-                senior.getUser().getPhoneNumber()
+                senior.getUser().getPhoneNumber(),
+                mentoring.getCreatedAt()
         );
     }
 
