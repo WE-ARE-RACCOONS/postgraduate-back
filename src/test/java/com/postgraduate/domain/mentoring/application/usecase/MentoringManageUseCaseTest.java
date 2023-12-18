@@ -89,7 +89,7 @@ class MentoringManageUseCaseTest {
     void updateCancel() {
         Mentoring mentoring = new Mentoring(mentoringId, user, senior
                 , "a", "b", "c"
-                , 40, 40, EXPECTED
+                , 40, 40, WAITING
                 , LocalDate.now(), LocalDate.now());
 
         given(checkIsMyMentoringUseCase.byUser(user, mentoringId))
@@ -101,7 +101,37 @@ class MentoringManageUseCaseTest {
     }
 
     @Test
-    @DisplayName("DONE 상태 변경 실패 테스트")
+    @DisplayName("CANCEL 상태 변경 실패 테스트 - EXPECTED")
+    void updateCancelFailWithExpected() {
+        Mentoring mentoring = new Mentoring(mentoringId, user, senior
+                , "a", "b", "c"
+                , 40, 40, EXPECTED
+                , LocalDate.now(), LocalDate.now());
+
+        given(checkIsMyMentoringUseCase.byUser(user, mentoringId))
+                .willReturn(mentoring);
+
+        assertThatThrownBy(() -> mentoringManageUseCase.updateCancel(user, mentoringId))
+                .isInstanceOf(MentoringNotWaitingException.class);
+    }
+
+    @Test
+    @DisplayName("CANCEL 상태 변경 실패 테스트 - DONE")
+    void updateCancelFailWithDone() {
+        Mentoring mentoring = new Mentoring(mentoringId, user, senior
+                , "a", "b", "c"
+                , 40, 40, DONE
+                , LocalDate.now(), LocalDate.now());
+
+        given(checkIsMyMentoringUseCase.byUser(user, mentoringId))
+                .willReturn(mentoring);
+
+        assertThatThrownBy(() -> mentoringManageUseCase.updateCancel(user, mentoringId))
+                .isInstanceOf(MentoringNotWaitingException.class);
+    }
+
+    @Test
+    @DisplayName("DONE 상태 변경 실패 테스트 - DONE")
     void updateDoneFailWithDone() {
         Mentoring mentoring = new Mentoring(mentoringId, user, senior
                 , "a", "b", "c"
@@ -116,7 +146,7 @@ class MentoringManageUseCaseTest {
     }
 
     @Test
-    @DisplayName("DONE 상태 변경 실패 테스트")
+    @DisplayName("DONE 상태 변경 실패 테스트 - WAITING")
     void updateDoneFailWithWaiting() {
         Mentoring mentoring = new Mentoring(mentoringId, user, senior
                 , "a", "b", "c"
@@ -152,7 +182,7 @@ class MentoringManageUseCaseTest {
         MentoringRefuseRequest request = new MentoringRefuseRequest("abc");
         Mentoring mentoring = new Mentoring(mentoringId, user, senior
                 , "a", "b", "c"
-                , 40, 40, EXPECTED
+                , 40, 40, WAITING
                 , LocalDate.now(), LocalDate.now());
 
         given(seniorGetService.byUser(user))
@@ -164,6 +194,42 @@ class MentoringManageUseCaseTest {
 
         verify(refuseSaveService).saveRefuse(any(Refuse.class));
         verify(mentoringUpdateService).updateStatus(mentoring, REFUSE);
+    }
+
+    @Test
+    @DisplayName("REFUSE 상태 변경 실패 테스트 - EXPECTED")
+    void updateRefuseWithExpected() {
+        MentoringRefuseRequest request = new MentoringRefuseRequest("abc");
+        Mentoring mentoring = new Mentoring(mentoringId, user, senior
+                , "a", "b", "c"
+                , 40, 40, EXPECTED
+                , LocalDate.now(), LocalDate.now());
+
+        given(seniorGetService.byUser(user))
+                .willReturn(senior);
+        given(checkIsMyMentoringUseCase.bySenior(senior, mentoringId))
+                .willReturn(mentoring);
+
+        assertThatThrownBy(() -> mentoringManageUseCase.updateRefuse(user, mentoringId, request))
+                .isInstanceOf(MentoringNotWaitingException.class);
+    }
+
+    @Test
+    @DisplayName("REFUSE 상태 변경 실패 테스트 - DONE")
+    void updateRefuseWithDone() {
+        MentoringRefuseRequest request = new MentoringRefuseRequest("abc");
+        Mentoring mentoring = new Mentoring(mentoringId, user, senior
+                , "a", "b", "c"
+                , 40, 40, DONE
+                , LocalDate.now(), LocalDate.now());
+
+        given(seniorGetService.byUser(user))
+                .willReturn(senior);
+        given(checkIsMyMentoringUseCase.bySenior(senior, mentoringId))
+                .willReturn(mentoring);
+
+        assertThatThrownBy(() -> mentoringManageUseCase.updateRefuse(user, mentoringId, request))
+                .isInstanceOf(MentoringNotWaitingException.class);
     }
 
     @Test
@@ -211,7 +277,7 @@ class MentoringManageUseCaseTest {
     }
 
     @Test
-    @DisplayName("EXPECTED 상태 변경 실패 테스트")
+    @DisplayName("EXPECTED 상태 변경 실패 테스트 - EXPECTED")
     void updateExpectedFailWithExpected() {
         MentoringDateRequest dateRequest = new MentoringDateRequest("2023-12-12");
         Mentoring mentoring = new Mentoring(mentoringId, user, senior
@@ -229,7 +295,7 @@ class MentoringManageUseCaseTest {
     }
 
     @Test
-    @DisplayName("EXPECTED 상태 변경 실패 테스트")
+    @DisplayName("EXPECTED 상태 변경 실패 테스트 - DONE")
     void updateExpectedFailwithDone() {
         MentoringDateRequest dateRequest = new MentoringDateRequest("2023-12-12");
         Mentoring mentoring = new Mentoring(mentoringId, user, senior
