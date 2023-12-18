@@ -5,5 +5,10 @@ import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 
-public record SeniorManageResponse(@NotNull List<SeniorInfo> seniorInfo) {
+public record SeniorManageResponse(
+        @NotNull
+        List<SeniorInfo> seniorInfo,
+        @NotNull
+        Long count
+) {
 }

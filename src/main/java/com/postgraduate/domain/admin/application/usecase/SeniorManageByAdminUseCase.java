@@ -57,6 +57,9 @@ public class SeniorManageByAdminUseCase {
                     return AdminMapper.mapToSeniorInfo(senior, salaryStatus, wish.isPresent());
                 })
                 .toList();
-        return new SeniorManageResponse(seniorInfos);
+        long count = seniors.stream()
+                .filter(senior -> senior.getStatus().equals(Status.APPROVE))
+                .count();
+        return new SeniorManageResponse(seniorInfos, count);
     }
 }
