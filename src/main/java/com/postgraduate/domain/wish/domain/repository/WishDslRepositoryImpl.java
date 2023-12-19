@@ -24,8 +24,8 @@ public class WishDslRepositoryImpl implements WishDslRepository {
         JPAQuery<Wish> query = queryFactory.selectFrom(wish)
                 .where(
                         wish.user.phoneNumber.like("%" + search + "%")
-                                .or(wish.user.nickName.like("%" + search + "%"))
-                                .and(wish.user.isDelete.eq(FALSE))
+                                .or(wish.user.nickName.like("%" + search + "%")),
+                        wish.user.isDelete.eq(FALSE)
                 );
 
         List<Wish> wishes = query.offset(pageable.getOffset())

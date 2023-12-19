@@ -33,8 +33,4 @@ public class WishGetService {
         search = search == null ? "" : search;
         return wishRepository.findAllBySearchWish(search, pageable);
     }
-
-    public Long count() {
-        return wishRepository.count();
-    }
 }

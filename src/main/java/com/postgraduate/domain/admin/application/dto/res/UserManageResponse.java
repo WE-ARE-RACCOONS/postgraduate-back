@@ -9,6 +9,6 @@ public record UserManageResponse(
         @NotNull
         List<UserInfo> userInfo,
         @NotNull
-        Long count
+        Long totalElements
 ) {
 }

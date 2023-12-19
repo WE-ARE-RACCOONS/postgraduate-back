@@ -24,8 +24,8 @@ public class UserManageByAdminUseCase {
         List<UserInfo> userInfos = wishes.stream()
                 .map(AdminMapper::mapToUserInfo)
                 .toList();
-        Long count = wishGetService.count();
-        return new UserManageResponse(userInfos, count);
+        long totalElements = wishes.getTotalElements();
+        return new UserManageResponse(userInfos, totalElements);
     }
 
     public WishResponse getWish(Long wishId) {
