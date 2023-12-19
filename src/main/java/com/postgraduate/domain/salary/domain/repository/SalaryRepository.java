@@ -12,13 +12,9 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-public interface SalaryRepository extends JpaRepository<Salary, Long> {
+public interface SalaryRepository extends JpaRepository<Salary, Long>, SalaryDslRepository {
     List<Salary> findAllBySeniorAndSalaryDate(Senior senior, LocalDate salaryDate);
     List<Salary> findAllBySeniorAndSalaryDateAndStatus(Senior senior, LocalDate salaryDate, Boolean status);
     List<Salary> findAllBySeniorAndStatusOrderBySalaryDateDesc(Senior senior, Boolean status);
     Optional<Salary> findByMentoring(Mentoring mentoring);
-    @Query("SELECT COUNT(DISTINCT s.senior) FROM Salary s WHERE s.salaryDate = :salaryDate AND s.status = true")
-    Long countBySalaryDate(LocalDate salaryDate);
-    @Query("SELECT DISTINCT s.senior FROM Salary s WHERE s.salaryDate = :salaryDate AND s.status = true")
-    Page<Senior> findDistinctSeniors(LocalDate salaryDate, Pageable pageable);
 }

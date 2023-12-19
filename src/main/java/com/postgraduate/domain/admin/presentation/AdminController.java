@@ -74,8 +74,9 @@ public class AdminController {
 
     @GetMapping("/salary")
     @Operation(summary = "[관리자] 정산 목록 조회", description = "한 달 기준으로 정산 목록을 조회합니다. 기준일은 [11일 ~ 내월 10일]입니다.")
-    public ResponseDto<SalaryManageResponse> getSalaries(@RequestParam(required = false) Integer page) {
-        SalaryManageResponse salaries = salaryManageUseCase.getSalaries(page);
+    public ResponseDto<SalaryManageResponse> getSalaries(@RequestParam(required = false) Integer page,
+                                                         @RequestParam(required = false) String search) {
+        SalaryManageResponse salaries = salaryManageUseCase.getSalaries(page, search);
         return ResponseDto.create(ADMIN_FIND.getCode(), GET_LIST.getMessage(), salaries);
     }
 

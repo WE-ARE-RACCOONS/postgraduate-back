@@ -51,17 +51,16 @@ public class SalaryManageByAdminUseCase {
         return AdminMapper.mapToSalaryDetailsResponse(senior, totalAmount, status);
     }
 
-    public SalaryManageResponse getSalaries(Integer page) {
-        Page<Senior> seniors = salaryGetService.findDistinctSeniors(getSalaryDate(), page);
-        Long count = salaryGetService.countBySalaryDate(getSalaryDate());
-
+    public SalaryManageResponse getSalaries(Integer page, String search) {
+        Page<Senior> seniors = salaryGetService.findDistinctSeniors(getSalaryDate(), search, page);
+        Long totalElements = seniors.getTotalElements();
         List<SalaryInfo> responses = new ArrayList<>();
         seniors.forEach(senior -> {
             List<Salary> salaries = salaryGetService.bySeniorAndSalaryDateAndStatus(senior, getSalaryDate(), true);
             SalaryInfo response = getSalaryInfo(senior, salaries);
             responses.add(response);
         });
-        return new SalaryManageResponse(responses, count);
+        return new SalaryManageResponse(responses, totalElements);
     }
 
     private SalaryInfo getSalaryInfo(Senior senior, List<Salary> salaries) {

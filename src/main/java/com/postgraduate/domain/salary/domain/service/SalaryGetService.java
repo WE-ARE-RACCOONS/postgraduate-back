@@ -37,14 +37,10 @@ public class SalaryGetService {
         return salaryRepository.findByMentoring(mentoring).orElseThrow(SalaryNotFoundException::new);
     }
 
-    public Long countBySalaryDate(LocalDate salaryDate) {
-        return salaryRepository.countBySalaryDate(salaryDate);
-    }
-
-    public Page<Senior> findDistinctSeniors(LocalDate salaryDate, Integer page) {
-        if (page == null)
-            page = 1;
+    public Page<Senior> findDistinctSeniors(LocalDate salaryDate, String search, Integer page) {
+        page = page == null ? 1 : page;
         Pageable pageable = PageRequest.of(page - 1, ADMIN_PAGE_SIZE);
-        return salaryRepository.findDistinctSeniors(salaryDate, pageable);
+        search = search == null ? "" : search;
+        return salaryRepository.findDistinctBySearchSenior(salaryDate, search, pageable);
     }
 }

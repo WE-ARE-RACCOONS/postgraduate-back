@@ -9,6 +9,6 @@ public record SalaryManageResponse(
         @NotNull
         List<SalaryInfo> salaryInfos,
         @NotNull
-        Long count
+        Long totalElements
 ) {
 }
