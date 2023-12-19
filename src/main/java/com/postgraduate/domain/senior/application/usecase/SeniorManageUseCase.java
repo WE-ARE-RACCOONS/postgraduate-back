@@ -13,6 +13,7 @@ import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.domain.senior.domain.service.SeniorUpdateService;
+import com.postgraduate.domain.senior.exception.NoneAccountException;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.service.UserUpdateService;
 import com.postgraduate.global.config.security.util.EncryptorUtils;
@@ -78,6 +79,8 @@ public class SeniorManageUseCase {
             updateSeniorMyPageUserAccountNoneAccount(senior, user, myPageUserAccountRequest);
             return;
         }
+        if (myPageUserAccountRequest.accountNumber().isEmpty() || myPageUserAccountRequest.accountHolder().isEmpty() || myPageUserAccountRequest.bank().isEmpty())
+            throw new NoneAccountException();
         Account account = optionalAccount.get();
         String accountNumber = encryptorUtils.encryptData(myPageUserAccountRequest.accountNumber());
         userUpdateService.updateSeniorUserAccount(user.getUserId(), myPageUserAccountRequest);
@@ -85,6 +88,10 @@ public class SeniorManageUseCase {
     }
 
     private void updateSeniorMyPageUserAccountNoneAccount(Senior senior, User user, SeniorMyPageUserAccountRequest myPageUserAccountRequest) {
+        if (myPageUserAccountRequest.accountNumber().isEmpty() || myPageUserAccountRequest.accountHolder().isEmpty() || myPageUserAccountRequest.bank().isEmpty()) {
+            userUpdateService.updateSeniorUserAccount(user.getUserId(), myPageUserAccountRequest);
+            return;
+        }
         String accountNumber = encryptorUtils.encryptData(myPageUserAccountRequest.accountNumber());
         Account account = mapToAccount(senior, myPageUserAccountRequest, accountNumber);
         userUpdateService.updateSeniorUserAccount(user.getUserId(), myPageUserAccountRequest);
