@@ -23,7 +23,7 @@ public class KakaoSignInUseCase implements SignInUseCase {
     @Override
     public AuthUserResponse getUser(CodeRequest codeRequest) {
         KakaoUserInfoResponse userInfo = kakaoTokenUseCase.getAccessToken(codeRequest);
-        Long socialId = userInfo.getId();
+        Long socialId = userInfo.id();
         Optional<User> user = userGetService.bySocialId(socialId);
         return AuthMapper.mapToAuthUser(user, socialId);
     }

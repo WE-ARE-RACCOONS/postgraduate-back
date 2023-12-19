@@ -7,6 +7,7 @@ import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
 import com.postgraduate.domain.mentoring.domain.service.MentoringUpdateService;
 import com.postgraduate.domain.mentoring.exception.MentoringDoneException;
+import com.postgraduate.domain.mentoring.exception.MentoringNotExpectedException;
 import com.postgraduate.domain.mentoring.exception.MentoringNotWaitingException;
 import com.postgraduate.domain.refuse.application.dto.req.MentoringRefuseRequest;
 import com.postgraduate.domain.refuse.application.mapper.RefuseMapper;
@@ -44,14 +45,15 @@ public class MentoringManageUseCase {
 
     public void updateCancel(User user, Long mentoringId) {
         Mentoring mentoring = checkIsMyMentoringUseCase.byUser(user, mentoringId);
+        if (mentoring.getStatus() != WAITING)
+            throw new MentoringNotWaitingException();
         mentoringUpdateService.updateStatus(mentoring, CANCEL);
     }
 
     public void updateDone(User user, Long mentoringId) {
         Mentoring mentoring = checkIsMyMentoringUseCase.byUser(user, mentoringId);
-        if (mentoring.getStatus() == DONE) {
-            throw new MentoringDoneException();
-        }
+        if (mentoring.getStatus() != EXPECTED)
+            throw new MentoringNotExpectedException();
         createSalary(mentoring);
         mentoringUpdateService.updateStatus(mentoring, DONE);
     }
@@ -65,6 +67,8 @@ public class MentoringManageUseCase {
     public void updateRefuse(User user, Long mentoringId, MentoringRefuseRequest request) {
         Senior senior = seniorGetService.byUser(user);
         Mentoring mentoring = checkIsMyMentoringUseCase.bySenior(senior, mentoringId);
+        if (mentoring.getStatus() != WAITING)
+            throw new MentoringNotWaitingException();
         Refuse refuse = RefuseMapper.mapToRefuse(mentoring, request);
         refuseSaveService.saveRefuse(refuse);
         mentoringUpdateService.updateStatus(mentoring, REFUSE);

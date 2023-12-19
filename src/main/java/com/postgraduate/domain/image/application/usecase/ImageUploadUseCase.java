@@ -18,7 +18,7 @@ public class ImageUploadUseCase {
     }
 
     public ImageUrlResponse uploadProfile(User user, MultipartFile profile) {
-        if (user.getProfile() != null)
+        if (!user.getProfile().equals("default")) //todo : default사진 생기면 수정
             uploadService.deleteProfileImage(user.getProfile());
         String url = uploadService.saveProfileFile(profile);
         return new ImageUrlResponse(url);

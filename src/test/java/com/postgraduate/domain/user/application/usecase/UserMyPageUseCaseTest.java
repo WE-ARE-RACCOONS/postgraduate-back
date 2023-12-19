@@ -1,57 +1,82 @@
 package com.postgraduate.domain.user.application.usecase;
 
+import com.postgraduate.domain.user.application.dto.res.UserInfoResponse;
+import com.postgraduate.domain.user.application.dto.res.UserMyPageResponse;
+import com.postgraduate.domain.user.application.dto.res.UserPossibleResponse;
+import com.postgraduate.domain.user.domain.entity.User;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static com.postgraduate.domain.user.domain.entity.constant.Role.SENIOR;
+import static com.postgraduate.domain.user.domain.entity.constant.Role.USER;
+import static java.lang.Boolean.TRUE;
+import static java.time.LocalDate.now;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
-public class UserMyPageUseCaseTest {
-//    @Mock
-//    UserGetService userGetService;
-//    @InjectMocks
-//    UserMyPageUseCase userMyPageUseCase;
-//
-//    private User testUser;
-//    @BeforeEach
-//    void setTestUser() {
-//        Hope hope = new Hope("computer","ai", true);
-//        testUser = new User(100000000L, 12345L, "test.com",
-//                "test", "test.png", "01012341234", 0, Role.USER, hope, false,
-//                LocalDate.now(), LocalDate.now());
-//    }
-//
-//    @Test
-//    @DisplayName("유저 기본 정보 반환 테스트")
-//    void getUserInfo() {
-//        UserInfoResponse expected = new UserInfoResponse(testUser.getNickName(), testUser.getProfile(), testUser.getPoint());
-//        UserInfoResponse actual = userMyPageUseCase.getUserInfo(testUser);
-//
-//        assertThat(expected.getNickName())
-//                .isEqualTo(actual.getNickName());
-//        assertThat(expected.getProfile())
-//                .isEqualTo(actual.getProfile());
-//        assertThat(expected.getPoint())
-//                .isEqualTo(actual.getPoint());
-//    }
-//
-//    @Test
-//    @DisplayName("닉네임 중복되는 경우 테스트")
-//    void duplicatedNick() {
-//        given(userGetService.byNickName("test"))
-//                .willReturn(Optional.ofNullable(testUser));
-//
-//        assertThat(userMyPageUseCase.duplicatedNickName("test"))
-//                .isFalse();
-//    }
-//
-//    @Test
-//    @DisplayName("닉네임 중복되지 않는 경우 테스트")
-//    void notDuplicatedNick() {
-//        given(userGetService.byNickName("test"))
-//                .willReturn(Optional.ofNullable(null));
-//
-//        assertThat(userMyPageUseCase.duplicatedNickName("test"))
-//                .isTrue();
-//    }
+class UserMyPageUseCaseTest {
+    @InjectMocks
+    UserMyPageUseCase userMyPageUseCase;
+
+    private User user;
+    @BeforeEach
+    void setting() {
+        user = new User(1L, 1234L, "a",
+                "a", "123", "a",
+                1, USER, TRUE, now(), now(), TRUE);
+    }
+
+    @Test
+    @DisplayName("마이페이지에서의 유저 정보 확인 테스트")
+    void getMyPageUserInfo() {
+        UserMyPageResponse userInfo = userMyPageUseCase.getUserInfo(user);
+
+        assertThat(userInfo.nickName())
+                .isEqualTo(user.getNickName());
+        assertThat(userInfo.profile())
+                .isEqualTo(user.getProfile());
+    }
+
+    @Test
+    @DisplayName("유저 정보 확인 테스트")
+    void getUserInfo() {
+        UserInfoResponse userInfo = userMyPageUseCase.getUserOriginInfo(user);
+
+        assertThat(userInfo.nickName())
+                .isEqualTo(user.getNickName());
+        assertThat(userInfo.profile())
+                .isEqualTo(user.getProfile());
+        assertThat(userInfo.phoneNumber())
+                .isEqualTo(user.getPhoneNumber());
+    }
+
+    @Test
+    @DisplayName("선배 여부 확인 - USER")
+    void checkSeniorWithUser() {
+        UserPossibleResponse checkSenior = userMyPageUseCase.checkSenior(user);
+
+        assertThat(checkSenior.possible())
+                .isFalse();
+        assertThat(checkSenior.socialId())
+                .isEqualTo(user.getSocialId());
+    }
+
+    @Test
+    @DisplayName("선배 여부 확인 - SENIOR")
+    void checkSeniorWithSenior() {
+        user = new User(1L, 1234L, "a",
+                "a", "123", "a",
+                1, SENIOR, TRUE, now(), now(), TRUE);
+
+        UserPossibleResponse checkSenior = userMyPageUseCase.checkSenior(user);
+
+        assertThat(checkSenior.possible())
+                .isTrue();
+        assertThat(checkSenior.socialId())
+                .isEqualTo(user.getSocialId());
+    }
 }

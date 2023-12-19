@@ -27,8 +27,6 @@ public class JwtUseCase {
     }
 
     public JwtTokenResponse regenerateToken(User user, HttpServletRequest request) {
-        if (user.getIsDelete())
-            throw new DeletedUserException();
         jwtUtils.checkRedis(user.getUserId(), request);
         return generateToken(user);
     }
