@@ -21,6 +21,7 @@ import static java.lang.Boolean.FALSE;
 public class SeniorGetService {
     private final SeniorRepository seniorRepository;
     private static final int SENIOR_PAGE_SIZE = 10;
+    private static final int ADMIN_PAGE_SIZE = 15;
 
     public Senior byUser(User user) {
         return seniorRepository.findByUser(user).orElseThrow(NoneSeniorException::new);
@@ -36,6 +37,13 @@ public class SeniorGetService {
 
     public List<Senior> byStatus(Status status) {
         return seniorRepository.findAllByStatus(status);
+    }
+
+    public Page<Senior> all(Integer page) {
+        if (page == null)
+            page = 1;
+        Pageable pageable = PageRequest.of(page - 1, ADMIN_PAGE_SIZE);
+        return seniorRepository.findAllByUser_IsDelete(FALSE, pageable);
     }
 
     public List<Senior> all() {

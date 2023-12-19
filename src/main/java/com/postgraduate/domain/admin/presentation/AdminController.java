@@ -65,8 +65,8 @@ public class AdminController {
 
     @GetMapping("/seniors")
     @Operation(summary = "[관리자] 선배 정보 목록", description = "대학원생 선배 정보 목록을 조회합니다.")
-    public ResponseDto<SeniorManageResponse> getSeniors() {
-        SeniorManageResponse seniors = seniorManageUseCase.getSeniors();
+    public ResponseDto<SeniorManageResponse> getSeniors(@RequestParam(required = false) Integer page) {
+        SeniorManageResponse seniors = seniorManageUseCase.getSeniors(page);
         return ResponseDto.create(ADMIN_FIND.getCode(), GET_LIST.getMessage(), seniors);
     }
 
