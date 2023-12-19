@@ -27,12 +27,11 @@ public class WishGetService {
         return wishRepository.findByUser(user);
     }
 
-    public Page<Wish> all(Integer page) {
-        if (page == null) {
-            page = 1;
-        }
+    public Page<Wish> all(Integer page, String search) {
+        page = page == null ? 1 : page;
         Pageable pageable = PageRequest.of(page - 1, ADMIN_PAGE_SIZE);
-        return wishRepository.findAllByUser_IsDelete(false, pageable);
+        search = search == null ? "" : search;
+        return wishRepository.findAllBySearchWish(search, pageable);
     }
 
     public Long count() {

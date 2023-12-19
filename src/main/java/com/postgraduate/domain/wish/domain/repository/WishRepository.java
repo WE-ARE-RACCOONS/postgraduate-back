@@ -2,13 +2,10 @@ package com.postgraduate.domain.wish.domain.repository;
 
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.wish.domain.entity.Wish;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface WishRepository extends JpaRepository<Wish, Long> {
+public interface WishRepository extends JpaRepository<Wish, Long>, WishDslRepository {
     Optional<Wish> findByUser(User user);
-    Page<Wish> findAllByUser_IsDelete(boolean isDelete, Pageable pageable);
 }

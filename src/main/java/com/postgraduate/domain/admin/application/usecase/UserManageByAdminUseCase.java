@@ -19,8 +19,8 @@ import java.util.List;
 public class UserManageByAdminUseCase {
     private final WishGetService wishGetService;
 
-    public UserManageResponse getUsers(Integer page) {
-        Page<Wish> wishes = wishGetService.all(page);
+    public UserManageResponse getUsers(Integer page, String search) {
+        Page<Wish> wishes = wishGetService.all(page, search);
         List<UserInfo> userInfos = wishes.stream()
                 .map(AdminMapper::mapToUserInfo)
                 .toList();
