@@ -16,15 +16,15 @@ import org.springframework.stereotype.Service;
 public class PaymentGetService {
     private static final int ADMIN_PAGE_SIZE = 15;
     private final PaymentRepository paymentRepository;
-    public Page<Payment> all(Integer page) {
-        if (page == null)
-            page = 1;
+    public Page<Payment> all(Integer page, String search) {
+        page = page == null ? 1 : page;
         Pageable pageable = PageRequest.of(page - 1, ADMIN_PAGE_SIZE);
-        return paymentRepository.findAll(pageable);
+        search = search == null ? "" : search;
+        return paymentRepository.findAllBySearchPayment(search, pageable);
     }
 
     public Long count() {
-        return paymentRepository.countAllByStatus(Status.DONE);
+        return paymentRepository.countAllByStatusAndMentoring_UserIsDelete(Status.DONE, false);
     }
 
     public Payment byMentoring(Mentoring mentoring) {

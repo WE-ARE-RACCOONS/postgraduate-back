@@ -9,6 +9,6 @@ public record PaymentManageResponse(
         @NotNull
         List<PaymentInfo> paymentInfo,
         @NotNull
-        Long count
+        Long totalElements
 ) {
 }

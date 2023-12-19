@@ -17,12 +17,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PaymentManageByAdminUseCase {
     private final PaymentGetService paymentGetService;
-    public PaymentManageResponse getPayments(Integer page) {
-        Page<Payment> payments = paymentGetService.all(page);
+    public PaymentManageResponse getPayments(Integer page, String search) {
+        Page<Payment> payments = paymentGetService.all(page, search);
         List<PaymentInfo> paymentInfos = payments.stream()
                 .map(AdminMapper::mapToPaymentInfo)
                 .toList();
-        Long count = paymentGetService.count();
-        return new PaymentManageResponse(paymentInfos, count);
+        long totalElements = payments.getTotalElements();
+        return new PaymentManageResponse(paymentInfos, totalElements);
     }
 }

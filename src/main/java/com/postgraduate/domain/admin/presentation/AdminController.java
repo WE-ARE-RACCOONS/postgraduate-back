@@ -109,8 +109,9 @@ public class AdminController {
 
     @GetMapping("/payments")
     @Operation(summary = "[관리자] 결제 정보 목록", description = "결제 정보 목록을 조회합니다.")
-    public ResponseDto<PaymentManageResponse> getPayments(@RequestParam(required = false) Integer page) {
-        PaymentManageResponse payments = paymentManageUseCase.getPayments(page);
+    public ResponseDto<PaymentManageResponse> getPayments(@RequestParam(required = false) Integer page,
+                                                          @RequestParam(required = false) String search) {
+        PaymentManageResponse payments = paymentManageUseCase.getPayments(page, search);
         return ResponseDto.create(ADMIN_FIND.getCode(), GET_LIST.getMessage(), payments);
     }
 
