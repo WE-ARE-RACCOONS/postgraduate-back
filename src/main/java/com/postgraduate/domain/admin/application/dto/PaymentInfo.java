@@ -1,5 +1,6 @@
 package com.postgraduate.domain.admin.application.dto;
 
+import com.postgraduate.domain.payment.domain.entity.constant.Status;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
@@ -10,11 +11,13 @@ public record PaymentInfo(
         @NotNull
         Long mentoringId,
         @NotNull
-        String userNickName,
+        String userNickName, //todo: payple 실명
         @NotNull
-        String seniorNickName,
+        String phoneNumber,
         @NotNull
         LocalDate createdAt,
         @NotNull
-        Integer pay
+        Integer pay,
+        @NotNull
+        Status status
 ) { }

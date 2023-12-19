@@ -5,5 +5,10 @@ import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 
-public record PaymentManageResponse(@NotNull List<PaymentInfo> paymentInfo) {
+public record PaymentManageResponse(
+        @NotNull
+        List<PaymentInfo> paymentInfo,
+        @NotNull
+        Long count
+) {
 }

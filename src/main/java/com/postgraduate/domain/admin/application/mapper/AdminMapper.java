@@ -76,13 +76,15 @@ public class AdminMapper {
 
     public static PaymentInfo mapToPaymentInfo(Payment payment) {
         Mentoring mentoring = payment.getMentoring();
+        User user = mentoring.getUser();
         return new PaymentInfo(
                 payment.getPaymentId(),
                 mentoring.getMentoringId(),
-                mentoring.getUser().getNickName(),
-                mentoring.getSenior().getUser().getNickName(),
+                user.getNickName(),
+                user.getPhoneNumber(),
                 payment.getCreatedAt(),
-                mentoring.getPay()
+                mentoring.getPay(),
+                payment.getStatus()
         );
     }
 
