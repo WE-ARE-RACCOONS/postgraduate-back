@@ -54,10 +54,10 @@ public class SalaryManageByAdminUseCase {
         List<SalaryInfo> responses = new ArrayList<>();
         List<Senior> seniors = seniorGetService.all();
         seniors.forEach(senior -> {
-            List<Salary> salaries = salaryGetService.bySeniorAndSalaryDateAndStatus(senior, getSalaryDate(), true)
-                    .stream()
-                    .filter(salary -> (salary.getStatus().equals(DONE)))
-                    .toList();
+            List<Salary> salaries = salaryGetService.bySeniorAndSalaryDateAndStatus(senior, getSalaryDate(), true);
+            if (!DONE.equals(getStatus(salaries))) {
+                return;
+            }
             SalaryInfo response = getSalaryInfo(senior, salaries);
             responses.add(response);
         });
