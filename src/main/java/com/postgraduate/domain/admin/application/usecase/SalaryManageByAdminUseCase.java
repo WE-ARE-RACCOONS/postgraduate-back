@@ -14,6 +14,7 @@ import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.global.config.security.util.EncryptorUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,18 +51,17 @@ public class SalaryManageByAdminUseCase {
         return AdminMapper.mapToSalaryDetailsResponse(senior, totalAmount, status);
     }
 
-    public SalaryManageResponse getSalaries() {
+    public SalaryManageResponse getSalaries(Integer page) {
+        Page<Senior> seniors = salaryGetService.findDistinctSeniors(getSalaryDate(), page);
+        Long count = salaryGetService.countBySalaryDate(getSalaryDate());
+
         List<SalaryInfo> responses = new ArrayList<>();
-        List<Senior> seniors = seniorGetService.all();
         seniors.forEach(senior -> {
             List<Salary> salaries = salaryGetService.bySeniorAndSalaryDateAndStatus(senior, getSalaryDate(), true);
-            if (!DONE.equals(getStatus(salaries))) {
-                return;
-            }
             SalaryInfo response = getSalaryInfo(senior, salaries);
             responses.add(response);
         });
-        return new SalaryManageResponse(responses);
+        return new SalaryManageResponse(responses, count);
     }
 
     private SalaryInfo getSalaryInfo(Senior senior, List<Salary> salaries) {

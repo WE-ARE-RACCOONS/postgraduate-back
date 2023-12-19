@@ -5,5 +5,10 @@ import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 
-public record SalaryManageResponse(@NotNull List<SalaryInfo> salaryInfos) {
+public record SalaryManageResponse(
+        @NotNull
+        List<SalaryInfo> salaryInfos,
+        @NotNull
+        Long count
+) {
 }
