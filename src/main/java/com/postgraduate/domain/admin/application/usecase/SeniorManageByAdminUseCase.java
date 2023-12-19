@@ -48,8 +48,8 @@ public class SeniorManageByAdminUseCase {
         seniorUpdateService.updateCertificationStatus(senior, request.certificationStatus());
     }
 
-    public SeniorManageResponse getSeniors(Integer page) {
-        Page<Senior> seniors = seniorGetService.all(page);
+    public SeniorManageResponse getSeniors(Integer page, String search) {
+        Page<Senior> seniors = seniorGetService.all(page, search);
         List<SeniorInfo> seniorInfos = seniors.stream()
                 .map(senior -> {
                     List<Salary> salaries = salaryGetService.bySeniorAndSalaryDate(senior, getSalaryDate());

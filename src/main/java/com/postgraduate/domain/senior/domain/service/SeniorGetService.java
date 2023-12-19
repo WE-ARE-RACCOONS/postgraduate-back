@@ -39,11 +39,11 @@ public class SeniorGetService {
         return seniorRepository.findAllByStatus(status);
     }
 
-    public Page<Senior> all(Integer page) {
-        if (page == null)
-            page = 1;
+    public Page<Senior> all(Integer page, String search) {
+        page = page == null ? 1 : page;
         Pageable pageable = PageRequest.of(page - 1, ADMIN_PAGE_SIZE);
-        return seniorRepository.findAllByUser_IsDelete(FALSE, pageable);
+        search = search == null ? "" : search;
+        return seniorRepository.findAllBySearchSenior(search, pageable);
     }
 
     public List<Senior> all() {

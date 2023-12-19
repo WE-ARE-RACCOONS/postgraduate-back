@@ -101,4 +101,22 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
                 .reduce(BooleanExpression::or)
                 .orElse(FALSE);
     }
+
+    @Override
+    public Page<Senior> findAllBySearchSenior(String search, Pageable pageable) {
+        JPAQuery<Senior> query = queryFactory.selectFrom(senior)
+                .where(
+                        senior.user.phoneNumber.like("%" + search + "%")
+                                .or(senior.user.nickName.like("%" + search + "%"))
+                                .and(senior.user.isDelete.eq(FALSE))
+                );
+
+        List<Senior> seniors = query.offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        long total = query.fetchCount();
+
+        return new PageImpl<>(seniors, pageable, total);
+    }
 }
