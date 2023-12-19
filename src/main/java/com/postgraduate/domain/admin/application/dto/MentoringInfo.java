@@ -11,13 +11,9 @@ public record MentoringInfo(
         @NotNull
         Status status,
         @NotNull
-        String userNickName,
+        String nickName,
         @NotNull
-        String userPhoneNumber,
-        @NotNull
-        String seniorNickName,
-        @NotNull
-        String seniorPhoneNumber,
+        String phoneNumber,
         @NotNull
         LocalDate createdAt
 ) {

@@ -62,15 +62,27 @@ public class AdminMapper {
 
     public static MentoringInfo mapToMentoringInfo(Mentoring mentoring) {
          User user = mentoring.getUser();
-        Senior senior = mentoring.getSenior();
         return new MentoringInfo(
                 mentoring.getMentoringId(),
                 mentoring.getStatus(),
                 user.getNickName(),
                 user.getPhoneNumber(),
-                senior.getUser().getNickName(),
-                senior.getUser().getPhoneNumber(),
                 mentoring.getCreatedAt()
+        );
+    }
+
+    public static UserMentoringInfo mapToUserMentoringInfo(User user) {
+        return new UserMentoringInfo(
+                user.getNickName(),
+                user.getPhoneNumber()
+        );
+    }
+
+    public static UserMentoringInfo mapToUserMentoringInfo(Senior senior) {
+        User user = senior.getUser();
+        return new UserMentoringInfo(
+                user.getNickName(),
+                user.getPhoneNumber()
         );
     }
 
