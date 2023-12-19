@@ -24,8 +24,8 @@ public class PaymentDslRepositoryImpl implements PaymentDslRepository {
         JPAQuery<Payment> query = queryFactory.selectFrom(payment)
                 .where(
                         payment.mentoring.user.nickName.like("%" + search + "%")
-                                .or(payment.mentoring.user.phoneNumber.like("%" + search + "%"))
-                        , payment.mentoring.user.isDelete.eq(FALSE)
+                                .or(payment.mentoring.user.phoneNumber.like("%" + search + "%")),
+                        payment.mentoring.user.isDelete.eq(FALSE)
                         );
 
         List<Payment> seniors = query.offset(pageable.getOffset())
