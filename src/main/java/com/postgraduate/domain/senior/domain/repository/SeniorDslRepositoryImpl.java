@@ -107,8 +107,8 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
         JPAQuery<Senior> query = queryFactory.selectFrom(senior)
                 .where(
                         senior.user.phoneNumber.like("%" + search + "%")
-                                .or(senior.user.nickName.like("%" + search + "%"))
-                                .and(senior.user.isDelete.eq(FALSE))
+                                .or(senior.user.nickName.like("%" + search + "%")),
+                        senior.user.isDelete.eq(FALSE)
                 );
 
         List<Senior> seniors = query.offset(pageable.getOffset())
