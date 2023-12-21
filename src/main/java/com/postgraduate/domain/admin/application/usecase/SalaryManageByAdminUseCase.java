@@ -8,6 +8,7 @@ import com.postgraduate.domain.admin.application.dto.res.SalaryDetailsResponse;
 import com.postgraduate.domain.admin.application.mapper.AdminMapper;
 import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.admin.presentation.constant.SalaryStatus;
+import com.postgraduate.domain.salary.application.dto.SeniorSalary;
 import com.postgraduate.domain.salary.domain.service.SalaryGetService;
 import com.postgraduate.domain.salary.domain.service.SalaryUpdateService;
 import com.postgraduate.domain.senior.domain.entity.Senior;
@@ -23,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.postgraduate.domain.admin.presentation.constant.SalaryStatus.DONE;
 import static com.postgraduate.domain.salary.util.SalaryUtil.*;
 
 @Service
@@ -52,11 +52,11 @@ public class SalaryManageByAdminUseCase {
     }
 
     public SalaryManageResponse getSalaries(Integer page, String search) {
-        Page<Senior> seniors = salaryGetService.findDistinctSeniors(getSalaryDate(), search, page);
+        Page<SeniorSalary> seniors = salaryGetService.findDistinctSeniors(search, page);
         List<SalaryInfo> responses = new ArrayList<>();
         seniors.forEach(senior -> {
-            List<Salary> salaries = salaryGetService.bySeniorAndSalaryDateAndStatus(senior, getSalaryDate(), true);
-            SalaryInfo response = getSalaryInfo(senior, salaries);
+            List<Salary> salaries = salaryGetService.bySeniorAndSalaryDateAndStatus(senior.senior(), senior.salaryDate(), true);
+            SalaryInfo response = getSalaryInfo(senior.senior(), salaries);
             responses.add(response);
         });
         Long totalElements = seniors.getTotalElements();

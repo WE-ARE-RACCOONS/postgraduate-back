@@ -1,11 +1,9 @@
 package com.postgraduate.domain.salary.domain.repository;
 
-import com.postgraduate.domain.senior.domain.entity.Senior;
+import com.postgraduate.domain.salary.application.dto.SeniorSalary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.time.LocalDate;
-
 public interface SalaryDslRepository {
-    Page<Senior> findDistinctBySearchSenior(LocalDate salaryDate, String search, Pageable pageable);
+    Page<SeniorSalary> findDistinctBySearchSenior(String search, Pageable pageable);
 }
