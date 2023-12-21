@@ -7,6 +7,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import static com.postgraduate.global.config.s3.Default.SENIOR;
+import static com.postgraduate.global.config.s3.Default.USER;
+
 @Service
 @RequiredArgsConstructor
 public class ImageUploadUseCase {
@@ -18,7 +21,7 @@ public class ImageUploadUseCase {
     }
 
     public ImageUrlResponse uploadProfile(User user, MultipartFile profile) {
-        if (!user.getProfile().equals("default")) //todo : default사진 생기면 수정
+        if (!(user.getProfile().equals(USER.getUrl()) || user.getProfile().equals(SENIOR.getUrl())))
             uploadService.deleteProfileImage(user.getProfile());
         String url = uploadService.saveProfileFile(profile);
         return new ImageUrlResponse(url);
