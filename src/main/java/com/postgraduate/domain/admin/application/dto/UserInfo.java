@@ -3,7 +3,7 @@ package com.postgraduate.domain.admin.application.dto;
 import com.postgraduate.domain.user.domain.entity.constant.Role;
 import jakarta.validation.constraints.NotNull;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public record UserInfo(
         @NotNull
@@ -13,7 +13,7 @@ public record UserInfo(
         @NotNull
         String phoneNumber,
         @NotNull
-        LocalDate createdAt,
+        LocalDateTime createdAt,
         @NotNull
         Boolean marketingReceive,
         @NotNull

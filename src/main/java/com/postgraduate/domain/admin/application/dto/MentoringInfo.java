@@ -3,7 +3,7 @@ package com.postgraduate.domain.admin.application.dto;
 import com.postgraduate.domain.mentoring.domain.entity.constant.Status;
 import jakarta.validation.constraints.NotNull;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public record MentoringInfo(
         @NotNull
@@ -15,6 +15,6 @@ public record MentoringInfo(
         @NotNull
         String phoneNumber,
         @NotNull
-        LocalDate createdAt
+        LocalDateTime createdAt
 ) {
 }

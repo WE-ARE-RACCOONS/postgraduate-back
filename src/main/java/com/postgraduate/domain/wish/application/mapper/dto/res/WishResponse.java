@@ -2,7 +2,7 @@ package com.postgraduate.domain.wish.application.mapper.dto.res;
 
 import jakarta.validation.constraints.NotNull;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public record WishResponse(
         @NotNull
@@ -10,7 +10,7 @@ public record WishResponse(
         @NotNull
         String phoneNumber,
         @NotNull
-        LocalDate createAt,
+        LocalDateTime createAt,
         @NotNull
         Boolean marketingReceive,
         @NotNull

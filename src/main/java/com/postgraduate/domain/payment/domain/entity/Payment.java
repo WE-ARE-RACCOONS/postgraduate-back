@@ -7,10 +7,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Builder
@@ -26,11 +25,11 @@ public class Payment {
     private Mentoring mentoring;
 
     @CreationTimestamp
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
-    private LocalDate paidAt;
+    private LocalDateTime paidAt;
 
-    private LocalDate deletedAt;
+    private LocalDateTime deletedAt;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

@@ -3,7 +3,7 @@ package com.postgraduate.domain.admin.application.dto;
 import com.postgraduate.domain.payment.domain.entity.constant.Status;
 import jakarta.validation.constraints.NotNull;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public record PaymentInfo(
         @NotNull
@@ -15,7 +15,7 @@ public record PaymentInfo(
         @NotNull
         String phoneNumber,
         @NotNull
-        LocalDate createdAt,
+        LocalDateTime createdAt,
         @NotNull
         Integer pay,
         @NotNull

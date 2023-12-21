@@ -3,7 +3,8 @@ package com.postgraduate.domain.mentoring.application.usecase;
 import com.postgraduate.domain.mentoring.application.dto.DoneSeniorMentoringInfo;
 import com.postgraduate.domain.mentoring.application.dto.ExpectedSeniorMentoringInfo;
 import com.postgraduate.domain.mentoring.application.dto.WaitingSeniorMentoringInfo;
-import com.postgraduate.domain.mentoring.application.dto.res.*;
+import com.postgraduate.domain.mentoring.application.dto.res.SeniorMentoringDetailResponse;
+import com.postgraduate.domain.mentoring.application.dto.res.SeniorMentoringResponse;
 import com.postgraduate.domain.mentoring.application.mapper.MentoringMapper;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.entity.constant.Status;
@@ -20,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.postgraduate.domain.mentoring.application.mapper.MentoringMapper.*;
@@ -48,9 +48,7 @@ public class MentoringSeniorInfoUseCase {
         List<Mentoring> mentorings = getMentorings(user, WAITING);
         List<WaitingSeniorMentoringInfo> waitingMentoringInfos = mentorings.stream()
                 .map(mentoring -> {
-                    LocalDateTime expiredAt = mentoring.getCreatedAt()
-                            .plusDays(2)
-                            .atStartOfDay();
+                    LocalDateTime expiredAt = mentoring.getCreatedAt().plusDays(2);
                     LocalDateTime now = LocalDateTime.now();
                     long remain = Duration.between(now, expiredAt).toMinutes();
                     return mapToSeniorWaitingInfo(mentoring, remain);
