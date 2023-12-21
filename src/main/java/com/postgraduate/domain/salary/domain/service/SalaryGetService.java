@@ -41,7 +41,6 @@ public class SalaryGetService {
     public Page<SeniorSalary> findDistinctSeniors(String search, Integer page) {
         page = page == null ? 1 : page;
         Pageable pageable = PageRequest.of(page - 1, ADMIN_PAGE_SIZE);
-        search = search == null ? "" : search;
         return salaryRepository.findDistinctBySearchSenior(search, pageable);
     }
 }
