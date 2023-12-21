@@ -59,6 +59,7 @@ public class SeniorManageByAdminUseCase {
                 })
                 .toList();
         long totalElements = seniors.getTotalElements();
-        return new SeniorManageResponse(seniorInfos, totalElements);
+        int totalPages = seniors.getTotalPages();
+        return new SeniorManageResponse(seniorInfos, totalElements, totalPages);
     }
 }

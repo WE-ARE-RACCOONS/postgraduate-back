@@ -23,6 +23,7 @@ public class PaymentManageByAdminUseCase {
                 .map(AdminMapper::mapToPaymentInfo)
                 .toList();
         long totalElements = payments.getTotalElements();
-        return new PaymentManageResponse(paymentInfos, totalElements);
+        int totalPages = payments.getTotalPages();
+        return new PaymentManageResponse(paymentInfos, totalElements, totalPages);
     }
 }

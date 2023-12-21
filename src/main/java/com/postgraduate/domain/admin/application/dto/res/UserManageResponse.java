@@ -9,6 +9,8 @@ public record UserManageResponse(
         @NotNull
         List<UserInfo> userInfo,
         @NotNull
-        Long totalElements
+        Long totalElements,
+        @NotNull
+        Integer totalPages
 ) {
 }

@@ -53,14 +53,15 @@ public class SalaryManageByAdminUseCase {
 
     public SalaryManageResponse getSalaries(Integer page, String search) {
         Page<Senior> seniors = salaryGetService.findDistinctSeniors(getSalaryDate(), search, page);
-        Long totalElements = seniors.getTotalElements();
         List<SalaryInfo> responses = new ArrayList<>();
         seniors.forEach(senior -> {
             List<Salary> salaries = salaryGetService.bySeniorAndSalaryDateAndStatus(senior, getSalaryDate(), true);
             SalaryInfo response = getSalaryInfo(senior, salaries);
             responses.add(response);
         });
-        return new SalaryManageResponse(responses, totalElements);
+        Long totalElements = seniors.getTotalElements();
+        int totalPages = seniors.getTotalPages();
+        return new SalaryManageResponse(responses, totalElements, totalPages);
     }
 
     private SalaryInfo getSalaryInfo(Senior senior, List<Salary> salaries) {

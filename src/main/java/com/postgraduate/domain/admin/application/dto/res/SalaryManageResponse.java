@@ -9,6 +9,8 @@ public record SalaryManageResponse(
         @NotNull
         List<SalaryInfo> salaryInfos,
         @NotNull
-        Long totalElements
+        Long totalElements,
+        @NotNull
+        Integer totalPages
 ) {
 }

@@ -25,7 +25,8 @@ public class UserManageByAdminUseCase {
                 .map(AdminMapper::mapToUserInfo)
                 .toList();
         long totalElements = wishes.getTotalElements();
-        return new UserManageResponse(userInfos, totalElements);
+        int totalPages = wishes.getTotalPages();
+        return new UserManageResponse(userInfos, totalElements, totalPages);
     }
 
     public WishResponse getWish(Long wishId) {

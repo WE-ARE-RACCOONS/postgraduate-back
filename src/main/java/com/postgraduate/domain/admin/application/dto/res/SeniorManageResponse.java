@@ -9,6 +9,8 @@ public record SeniorManageResponse(
         @NotNull
         List<SeniorInfo> seniorInfo,
         @NotNull
-        Long totalElements
+        Long totalElements,
+        @NotNull
+        Integer totalPages
 ) {
 }
