@@ -2,7 +2,6 @@ package com.postgraduate.domain.payment.domain.service;
 
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.payment.domain.entity.Payment;
-import com.postgraduate.domain.payment.domain.entity.constant.Status;
 import com.postgraduate.domain.payment.domain.repository.PaymentRepository;
 import com.postgraduate.domain.payment.exception.PaymentNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -21,10 +20,6 @@ public class PaymentGetService {
         Pageable pageable = PageRequest.of(page - 1, ADMIN_PAGE_SIZE);
         search = search == null ? "" : search;
         return paymentRepository.findAllBySearchPayment(search, pageable);
-    }
-
-    public Long count() {
-        return paymentRepository.countAllByStatusAndMentoring_UserIsDelete(Status.DONE, false);
     }
 
     public Payment byMentoring(Mentoring mentoring) {
