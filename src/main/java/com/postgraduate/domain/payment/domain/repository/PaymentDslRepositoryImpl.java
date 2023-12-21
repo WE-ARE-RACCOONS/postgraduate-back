@@ -26,7 +26,8 @@ public class PaymentDslRepositoryImpl implements PaymentDslRepository {
                         payment.mentoring.user.nickName.like("%" + search + "%")
                                 .or(payment.mentoring.user.phoneNumber.like("%" + search + "%")),
                         payment.mentoring.user.isDelete.eq(FALSE)
-                        );
+                        )
+                .orderBy(payment.createdAt.desc());
 
         List<Payment> seniors = query.offset(pageable.getOffset())
                 .limit(pageable.getPageSize())

@@ -109,7 +109,8 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
                         senior.user.phoneNumber.like("%" + search + "%")
                                 .or(senior.user.nickName.like("%" + search + "%")),
                         senior.user.isDelete.eq(FALSE)
-                );
+                )
+                .orderBy(senior.createdAt.desc());
 
         List<Senior> seniors = query.offset(pageable.getOffset())
                 .limit(pageable.getPageSize())

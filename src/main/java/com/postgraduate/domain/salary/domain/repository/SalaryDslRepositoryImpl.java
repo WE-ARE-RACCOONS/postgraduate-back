@@ -37,8 +37,8 @@ public class SalaryDslRepositoryImpl implements SalaryDslRepository {
                         salary.senior.user.isDelete.eq(FALSE),
                         salary.salaryDate.eq(salaryDate)
                 )
+                .orderBy(salary.salaryDate.desc())
                 .distinct()
-                .limit(pageable.getPageSize())
                 .select(salary.senior);
 
         List<Senior> wishes = query.offset(pageable.getOffset())

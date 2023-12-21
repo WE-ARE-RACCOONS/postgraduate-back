@@ -26,7 +26,8 @@ public class WishDslRepositoryImpl implements WishDslRepository {
                         wish.user.phoneNumber.like("%" + search + "%")
                                 .or(wish.user.nickName.like("%" + search + "%")),
                         wish.user.isDelete.eq(FALSE)
-                );
+                )
+                .orderBy(wish.user.createdAt.desc());
 
         List<Wish> wishes = query.offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
