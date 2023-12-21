@@ -5,6 +5,7 @@ import com.postgraduate.domain.auth.application.dto.req.SignUpRequest;
 import com.postgraduate.domain.user.application.dto.res.UserInfoResponse;
 import com.postgraduate.domain.user.application.dto.res.UserMyPageResponse;
 import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.global.config.s3.Default;
 
 import static com.postgraduate.domain.user.domain.entity.constant.Role.SENIOR;
 
@@ -39,6 +40,7 @@ public class UserMapper {
                 .nickName(request.nickName())
                 .phoneNumber(request.phoneNumber())
                 .marketingReceive(request.marketingReceive())
+                .profile(Default.SENIOR.getUrl())
                 .role(SENIOR)
                 .build();
     }
