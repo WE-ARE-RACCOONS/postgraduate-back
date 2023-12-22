@@ -48,7 +48,10 @@ public class MentoringSeniorInfoUseCase {
         List<Mentoring> mentorings = getMentorings(user, WAITING);
         List<WaitingSeniorMentoringInfo> waitingMentoringInfos = mentorings.stream()
                 .map(mentoring -> {
-                    LocalDateTime expiredAt = mentoring.getCreatedAt().plusDays(2);
+                    LocalDateTime expiredAt = mentoring.getCreatedAt()
+                            .plusDays(2)
+                            .toLocalDate()
+                            .atStartOfDay();
                     LocalDateTime now = LocalDateTime.now();
                     long remain = Duration.between(now, expiredAt).toMinutes();
                     return mapToSeniorWaitingInfo(mentoring, remain);
