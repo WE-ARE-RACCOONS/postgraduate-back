@@ -84,12 +84,14 @@ public class JwtUtils {
         return refreshToken;
     }
 
-    public void checkRedis(Long id, HttpServletRequest request) {
+    public String checkRedis(Long id, HttpServletRequest request) {
         String refreshToken = request.getHeader(AUTHORIZATION).split(" ")[1];
         String redisToken = redisRepository.getValues(REFRESH.toString() + id)
                 .orElseThrow(NoneRefreshTokenException::new);
         if (!redisToken.equals(refreshToken))
             throw new InvalidRefreshTokenException();
+        Claims claims = parseClaims(refreshToken);
+        return claims.get(ROLE).toString();
     }
 
     public void makeExpired(Long id) {
