@@ -25,8 +25,7 @@ public class JwtUseCase {
     private int accessExpiration;
 
     public JwtTokenResponse signIn(User user) {
-        if (user.getIsDelete())
-            throw new DeletedUserException();
+        checkDelete(user);
         if (user.getRole() == SENIOR)
             return seniorToken(user);
         if (user.getRole() == ADMIN)
@@ -48,14 +47,12 @@ public class JwtUseCase {
     }
 
     public JwtTokenResponse changeUser(User user) {
-        if (user.getIsDelete())
-            throw new DeletedUserException();
+        checkDelete(user);
         return userToken(user);
     }
 
     public JwtTokenResponse changeSenior(User user) {
-        if (user.getIsDelete())
-            throw new DeletedUserException();
+        checkDelete(user);
         return seniorToken(user);
     }
 
@@ -66,8 +63,7 @@ public class JwtUseCase {
     }
 
     private JwtTokenResponse seniorToken(User user) {
-        if (user.getIsDelete())
-            throw new DeletedUserException();
+        checkDelete(user);
         return generateToken(user, SENIOR);
     }
 
@@ -79,5 +75,10 @@ public class JwtUseCase {
         String accessToken = jwtUtils.generateAccessToken(user.getUserId(), role);
         String refreshToken = jwtUtils.generateRefreshToken(user.getUserId(), role);
         return new JwtTokenResponse(accessToken, accessExpiration, refreshToken, refreshExpiration, role);
+    }
+
+    private void checkDelete(User user) {
+        if (user.getIsDelete())
+            throw new DeletedUserException();
     }
 }
