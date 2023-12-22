@@ -127,4 +127,11 @@ public class SeniorController {
         AllSeniorSearchResponse searchSenior = seniorInfoUseCase.getFieldSenior(field, postgradu, page);
         return ResponseDto.create(SENIOR_FIND.getCode(), GET_SENIOR_LIST_INFO.getMessage(), searchSenior);
     }
+
+    @GetMapping("/me/role")
+    @Operation(summary = "후배 전환시 가능 여부 확인 | 토큰 필요", description = "true-가능, false-불가능")
+    public ResponseDto<SeniorPossibleResponse> checkRole(@AuthenticationPrincipal User user) {
+        SeniorPossibleResponse possibleResponse = seniorMyPageUseCase.checkUser(user);
+        return ResponseDto.create(SENIOR_FIND.getCode(), GET_USER_CHECK.getMessage(), possibleResponse);
+    }
 }

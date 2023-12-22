@@ -3,6 +3,8 @@ package com.postgraduate.domain.auth.application.usecase.jwt;
 import com.postgraduate.domain.auth.application.dto.res.JwtTokenResponse;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.exception.DeletedUserException;
+import com.postgraduate.domain.wish.domain.entity.Wish;
+import com.postgraduate.domain.wish.domain.service.WishGetService;
 import com.postgraduate.global.config.security.jwt.exception.InvalidRefreshTokenException;
 import com.postgraduate.global.config.security.jwt.exception.NoneRefreshTokenException;
 import com.postgraduate.global.config.security.jwt.util.JwtUtils;
@@ -14,6 +16,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockHttpServletRequest;
+
+import java.util.Optional;
 
 import static com.postgraduate.domain.user.domain.entity.constant.Role.SENIOR;
 import static com.postgraduate.domain.user.domain.entity.constant.Role.USER;
@@ -29,6 +33,8 @@ import static org.mockito.BDDMockito.*;
 public class JwtUseCaseTest {
     @Mock
     private JwtUtils jwtUtils;
+    @Mock
+    private WishGetService wishGetService;
     @InjectMocks
     private JwtUseCase jwtUseCase;
 
@@ -48,6 +54,8 @@ public class JwtUseCaseTest {
                 .willReturn("accessToken");
         given(jwtUtils.generateRefreshToken(user.getUserId(), user.getRole()))
                 .willReturn("refreshToken");
+        given(wishGetService.byUser(user))
+                .willReturn(Optional.of(mock(Wish.class)));
 
         JwtTokenResponse jwtTokenResponse = jwtUseCase.signIn(user);
 
@@ -119,6 +127,10 @@ public class JwtUseCaseTest {
                 .willReturn("accessToken");
         given(jwtUtils.generateRefreshToken(user.getUserId(), user.getRole()))
                 .willReturn("refreshToken");
+        given(wishGetService.byUser(user))
+                .willReturn(Optional.of(mock(Wish.class)));
+        given(jwtUtils.checkRedis(user.getUserId(), request))
+                .willReturn(USER.toString());
 
         JwtTokenResponse jwtTokenResponse = jwtUseCase.regenerateToken(user, request);
 
