@@ -1,9 +1,6 @@
 package com.postgraduate.domain.auth.presentation;
 
-import com.postgraduate.domain.auth.application.dto.req.CodeRequest;
-import com.postgraduate.domain.auth.application.dto.req.SeniorChangeRequest;
-import com.postgraduate.domain.auth.application.dto.req.SeniorSignUpRequest;
-import com.postgraduate.domain.auth.application.dto.req.SignUpRequest;
+import com.postgraduate.domain.auth.application.dto.req.*;
 import com.postgraduate.domain.auth.application.dto.res.AuthUserResponse;
 import com.postgraduate.domain.auth.application.dto.res.JwtTokenResponse;
 import com.postgraduate.domain.auth.application.usecase.oauth.SelectOauth;
@@ -74,6 +71,22 @@ public class AuthController {
         return ResponseDto.create(AUTH_CREATE.getCode(), SUCCESS_AUTH.getMessage(), jwtToken);
     }
 
+    @PostMapping("/user/token")
+    @Operation(summary = "후배로 변경 | 토큰 필요", description = "후배로 변경 가능한 경우 후배 토큰 발급")
+    public ResponseDto<JwtTokenResponse> changeUserToken(@AuthenticationPrincipal User user) {
+        JwtTokenResponse jwtToken = jwtUseCase.changeUser(user);
+        return ResponseDto.create(AUTH_CREATE.getCode(), SUCCESS_AUTH.getMessage(), jwtToken);
+    }
+
+    @PostMapping("/user/change")
+    @Operation(summary = "후배로 추가 가입 | 토큰 필요", description = "대학원생 대학생으로 변경 추가 가입")
+    public ResponseDto<JwtTokenResponse> changeUser(@AuthenticationPrincipal User user,
+                                                    @RequestBody @Valid UserChangeRequest changeRequest) {
+        signUpUseCase.changeUser(user, changeRequest);
+        JwtTokenResponse jwtToken = jwtUseCase.changeUser(user);
+        return ResponseDto.create(AUTH_CREATE.getCode(), SUCCESS_AUTH.getMessage(), jwtToken);
+    }
+
     @PostMapping("/senior/signup")
     @Operation(summary = "대학원생 가입 - 필수 과정만", description = "대학원생 회원가입 - 필수 과정만")
     public ResponseDto<JwtTokenResponse> singUpSenior(@RequestBody @Valid SeniorSignUpRequest request) {
@@ -83,14 +96,20 @@ public class AuthController {
     }
 
     @PostMapping("/senior/change")
-    @Operation(summary = "선배로 업데이트 | 토큰 필요", description = "대학생 대학원생으로 변경")
+    @Operation(summary = "선배로 추가 가입 | 토큰 필요", description = "대학생 대학원생으로 변경 추가 가입")
     public ResponseDto<JwtTokenResponse> changeSenior(@AuthenticationPrincipal User user,
                                                       @RequestBody @Valid SeniorChangeRequest changeRequest) {
         User changeUser = signUpUseCase.changeSenior(user, changeRequest);
-        JwtTokenResponse jwtToken = jwtUseCase.signIn(changeUser);
+        JwtTokenResponse jwtToken = jwtUseCase.changeSenior(changeUser);
         return ResponseDto.create(SENIOR_CREATE.getCode(), CREATE_SENIOR.getMessage(), jwtToken);
     }
 
+    @PostMapping("/senior/token")
+    @Operation(summary = "선배로 변경 | 토큰 필요", description = "선배로 변경 가능한 경우 선배 토큰 발급")
+    public ResponseDto<JwtTokenResponse> changeSeniorToken(@AuthenticationPrincipal User user) {
+        JwtTokenResponse jwtToken = jwtUseCase.changeSenior(user);
+        return ResponseDto.create(AUTH_CREATE.getCode(), SUCCESS_AUTH.getMessage(), jwtToken);
+    }
 
     @PostMapping("/refresh")
     @Operation(summary = "토큰 재발급 | 토큰 필요", description = "refreshToken 으로 토큰 재발급")

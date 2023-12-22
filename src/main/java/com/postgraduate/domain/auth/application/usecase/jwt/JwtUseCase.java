@@ -2,24 +2,36 @@ package com.postgraduate.domain.auth.application.usecase.jwt;
 
 import com.postgraduate.domain.auth.application.dto.res.JwtTokenResponse;
 import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.user.domain.entity.constant.Role;
 import com.postgraduate.domain.user.exception.DeletedUserException;
+import com.postgraduate.domain.user.exception.UserNotFoundException;
+import com.postgraduate.domain.wish.domain.service.WishGetService;
 import com.postgraduate.global.config.security.jwt.util.JwtUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import static com.postgraduate.domain.user.domain.entity.constant.Role.*;
+
 @RequiredArgsConstructor
 @Service
 public class JwtUseCase {
     private final JwtUtils jwtUtils;
+    private final WishGetService wishGetService;
     @Value("${jwt.refreshExpiration}")
     private int refreshExpiration;
     @Value("${jwt.accessExpiration}")
     private int accessExpiration;
 
     public JwtTokenResponse signIn(User user) {
-        return generateToken(user);
+        if (user.getIsDelete())
+            throw new DeletedUserException();
+        if (user.getRole() == SENIOR)
+            return seniorToken(user);
+        if (user.getRole() == ADMIN)
+            return adminToken(user);
+        return userToken(user);
     }
     
     public void logout(User user) {
@@ -27,15 +39,45 @@ public class JwtUseCase {
     }
 
     public JwtTokenResponse regenerateToken(User user, HttpServletRequest request) {
-        jwtUtils.checkRedis(user.getUserId(), request);
-        return generateToken(user);
+        String role = jwtUtils.checkRedis(user.getUserId(), request);
+        if (role.equals(SENIOR.toString()))
+            return seniorToken(user);
+        if (role.equals(ADMIN.toString()))
+            return adminToken(user);
+        return userToken(user);
     }
 
-    private JwtTokenResponse generateToken(User user) {
+    public JwtTokenResponse changeUser(User user) {
         if (user.getIsDelete())
             throw new DeletedUserException();
-        String accessToken = jwtUtils.generateAccessToken(user.getUserId(), user.getRole());
-        String refreshToken = jwtUtils.generateRefreshToken(user.getUserId(), user.getRole());
-        return new JwtTokenResponse(accessToken, accessExpiration, refreshToken, refreshExpiration, user.getRole());
+        return userToken(user);
+    }
+
+    public JwtTokenResponse changeSenior(User user) {
+        if (user.getIsDelete())
+            throw new DeletedUserException();
+        return seniorToken(user);
+    }
+
+    private JwtTokenResponse userToken(User user) {
+        if (wishGetService.byUser(user).isEmpty())
+            throw new UserNotFoundException();
+        return generateToken(user, USER);
+    }
+
+    private JwtTokenResponse seniorToken(User user) {
+        if (user.getIsDelete())
+            throw new DeletedUserException();
+        return generateToken(user, SENIOR);
+    }
+
+    private JwtTokenResponse adminToken(User user) {
+        return generateToken(user, ADMIN);
+    }
+
+    private JwtTokenResponse generateToken(User user, Role role) {
+        String accessToken = jwtUtils.generateAccessToken(user.getUserId(), role);
+        String refreshToken = jwtUtils.generateRefreshToken(user.getUserId(), role);
+        return new JwtTokenResponse(accessToken, accessExpiration, refreshToken, refreshExpiration, role);
     }
 }
