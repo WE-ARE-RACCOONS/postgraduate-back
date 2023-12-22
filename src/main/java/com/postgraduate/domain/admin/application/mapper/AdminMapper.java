@@ -9,6 +9,7 @@ import com.postgraduate.domain.admin.presentation.constant.SalaryStatus;
 import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.user.domain.entity.constant.Role;
 import com.postgraduate.domain.wish.application.mapper.dto.res.WishResponse;
 import com.postgraduate.domain.wish.domain.entity.Wish;
 
@@ -35,6 +36,7 @@ public class AdminMapper {
 
     public static UserInfo mapToUserInfo(Wish wish) {
         User user = wish.getUser();
+        Boolean isSenior = user.getRole() == Role.SENIOR;
         return new UserInfo(
                 user.getUserId(),
                 user.getNickName(),
@@ -43,7 +45,7 @@ public class AdminMapper {
                 user.getMarketingReceive(),
                 wish.getMatchingReceive(),
                 wish.getWishId(),
-                user.getRole()
+                isSenior
         );
     }
 
