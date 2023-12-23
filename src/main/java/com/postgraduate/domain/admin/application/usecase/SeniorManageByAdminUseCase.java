@@ -16,6 +16,7 @@ import com.postgraduate.domain.senior.domain.service.SeniorUpdateService;
 import com.postgraduate.domain.wish.domain.entity.Wish;
 import com.postgraduate.domain.wish.domain.service.WishGetService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,8 +48,8 @@ public class SeniorManageByAdminUseCase {
         seniorUpdateService.updateCertificationStatus(senior, request.certificationStatus());
     }
 
-    public SeniorManageResponse getSeniors() {
-        List<Senior> seniors = seniorGetService.all();
+    public SeniorManageResponse getSeniors(Integer page, String search) {
+        Page<Senior> seniors = seniorGetService.all(page, search);
         List<SeniorInfo> seniorInfos = seniors.stream()
                 .map(senior -> {
                     List<Salary> salaries = salaryGetService.bySeniorAndSalaryDate(senior, getSalaryDate());
@@ -57,6 +58,8 @@ public class SeniorManageByAdminUseCase {
                     return AdminMapper.mapToSeniorInfo(senior, salaryStatus, wish.isPresent());
                 })
                 .toList();
-        return new SeniorManageResponse(seniorInfos);
+        long totalElements = seniors.getTotalElements();
+        int totalPages = seniors.getTotalPages();
+        return new SeniorManageResponse(seniorInfos, totalElements, totalPages);
     }
 }

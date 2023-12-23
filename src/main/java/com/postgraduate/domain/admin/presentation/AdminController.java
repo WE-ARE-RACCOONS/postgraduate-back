@@ -51,8 +51,9 @@ public class AdminController {
 
     @GetMapping("/users")
     @Operation(summary = "[관리자] 후배 정보 목록", description = "대학생 후배 정보 목록을 조회합니다.")
-    public ResponseDto<UserManageResponse> getUsers() {
-        UserManageResponse users = userManageUseCase.getUsers();
+    public ResponseDto<UserManageResponse> getUsers(@RequestParam(required = false) Integer page,
+                                                    @RequestParam(required = false) String search) {
+        UserManageResponse users = userManageUseCase.getUsers(page, search);
         return ResponseDto.create(ADMIN_FIND.getCode(), GET_LIST.getMessage(), users);
     }
 
@@ -65,15 +66,17 @@ public class AdminController {
 
     @GetMapping("/seniors")
     @Operation(summary = "[관리자] 선배 정보 목록", description = "대학원생 선배 정보 목록을 조회합니다.")
-    public ResponseDto<SeniorManageResponse> getSeniors() {
-        SeniorManageResponse seniors = seniorManageUseCase.getSeniors();
+    public ResponseDto<SeniorManageResponse> getSeniors(@RequestParam(required = false) Integer page,
+                                                        @RequestParam(required = false) String search) {
+        SeniorManageResponse seniors = seniorManageUseCase.getSeniors(page, search);
         return ResponseDto.create(ADMIN_FIND.getCode(), GET_LIST.getMessage(), seniors);
     }
 
     @GetMapping("/salary")
     @Operation(summary = "[관리자] 정산 목록 조회", description = "한 달 기준으로 정산 목록을 조회합니다. 기준일은 [11일 ~ 내월 10일]입니다.")
-    public ResponseDto<SalaryManageResponse> getSalaries() {
-        SalaryManageResponse salaries = salaryManageUseCase.getSalaries();
+    public ResponseDto<SalaryManageResponse> getSalaries(@RequestParam(required = false) Integer page,
+                                                         @RequestParam(required = false) String search) {
+        SalaryManageResponse salaries = salaryManageUseCase.getSalaries(page, search);
         return ResponseDto.create(ADMIN_FIND.getCode(), GET_LIST.getMessage(), salaries);
     }
 
@@ -107,8 +110,9 @@ public class AdminController {
 
     @GetMapping("/payments")
     @Operation(summary = "[관리자] 결제 정보 목록", description = "결제 정보 목록을 조회합니다.")
-    public ResponseDto<PaymentManageResponse> getPayments() {
-        PaymentManageResponse payments = paymentManageUseCase.getPayments();
+    public ResponseDto<PaymentManageResponse> getPayments(@RequestParam(required = false) Integer page,
+                                                          @RequestParam(required = false) String search) {
+        PaymentManageResponse payments = paymentManageUseCase.getPayments(page, search);
         return ResponseDto.create(ADMIN_FIND.getCode(), GET_LIST.getMessage(), payments);
     }
 

@@ -44,6 +44,9 @@ public class SalaryUtil {
     }
 
     public static LocalDateTime getDoneDate(List<Salary> salaries) {
+        if (salaries.size() == 0) {
+            return null;
+        }
         return salaries.get(0).getSalaryDoneDate();
     }
 }

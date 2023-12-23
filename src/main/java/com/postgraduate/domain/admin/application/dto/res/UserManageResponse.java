@@ -5,5 +5,12 @@ import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 
-public record UserManageResponse(@NotNull List<UserInfo> userInfo) {
+public record UserManageResponse(
+        @NotNull
+        List<UserInfo> userInfo,
+        @NotNull
+        Long totalElements,
+        @NotNull
+        Integer totalPages
+) {
 }

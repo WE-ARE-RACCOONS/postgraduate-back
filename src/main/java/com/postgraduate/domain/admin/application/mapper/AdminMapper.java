@@ -9,6 +9,7 @@ import com.postgraduate.domain.admin.presentation.constant.SalaryStatus;
 import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.user.domain.entity.constant.Role;
 import com.postgraduate.domain.wish.application.mapper.dto.res.WishResponse;
 import com.postgraduate.domain.wish.domain.entity.Wish;
 
@@ -35,6 +36,7 @@ public class AdminMapper {
 
     public static UserInfo mapToUserInfo(Wish wish) {
         User user = wish.getUser();
+        Boolean isSenior = user.getRole() == Role.SENIOR;
         return new UserInfo(
                 user.getUserId(),
                 user.getNickName(),
@@ -43,7 +45,7 @@ public class AdminMapper {
                 user.getMarketingReceive(),
                 wish.getMatchingReceive(),
                 wish.getWishId(),
-                user.getRole()
+                isSenior
         );
     }
 
@@ -62,26 +64,41 @@ public class AdminMapper {
 
     public static MentoringInfo mapToMentoringInfo(Mentoring mentoring) {
          User user = mentoring.getUser();
-        Senior senior = mentoring.getSenior();
         return new MentoringInfo(
                 mentoring.getMentoringId(),
                 mentoring.getStatus(),
                 user.getNickName(),
                 user.getPhoneNumber(),
-                senior.getUser().getNickName(),
-                senior.getUser().getPhoneNumber()
+                mentoring.getCreatedAt()
+        );
+    }
+
+    public static UserMentoringInfo mapToUserMentoringInfo(User user) {
+        return new UserMentoringInfo(
+                user.getNickName(),
+                user.getPhoneNumber()
+        );
+    }
+
+    public static UserMentoringInfo mapToUserMentoringInfo(Senior senior) {
+        User user = senior.getUser();
+        return new UserMentoringInfo(
+                user.getNickName(),
+                user.getPhoneNumber()
         );
     }
 
     public static PaymentInfo mapToPaymentInfo(Payment payment) {
         Mentoring mentoring = payment.getMentoring();
+        User user = mentoring.getUser();
         return new PaymentInfo(
                 payment.getPaymentId(),
                 mentoring.getMentoringId(),
-                mentoring.getUser().getNickName(),
-                mentoring.getSenior().getUser().getNickName(),
+                user.getNickName(),
+                user.getPhoneNumber(),
                 payment.getCreatedAt(),
-                mentoring.getPay()
+                mentoring.getPay(),
+                payment.getStatus()
         );
     }
 
