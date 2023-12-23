@@ -44,7 +44,7 @@ public class KakaoSignOutUseCase implements SignOutUseCase {
                     .retrieve()
                     .bodyToMono(String.class)
                     .block();
-            userUpdateService.updateDelete(user.getUserId());
+            userUpdateService.updateDelete(user);
             jwtUtils.makeExpired(userId);
         } catch (WebClientResponseException ex) {
             throw new KakaoException();
