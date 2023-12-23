@@ -14,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import static com.postgraduate.domain.user.domain.entity.constant.Role.SENIOR;
 import static com.postgraduate.domain.user.domain.entity.constant.Role.USER;
@@ -42,17 +43,17 @@ class CheckIsMyMentoringUseCaseTest {
     void setUser() {
         user1 = new User(-1L, -1234L, "abc.com", "abc"
                 , " 123123", "abcab", 0
-                , USER, TRUE, LocalDate.now(), LocalDate.now(), FALSE);
+                , USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), FALSE);
         user2 = new User(-11L, -12345L, "abc.com", "qwe"
                 , " 123123", "abcab", 0
-                , USER, TRUE, LocalDate.now(), LocalDate.now(), FALSE);
+                , USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), FALSE);
 
         senior1 = new User(-2L, -2345L, "abc.com", "zxc"
                 , " 123123", "abcab", 0
-                , SENIOR, TRUE, LocalDate.now(), LocalDate.now(), FALSE);
+                , SENIOR, TRUE, LocalDateTime.now(), LocalDateTime.now(), FALSE);
         senior2 = new User(-22L, -23456L, "abc.com", "asdf"
                 , " 123123", "abcab", 0
-                , SENIOR, TRUE, LocalDate.now(), LocalDate.now(), FALSE);
+                , SENIOR, TRUE, LocalDateTime.now(), LocalDateTime.now(), FALSE);
     }
 
     @Test

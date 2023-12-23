@@ -17,7 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.*;
@@ -53,7 +53,7 @@ class MentoringSeniorInfoUseCaseTest {
         Mentoring mentoring = new Mentoring(mentoringId, user, senior
                 , "a", "b", "c"
                 , 40, 40, EXPECTED
-                , LocalDate.now(), LocalDate.now());
+                , LocalDateTime.now(), LocalDateTime.now());
 
         given(seniorGetService.byUser(user))
                 .willReturn(senior);
@@ -74,7 +74,7 @@ class MentoringSeniorInfoUseCaseTest {
         Mentoring mentoring = new Mentoring(mentoringId, user, senior
                 , "a", "b", "c"
                 , 40, 40, DONE
-                , LocalDate.now(), LocalDate.now());
+                , LocalDateTime.now(), LocalDateTime.now());
 
         given(seniorGetService.byUser(user))
                 .willReturn(senior);
@@ -91,9 +91,9 @@ class MentoringSeniorInfoUseCaseTest {
         User user = mock(User.class);
         Senior senior = mock(Senior.class);
 
-        Mentoring mentoring1 = new Mentoring(1L, user, senior, "A", "b", "a", 40, 40, WAITING, LocalDate.now(), LocalDate.now());
-        Mentoring mentoring2 = new Mentoring(2L, user, senior, "A", "b", "a", 40, 40, WAITING, LocalDate.now(), LocalDate.now());
-        Mentoring mentoring3 = new Mentoring(3L, user, senior, "A", "b", "a", 40, 40, WAITING, LocalDate.now(), LocalDate.now());
+        Mentoring mentoring1 = new Mentoring(1L, user, senior, "A", "b", "a", 40, 40, WAITING, LocalDateTime.now(), LocalDateTime.now());
+        Mentoring mentoring2 = new Mentoring(2L, user, senior, "A", "b", "a", 40, 40, WAITING, LocalDateTime.now(), LocalDateTime.now());
+        Mentoring mentoring3 = new Mentoring(3L, user, senior, "A", "b", "a", 40, 40, WAITING, LocalDateTime.now(), LocalDateTime.now());
         List<Mentoring> mentorings = List.of(mentoring1, mentoring2, mentoring3);
 
         given(seniorGetService.byUser(user))
@@ -113,9 +113,9 @@ class MentoringSeniorInfoUseCaseTest {
         User user = mock(User.class);
         Senior senior = mock(Senior.class);
 
-        Mentoring mentoring1 = new Mentoring(1L, user, senior, "A", "b", "a", 40, 40, WAITING, LocalDate.now(), LocalDate.now());
-        Mentoring mentoring2 = new Mentoring(2L, user, senior, "A", "b", "a", 40, 40, WAITING, LocalDate.now(), LocalDate.now());
-        Mentoring mentoring3 = new Mentoring(3L, user, senior, "A", "b", "a", 40, 40, WAITING, LocalDate.now(), LocalDate.now());
+        Mentoring mentoring1 = new Mentoring(1L, user, senior, "A", "b", "a", 40, 40, WAITING, LocalDateTime.now(), LocalDateTime.now());
+        Mentoring mentoring2 = new Mentoring(2L, user, senior, "A", "b", "a", 40, 40, WAITING, LocalDateTime.now(), LocalDateTime.now());
+        Mentoring mentoring3 = new Mentoring(3L, user, senior, "A", "b", "a", 40, 40, WAITING, LocalDateTime.now(), LocalDateTime.now());
         List<Mentoring> mentorings = List.of(mentoring1, mentoring2, mentoring3);
 
         given(seniorGetService.byUser(user))
@@ -136,9 +136,9 @@ class MentoringSeniorInfoUseCaseTest {
         Senior senior = mock(Senior.class);
         Salary salary = mock(Salary.class);
 
-        Mentoring mentoring1 = new Mentoring(1L, user, senior, "A", "b", "a", 40, 40, WAITING, LocalDate.now(), LocalDate.now());
-        Mentoring mentoring2 = new Mentoring(2L, user, senior, "A", "b", "a", 40, 40, WAITING, LocalDate.now(), LocalDate.now());
-        Mentoring mentoring3 = new Mentoring(3L, user, senior, "A", "b", "a", 40, 40, WAITING, LocalDate.now(), LocalDate.now());
+        Mentoring mentoring1 = new Mentoring(1L, user, senior, "A", "b", "a", 40, 40, WAITING, LocalDateTime.now(), LocalDateTime.now());
+        Mentoring mentoring2 = new Mentoring(2L, user, senior, "A", "b", "a", 40, 40, WAITING, LocalDateTime.now(), LocalDateTime.now());
+        Mentoring mentoring3 = new Mentoring(3L, user, senior, "A", "b", "a", 40, 40, WAITING, LocalDateTime.now(), LocalDateTime.now());
         List<Mentoring> mentorings = List.of(mentoring1, mentoring2, mentoring3);
 
         given(seniorGetService.byUser(user))

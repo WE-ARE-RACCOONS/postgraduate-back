@@ -22,6 +22,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.postgraduate.domain.senior.domain.entity.constant.Status.APPROVE;
@@ -53,10 +54,10 @@ class SeniorInfoUseCaseTest {
         profile = new Profile("a", "a", "a", "a", 40);
         user = new User(1L, 1234L, "a",
                 "a", "123", "a",
-                1, USER, TRUE, now(), now(), TRUE);
+                1, USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE);
         senior = new Senior(1L, user, "a",
                 APPROVE, 1, info, profile,
-                now(), now());
+                LocalDateTime.now(), LocalDateTime.now());
     }
     @Test
     @DisplayName("선배 상세보기 테스트")
@@ -83,7 +84,7 @@ class SeniorInfoUseCaseTest {
     void getSearchSeniorWithNull() {
         Senior senior1 = new Senior(1L, user, "a",
                 APPROVE, 1, info, profile,
-                now(), now());
+                LocalDateTime.now(), LocalDateTime.now());
         List<Senior> seniors = List.of(senior, senior1);
         Page<Senior> seniorPage = new PageImpl<>(seniors);
 
@@ -101,7 +102,7 @@ class SeniorInfoUseCaseTest {
     void getSearchSeniorWithPage() {
         Senior senior1 = new Senior(1L, user, "a",
                 APPROVE, 1, info, profile,
-                now(), now());
+                LocalDateTime.now(), LocalDateTime.now());
         List<Senior> seniors = List.of(senior, senior1);
         Page<Senior> seniorPage = new PageImpl<>(seniors);
 
@@ -119,7 +120,7 @@ class SeniorInfoUseCaseTest {
     void getFieldSeniorWithNull() {
         Senior senior1 = new Senior(1L, user, "a",
                 APPROVE, 1, info, profile,
-                now(), now());
+                LocalDateTime.now(), LocalDateTime.now());
         List<Senior> seniors = List.of(senior, senior1);
         Page<Senior> seniorPage = new PageImpl<>(seniors);
 
@@ -137,7 +138,7 @@ class SeniorInfoUseCaseTest {
     void getFieldSeniorWithPage() {
         Senior senior1 = new Senior(1L, user, "a",
                 APPROVE, 1, info, profile,
-                now(), now());
+                LocalDateTime.now(), LocalDateTime.now());
         List<Senior> seniors = List.of(senior, senior1);
         Page<Senior> seniorPage = new PageImpl<>(seniors);
 

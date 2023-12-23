@@ -21,6 +21,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDateTime;
+
 import static com.postgraduate.domain.senior.domain.entity.constant.Status.APPROVE;
 import static com.postgraduate.domain.user.domain.entity.constant.Role.SENIOR;
 import static com.postgraduate.domain.user.domain.entity.constant.Role.USER;
@@ -60,11 +62,11 @@ class SignUpUseCaseTest {
         profile = new Profile("a", "a", "a", "a", 40);
         user = new User(1L, 1234L, "a",
                 "a", "123", "a",
-                1, USER, TRUE, now(), now(), FALSE);
+                1, USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), FALSE);
         wish = new Wish(1L, "major", "field", TRUE, user);
         senior = new Senior(1L, user, "a",
                 APPROVE, 1, info, profile,
-                now(), now());
+                LocalDateTime.now(), LocalDateTime.now());
     }
 
     @Test

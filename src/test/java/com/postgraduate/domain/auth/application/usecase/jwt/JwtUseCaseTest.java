@@ -17,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockHttpServletRequest;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static com.postgraduate.domain.user.domain.entity.constant.Role.SENIOR;
@@ -44,7 +45,7 @@ public class JwtUseCaseTest {
     void setting() {
         user = new User(1L, 1L, "a",
                 "a", "123", "a",
-                1, USER, TRUE, now(), now(), FALSE);
+                1, USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), FALSE);
     }
 
     @Test
@@ -72,7 +73,7 @@ public class JwtUseCaseTest {
     void signInWithSenior() {
         user = new User(1L, 1L, "a",
                 "a", "123", "a",
-                1, SENIOR, TRUE, now(), now(), FALSE);
+                1, SENIOR, TRUE, LocalDateTime.now(), LocalDateTime.now(), FALSE);
         given(jwtUtils.generateAccessToken(user.getUserId(), user.getRole()))
                 .willReturn("accessToken");
         given(jwtUtils.generateRefreshToken(user.getUserId(), user.getRole()))
@@ -102,7 +103,7 @@ public class JwtUseCaseTest {
     void signInWithUserDelete() {
         user = new User(1L, 1L, "a",
                 "a", "123", "a",
-                1, USER, TRUE, now(), now(), TRUE);
+                1, USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE);
 
         assertThatThrownBy(() -> jwtUseCase.signIn(user))
                 .isInstanceOf(DeletedUserException.class);
@@ -113,7 +114,7 @@ public class JwtUseCaseTest {
     void signInWithSeniorDelete() {
         user = new User(1L, 1L, "a",
                 "a", "123", "a",
-                1, SENIOR, TRUE, now(), now(), TRUE);
+                1, SENIOR, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE);
 
         assertThatThrownBy(() -> jwtUseCase.signIn(user))
                 .isInstanceOf(DeletedUserException.class);
