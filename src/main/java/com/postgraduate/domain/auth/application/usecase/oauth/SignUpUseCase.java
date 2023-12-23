@@ -3,6 +3,7 @@ package com.postgraduate.domain.auth.application.usecase.oauth;
 import com.postgraduate.domain.auth.application.dto.req.SeniorChangeRequest;
 import com.postgraduate.domain.auth.application.dto.req.SeniorSignUpRequest;
 import com.postgraduate.domain.auth.application.dto.req.SignUpRequest;
+import com.postgraduate.domain.auth.application.dto.req.UserChangeRequest;
 import com.postgraduate.domain.senior.application.mapper.SeniorMapper;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorSaveService;
@@ -45,11 +46,15 @@ public class SignUpUseCase {
         return senior.getUser();
     }
 
-
     public User changeSenior(User user, SeniorChangeRequest changeRequest) {
         Senior senior = SeniorMapper.mapToSenior(user, changeRequest); //todo : 예외 처리
         seniorSaveService.saveSenior(senior);
         userUpdateService.updateRole(user.getUserId(), Role.SENIOR);
         return userGetService.getUser(user.getUserId());
+    }
+
+    public void changeUser(User user, UserChangeRequest changeRequest) {
+        Wish wish = WishMapper.mapToWish(user, changeRequest);
+        wishSaveService.saveWish(wish);
     }
 }

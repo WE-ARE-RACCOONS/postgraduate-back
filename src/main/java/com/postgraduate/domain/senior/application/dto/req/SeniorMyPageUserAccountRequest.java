@@ -5,8 +5,8 @@ import jakarta.validation.constraints.NotNull;
 public record SeniorMyPageUserAccountRequest(
         @NotNull String nickName,
         @NotNull String phoneNumber,
-        @NotNull String accountNumber,
-        @NotNull String bank,
-        @NotNull String accountHolder,
-        @NotNull String profile
+        @NotNull String profile,
+        String accountNumber,
+        String bank,
+        String accountHolder
 ) {}

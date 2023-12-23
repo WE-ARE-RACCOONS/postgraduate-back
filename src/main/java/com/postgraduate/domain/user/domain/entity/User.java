@@ -10,6 +10,8 @@ import org.hibernate.annotations.*;
 
 import java.time.LocalDateTime;
 
+import static com.postgraduate.global.config.s3.Default.USER;
+
 @Entity
 @Builder
 @AllArgsConstructor
@@ -32,8 +34,8 @@ public class User {
     private String phoneNumber;
 
     @Column(nullable = false, columnDefinition = "TEXT")
-    @Builder.Default //이후에 기본 이미지 생기면 수정이 필요할 듯
-    private String profile = "default";
+    @Builder.Default //todo : 이후에 기본 이미지 생기면 수정이 필요
+    private String profile = USER.getUrl();
 
     @Column(nullable = false)
     private int point;

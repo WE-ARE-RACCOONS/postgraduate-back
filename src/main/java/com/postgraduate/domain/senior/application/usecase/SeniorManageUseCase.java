@@ -5,7 +5,6 @@ import com.postgraduate.domain.account.domain.service.AccountGetService;
 import com.postgraduate.domain.account.domain.service.AccountSaveService;
 import com.postgraduate.domain.account.domain.service.AccountUpdateService;
 import com.postgraduate.domain.available.application.dto.req.AvailableCreateRequest;
-import com.postgraduate.domain.available.application.mapper.AvailableMapper;
 import com.postgraduate.domain.available.domain.entity.Available;
 import com.postgraduate.domain.available.domain.service.AvailableSaveService;
 import com.postgraduate.domain.available.domain.service.AvailableDeleteService;
@@ -14,6 +13,7 @@ import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.domain.senior.domain.service.SeniorUpdateService;
+import com.postgraduate.domain.senior.exception.NoneAccountException;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.service.UserUpdateService;
 import com.postgraduate.global.config.security.util.EncryptorUtils;
@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.postgraduate.domain.account.application.mapper.AccountMapper.mapToAccount;
+import static com.postgraduate.domain.available.application.util.AvailableUtil.sortAvailable;
 import static com.postgraduate.domain.senior.application.mapper.SeniorMapper.mapToProfile;
 
 @Service
@@ -51,10 +52,8 @@ public class SeniorManageUseCase {
         Profile profile = mapToProfile(profileRequest);
         seniorUpdateService.signUpSeniorProfile(senior, profile);
         List<AvailableCreateRequest> availableCreateRequests = profileRequest.times();
-        availableCreateRequests.forEach(createRequest -> {
-            Available available = AvailableMapper.mapToAvailable(senior, createRequest);
-            availableSaveService.save(available);
-        });
+        List<Available> sortedAvailable = sortAvailable(availableCreateRequests, senior);
+        sortedAvailable.forEach(availableSaveService::save);
     }
 
     public void saveAccount(User user, SeniorAccountRequest accountRequest) {
@@ -69,10 +68,8 @@ public class SeniorManageUseCase {
         seniorUpdateService.updateMyPageProfile(senior, myPageProfileRequest, profile);
         availableDeleteService.delete(senior);
         List<AvailableCreateRequest> availableCreateRequests = myPageProfileRequest.times();
-        availableCreateRequests.forEach(createRequest -> {
-            Available available = AvailableMapper.mapToAvailable(senior, createRequest);
-            availableSaveService.save(available);
-        });
+        List<Available> sortedAvailable = sortAvailable(availableCreateRequests, senior);
+        sortedAvailable.forEach(availableSaveService::save);
     }
 
     public void updateSeniorMyPageUserAccount(User user, SeniorMyPageUserAccountRequest myPageUserAccountRequest) {
@@ -82,6 +79,8 @@ public class SeniorManageUseCase {
             updateSeniorMyPageUserAccountNoneAccount(senior, user, myPageUserAccountRequest);
             return;
         }
+        if (myPageUserAccountRequest.accountNumber().isEmpty() || myPageUserAccountRequest.accountHolder().isEmpty() || myPageUserAccountRequest.bank().isEmpty())
+            throw new NoneAccountException();
         Account account = optionalAccount.get();
         String accountNumber = encryptorUtils.encryptData(myPageUserAccountRequest.accountNumber());
         userUpdateService.updateSeniorUserAccount(user.getUserId(), myPageUserAccountRequest);
@@ -89,6 +88,10 @@ public class SeniorManageUseCase {
     }
 
     private void updateSeniorMyPageUserAccountNoneAccount(Senior senior, User user, SeniorMyPageUserAccountRequest myPageUserAccountRequest) {
+        if (myPageUserAccountRequest.accountNumber().isEmpty() || myPageUserAccountRequest.accountHolder().isEmpty() || myPageUserAccountRequest.bank().isEmpty()) {
+            userUpdateService.updateSeniorUserAccount(user.getUserId(), myPageUserAccountRequest);
+            return;
+        }
         String accountNumber = encryptorUtils.encryptData(myPageUserAccountRequest.accountNumber());
         Account account = mapToAccount(senior, myPageUserAccountRequest, accountNumber);
         userUpdateService.updateSeniorUserAccount(user.getUserId(), myPageUserAccountRequest);

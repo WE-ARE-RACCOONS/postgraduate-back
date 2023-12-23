@@ -20,9 +20,10 @@ public enum SeniorResponseMessage {
     GET_SENIOR_LIST_INFO("대학원생 리스트 조회에 성공하였습니다."),
     UPDATE_CERTIFICATION("대학원생 인증사진 업로드에 성공하였습니다"),
     UPDATE_STATUS("대학원생 승인 요청 응답에 성공하였습니다"),
+    GET_USER_CHECK("후배 변경 가능 여부 확인에 성공하였습니다"),
 
     NONE_SENIOR("등록된 멘토가 없습니다."),
-    NONE_ACCOUNT("등록된 계좌가 없습니다."),
+    NONE_ACCOUNT("계좌가 없습니다."),
     NOT_WAITING_STATUS("승인대기 상태의 선배가 아닙니다.");
 
     private final String message;
