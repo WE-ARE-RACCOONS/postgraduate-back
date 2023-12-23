@@ -21,6 +21,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.DONE;
@@ -56,7 +57,7 @@ class SalaryInfoUseCaseTest {
         Mentoring mentoring = new Mentoring(1L, user, senior
                 , "a", "b", "c"
                 , 40, 40, DONE
-                , LocalDate.now(), LocalDate.now());
+                , LocalDateTime.now(), LocalDateTime.now());
         Salary salary1 = new Salary(1L, FALSE, senior, mentoring, salaryDate, null);
         Salary salary2 = new Salary(2L, FALSE, senior, mentoring, salaryDate, null);
         Salary salary3 = new Salary(3L, FALSE, senior, mentoring, salaryDate, null);
@@ -102,7 +103,7 @@ class SalaryInfoUseCaseTest {
         Mentoring mentoring = new Mentoring(1L, user, senior
                 , "a", "b", "c"
                 , 40, 40, DONE
-                , LocalDate.now(), LocalDate.now());
+                , LocalDateTime.now(), LocalDateTime.now());
         Salary salary1 = new Salary(1L, FALSE, senior, mentoring, salaryDate, null);
         Salary salary2 = new Salary(2L, FALSE, senior, mentoring, salaryDate, null);
         Salary salary3 = new Salary(3L, FALSE, senior, mentoring, salaryDate, null);

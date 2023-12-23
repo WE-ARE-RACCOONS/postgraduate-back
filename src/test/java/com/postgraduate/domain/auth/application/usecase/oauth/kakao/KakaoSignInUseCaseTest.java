@@ -14,6 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static com.postgraduate.domain.auth.application.dto.res.KakaoUserInfoResponse.KakaoAccount;
@@ -37,7 +38,7 @@ class KakaoSignInUseCaseTest {
     void setting() {
         user = new User(1L, 1L, "a",
                 "a", "123", "a",
-                1, USER, TRUE, now(), now(), TRUE);
+                1, USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE);
     }
     @Test
     @DisplayName("기존 회원 테스트")

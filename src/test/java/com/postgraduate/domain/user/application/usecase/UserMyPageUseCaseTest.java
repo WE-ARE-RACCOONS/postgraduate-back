@@ -11,6 +11,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDateTime;
+
 import static com.postgraduate.domain.user.domain.entity.constant.Role.SENIOR;
 import static com.postgraduate.domain.user.domain.entity.constant.Role.USER;
 import static java.lang.Boolean.TRUE;
@@ -27,7 +29,7 @@ class UserMyPageUseCaseTest {
     void setting() {
         user = new User(1L, 1234L, "a",
                 "a", "123", "a",
-                1, USER, TRUE, now(), now(), TRUE);
+                1, USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE);
     }
 
     @Test
@@ -70,7 +72,7 @@ class UserMyPageUseCaseTest {
     void checkSeniorWithSenior() {
         user = new User(1L, 1234L, "a",
                 "a", "123", "a",
-                1, SENIOR, TRUE, now(), now(), TRUE);
+                1, SENIOR, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE);
 
         UserPossibleResponse checkSenior = userMyPageUseCase.checkSenior(user);
 
