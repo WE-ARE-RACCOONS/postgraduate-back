@@ -2,6 +2,8 @@ package com.postgraduate.global.config.security.jwt.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.postgraduate.global.dto.ErrorResponse;
+import com.postgraduate.global.logging.dto.LogRequest;
+import com.postgraduate.global.logging.service.LogService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,12 +23,14 @@ import static com.postgraduate.domain.auth.presentation.constant.AuthResponseMes
 @RequiredArgsConstructor
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
     private final ObjectMapper objectMapper;
+    private final LogService logService;
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding("UTF-8");
+        logService.save(new LogRequest(CustomAuthenticationEntryPoint.class.getSimpleName(), FAILED_AUTH.getMessage()));
         objectMapper.writeValue(
                 response.getOutputStream(),
                 new ErrorResponse(AUTH_FAILED.getCode(), FAILED_AUTH.getMessage())
