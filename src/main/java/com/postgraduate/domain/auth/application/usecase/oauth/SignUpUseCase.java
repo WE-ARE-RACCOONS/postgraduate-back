@@ -49,8 +49,9 @@ public class SignUpUseCase {
     public User changeSenior(User user, SeniorChangeRequest changeRequest) {
         Senior senior = SeniorMapper.mapToSenior(user, changeRequest); //todo : 예외 처리
         seniorSaveService.saveSenior(senior);
-        userUpdateService.updateRole(user.getUserId(), Role.SENIOR);
-        return userGetService.getUser(user.getUserId());
+        user = userGetService.getUser(user.getUserId());
+        userUpdateService.updateRole(user, Role.SENIOR);
+        return user;
     }
 
     public void changeUser(User user, UserChangeRequest changeRequest) {

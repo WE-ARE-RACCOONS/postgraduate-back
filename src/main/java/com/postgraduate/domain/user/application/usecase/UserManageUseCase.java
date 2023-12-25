@@ -16,7 +16,8 @@ public class UserManageUseCase {
     private final UserGetService userGetService;
 
     public void updateInfo(User user, UserInfoRequest userInfoRequest) {
-        userUpdateService.updateInfo(user.getUserId(), userInfoRequest);
+        user = userGetService.getUser(user.getUserId());
+        userUpdateService.updateInfo(user, userInfoRequest);
     }
 
     public boolean duplicatedNickName(String nickName) {

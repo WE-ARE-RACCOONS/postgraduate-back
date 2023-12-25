@@ -16,6 +16,7 @@ import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.domain.senior.domain.service.SeniorUpdateService;
 import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.user.domain.service.UserGetService;
 import com.postgraduate.domain.user.domain.service.UserUpdateService;
 import com.postgraduate.global.config.security.util.EncryptorUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,6 +41,8 @@ import static org.mockito.BDDMockito.*;
 class SeniorManageUseCaseTest {
     @Mock
     private UserUpdateService userUpdateService;
+    @Mock
+    private UserGetService userGetService;
     @Mock
     private SeniorUpdateService seniorUpdateService;
     @Mock
@@ -104,6 +107,9 @@ class SeniorManageUseCaseTest {
     void updateSeniorMyPageUserAccountWithNonAccount() {
         SeniorMyPageUserAccountRequest request =
                 new SeniorMyPageUserAccountRequest("a", "b", "a" , "b", "a", "b");
+
+        given(userGetService.getUser(user.getUserId()))
+                .willReturn(user);
         given(seniorGetService.byUser(user))
                 .willReturn(senior);
         given(accountGetService.bySenior(senior))
@@ -112,7 +118,7 @@ class SeniorManageUseCaseTest {
         seniorManageUseCase.updateSeniorMyPageUserAccount(user, request);
 
         verify(userUpdateService)
-                .updateSeniorUserAccount(user.getUserId(), request);
+                .updateSeniorUserAccount(user, request);
         verify(accountSaveService)
                 .saveAccount(any(Account.class));
     }
@@ -122,6 +128,9 @@ class SeniorManageUseCaseTest {
     void updateSeniorMyPageUserAccountWithAccount() {
         SeniorMyPageUserAccountRequest request =
                 new SeniorMyPageUserAccountRequest("a", "b", "a" , "b", "a", "b");
+
+        given(userGetService.getUser(user.getUserId()))
+                .willReturn(user);
         given(seniorGetService.byUser(user))
                 .willReturn(senior);
         given(accountGetService.bySenior(senior))
@@ -132,7 +141,7 @@ class SeniorManageUseCaseTest {
         seniorManageUseCase.updateSeniorMyPageUserAccount(user, request);
 
         verify(userUpdateService)
-                .updateSeniorUserAccount(user.getUserId(), request);
+                .updateSeniorUserAccount(user, request);
         verify(accountUpdateService)
                 .updateAccount(any(Account.class), eq(request), eq("encrypt"));
     }

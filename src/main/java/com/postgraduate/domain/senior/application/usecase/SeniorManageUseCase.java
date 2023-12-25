@@ -15,6 +15,7 @@ import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.domain.senior.domain.service.SeniorUpdateService;
 import com.postgraduate.domain.senior.exception.NoneAccountException;
 import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.user.domain.service.UserGetService;
 import com.postgraduate.domain.user.domain.service.UserUpdateService;
 import com.postgraduate.global.config.security.util.EncryptorUtils;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,7 @@ import static com.postgraduate.domain.senior.application.mapper.SeniorMapper.map
 @RequiredArgsConstructor
 public class SeniorManageUseCase {
     private final UserUpdateService userUpdateService;
+    private final UserGetService userGetService;
     private final SeniorUpdateService seniorUpdateService;
     private final SeniorGetService seniorGetService;
     private final AvailableSaveService availableSaveService;
@@ -74,6 +76,7 @@ public class SeniorManageUseCase {
 
     public void updateSeniorMyPageUserAccount(User user, SeniorMyPageUserAccountRequest myPageUserAccountRequest) {
         Senior senior = seniorGetService.byUser(user);
+        user = userGetService.getUser(user.getUserId());
         Optional<Account> optionalAccount = accountGetService.bySenior(senior);
         if (optionalAccount.isEmpty()) {
             updateSeniorMyPageUserAccountNoneAccount(senior, user, myPageUserAccountRequest);
@@ -83,18 +86,19 @@ public class SeniorManageUseCase {
             throw new NoneAccountException();
         Account account = optionalAccount.get();
         String accountNumber = encryptorUtils.encryptData(myPageUserAccountRequest.accountNumber());
-        userUpdateService.updateSeniorUserAccount(user.getUserId(), myPageUserAccountRequest);
+        userUpdateService.updateSeniorUserAccount(user, myPageUserAccountRequest);
         accountUpdateService.updateAccount(account, myPageUserAccountRequest, accountNumber);
     }
 
     private void updateSeniorMyPageUserAccountNoneAccount(Senior senior, User user, SeniorMyPageUserAccountRequest myPageUserAccountRequest) {
+        user = userGetService.getUser(user.getUserId());
         if (myPageUserAccountRequest.accountNumber().isEmpty() || myPageUserAccountRequest.accountHolder().isEmpty() || myPageUserAccountRequest.bank().isEmpty()) {
-            userUpdateService.updateSeniorUserAccount(user.getUserId(), myPageUserAccountRequest);
+            userUpdateService.updateSeniorUserAccount(user, myPageUserAccountRequest);
             return;
         }
         String accountNumber = encryptorUtils.encryptData(myPageUserAccountRequest.accountNumber());
         Account account = mapToAccount(senior, myPageUserAccountRequest, accountNumber);
-        userUpdateService.updateSeniorUserAccount(user.getUserId(), myPageUserAccountRequest);
+        userUpdateService.updateSeniorUserAccount(user, myPageUserAccountRequest);
         accountSaveService.saveAccount(account);
     }
 }

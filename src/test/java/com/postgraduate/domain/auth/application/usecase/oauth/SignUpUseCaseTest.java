@@ -28,10 +28,10 @@ import static com.postgraduate.domain.user.domain.entity.constant.Role.SENIOR;
 import static com.postgraduate.domain.user.domain.entity.constant.Role.USER;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
-import static java.time.LocalDate.now;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -108,6 +108,9 @@ class SignUpUseCaseTest {
         SeniorChangeRequest seniorChangeRequest = new SeniorChangeRequest(info.getMajor(), info.getPostgradu(), info.getProfessor(),
                 info.getLab(), info.getField(), info.getKeyword(),
                 senior.getCertification());
+
+        given(userGetService.getUser(user.getUserId()))
+                        .willReturn(user);
 
         signUpUseCase.changeSenior(user, seniorChangeRequest);
 

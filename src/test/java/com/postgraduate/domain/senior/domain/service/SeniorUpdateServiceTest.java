@@ -1,0 +1,120 @@
+package com.postgraduate.domain.senior.domain.service;
+
+import com.postgraduate.domain.available.application.dto.req.AvailableCreateRequest;
+import com.postgraduate.domain.senior.application.dto.req.SeniorMyPageProfileRequest;
+import com.postgraduate.domain.senior.domain.entity.Info;
+import com.postgraduate.domain.senior.domain.entity.Profile;
+import com.postgraduate.domain.senior.domain.entity.Senior;
+import com.postgraduate.domain.senior.domain.entity.constant.Status;
+import com.postgraduate.domain.user.domain.entity.User;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import static com.postgraduate.domain.senior.application.mapper.SeniorMapper.mapToProfile;
+import static com.postgraduate.domain.senior.domain.entity.constant.Status.APPROVE;
+import static com.postgraduate.domain.user.domain.entity.constant.Role.SENIOR;
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
+import static java.time.LocalDateTime.now;
+import static java.util.List.of;
+import static org.assertj.core.api.Assertions.assertThat;
+
+@ExtendWith({MockitoExtension.class})
+class SeniorUpdateServiceTest {
+    @InjectMocks
+    private SeniorUpdateService seniorUpdateService;
+
+    private User user = new User(1L, 2L, "a", "b", "c", "d", 0, SENIOR, FALSE, now(), now(), TRUE);
+    private Senior senior;
+    @BeforeEach
+    void setting() {
+        senior = new Senior(1L, user, "a", Status.WAITING, 100, new Info(), new Profile(), now(), now());
+    }
+
+    @Test
+    @DisplayName("profile 업데이트")
+    void seniorProfile() {
+        Profile profile = new Profile("a", "b", "c", "d", 10);
+        seniorUpdateService.signUpSeniorProfile(senior, profile);
+        Profile changeProfile = senior.getProfile();
+
+        assertThat(changeProfile.getInfo())
+                .isEqualTo(profile.getInfo());
+        assertThat(changeProfile.getOneLiner())
+                .isEqualTo(profile.getOneLiner());
+        assertThat(changeProfile.getChatLink())
+                .isEqualTo(profile.getChatLink());
+        assertThat(changeProfile.getTarget())
+                .isEqualTo(profile.getTarget());
+        assertThat(changeProfile.getTerm())
+                .isEqualTo(profile.getTerm());
+    }
+
+    @Test
+    @DisplayName("인증사진 업데이트")
+    void updateCertification() {
+        String image = "image";
+        seniorUpdateService.updateCertification(senior, image);
+
+        assertThat(senior.getCertification())
+                .isEqualTo(image);
+    }
+
+    @Test
+    @DisplayName("마이페이지 프로필 업데이트")
+    void updateMyPageProfile() {
+        AvailableCreateRequest availableCreateRequest1 = new AvailableCreateRequest("day", "12:00", "18:00");
+        AvailableCreateRequest availableCreateRequest2 = new AvailableCreateRequest("day", "12:00", "18:00");
+        AvailableCreateRequest availableCreateRequest3 = new AvailableCreateRequest("day", "12:00", "18:00");
+        SeniorMyPageProfileRequest request = new SeniorMyPageProfileRequest(
+                "a", "b", "c",
+                "d", "e", "f", "g",
+                of(availableCreateRequest1, availableCreateRequest2, availableCreateRequest3)
+        );
+        Profile profile = mapToProfile(request);
+        seniorUpdateService.updateMyPageProfile(senior, request, profile);
+        Info info = senior.getInfo();
+        Profile changeProfile = senior.getProfile();
+
+        assertThat(info.getKeyword())
+                .isEqualTo(request.keyword());
+        assertThat(info.getLab())
+                .isEqualTo(request.lab());
+        assertThat(info.getField())
+                .isEqualTo(request.field());
+
+        assertThat(changeProfile.getTerm())
+                .isEqualTo(profile.getTerm());
+        assertThat(changeProfile.getInfo())
+                .isEqualTo(profile.getInfo());
+        assertThat(changeProfile.getTarget())
+                .isEqualTo(profile.getTarget());
+        assertThat(changeProfile.getChatLink())
+                .isEqualTo(profile.getChatLink());
+        assertThat(changeProfile.getOneLiner())
+                .isEqualTo(profile.getOneLiner());
+    }
+
+    @Test
+    @DisplayName("조회수 증가")
+    void updateHit() {
+        int originHit = senior.getHit();
+        seniorUpdateService.updateHit(senior);
+
+        assertThat(senior.getHit())
+                .isEqualTo(++originHit);
+    }
+
+    @Test
+    @DisplayName("상태 변경")
+    void updateStatus() {
+        seniorUpdateService.updateCertificationStatus(senior, APPROVE);
+
+        assertThat(senior.getStatus())
+                .isEqualTo(APPROVE);
+    }
+}

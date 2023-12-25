@@ -12,20 +12,15 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class UserUpdateService {
-    private final UserRepository userRepository;
-
-    public void updateDelete(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+    public void updateDelete(User user) {
         user.updateDelete();
     }
 
-    public void updateRole(Long userId, Role role) {
-        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+    public void updateRole(User user, Role role) {
         user.updateRole(role);
     }
 
-    public void updateInfo(Long userId, UserInfoRequest userInfoRequest) {
-        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+    public void updateInfo(User user, UserInfoRequest userInfoRequest) {
         user.updateInfo(
                 userInfoRequest.getProfile(),
                 userInfoRequest.getNickName(),
@@ -33,8 +28,7 @@ public class UserUpdateService {
         );
     }
 
-    public void updateSeniorUserAccount(Long userId, SeniorMyPageUserAccountRequest myPageUserAccountRequest) {
-        User user = userRepository.findById(userId).orElseThrow();
+    public void updateSeniorUserAccount(User user, SeniorMyPageUserAccountRequest myPageUserAccountRequest) {
         user.updateInfo(
                 myPageUserAccountRequest.profile(),
                 myPageUserAccountRequest.nickName(),
