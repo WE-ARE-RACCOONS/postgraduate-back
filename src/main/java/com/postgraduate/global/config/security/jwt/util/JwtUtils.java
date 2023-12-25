@@ -10,6 +10,7 @@ import com.postgraduate.global.config.security.jwt.constant.Type;
 import com.postgraduate.global.config.security.jwt.exception.InvalidRefreshTokenException;
 import com.postgraduate.global.config.security.jwt.exception.InvalidTokenException;
 import com.postgraduate.global.config.redis.RedisRepository;
+import com.postgraduate.global.config.security.jwt.filter.JwtFilter;
 import com.postgraduate.global.dto.ResponseDto;
 import com.postgraduate.global.exception.ApplicationException;
 import com.postgraduate.global.config.security.jwt.exception.NoneRefreshTokenException;
@@ -140,7 +141,7 @@ public class JwtUtils {
         response.setContentType(CONTENT_TYPE);
         response.setCharacterEncoding(CHARACTER_ENCODING);
         try {
-            logService.save(new LogRequest(ex.getMessage()));
+            logService.save(new LogRequest(JwtFilter.class.getSimpleName(), ex.getMessage()));
             String json = new ObjectMapper().writeValueAsString(ResponseDto.create(ex.getErrorCode(), ex.getMessage()));
             response.getWriter().write(json);
         } catch (Exception e) {
