@@ -1,5 +1,6 @@
 package com.postgraduate.domain.admin.application.dto;
 
+import com.postgraduate.domain.wish.domain.entity.constant.Status;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
@@ -20,7 +21,7 @@ public record UserInfo(
         @NotNull
         Long wishId,
         @NotNull
-        Boolean wishStatus,
+        Status matchingStatus,
         @NotNull
         Boolean isSenior
 ) { }

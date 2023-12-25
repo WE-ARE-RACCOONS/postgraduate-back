@@ -1,6 +1,7 @@
 package com.postgraduate.domain.wish.domain.entity;
 
 import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.wish.domain.entity.constant.Status;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,10 +29,10 @@ public class Wish {
     private User user;
 
     @Column(nullable = false)
-    @Builder.Default
-    private Boolean status = false;
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
     public void updateStatus() {
-        this.status = true;
+        this.status = Status.MATCHED;
     }
 }
