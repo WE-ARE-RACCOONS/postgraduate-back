@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Transactional
 @Service
 @RequiredArgsConstructor
@@ -20,7 +22,7 @@ public class UserManageUseCase {
         userUpdateService.updateInfo(user, userInfoRequest);
     }
 
-    public boolean duplicatedNickName(String nickName) {
+    public Boolean duplicatedNickName(String nickName) {
         return userGetService.byNickName(nickName).isEmpty();
     }
 }

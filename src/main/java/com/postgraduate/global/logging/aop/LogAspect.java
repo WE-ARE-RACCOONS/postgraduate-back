@@ -20,17 +20,18 @@ public class LogAspect {
     private final LogService logService;
 
     @Around("com.postgraduate.global.logging.aop.PointCuts.allService()")
-    public void serviceLog(ProceedingJoinPoint joinPoint) throws Throwable {
+    public Object serviceLog(ProceedingJoinPoint joinPoint) throws Throwable {
         log.info("serviceLog: {}", joinPoint.getSignature().getName());
-        getObject(joinPoint);
+        return getObject(joinPoint);
     }
 
     @Around("com.postgraduate.global.logging.aop.PointCuts.allController()")
-    public void controllerLog(ProceedingJoinPoint joinPoint) throws Throwable {
+    public Object controllerLog(ProceedingJoinPoint joinPoint) throws Throwable {
         setLogId();
         log.info("controllerLog: {}", joinPoint.getSignature().getName());
-        getObject(joinPoint);
+        Object object = getObject(joinPoint);
         clearLogId();
+        return object;
     }
 
     private Object getObject(ProceedingJoinPoint joinPoint) throws Throwable {
