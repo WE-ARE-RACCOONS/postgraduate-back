@@ -20,5 +20,7 @@ public record UserInfo(
         @NotNull
         Long wishId,
         @NotNull
+        Boolean wishStatus,
+        @NotNull
         Boolean isSenior
 ) { }

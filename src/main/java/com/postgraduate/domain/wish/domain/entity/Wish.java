@@ -26,4 +26,8 @@ public class Wish {
 
     @OneToOne
     private User user;
+
+    @Column(nullable = false)
+    @Builder.Default
+    private Boolean status = false;
 }
