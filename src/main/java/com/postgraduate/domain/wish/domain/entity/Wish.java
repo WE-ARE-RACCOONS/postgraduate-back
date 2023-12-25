@@ -30,4 +30,8 @@ public class Wish {
     @Column(nullable = false)
     @Builder.Default
     private Boolean status = false;
+
+    public void updateStatus() {
+        this.status = true;
+    }
 }
