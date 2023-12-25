@@ -11,6 +11,7 @@ public enum WishResponseCode {
     WISH_CREATE("WSH202"),
     WISH_DELETE("WSH203"),
 
-    WISH_NOT_FOUND("EX200");
+    WISH_NOT_FOUND("EX200"),
+    MATCHING_NOT_RECEIVE("EX201");
     private final String code;
 }
