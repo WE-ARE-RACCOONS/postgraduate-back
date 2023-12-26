@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 
-import java.util.UUID;
+import static com.postgraduate.global.logging.aop.LogUtils.getLogId;
 
 @Component
 @Slf4j
@@ -12,7 +12,7 @@ public class LogTrace {
     private static final String TRACE_ID = "TraceId";
 
     public TraceStatus start(String method) {
-        String id = createTraceId();
+        String id = getLogId();
         MDC.put(TRACE_ID, id);
         // MDC란 ThreadLocal을 이용해 각 스레드에서만 유지되는 정보입니다.
         long startTime = System.currentTimeMillis();
@@ -22,30 +22,14 @@ public class LogTrace {
 
     public Integer end(TraceStatus traceStatus) { // 걸린 시간 로그 처리 및 오래걸리면 경고
         long endTime = System.currentTimeMillis();
-        long executionTime = endTime - traceStatus.getStartTime();
-        if (executionTime > 1000) {
-            log.warn("[{}]{} === execute time {}ms", traceStatus.getThreadId(),traceStatus.getMethodName(), executionTime);
-        } else {
-            log.info("[{}]{} === execute time {}ms", traceStatus.getThreadId(),traceStatus.getMethodName(), executionTime);
-        }
+        long executionTime = endTime - traceStatus.startTime();
         removeMdcContext();
         return (int)executionTime;
     }
-     /**
-     * 일단은 댕충 ClassCastException으로 처리 실제 사용할 경우 알맞게 처리
-     */
-    public void apiException(ClassCastException e, TraceStatus traceStatus) {
-        log.error("[{}]{} === API EXCEPTION [{}] {}", traceStatus.getThreadId(), traceStatus.getMethodName(), 500, e.getMessage());
-        removeMdcContext();
-    }
 
     public void exception(Exception e, TraceStatus traceStatus) {
-        log.error("[{}]{} === Exception [{}] {}", traceStatus.getThreadId(), traceStatus.getMethodName(), 500, e.getMessage());
+        log.error("[{}]{} === Exception [{}] {}", traceStatus.threadId(), traceStatus.methodName(), 500, e.getMessage());
         removeMdcContext();
-    }
-
-    private String createTraceId() {
-        return UUID.randomUUID().toString().substring(0, 8);
     }
 
     private void removeMdcContext() {

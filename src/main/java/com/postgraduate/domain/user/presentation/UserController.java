@@ -59,7 +59,7 @@ public class UserController {
     @GetMapping("/nickname")
     @Operation(summary = "사용자 닉네임 중복체크", description = "true-사용가능, false-사용불가능")
     public ResponseDto<Boolean> duplicatedNickName(@RequestParam String nickName) {
-        boolean checkDup = manageUseCase.duplicatedNickName(nickName);
+        Boolean checkDup = manageUseCase.duplicatedNickName(nickName);
         return ResponseDto.create(USER_FIND.getCode(), GET_NICKNAME_CHECK.getMessage(), checkDup);
     }
 }

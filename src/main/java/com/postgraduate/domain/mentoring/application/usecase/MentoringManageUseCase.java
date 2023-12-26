@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -87,7 +88,7 @@ public class MentoringManageUseCase {
 
     @Scheduled(cron = "0 59 23 * * *", zone = "Asia/Seoul")
     public void updateCancel() {
-        LocalDate now = LocalDate.now();
+        LocalDateTime now = LocalDateTime.now();
         List<Mentoring> mentorings = mentoringGetService.byStatusAndCreatedAt(WAITING, now);
         mentorings.forEach(mentoring -> {
                     mentoringUpdateService.updateStatus(mentoring, CANCEL);

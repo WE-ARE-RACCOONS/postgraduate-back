@@ -9,7 +9,7 @@ import com.postgraduate.domain.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static java.lang.Boolean.FALSE;
@@ -32,7 +32,7 @@ public class MentoringGetService {
                 .orElseThrow(MentoringNotFoundException::new);
     }
 
-    public List<Mentoring> byStatusAndCreatedAt(Status status, LocalDate now) {
+    public List<Mentoring> byStatusAndCreatedAt(Status status, LocalDateTime now) {
         return mentoringRepository.findAllByStatusAndCreatedAtIsBefore(status, now);
     }
 
