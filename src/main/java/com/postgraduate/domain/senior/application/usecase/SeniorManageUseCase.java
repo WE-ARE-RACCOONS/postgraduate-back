@@ -9,6 +9,7 @@ import com.postgraduate.domain.available.domain.entity.Available;
 import com.postgraduate.domain.available.domain.service.AvailableSaveService;
 import com.postgraduate.domain.available.domain.service.AvailableDeleteService;
 import com.postgraduate.domain.senior.application.dto.req.*;
+import com.postgraduate.domain.senior.application.utils.SeniorUtils;
 import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
@@ -45,6 +46,7 @@ public class SeniorManageUseCase {
     private final AccountUpdateService accountUpdateService;
     private final EncryptorUtils encryptorUtils;
     private final UserUtils userUtils;
+    private final SeniorUtils seniorUtils;
 
     public void updateCertification(User user, SeniorCertificationRequest certificationRequest) {
         Senior senior = seniorGetService.byUser(user);
@@ -67,6 +69,7 @@ public class SeniorManageUseCase {
     }
 
     public void updateSeniorMyPageProfile(User user, SeniorMyPageProfileRequest myPageProfileRequest) {
+        seniorUtils.checkKeyword(myPageProfileRequest.keyword());
         Senior senior = seniorGetService.byUser(user);
         Profile profile = mapToProfile(myPageProfileRequest);
         seniorUpdateService.updateMyPageProfile(senior, myPageProfileRequest, profile);
