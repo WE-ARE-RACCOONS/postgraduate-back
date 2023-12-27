@@ -14,6 +14,7 @@ import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.domain.senior.domain.service.SeniorUpdateService;
 import com.postgraduate.domain.senior.exception.NoneAccountException;
+import com.postgraduate.domain.user.application.utils.UserUtils;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.service.UserGetService;
 import com.postgraduate.domain.user.domain.service.UserUpdateService;
@@ -43,6 +44,7 @@ public class SeniorManageUseCase {
     private final AccountSaveService accountSaveService;
     private final AccountUpdateService accountUpdateService;
     private final EncryptorUtils encryptorUtils;
+    private final UserUtils userUtils;
 
     public void updateCertification(User user, SeniorCertificationRequest certificationRequest) {
         Senior senior = seniorGetService.byUser(user);
@@ -75,6 +77,7 @@ public class SeniorManageUseCase {
     }
 
     public void updateSeniorMyPageUserAccount(User user, SeniorMyPageUserAccountRequest myPageUserAccountRequest) {
+        userUtils.checkPhoneNumber(myPageUserAccountRequest.phoneNumber());
         Senior senior = seniorGetService.byUser(user);
         user = userGetService.getUser(user.getUserId());
         Optional<Account> optionalAccount = accountGetService.bySenior(senior);
@@ -91,6 +94,7 @@ public class SeniorManageUseCase {
     }
 
     private void updateSeniorMyPageUserAccountNoneAccount(Senior senior, User user, SeniorMyPageUserAccountRequest myPageUserAccountRequest) {
+        userUtils.checkPhoneNumber(myPageUserAccountRequest.phoneNumber());
         user = userGetService.getUser(user.getUserId());
         if (myPageUserAccountRequest.accountNumber().isEmpty() || myPageUserAccountRequest.accountHolder().isEmpty() || myPageUserAccountRequest.bank().isEmpty()) {
             userUpdateService.updateSeniorUserAccount(user, myPageUserAccountRequest);
