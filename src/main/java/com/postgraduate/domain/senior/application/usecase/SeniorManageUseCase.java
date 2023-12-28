@@ -97,7 +97,6 @@ public class SeniorManageUseCase {
     }
 
     private void updateSeniorMyPageUserAccountNoneAccount(Senior senior, User user, SeniorMyPageUserAccountRequest myPageUserAccountRequest) {
-        userUtils.checkPhoneNumber(myPageUserAccountRequest.phoneNumber());
         user = userGetService.getUser(user.getUserId());
         if (myPageUserAccountRequest.accountNumber().isEmpty() || myPageUserAccountRequest.accountHolder().isEmpty() || myPageUserAccountRequest.bank().isEmpty()) {
             userUpdateService.updateSeniorUserAccount(user, myPageUserAccountRequest);
