@@ -8,6 +8,7 @@ import com.postgraduate.domain.wish.domain.entity.Wish;
 import com.postgraduate.domain.wish.domain.service.WishGetService;
 import com.postgraduate.domain.wish.domain.service.WishUpdateService;
 import com.postgraduate.domain.wish.exception.MatchingNotReceiveException;
+import com.postgraduate.domain.wish.exception.WishEmptyException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,9 @@ public class UserManageByAdminUseCase {
 
     public WishResponse getWish(Long wishId) {
         Wish wish = wishGetService.byWishId(wishId);
+        if (wish.getMajor() == null && wish.getField() == null) {
+            throw new WishEmptyException();
+        }
         return AdminMapper.mapToWishResponse(wish);
     }
 
