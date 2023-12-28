@@ -45,6 +45,7 @@ public class AdminMapper {
                 user.getMarketingReceive(),
                 wish.getMatchingReceive(),
                 wish.getWishId(),
+                wish.getStatus(),
                 isSenior
         );
     }

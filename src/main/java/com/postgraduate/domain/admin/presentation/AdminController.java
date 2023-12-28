@@ -64,6 +64,13 @@ public class AdminController {
         return ResponseDto.create(ADMIN_FIND.getCode(), GET_DETAILS.getMessage(), wish);
     }
 
+    @PatchMapping("/wish/{wishId}")
+    @Operation(summary = "[관리자] 후배 매칭 지원 완료", description = "대학생 매칭지원을 완료합니다.")
+    public ResponseDto updateWishStatus(@PathVariable Long wishId) {
+        userManageUseCase.updateWishStatus(wishId);
+        return ResponseDto.create(ADMIN_UPDATE.getCode(), UPDATE_WISH_STATUS.getMessage());
+    }
+
     @GetMapping("/seniors")
     @Operation(summary = "[관리자] 선배 정보 목록", description = "대학원생 선배 정보 목록을 조회합니다.")
     public ResponseDto<SeniorManageResponse> getSeniors(@RequestParam(required = false) Integer page,

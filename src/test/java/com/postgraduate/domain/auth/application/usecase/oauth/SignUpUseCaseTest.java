@@ -12,6 +12,7 @@ import com.postgraduate.domain.user.domain.service.UserGetService;
 import com.postgraduate.domain.user.domain.service.UserSaveService;
 import com.postgraduate.domain.user.domain.service.UserUpdateService;
 import com.postgraduate.domain.wish.domain.entity.Wish;
+import com.postgraduate.domain.wish.domain.entity.constant.Status;
 import com.postgraduate.domain.wish.domain.service.WishSaveService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -63,7 +64,7 @@ class SignUpUseCaseTest {
         user = new User(1L, 1234L, "a",
                 "a", "123", "a",
                 1, USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), FALSE);
-        wish = new Wish(1L, "major", "field", TRUE, user);
+        wish = new Wish(1L, "major", "field", TRUE, user, Status.WAITING);
         senior = new Senior(1L, user, "a",
                 APPROVE, 1, info, profile,
                 LocalDateTime.now(), LocalDateTime.now());
