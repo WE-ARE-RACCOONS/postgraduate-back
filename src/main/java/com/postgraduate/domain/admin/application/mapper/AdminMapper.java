@@ -37,6 +37,10 @@ public class AdminMapper {
     public static UserInfo mapToUserInfo(Wish wish) {
         User user = wish.getUser();
         Boolean isSenior = user.getRole() == Role.SENIOR;
+        Long wishId = wish.getWishId();
+        if (wish.getMajor() == null && wish.getField() == null) {
+            wishId = null;
+        }
         return new UserInfo(
                 user.getUserId(),
                 user.getNickName(),
@@ -44,7 +48,7 @@ public class AdminMapper {
                 user.getCreatedAt(),
                 user.getMarketingReceive(),
                 wish.getMatchingReceive(),
-                wish.getWishId(),
+                wishId,
                 wish.getStatus(),
                 isSenior
         );
