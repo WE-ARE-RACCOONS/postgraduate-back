@@ -88,13 +88,15 @@ public class MentoringManageUseCase {
 
     @Scheduled(cron = "0 59 23 * * *", zone = "Asia/Seoul")
     public void updateCancel() {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now()
+                .toLocalDate()
+                .atStartOfDay();
         List<Mentoring> mentorings = mentoringGetService.byStatusAndCreatedAt(WAITING, now);
         mentorings.forEach(mentoring -> {
-                    mentoringUpdateService.updateStatus(mentoring, CANCEL);
-                    Refuse refuse = RefuseMapper.mapToRefuse(mentoring);
-                    refuseSaveService.saveRefuse(refuse);
-                    //TODO : 알림 보내거나 나머지 작업
-                });
+            mentoringUpdateService.updateStatus(mentoring, CANCEL);
+            Refuse refuse = RefuseMapper.mapToRefuse(mentoring);
+            refuseSaveService.saveRefuse(refuse);
+            //TODO : 알림 보내거나 나머지 작업
+        });
     }
 }
