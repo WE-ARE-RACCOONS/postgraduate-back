@@ -8,21 +8,28 @@ import com.postgraduate.domain.available.application.dto.req.AvailableCreateRequ
 import com.postgraduate.domain.available.domain.entity.Available;
 import com.postgraduate.domain.available.domain.service.AvailableDeleteService;
 import com.postgraduate.domain.available.domain.service.AvailableSaveService;
+import com.postgraduate.domain.senior.application.dto.req.SeniorMyPageProfileRequest;
 import com.postgraduate.domain.senior.application.dto.req.SeniorMyPageUserAccountRequest;
 import com.postgraduate.domain.senior.application.dto.req.SeniorProfileRequest;
+import com.postgraduate.domain.senior.application.utils.SeniorUtils;
 import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.domain.senior.domain.service.SeniorUpdateService;
+import com.postgraduate.domain.senior.exception.KeywordException;
+import com.postgraduate.domain.user.application.utils.UserUtils;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.service.UserGetService;
 import com.postgraduate.domain.user.domain.service.UserUpdateService;
+import com.postgraduate.domain.user.exception.PhoneNumberException;
 import com.postgraduate.global.config.security.util.EncryptorUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -34,7 +41,7 @@ import java.util.Optional;
 import static com.postgraduate.domain.senior.domain.entity.constant.Status.APPROVE;
 import static com.postgraduate.domain.user.domain.entity.constant.Role.USER;
 import static java.lang.Boolean.TRUE;
-import static java.time.LocalDate.now;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -59,6 +66,10 @@ class SeniorManageUseCaseTest {
     private AccountUpdateService accountUpdateService;
     @Mock
     private EncryptorUtils encryptorUtils;
+    @Mock
+    private UserUtils userUtils;
+    @Mock
+    private SeniorUtils seniorUtils;
     @InjectMocks
     private SeniorManageUseCase seniorManageUseCase;
 
@@ -114,7 +125,6 @@ class SeniorManageUseCaseTest {
                 .willReturn(senior);
         given(accountGetService.bySenior(senior))
                 .willReturn(Optional.ofNullable(null));
-
         seniorManageUseCase.updateSeniorMyPageUserAccount(user, request);
 
         verify(userUpdateService)
@@ -144,5 +154,32 @@ class SeniorManageUseCaseTest {
                 .updateSeniorUserAccount(user, request);
         verify(accountUpdateService)
                 .updateAccount(any(Account.class), eq(request), eq("encrypt"));
+    }
+
+    @Test
+    @DisplayName("키워드 예외 테스트")
+    void invalidKeyword() {
+        SeniorMyPageProfileRequest request = mock(SeniorMyPageProfileRequest.class);
+
+        doThrow(KeywordException.class)
+                .when(seniorUtils)
+                .checkKeyword(any());
+
+        assertThatThrownBy(() -> seniorManageUseCase.updateSeniorMyPageProfile(user, request))
+                .isInstanceOf(KeywordException.class);
+    }
+
+    @Test
+    @DisplayName("번호 예외 테스트")
+    void userAccountInvalidPhoneNumber() {
+        SeniorMyPageUserAccountRequest request =
+                new SeniorMyPageUserAccountRequest("a", "1234", "a" , "b", "a", "b");
+
+        doThrow(PhoneNumberException.class)
+                .when(userUtils)
+                .checkPhoneNumber(request.phoneNumber());
+
+        assertThatThrownBy(() -> seniorManageUseCase.updateSeniorMyPageUserAccount(user, request))
+                .isInstanceOf(PhoneNumberException.class);
     }
 }
