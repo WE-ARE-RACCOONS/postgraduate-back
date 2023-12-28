@@ -38,9 +38,9 @@ public class AuthController {
     public ResponseDto<?> authLogin(@RequestBody @Valid CodeRequest request, @PathVariable Provider provider) {
         SignInUseCase signInUseCase = selectOauth.selectSignIn(provider);
         AuthUserResponse authUser = signInUseCase.getUser(request);
-        if (authUser.getUser().isEmpty())
+        if (authUser.user() == null)
             return ResponseDto.create(AUTH_NONE.getCode(), NOT_REGISTERED_USER.getMessage(), authUser);
-        JwtTokenResponse jwtToken = jwtUseCase.signIn(authUser.getUser().get());
+        JwtTokenResponse jwtToken = jwtUseCase.signIn(authUser.user());
         return ResponseDto.create(AUTH_ALREADY.getCode(), SUCCESS_AUTH.getMessage(), jwtToken);
     }
 
