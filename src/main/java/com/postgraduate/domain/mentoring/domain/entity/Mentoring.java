@@ -12,6 +12,11 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+import static java.time.LocalDateTime.now;
+import static java.time.LocalDateTime.parse;
+import static java.time.format.DateTimeFormatter.ofPattern;
 
 @Entity
 @Builder
@@ -62,5 +67,12 @@ public class Mentoring {
 
     public void updateDate(String date) {
         this.date = date;
+    }
+
+    public boolean checkAutoDone() {
+        DateTimeFormatter formatter = ofPattern("yyyy-MM-dd-HH-mm");
+        LocalDateTime doneDate = parse(this.date, formatter);
+        return now().minusDays(2)
+                .isAfter(doneDate);
     }
 }
