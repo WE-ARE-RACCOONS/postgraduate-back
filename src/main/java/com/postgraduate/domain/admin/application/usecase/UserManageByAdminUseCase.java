@@ -46,6 +46,9 @@ public class UserManageByAdminUseCase {
         if (!wish.getMatchingReceive()) {
             throw new MatchingNotReceiveException();
         }
+        if (wish.getMajor() == null && wish.getField() == null) {
+            throw new WishEmptyException();
+        }
         wishUpdateService.updateWishStatus(wish);
     }
 }
