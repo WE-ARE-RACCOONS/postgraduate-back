@@ -4,4 +4,10 @@ import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 
-public record AllSeniorSearchResponse(@NotNull List<SeniorSearchResponse> seniorSearchResponses) {}
+public record AllSeniorSearchResponse(
+        @NotNull
+        List<SeniorSearchResponse> seniorSearchResponses,
+        @NotNull
+        Long totalElements
+) {
+}
