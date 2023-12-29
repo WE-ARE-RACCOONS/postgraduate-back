@@ -27,7 +27,7 @@ public class Senior {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long seniorId;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     private User user;
 
     @Column(nullable = false, columnDefinition = "TEXT")

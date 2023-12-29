@@ -28,7 +28,7 @@ public class Account {
     @Column(nullable = false)
     private String accountHolder;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     private Senior senior;
 
     public void updateMyPageUserAccount(SeniorMyPageUserAccountRequest myPageUserAccountRequest, String accountNumber) {

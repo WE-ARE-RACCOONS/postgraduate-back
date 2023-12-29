@@ -28,10 +28,10 @@ public class Mentoring {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long mentoringId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Senior senior;
 
     @Column(nullable = false, columnDefinition = "TEXT")

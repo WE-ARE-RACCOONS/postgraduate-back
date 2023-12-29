@@ -25,10 +25,10 @@ public class Salary {
     @Builder.Default
     private Boolean status = false;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Senior senior;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     private Mentoring mentoring;
 
     @Column(nullable = false)
