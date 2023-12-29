@@ -35,4 +35,9 @@ public class Payment {
     @Column(nullable = false)
     @Builder.Default
     private Status status = Status.IMPOSSIBLE;
+
+    public void updateStatus(Status status) {
+        this.status = status;
+        this.deletedAt = LocalDateTime.now();
+    }
 }
