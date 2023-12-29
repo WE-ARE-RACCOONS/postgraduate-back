@@ -5,6 +5,7 @@ import com.postgraduate.domain.auth.application.dto.res.AuthUserResponse;
 import com.postgraduate.domain.auth.application.dto.res.KakaoUserInfoResponse;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.service.UserGetService;
+import com.postgraduate.domain.user.exception.UserNotFoundException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -15,12 +16,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 import static com.postgraduate.domain.auth.application.dto.res.KakaoUserInfoResponse.KakaoAccount;
 import static com.postgraduate.domain.user.domain.entity.constant.Role.USER;
 import static java.lang.Boolean.TRUE;
-import static java.time.LocalDate.now;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
@@ -50,12 +49,11 @@ class KakaoSignInUseCaseTest {
         given(kakaoAccessTokenUseCase.getAccessToken(codeRequest))
                 .willReturn(kakaoUserInfoResponse);
         given(userGetService.bySocialId(kakaoUserInfoResponse.id()))
-                .willReturn(Optional.of(user));
+                .willReturn(user);
 
         AuthUserResponse authUserResponse = kakaoSignInUseCase.getUser(codeRequest);
 
-        Assertions.assertThat(authUserResponse.getUser())
-                .isNotEmpty();
+        Assertions.assertThat(authUserResponse.user()).isNotNull();
     }
 
     @Test
@@ -68,11 +66,11 @@ class KakaoSignInUseCaseTest {
         given(kakaoAccessTokenUseCase.getAccessToken(codeRequest))
                 .willReturn(kakaoUserInfoResponse);
         given(userGetService.bySocialId(kakaoUserInfoResponse.id()))
-                .willReturn(Optional.ofNullable(null));
+                .willThrow(UserNotFoundException.class);
 
         AuthUserResponse authUserResponse = kakaoSignInUseCase.getUser(codeRequest);
 
-        Assertions.assertThat(authUserResponse.getUser())
-                .isEmpty();
+        Assertions.assertThat(authUserResponse.user())
+                .isNull();
     }
 }

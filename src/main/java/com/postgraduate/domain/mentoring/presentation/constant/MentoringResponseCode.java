@@ -15,6 +15,7 @@ public enum MentoringResponseCode {
     MENTORING_DONE("EX701"),
     MENTORING_NOT_WAITING("EX702"),
     MENTORING_NOT_EXPECTED("EX703"),
+    INVALID_DATE("EX704"),
     ;
     private final String code;
 }

@@ -13,6 +13,7 @@ public enum SeniorResponseCode {
 
     NONE_SENIOR("EX400"),
     NONE_ACCOUNT("EX401"),
-    NOT_WAITING_STATUS("EX402");
+    NOT_WAITING_STATUS("EX402"),
+    INVALID_KEYWORD("EX402");
     private final String code;
 }
