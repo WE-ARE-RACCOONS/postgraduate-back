@@ -38,7 +38,7 @@ public class MentoringManageByAdminUseCase {
     public MentoringManageResponse getUserMentorings(Long userId) {
         List<Mentoring> mentorings = mentoringGetService.byUserId(userId);
         List<MentoringInfo> mentoringInfos = mentorings.stream()
-                .map(AdminMapper::mapToMentoringInfo)
+                .map(AdminMapper::mapToSeniorMentoringInfo)
                 .toList();
         User user = userGetService.getUser(userId);
         UserMentoringInfo userMentoringInfo = AdminMapper.mapToUserMentoringInfo(user);
