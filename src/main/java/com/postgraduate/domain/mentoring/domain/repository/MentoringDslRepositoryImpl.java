@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.postgraduate.domain.mentoring.domain.entity.QMentoring.mentoring;
 import static com.postgraduate.domain.senior.domain.entity.QSenior.senior;
@@ -43,14 +44,14 @@ public class MentoringDslRepositoryImpl implements MentoringDslRepository {
     }
 
     @Override
-    public List<Mentoring> findAllByStatus(Status status) {
-        return queryFactory.selectFrom(mentoring)
+    public Optional<Mentoring> findByMentoringId(Long mentoringId) {
+        return Optional.ofNullable(queryFactory.selectFrom(mentoring)
                 .distinct()
                 .leftJoin(mentoring.senior, senior)
                 .fetchJoin()
                 .leftJoin(mentoring.user, user)
                 .fetchJoin()
-                .where(mentoring.status.eq(status))
-                .fetch();
+                .where(mentoring.mentoringId.eq(mentoringId), mentoring.user.isDelete.isFalse(), mentoring.senior.user.isDelete.isFalse())
+                .fetchOne());
     }
 }

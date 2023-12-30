@@ -10,9 +10,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MentoringRepository extends JpaRepository<Mentoring, Long>, MentoringDslRepository {
-    Optional<Mentoring> findByMentoringIdAndUser_IsDeleteAndSenior_User_IsDelete(Long mentoringId, Boolean isUserDelete, Boolean isSeniorDelete);
+//    Optional<Mentoring> findByMentoringIdAndUser_IsDeleteAndSenior_User_IsDelete(Long mentoringId, Boolean isUserDelete, Boolean isSeniorDelete);
     List<Mentoring> findAllByUserAndStatus(User user, Status status);
+    List<Mentoring> findAllByUser_UserId(Long userId);
     List<Mentoring> findAllByStatus(Status status);
     List<Mentoring> findAllByStatusAndCreatedAtIsBefore(Status status, LocalDateTime now);
-    List<Mentoring> findAllByUser_UserId(Long userId);
 }

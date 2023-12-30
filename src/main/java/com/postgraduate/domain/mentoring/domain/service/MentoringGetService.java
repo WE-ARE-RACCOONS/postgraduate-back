@@ -28,8 +28,11 @@ public class MentoringGetService {
     }
 
     public Mentoring byMentoringId(Long mentoringId) {
-        return mentoringRepository.findByMentoringIdAndUser_IsDeleteAndSenior_User_IsDelete(mentoringId, FALSE, FALSE)
+        return mentoringRepository.findByMentoringId(mentoringId)
                 .orElseThrow(MentoringNotFoundException::new);
+//        return mentoringRepository.findByMentoringIdAndUser_IsDeleteAndSenior_User_IsDelete(mentoringId, FALSE, FALSE)
+//                .orElseThrow(MentoringNotFoundException::new);
+        //todo: 차이가 안남 무엇을 사용할지 결정할 필요가 있다.
     }
 
     public List<Mentoring> byStatusAndCreatedAt(Status status, LocalDateTime now) {
