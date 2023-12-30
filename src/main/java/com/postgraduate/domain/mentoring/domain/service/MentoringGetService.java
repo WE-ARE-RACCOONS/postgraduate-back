@@ -36,6 +36,10 @@ public class MentoringGetService {
         return mentoringRepository.findAllByStatusAndCreatedAtIsBefore(status, now);
     }
 
+    public List<Mentoring> byStatus(Status status) {
+        return mentoringRepository.findAllByStatus(status);
+    }
+
     public List<Mentoring> byUserId(Long userId) {
         return mentoringRepository.findAllByUser_UserId(userId);
     }

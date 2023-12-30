@@ -27,6 +27,6 @@ public class Available {
     @Column(nullable = false)
     private String endTime;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Senior senior;
 }

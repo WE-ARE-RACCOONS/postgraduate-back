@@ -24,6 +24,7 @@ public enum SeniorResponseMessage {
 
     NONE_SENIOR("등록된 멘토가 없습니다."),
     NONE_ACCOUNT("계좌가 없습니다."),
+    INVALID_KEYWORD("키워드가 잘못되었습니다."),
     NOT_WAITING_STATUS("승인대기 상태의 선배가 아닙니다.");
 
     private final String message;

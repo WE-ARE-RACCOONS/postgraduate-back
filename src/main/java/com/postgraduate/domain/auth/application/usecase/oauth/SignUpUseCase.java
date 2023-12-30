@@ -5,9 +5,11 @@ import com.postgraduate.domain.auth.application.dto.req.SeniorSignUpRequest;
 import com.postgraduate.domain.auth.application.dto.req.SignUpRequest;
 import com.postgraduate.domain.auth.application.dto.req.UserChangeRequest;
 import com.postgraduate.domain.senior.application.mapper.SeniorMapper;
+import com.postgraduate.domain.senior.application.utils.SeniorUtils;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorSaveService;
 import com.postgraduate.domain.user.application.mapper.UserMapper;
+import com.postgraduate.domain.user.application.utils.UserUtils;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.entity.constant.Role;
 import com.postgraduate.domain.user.domain.service.UserGetService;
@@ -29,8 +31,11 @@ public class SignUpUseCase {
     private final UserGetService userGetService;
     private final WishSaveService wishSaveService;
     private final SeniorSaveService seniorSaveService;
+    private final UserUtils userUtils;
+    private final SeniorUtils seniorUtils;
 
     public User userSignUp(SignUpRequest request) {
+        userUtils.checkPhoneNumber(request.phoneNumber());
         User user = UserMapper.mapToUser(request);
         Wish wish = WishMapper.mapToWish(user, request);
         wishSaveService.saveWish(wish);
@@ -39,6 +44,8 @@ public class SignUpUseCase {
     }
 
     public User seniorSignUp(SeniorSignUpRequest request) {
+        seniorUtils.checkKeyword(request.keyword());
+        userUtils.checkPhoneNumber(request.phoneNumber());
         User user = UserMapper.mapToUser(request);
         userSaveService.saveUser(user);
         Senior senior = SeniorMapper.mapToSenior(user, request);
@@ -47,6 +54,7 @@ public class SignUpUseCase {
     }
 
     public User changeSenior(User user, SeniorChangeRequest changeRequest) {
+        seniorUtils.checkKeyword(changeRequest.keyword());
         Senior senior = SeniorMapper.mapToSenior(user, changeRequest); //todo : 예외 처리
         seniorSaveService.saveSenior(senior);
         user = userGetService.getUser(user.getUserId());

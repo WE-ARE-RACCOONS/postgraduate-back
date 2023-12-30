@@ -12,6 +12,11 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+import static java.time.LocalDateTime.now;
+import static java.time.LocalDateTime.parse;
+import static java.time.format.DateTimeFormatter.ofPattern;
 
 @Entity
 @Builder
@@ -23,10 +28,10 @@ public class Mentoring {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long mentoringId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Senior senior;
 
     @Column(nullable = false, columnDefinition = "TEXT")
@@ -62,5 +67,12 @@ public class Mentoring {
 
     public void updateDate(String date) {
         this.date = date;
+    }
+
+    public boolean checkAutoDone() {
+        DateTimeFormatter formatter = ofPattern("yyyy-MM-dd-HH-mm");
+        LocalDateTime doneDate = parse(this.date, formatter);
+        return now().minusDays(2)
+                .isAfter(doneDate);
     }
 }

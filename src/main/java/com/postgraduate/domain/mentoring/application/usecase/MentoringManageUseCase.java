@@ -6,7 +6,6 @@ import com.postgraduate.domain.mentoring.application.dto.req.MentoringDateReques
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
 import com.postgraduate.domain.mentoring.domain.service.MentoringUpdateService;
-import com.postgraduate.domain.mentoring.exception.MentoringDoneException;
 import com.postgraduate.domain.mentoring.exception.MentoringNotExpectedException;
 import com.postgraduate.domain.mentoring.exception.MentoringNotWaitingException;
 import com.postgraduate.domain.refuse.application.dto.req.MentoringRefuseRequest;
@@ -87,13 +86,27 @@ public class MentoringManageUseCase {
     }
 
     @Scheduled(cron = "0 59 23 * * *", zone = "Asia/Seoul")
-    public void updateCancel() {
-        LocalDateTime now = LocalDateTime.now();
-        List<Mentoring> mentorings = mentoringGetService.byStatusAndCreatedAt(WAITING, now);
-        mentorings.forEach(mentoring -> {
-                    mentoringUpdateService.updateStatus(mentoring, CANCEL);
-                    Refuse refuse = RefuseMapper.mapToRefuse(mentoring);
-                    refuseSaveService.saveRefuse(refuse);
+    public void updateAutoCancel() {
+        LocalDateTime now = LocalDateTime.now()
+                .toLocalDate()
+                .atStartOfDay();
+        List<Mentoring> waitingMentorings = mentoringGetService.byStatusAndCreatedAt(WAITING, now);
+        waitingMentorings.forEach(mentoring -> {
+            mentoringUpdateService.updateStatus(mentoring, CANCEL);
+            Refuse refuse = RefuseMapper.mapToRefuse(mentoring);
+            refuseSaveService.saveRefuse(refuse);
+            //TODO : 알림 보내거나 나머지 작업
+        });
+    }
+
+    @Scheduled(cron = "0 59 23 * * *", zone = "Asia/Seoul")
+    public void updateAutoDone() {
+        List<Mentoring> expectedMentorings = mentoringGetService.byStatus(EXPECTED);
+        expectedMentorings.stream()
+                .filter(Mentoring::checkAutoDone)
+                .forEach(mentoring -> {
+                    createSalary(mentoring);
+                    mentoringUpdateService.updateStatus(mentoring, DONE);
                     //TODO : 알림 보내거나 나머지 작업
                 });
     }

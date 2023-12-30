@@ -9,11 +9,13 @@ import com.postgraduate.domain.available.domain.entity.Available;
 import com.postgraduate.domain.available.domain.service.AvailableSaveService;
 import com.postgraduate.domain.available.domain.service.AvailableDeleteService;
 import com.postgraduate.domain.senior.application.dto.req.*;
+import com.postgraduate.domain.senior.application.utils.SeniorUtils;
 import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.domain.senior.domain.service.SeniorUpdateService;
 import com.postgraduate.domain.senior.exception.NoneAccountException;
+import com.postgraduate.domain.user.application.utils.UserUtils;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.service.UserGetService;
 import com.postgraduate.domain.user.domain.service.UserUpdateService;
@@ -43,6 +45,8 @@ public class SeniorManageUseCase {
     private final AccountSaveService accountSaveService;
     private final AccountUpdateService accountUpdateService;
     private final EncryptorUtils encryptorUtils;
+    private final UserUtils userUtils;
+    private final SeniorUtils seniorUtils;
 
     public void updateCertification(User user, SeniorCertificationRequest certificationRequest) {
         Senior senior = seniorGetService.byUser(user);
@@ -65,6 +69,7 @@ public class SeniorManageUseCase {
     }
 
     public void updateSeniorMyPageProfile(User user, SeniorMyPageProfileRequest myPageProfileRequest) {
+        seniorUtils.checkKeyword(myPageProfileRequest.keyword());
         Senior senior = seniorGetService.byUser(user);
         Profile profile = mapToProfile(myPageProfileRequest);
         seniorUpdateService.updateMyPageProfile(senior, myPageProfileRequest, profile);
@@ -75,6 +80,7 @@ public class SeniorManageUseCase {
     }
 
     public void updateSeniorMyPageUserAccount(User user, SeniorMyPageUserAccountRequest myPageUserAccountRequest) {
+        userUtils.checkPhoneNumber(myPageUserAccountRequest.phoneNumber());
         Senior senior = seniorGetService.byUser(user);
         user = userGetService.getUser(user.getUserId());
         Optional<Account> optionalAccount = accountGetService.bySenior(senior);

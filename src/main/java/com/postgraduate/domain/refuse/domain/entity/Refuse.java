@@ -20,6 +20,6 @@ public class Refuse {
     @Column(nullable = false)
     private String reason;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     private Mentoring mentoring;
 }

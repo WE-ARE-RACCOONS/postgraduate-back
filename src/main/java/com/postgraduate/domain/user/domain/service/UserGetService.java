@@ -19,8 +19,8 @@ public class UserGetService {
         return user;
     }
 
-    public Optional<User> bySocialId(Long socialId) {
-        return userRepository.findBySocialId(socialId);
+    public User bySocialId(Long socialId) {
+        return userRepository.findBySocialId(socialId).orElseThrow(UserNotFoundException::new);
     }
 
     public Optional<User> byNickName(String nickName) {

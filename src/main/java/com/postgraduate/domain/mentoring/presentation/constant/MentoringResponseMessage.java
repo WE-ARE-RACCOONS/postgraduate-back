@@ -15,6 +15,7 @@ public enum MentoringResponseMessage {
     DONE_MENTORING("완료된 멘토링입니다."),
     NOT_WAITING_MENTORING("확정 대기 상태의 멘토링이 아닙니다."),
     NOT_EXPECTED_MENTORING("예정 상태의 멘토링이 아닙니다."),
+    INVALID_DATE("날짜가 잘못되었습니다."),
     ;
 
     private final String message;
