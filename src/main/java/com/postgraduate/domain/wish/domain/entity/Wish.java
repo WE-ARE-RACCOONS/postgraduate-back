@@ -25,7 +25,7 @@ public class Wish {
     @Column(nullable = false)
     private Boolean matchingReceive;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     private User user;
 
     @Column(nullable = false)

@@ -21,7 +21,7 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long paymentId;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     private Mentoring mentoring;
 
     @CreationTimestamp

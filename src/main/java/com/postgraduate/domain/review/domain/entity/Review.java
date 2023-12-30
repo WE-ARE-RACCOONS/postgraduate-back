@@ -22,7 +22,7 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reviewId;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     private Mentoring mentoring;
 
     @Lob
