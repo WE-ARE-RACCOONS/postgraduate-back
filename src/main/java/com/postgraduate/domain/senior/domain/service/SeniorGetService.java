@@ -32,21 +32,14 @@ public class SeniorGetService {
     }
 
     public Senior bySeniorIdWithCertification(Long seniorId) {
-        return seniorRepository.findBySeniorIdAndProfileNotNullAndStatusAndUser_IsDelete(seniorId, APPROVE, FALSE).orElseThrow(NoneSeniorException::new);
-    }
-
-    public List<Senior> byStatus(Status status) {
-        return seniorRepository.findAllByStatus(status);
+        return seniorRepository.findBySeniorIdAndProfileNotNullAndStatusAndUser_IsDelete(seniorId, APPROVE, FALSE)
+                .orElseThrow(NoneSeniorException::new);
     }
 
     public Page<Senior> all(Integer page, String search) {
         page = page == null ? 1 : page;
         Pageable pageable = PageRequest.of(page - 1, ADMIN_PAGE_SIZE);
         return seniorRepository.findAllBySearchSeniorWithAdmin(search, pageable);
-    }
-
-    public List<Senior> all() {
-        return seniorRepository.findAllByUser_IsDelete(FALSE);
     }
 
     public Page<Senior> bySearch(String search, Integer page, String sort) {
