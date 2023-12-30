@@ -45,6 +45,6 @@ public class MentoringGetService {
     }
 
     public List<Mentoring> bySeniorId(Long seniorId) {
-        return mentoringRepository.findAllBySenior_SeniorId(seniorId);
+        return mentoringRepository.findAllBySenior(seniorId);
     }
 }
