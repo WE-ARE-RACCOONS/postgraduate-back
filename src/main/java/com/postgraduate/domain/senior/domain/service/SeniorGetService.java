@@ -42,7 +42,7 @@ public class SeniorGetService {
     public Page<Senior> all(Integer page, String search) {
         page = page == null ? 1 : page;
         Pageable pageable = PageRequest.of(page - 1, ADMIN_PAGE_SIZE);
-        return seniorRepository.findAllBySearchSenior(search, pageable);
+        return seniorRepository.findAllBySearchSeniorWithAdmin(search, pageable);
     }
 
     public List<Senior> all() {
