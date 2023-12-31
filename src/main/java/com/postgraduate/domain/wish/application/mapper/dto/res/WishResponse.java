@@ -15,8 +15,7 @@ public record WishResponse(
         Boolean marketingReceive,
         @NotNull
         Boolean matchingReceive,
-        @NotNull
         String major,
-        @NotNull
         String field
-) {}
+) {
+}

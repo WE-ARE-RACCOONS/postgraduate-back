@@ -35,9 +35,6 @@ public class UserManageByAdminUseCase {
 
     public WishResponse getWish(Long wishId) {
         Wish wish = wishGetService.byWishId(wishId);
-        if (wish.getMajor() == null && wish.getField() == null) {
-            throw new WishEmptyException();
-        }
         return AdminMapper.mapToWishResponse(wish);
     }
 
