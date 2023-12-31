@@ -44,10 +44,10 @@ public class MentoringGetService {
     }
 
     public List<Mentoring> byUserId(Long userId) {
-        return mentoringRepository.findAllByUser_UserId(userId);
+        return mentoringRepository.findAllByUserId(userId);
     }
 
     public List<Mentoring> bySeniorId(Long seniorId) {
-        return mentoringRepository.findAllBySenior(seniorId);
+        return mentoringRepository.findAllBySeniorId(seniorId);
     }
 }
