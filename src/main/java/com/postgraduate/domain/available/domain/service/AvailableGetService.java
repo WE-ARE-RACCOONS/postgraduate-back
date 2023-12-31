@@ -13,8 +13,8 @@ import java.util.List;
 public class AvailableGetService {
     private final AvailableRepository availableRepository;
 
-    public List<Available> bySenior(Senior senior) {
-        List<Available> times = availableRepository.findAllBySenior(senior);
+    public List<Available> bySenior(Long seniorId) {
+        List<Available> times = availableRepository.findAllBySenior(seniorId);
         return times;
     }
 }

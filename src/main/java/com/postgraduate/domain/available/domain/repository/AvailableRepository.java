@@ -7,5 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface AvailableRepository extends JpaRepository<Available, Long>, AvailableDslRepository {
+    List<Available> findAllBySenior_SeniorId(Long seniorId);
     void deleteAllBySenior(Senior senior);
 }
