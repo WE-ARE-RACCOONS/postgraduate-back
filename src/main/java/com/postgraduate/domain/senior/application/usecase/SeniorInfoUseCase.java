@@ -30,7 +30,7 @@ public class SeniorInfoUseCase {
     public SeniorDetailResponse getSeniorDetail(Long seniorId) {
         Senior senior = seniorGetService.bySeniorIdWithCertification(seniorId);
         seniorUpdateService.updateHit(senior);
-        List<Available> availables = availableGetService.bySenior(senior);
+        List<Available> availables = availableGetService.bySenior(seniorId);
         List<AvailableTimeResponse> times = availables.stream()
                 .map(AvailableMapper::mapToAvailableTimes)
                 .toList();
@@ -60,8 +60,7 @@ public class SeniorInfoUseCase {
     }
 
     public AvailableTimesResponse getSeniorTimes(Long seniorId) {
-        Senior senior = seniorGetService.bySeniorId(seniorId);
-        List<Available> availables = availableGetService.bySenior(senior);
+        List<Available> availables = availableGetService.bySenior(seniorId);
         List<AvailableTimeResponse> times = availables.stream()
                 .map(AvailableMapper::mapToAvailableTimes)
                 .toList();

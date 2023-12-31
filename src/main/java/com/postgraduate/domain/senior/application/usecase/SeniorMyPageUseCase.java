@@ -49,7 +49,7 @@ public class SeniorMyPageUseCase {
 
     public SeniorMyPageProfileResponse getSeniorMyPageProfile(User user) {
         Senior senior = seniorGetService.byUser(user);
-        List<Available> availables = availableGetService.bySenior(senior);
+        List<Available> availables = availableGetService.bySenior(senior.getSeniorId());
         List<AvailableTimeResponse> times = availables.stream()
                 .map(AvailableMapper::mapToAvailableTimes)
                 .toList();

@@ -1,7 +1,6 @@
 package com.postgraduate.domain.senior.domain.service;
 
 import com.postgraduate.domain.senior.domain.entity.Senior;
-import com.postgraduate.domain.senior.domain.entity.constant.Status;
 import com.postgraduate.domain.senior.domain.repository.SeniorRepository;
 import com.postgraduate.domain.senior.exception.NoneSeniorException;
 import com.postgraduate.domain.user.domain.entity.User;
@@ -11,9 +10,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
-import static com.postgraduate.domain.senior.domain.entity.constant.Status.APPROVE;
 import static java.lang.Boolean.FALSE;
 
 @Service
@@ -28,11 +24,12 @@ public class SeniorGetService {
     }
 
     public Senior bySeniorId(Long seniorId) {
-        return seniorRepository.findBySeniorIdAndUser_IsDelete(seniorId, FALSE).orElseThrow(NoneSeniorException::new);
+        return seniorRepository.findBySeniorIdAndUser_IsDelete(seniorId, FALSE)
+                .orElseThrow(NoneSeniorException::new);
     }
 
     public Senior bySeniorIdWithCertification(Long seniorId) {
-        return seniorRepository.findBySeniorIdAndProfileNotNullAndStatusAndUser_IsDelete(seniorId, APPROVE, FALSE)
+        return seniorRepository.findBySeniorId(seniorId)
                 .orElseThrow(NoneSeniorException::new);
     }
 

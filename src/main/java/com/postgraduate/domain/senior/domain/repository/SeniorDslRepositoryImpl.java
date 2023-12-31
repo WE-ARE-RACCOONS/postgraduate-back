@@ -16,8 +16,8 @@ import org.springframework.util.StringUtils;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
-import static com.postgraduate.domain.account.domain.entity.QAccount.account;
 import static com.postgraduate.domain.senior.domain.entity.QSenior.senior;
 import static com.postgraduate.domain.senior.domain.entity.constant.Status.APPROVE;
 import static com.postgraduate.domain.user.domain.entity.QUser.user;
@@ -25,6 +25,7 @@ import static com.querydsl.core.types.Order.ASC;
 import static com.querydsl.core.types.Order.DESC;
 import static com.querydsl.core.types.dsl.Expressions.FALSE;
 import static com.querydsl.core.types.dsl.Expressions.TRUE;
+import static java.util.Optional.ofNullable;
 
 @RequiredArgsConstructor
 @Repository
@@ -164,5 +165,20 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
                     .or(senior.user.nickName.contains(search));
         }
         return null;
+    }
+
+    @Override
+    public Optional<Senior> findBySeniorId(Long seniorId) {
+        return ofNullable(queryFactory.selectFrom(senior)
+                .distinct()
+                .leftJoin(senior.user, user)
+                .fetchJoin()
+                .where(
+                        senior.seniorId.eq(seniorId),
+                        senior.profile.isNotNull(),
+                        senior.status.eq(APPROVE)
+                        ,senior.user.isDelete.isFalse()
+                )
+                .fetchOne());
     }
 }
