@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface SalaryRepository extends JpaRepository<Salary, Long>, SalaryDslRepository {
-//    List<Salary> findAllBySeniorAndSalaryDate(Senior senior, LocalDate salaryDate);
     List<Salary> findAllBySeniorAndSalaryDateAndStatus(Senior senior, LocalDate salaryDate, Boolean status);
     Optional<Salary> findByMentoring(Mentoring mentoring);
 }

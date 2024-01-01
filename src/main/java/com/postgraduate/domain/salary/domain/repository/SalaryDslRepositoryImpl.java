@@ -85,6 +85,7 @@ public class SalaryDslRepositoryImpl implements SalaryDslRepository {
     @Override
     public List<Salary> findAllBySeniorIdAndStatus(Senior senior, Boolean status) {
         return queryFactory.selectFrom(salary)
+                .distinct()
                 .join(salary.mentoring, mentoring)
                 .fetchJoin()
                 .join(salary.mentoring.user, user)
@@ -100,6 +101,7 @@ public class SalaryDslRepositoryImpl implements SalaryDslRepository {
     @Override
     public List<Salary> findAllBySeniorAndSalaryDate(Senior senior, LocalDate salaryDate) {
         return queryFactory.selectFrom(salary)
+                .distinct()
                 .join(salary.mentoring, mentoring)
                 .fetchJoin()
                 .where(
