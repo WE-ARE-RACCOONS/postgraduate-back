@@ -15,10 +15,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static com.postgraduate.domain.account.domain.entity.QAccount.account;
+import static com.postgraduate.domain.mentoring.domain.entity.QMentoring.mentoring;
 import static com.postgraduate.domain.salary.domain.entity.QSalary.salary;
+import static com.postgraduate.domain.user.domain.entity.QUser.user;
 import static com.querydsl.core.types.Projections.constructor;
 import static java.lang.Boolean.FALSE;
 
@@ -82,15 +85,27 @@ public class SalaryDslRepositoryImpl implements SalaryDslRepository {
     @Override
     public List<Salary> findAllBySeniorIdAndStatus(Senior senior, Boolean status) {
         return queryFactory.selectFrom(salary)
-                .join(salary.mentoring, QMentoring.mentoring)
+                .join(salary.mentoring, mentoring)
                 .fetchJoin()
-                .join(salary.mentoring.user, QUser.user)
+                .join(salary.mentoring.user, user)
                 .fetchJoin()
                 .where(
                         salary.senior.eq(senior),
                         salary.status.eq(status)
                 )
                 .orderBy(salary.salaryDate.desc())
+                .fetch();
+    }
+
+    @Override
+    public List<Salary> findAllBySeniorAndSalaryDate(Senior senior, LocalDate salaryDate) {
+        return queryFactory.selectFrom(salary)
+                .join(salary.mentoring, mentoring)
+                .fetchJoin()
+                .where(
+                        salary.senior.eq(senior),
+                        salary.salaryDate.eq(salaryDate)
+                )
                 .fetch();
     }
 }
