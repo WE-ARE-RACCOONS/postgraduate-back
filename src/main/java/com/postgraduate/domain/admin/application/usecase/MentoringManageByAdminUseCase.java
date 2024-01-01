@@ -66,5 +66,6 @@ public class MentoringManageByAdminUseCase {
         mentoringUpdateService.updateStatus(mentoring, Status.CANCEL);
         Payment payment = paymentGetService.byMentoring(mentoring);
         paymentUpdateService.updateStatus(payment, CANCEL);
+        //todo: 결제 취소 로직 추가
     }
 }
