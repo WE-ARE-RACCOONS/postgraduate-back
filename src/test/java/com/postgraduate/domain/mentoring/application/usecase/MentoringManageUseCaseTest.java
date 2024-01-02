@@ -5,7 +5,6 @@ import com.postgraduate.domain.account.domain.service.AccountGetService;
 import com.postgraduate.domain.mentoring.application.dto.req.MentoringDateRequest;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.service.MentoringUpdateService;
-import com.postgraduate.domain.mentoring.exception.MentoringDoneException;
 import com.postgraduate.domain.mentoring.exception.MentoringNotExpectedException;
 import com.postgraduate.domain.mentoring.exception.MentoringNotWaitingException;
 import com.postgraduate.domain.refuse.application.dto.req.MentoringRefuseRequest;
@@ -26,7 +25,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -250,7 +248,7 @@ class MentoringManageUseCaseTest {
         assertThat(mentoringManageUseCase.updateExpected(user, mentoringId, dateRequest))
                 .isEqualTo(TRUE);
 
-        verify(mentoringUpdateService).updateDate(mentoring, dateRequest.getDate());
+        verify(mentoringUpdateService).updateDate(mentoring, dateRequest.date());
         verify(mentoringUpdateService).updateStatus(mentoring, EXPECTED);
     }
 
@@ -273,7 +271,7 @@ class MentoringManageUseCaseTest {
         assertThat(mentoringManageUseCase.updateExpected(user, mentoringId, dateRequest))
                 .isEqualTo(FALSE);
 
-        verify(mentoringUpdateService).updateDate(mentoring, dateRequest.getDate());
+        verify(mentoringUpdateService).updateDate(mentoring, dateRequest.date());
         verify(mentoringUpdateService).updateStatus(mentoring, EXPECTED);
     }
 

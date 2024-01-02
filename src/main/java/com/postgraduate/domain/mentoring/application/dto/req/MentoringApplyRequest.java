@@ -1,14 +1,13 @@
 package com.postgraduate.domain.mentoring.application.dto.req;
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 
 public record MentoringApplyRequest(
-        @NotNull
         Long seniorId,
-        @NotNull
+        @NotBlank
         String topic,
-        @NotNull
+        @NotBlank
         String question,
-        @NotNull
+        @NotBlank
         String date
 ) { }

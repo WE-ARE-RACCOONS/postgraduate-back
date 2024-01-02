@@ -53,7 +53,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers(PASS).permitAll()
-                        .requestMatchers("/admin/**").hasAuthority(Role.ADMIN.name())
+//                        .requestMatchers("/admin/**").hasAuthority(Role.ADMIN.name())
                         .anyRequest().permitAll()
                 )
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

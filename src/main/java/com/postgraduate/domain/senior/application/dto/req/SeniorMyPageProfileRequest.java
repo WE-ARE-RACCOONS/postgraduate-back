@@ -1,31 +1,26 @@
 package com.postgraduate.domain.senior.application.dto.req;
 
 import com.postgraduate.domain.available.application.dto.req.AvailableCreateRequest;
-import com.postgraduate.domain.available.exception.EmptyAvailableException;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 
 import java.util.List;
 
 public record SeniorMyPageProfileRequest(
-        @NotNull
+        @NotBlank
         String lab,
-        @NotNull
+        @NotBlank
         String keyword,
-        @NotNull
+        @NotBlank
         String info,
-        @NotNull
+        @NotBlank
         String target,
-        @NotNull
+        @NotBlank
         String chatLink,
-        @NotNull
+        @NotBlank
         String field,
-        @NotNull
+        @NotBlank
         String oneLiner,
-        @NotNull
+        @NotEmpty
         List<AvailableCreateRequest> times
-) {
-        public SeniorMyPageProfileRequest {
-                if (times.isEmpty())
-                        throw new EmptyAvailableException();
-        }
-}
+) {}

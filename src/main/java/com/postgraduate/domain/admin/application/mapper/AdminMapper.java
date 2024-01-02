@@ -10,7 +10,7 @@ import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.entity.constant.Role;
-import com.postgraduate.domain.wish.application.mapper.dto.res.WishResponse;
+import com.postgraduate.domain.wish.application.dto.res.WishResponse;
 import com.postgraduate.domain.wish.domain.entity.Wish;
 
 import java.time.LocalDateTime;
@@ -76,7 +76,7 @@ public class AdminMapper {
 
     public static UserMentoringInfo mapToUserMentoringInfo(User user) {
         return new UserMentoringInfo(
-                user.getNickName(),
+                null,
                 user.getPhoneNumber()
         );
     }

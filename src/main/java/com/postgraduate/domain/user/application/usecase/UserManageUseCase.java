@@ -18,7 +18,7 @@ public class UserManageUseCase {
     private final UserUtils userUtils;
 
     public void updateInfo(User user, UserInfoRequest userInfoRequest) {
-        userUtils.checkPhoneNumber(userInfoRequest.getPhoneNumber());
+        userUtils.checkPhoneNumber(userInfoRequest.phoneNumber());
         user = userGetService.getUser(user.getUserId());
         userUpdateService.updateInfo(user, userInfoRequest);
     }
