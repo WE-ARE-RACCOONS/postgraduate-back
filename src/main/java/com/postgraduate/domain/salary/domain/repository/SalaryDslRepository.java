@@ -12,6 +12,6 @@ import java.util.List;
 public interface SalaryDslRepository {
     Page<SeniorSalary> findDistinctBySearchSenior(String search, Pageable pageable);
     //todo : 관리자 정산 목록 쿼리 조회 수정
-    List<Salary> findAllBySeniorIdAndStatus(Senior senior, Boolean status);
+    List<Salary> findAllBySeniorAndStatus(Senior senior, Boolean status);
     List<Salary> findAllBySeniorAndSalaryDate(Senior senior, LocalDate salaryDate);
 }

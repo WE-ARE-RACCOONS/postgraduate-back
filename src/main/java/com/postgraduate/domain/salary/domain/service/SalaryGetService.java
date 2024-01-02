@@ -23,7 +23,7 @@ public class SalaryGetService {
     private final SalaryRepository salaryRepository;
 
     public List<Salary> bySeniorAndStatus(Senior senior, Boolean status) {
-        return salaryRepository.findAllBySeniorIdAndStatus(senior, status);
+        return salaryRepository.findAllBySeniorAndStatus(senior, status);
     }
 
     public List<Salary> bySeniorAndSalaryDate(Senior senior, LocalDate salaryDate) {

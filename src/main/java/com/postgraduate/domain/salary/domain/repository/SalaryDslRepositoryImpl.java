@@ -83,7 +83,7 @@ public class SalaryDslRepositoryImpl implements SalaryDslRepository {
     }
 
     @Override
-    public List<Salary> findAllBySeniorIdAndStatus(Senior senior, Boolean status) {
+    public List<Salary> findAllBySeniorAndStatus(Senior senior, Boolean status) {
         return queryFactory.selectFrom(salary)
                 .distinct()
                 .join(salary.mentoring, mentoring)
