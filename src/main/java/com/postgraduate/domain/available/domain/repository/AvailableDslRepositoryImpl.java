@@ -18,10 +18,10 @@ import static com.postgraduate.domain.senior.domain.entity.constant.Status.APPRO
 public class AvailableDslRepositoryImpl implements AvailableDslRepository {
     private final JPAQueryFactory queryFactory;
     @Override
-    public List<Available> findAllBySenior(Long seniorId) {
+    public List<Available> findAllBySenior(Senior senior) {
         return queryFactory.selectFrom(available)
                 .distinct()
-                .where(available.senior.seniorId.eq(seniorId), available.senior.status.eq(APPROVE))
+                .where(available.senior.eq(senior), available.senior.status.eq(APPROVE))
                 .fetch();
     }
 }

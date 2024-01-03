@@ -2,10 +2,12 @@ package com.postgraduate.domain.admin.application.mapper;
 
 import com.postgraduate.domain.account.domain.entity.Account;
 import com.postgraduate.domain.admin.application.dto.*;
-import com.postgraduate.domain.admin.application.dto.res.*;
+import com.postgraduate.domain.admin.application.dto.res.CertificationDetailsResponse;
+import com.postgraduate.domain.admin.application.dto.res.MentoringWithPaymentResponse;
+import com.postgraduate.domain.admin.application.dto.res.SalaryDetailsResponse;
+import com.postgraduate.domain.admin.presentation.constant.SalaryStatus;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.payment.domain.entity.Payment;
-import com.postgraduate.domain.admin.presentation.constant.SalaryStatus;
 import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.user.domain.entity.User;
@@ -64,7 +66,18 @@ public class AdminMapper {
     }
 
     public static MentoringInfo mapToMentoringInfo(Mentoring mentoring) {
-         User user = mentoring.getUser();
+        User user = mentoring.getUser();
+        return new MentoringInfo(
+                mentoring.getMentoringId(),
+                mentoring.getStatus(),
+                user.getNickName(),
+                user.getPhoneNumber(),
+                mentoring.getCreatedAt()
+        );
+    }
+
+    public static MentoringInfo mapToSeniorMentoringInfo(Mentoring mentoring) {
+        User user = mentoring.getSenior().getUser();
         return new MentoringInfo(
                 mentoring.getMentoringId(),
                 mentoring.getStatus(),

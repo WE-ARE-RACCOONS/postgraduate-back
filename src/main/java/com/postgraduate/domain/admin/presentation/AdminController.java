@@ -115,6 +115,13 @@ public class AdminController {
         return ResponseDto.create(ADMIN_FIND.getCode(), GET_LIST.getMessage(), mentorings);
     }
 
+    @PatchMapping("/mentoring/{mentoringId}")
+    @Operation(summary = "[관리자] 멘토링 취소 및 환불", description = "멘토링을 취소 및 환불합니다.")
+    public ResponseDto cancelMentoring(@PathVariable Long mentoringId) {
+        mentoringManageUseCase.cancelMentoring(mentoringId);
+        return ResponseDto.create(ADMIN_UPDATE.getCode(), UPDATE_MENTORING_STATUS.getMessage());
+    }
+
     @GetMapping("/payments")
     @Operation(summary = "[관리자] 결제 정보 목록", description = "결제 정보 목록을 조회합니다.")
     public ResponseDto<PaymentManageResponse> getPayments(@RequestParam(required = false) Integer page,

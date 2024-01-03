@@ -10,4 +10,5 @@ public record WishResponse(
         Boolean matchingReceive,
         String major,
         String field
-) {}
+) {
+}
