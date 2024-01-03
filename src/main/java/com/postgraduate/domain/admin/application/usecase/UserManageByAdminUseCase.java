@@ -7,7 +7,6 @@ import com.postgraduate.domain.wish.application.mapper.dto.res.WishResponse;
 import com.postgraduate.domain.wish.domain.entity.Wish;
 import com.postgraduate.domain.wish.domain.service.WishGetService;
 import com.postgraduate.domain.wish.domain.service.WishUpdateService;
-import com.postgraduate.domain.wish.exception.MatchingNotReceiveException;
 import com.postgraduate.domain.wish.exception.WishEmptyException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -35,17 +34,11 @@ public class UserManageByAdminUseCase {
 
     public WishResponse getWish(Long wishId) {
         Wish wish = wishGetService.byWishId(wishId);
-        if (!wish.getMatchingReceive()) {
-            throw new MatchingNotReceiveException();
-        }
         return AdminMapper.mapToWishResponse(wish);
     }
 
     public void updateWishStatus(Long wishId) {
         Wish wish = wishGetService.byWishId(wishId);
-        if (!wish.getMatchingReceive()) {
-            throw new MatchingNotReceiveException();
-        }
         if (wish.getMajor() == null && wish.getField() == null) {
             throw new WishEmptyException();
         }
