@@ -1,7 +1,10 @@
 package com.postgraduate.domain.salary.domain.repository;
 
+import com.postgraduate.domain.mentoring.domain.entity.QMentoring;
 import com.postgraduate.domain.salary.application.dto.SeniorSalary;
-import com.querydsl.core.types.Projections;
+import com.postgraduate.domain.salary.domain.entity.Salary;
+import com.postgraduate.domain.senior.domain.entity.Senior;
+import com.postgraduate.domain.user.domain.entity.QUser;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -12,10 +15,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static com.postgraduate.domain.account.domain.entity.QAccount.account;
+import static com.postgraduate.domain.mentoring.domain.entity.QMentoring.mentoring;
 import static com.postgraduate.domain.salary.domain.entity.QSalary.salary;
+import static com.postgraduate.domain.user.domain.entity.QUser.user;
+import static com.querydsl.core.types.Projections.constructor;
 import static java.lang.Boolean.FALSE;
 
 @Repository
@@ -25,9 +32,9 @@ public class SalaryDslRepositoryImpl implements SalaryDslRepository {
 
     @Override
     public Page<SeniorSalary> findDistinctBySearchSenior(String search, Pageable pageable) {
-        JPAQuery<SeniorSalary> query = queryFactory
+        List<SeniorSalary> seniorSalaries = queryFactory
                 .select(
-                        Projections.constructor(
+                        constructor(
                                 SeniorSalary.class,
                                 salary.senior,
                                 salary.salaryDate
@@ -39,14 +46,18 @@ public class SalaryDslRepositoryImpl implements SalaryDslRepository {
                         salary.senior.user.isDelete.eq(FALSE)
                 )
                 .orderBy(salary.salaryDate.desc())
-                .groupBy(salary.senior.seniorId, salary.salaryDate);
-
-
-        List<SeniorSalary> seniorSalaries = query.offset(pageable.getOffset())
+                .groupBy(salary.senior.seniorId, salary.salaryDate)
+                .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        long total = query.fetchCount();
+        Long total = queryFactory.select(salary.count())
+                .from(salary)
+                .where(
+                        searchLike(search),
+                        salary.senior.user.isDelete.eq(FALSE)
+                )
+                .fetchOne();
 
         return new PageImpl<>(seniorSalaries, pageable, total);
     }
@@ -69,6 +80,35 @@ public class SalaryDslRepositoryImpl implements SalaryDslRepository {
             return account.accountHolder.contains(search);
         }
         return null;
+    }
+
+    @Override
+    public List<Salary> findAllBySeniorAndStatus(Senior senior, Boolean status) {
+        return queryFactory.selectFrom(salary)
+                .distinct()
+                .join(salary.mentoring, mentoring)
+                .fetchJoin()
+                .join(salary.mentoring.user, user)
+                .fetchJoin()
+                .where(
+                        salary.senior.eq(senior),
+                        salary.status.eq(status)
+                )
+                .orderBy(salary.salaryDate.desc())
+                .fetch();
+    }
+
+    @Override
+    public List<Salary> findAllBySeniorAndSalaryDate(Senior senior, LocalDate salaryDate) {
+        return queryFactory.selectFrom(salary)
+                .distinct()
+                .join(salary.mentoring, mentoring)
+                .fetchJoin()
+                .where(
+                        salary.senior.eq(senior),
+                        salary.salaryDate.eq(salaryDate)
+                )
+                .fetch();
     }
 }
 

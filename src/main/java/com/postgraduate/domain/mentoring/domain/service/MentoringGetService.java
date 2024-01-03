@@ -28,7 +28,7 @@ public class MentoringGetService {
     }
 
     public Mentoring byMentoringId(Long mentoringId) {
-        return mentoringRepository.findByMentoringIdAndUser_IsDeleteAndSenior_User_IsDelete(mentoringId, FALSE, FALSE)
+        return mentoringRepository.findByMentoringId(mentoringId)
                 .orElseThrow(MentoringNotFoundException::new);
     }
 
@@ -41,10 +41,10 @@ public class MentoringGetService {
     }
 
     public List<Mentoring> byUserId(Long userId) {
-        return mentoringRepository.findAllByUser_UserId(userId);
+        return mentoringRepository.findAllByUserId(userId);
     }
 
     public List<Mentoring> bySeniorId(Long seniorId) {
-        return mentoringRepository.findAllBySenior_SeniorId(seniorId);
+        return mentoringRepository.findAllBySeniorId(seniorId);
     }
 }

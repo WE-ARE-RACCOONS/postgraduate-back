@@ -79,7 +79,7 @@ public class MentoringManageUseCase {
         Mentoring mentoring = checkIsMyMentoringUseCase.bySenior(senior, mentoringId);
         if (mentoring.getStatus() != WAITING)
             throw new MentoringNotWaitingException();
-        mentoringUpdateService.updateDate(mentoring, dateRequest.getDate());
+        mentoringUpdateService.updateDate(mentoring, dateRequest.date());
         mentoringUpdateService.updateStatus(mentoring, EXPECTED);
         Optional<Account> account = accountGetService.bySenior(senior);
         return account.isPresent();

@@ -2,7 +2,6 @@ package com.postgraduate.domain.payment.domain.repository;
 
 import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -23,20 +22,26 @@ public class PaymentDslRepositoryImpl implements PaymentDslRepository {
 
     @Override
     public Page<Payment> findAllBySearchPayment(String search, Pageable pageable) {
-        JPAQuery<Payment> query = queryFactory.selectFrom(payment)
+        List<Payment> payments = queryFactory.selectFrom(payment)
                 .where(
                         searchLike(search),
                         payment.mentoring.user.isDelete.eq(FALSE)
                 )
-                .orderBy(payment.createdAt.desc());
-
-        List<Payment> seniors = query.offset(pageable.getOffset())
+                .orderBy(payment.createdAt.desc())
+                .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        long total = query.fetchCount();
+        Long total = queryFactory.select(payment.count())
+                .distinct()
+                .from(payment)
+                .where(
+                        searchLike(search),
+                        payment.mentoring.user.isDelete.eq(FALSE)
+                )
+                .fetchOne();
 
-        return new PageImpl<>(seniors, pageable, total);
+        return new PageImpl<>(payments, pageable, total);
     }
 
 

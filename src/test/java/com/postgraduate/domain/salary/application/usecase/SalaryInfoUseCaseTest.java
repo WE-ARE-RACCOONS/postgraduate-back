@@ -5,19 +5,15 @@ import com.postgraduate.domain.salary.application.dto.res.SalaryDetailsResponse;
 import com.postgraduate.domain.salary.application.dto.res.SalaryInfoResponse;
 import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.salary.domain.service.SalaryGetService;
-import com.postgraduate.domain.salary.util.SalaryUtil;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.domain.user.domain.entity.User;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
@@ -25,13 +21,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.DONE;
-import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.WAITING;
 import static com.postgraduate.domain.salary.util.SalaryUtil.*;
 import static java.lang.Boolean.FALSE;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class SalaryInfoUseCaseTest {
@@ -71,9 +64,9 @@ class SalaryInfoUseCaseTest {
 
         SalaryInfoResponse salary = salaryInfoUseCase.getSalary(user);
 
-        assertThat(salary.getSalaryAmount())
+        assertThat(salary.salaryAmount())
                 .isEqualTo(amount);
-        assertThat(salary.getSalaryDate())
+        assertThat(salary.salaryDate())
                 .isEqualTo(salaryDate);
     }
 
@@ -90,9 +83,9 @@ class SalaryInfoUseCaseTest {
 
         SalaryInfoResponse salary = salaryInfoUseCase.getSalary(user);
 
-        assertThat(salary.getSalaryAmount())
+        assertThat(salary.salaryAmount())
                 .isEqualTo(0);
-        assertThat(salary.getSalaryDate())
+        assertThat(salary.salaryDate())
                 .isEqualTo(salaryDate);
     }
 

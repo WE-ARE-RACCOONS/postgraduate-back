@@ -77,7 +77,7 @@ class SeniorGetServiceTest {
     @DisplayName("Certification 기반 Senior 조회 예외 테스트")
     void byCertificationFail() {
         long seniorId = 1L;
-        given(seniorRepository.findBySeniorIdAndProfileNotNullAndStatusAndUser_IsDelete(seniorId, APPROVE, FALSE))
+        given(seniorRepository.findBySeniorId(seniorId))
                 .willReturn(ofNullable(null));
 
         assertThatThrownBy(() -> seniorGetService.bySeniorIdWithCertification(seniorId))
@@ -89,7 +89,7 @@ class SeniorGetServiceTest {
     void byCertification() {
         Senior senior = mock(Senior.class);
         long seniorId = 1L;
-        given(seniorRepository.findBySeniorIdAndProfileNotNullAndStatusAndUser_IsDelete(seniorId, APPROVE, FALSE))
+        given(seniorRepository.findBySeniorId(seniorId))
                 .willReturn(of(senior));
 
         assertThat(seniorGetService.bySeniorIdWithCertification(seniorId))

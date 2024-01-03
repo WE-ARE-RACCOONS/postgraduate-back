@@ -31,7 +31,7 @@ class MentoringGetServiceTest {
     @DisplayName("mentoringId를 통해 조회 예외 테스트")
     void byMentoringIdFail() {
         long mentoringId = 1L;
-        given(mentoringRepository.findByMentoringIdAndUser_IsDeleteAndSenior_User_IsDelete(mentoringId, FALSE, FALSE))
+        given(mentoringRepository.findByMentoringId(mentoringId))
                 .willReturn(ofNullable(null));
 
         assertThatThrownBy(() -> mentoringGetService.byMentoringId(mentoringId))
@@ -43,7 +43,7 @@ class MentoringGetServiceTest {
     void byMentoringId() {
         long mentoringId = 1L;
         Mentoring mentoring = mock(Mentoring.class);
-        given(mentoringRepository.findByMentoringIdAndUser_IsDeleteAndSenior_User_IsDelete(mentoringId, FALSE, FALSE))
+        given(mentoringRepository.findByMentoringId(mentoringId))
                 .willReturn(of(mentoring));
 
         assertThat(mentoringGetService.byMentoringId(mentoringId))

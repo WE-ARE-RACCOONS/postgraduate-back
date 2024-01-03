@@ -1,18 +1,15 @@
 package com.postgraduate.domain.auth.application.dto.req;
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 
 public record SignUpRequest(
-        @NotNull
         Long socialId,
-        @NotNull
+        @NotBlank
         String phoneNumber,
-        @NotNull
+        @NotBlank
         String nickName,
-        @NotNull
         Boolean marketingReceive,
         String major,
         String field,
-        @NotNull
         Boolean matchingReceive
 ) { }

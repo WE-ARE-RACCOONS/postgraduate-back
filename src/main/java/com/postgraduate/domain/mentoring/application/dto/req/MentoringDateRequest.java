@@ -1,14 +1,6 @@
 package com.postgraduate.domain.mentoring.application.dto.req;
 
-import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotBlank;
 
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
-public class MentoringDateRequest {
-    @NotNull
-    private String date;
+public record MentoringDateRequest(@NotBlank String date) {
 }

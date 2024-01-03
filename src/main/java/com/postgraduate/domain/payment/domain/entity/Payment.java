@@ -11,6 +11,8 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
+import static com.postgraduate.domain.payment.domain.entity.constant.Status.DONE;
+
 @Entity
 @Builder
 @AllArgsConstructor
@@ -27,14 +29,12 @@ public class Payment {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    private LocalDateTime paidAt;
-
     private LocalDateTime deletedAt;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     @Builder.Default
-    private Status status = Status.IMPOSSIBLE;
+    private Status status = DONE;
 
     public void updateStatus(Status status) {
         this.status = status;

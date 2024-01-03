@@ -1,14 +1,6 @@
 package com.postgraduate.domain.refuse.application.dto.req;
 
-import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotBlank;
 
-@Getter
-@AllArgsConstructor
-@NoArgsConstructor
-public class MentoringRefuseRequest {
-    @NotNull
-    private String reason;
+public record MentoringRefuseRequest(@NotBlank String reason) {
 }

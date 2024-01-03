@@ -1,18 +1,6 @@
 package com.postgraduate.domain.user.application.dto.req;
 
-import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotBlank;
 
-@Getter
-@AllArgsConstructor
-@NoArgsConstructor
-public class UserInfoRequest {
-    @NotNull
-    private String profile;
-    @NotNull
-    private String nickName;
-    @NotNull
-    private String phoneNumber;
+public record UserInfoRequest(@NotBlank String profile, @NotBlank String nickName, @NotBlank String phoneNumber) {
 }
