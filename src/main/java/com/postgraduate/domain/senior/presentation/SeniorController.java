@@ -90,21 +90,21 @@ public class SeniorController {
     }
 
     @GetMapping("/{seniorId}")
-    @Operation(summary = "대학원생 상세 조회")
+    @Operation(summary = "대학원생 상세 조회 | 토큰 필요")
     public ResponseDto<SeniorDetailResponse> getSeniorDetails(@PathVariable Long seniorId) {
         SeniorDetailResponse seniorDetail = seniorInfoUseCase.getSeniorDetail(seniorId);
         return ResponseDto.create(SENIOR_FIND.getCode(), GET_SENIOR_INFO.getMessage(), seniorDetail);
     }
 
     @GetMapping("/{seniorId}/profile")
-    @Operation(summary = "대학원생 닉네임~연구실 등 기본 정보 확인", description = "신청서 완료 후 결제시 노출 필요")
+    @Operation(summary = "대학원생 닉네임~연구실 등 기본 정보 확인 | 토큰 필요", description = "신청서 완료 후 결제시 노출 필요")
     public ResponseDto<SeniorProfileResponse> getSeniorProfile(@PathVariable Long seniorId) {
         SeniorProfileResponse seniorProfile = seniorInfoUseCase.getSeniorProfile(seniorId);
         return ResponseDto.create(SENIOR_FIND.getCode(), GET_SENIOR_INFO.getMessage(), seniorProfile);
     }
 
     @GetMapping("/{seniorId}/times")
-    @Operation(summary = "대학원생 가능 시간 확인", description = "신청서 작성에서 가능 시간 작성시 노출 필요")
+    @Operation(summary = "대학원생 가능 시간 확인 | 토큰 필요", description = "신청서 작성에서 가능 시간 작성시 노출 필요")
     public ResponseDto<AvailableTimesResponse> getSeniorTimes(@PathVariable Long seniorId) {
         AvailableTimesResponse times = seniorInfoUseCase.getSeniorTimes(seniorId);
         return ResponseDto.create(SENIOR_FIND.getCode(), GET_SENIOR_TIME.getMessage(), times);
@@ -122,8 +122,8 @@ public class SeniorController {
     @GetMapping("/field")
     @Operation(summary = "대학원생 필드 검색", description = "분야 (분야1,분야2 이런식으로, 다른분야 : others), 대학원 필수 (대학원1,대학원2 이런식으로, 다른학교 : others, 전체 : all), 페이지 선택 ")
     public ResponseDto<AllSeniorSearchResponse> getFieldSenior(@RequestParam String field,
-                                                                @RequestParam String postgradu,
-                                                                @RequestParam(required = false) Integer page) {
+                                                               @RequestParam String postgradu,
+                                                               @RequestParam(required = false) Integer page) {
         AllSeniorSearchResponse searchSenior = seniorInfoUseCase.getFieldSenior(field, postgradu, page);
         return ResponseDto.create(SENIOR_FIND.getCode(), GET_SENIOR_LIST_INFO.getMessage(), searchSenior);
     }

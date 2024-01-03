@@ -12,5 +12,8 @@ public record SeniorProfileResponse(
         @NotNull
         String major,
         @NotNull
-        String lab
-) { }
+        String lab,
+        @NotNull
+        Integer term
+) {
+}

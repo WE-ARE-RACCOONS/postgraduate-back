@@ -20,7 +20,7 @@ public class WishGetService {
     private final WishRepository wishRepository;
 
     public Wish byWishId(Long wishId) {
-        return wishRepository.findById(wishId).orElseThrow(WishNotFoundException::new);
+        return wishRepository.findByWishIdAndMatchingReceiveIsTrue(wishId).orElseThrow(WishNotFoundException::new);
     }
 
     public Optional<Wish> byUser(User user) {

@@ -5,7 +5,10 @@ import com.postgraduate.domain.available.application.dto.res.AvailableTimesRespo
 import com.postgraduate.domain.available.application.mapper.AvailableMapper;
 import com.postgraduate.domain.available.domain.entity.Available;
 import com.postgraduate.domain.available.domain.service.AvailableGetService;
-import com.postgraduate.domain.senior.application.dto.res.*;
+import com.postgraduate.domain.senior.application.dto.res.AllSeniorSearchResponse;
+import com.postgraduate.domain.senior.application.dto.res.SeniorDetailResponse;
+import com.postgraduate.domain.senior.application.dto.res.SeniorProfileResponse;
+import com.postgraduate.domain.senior.application.dto.res.SeniorSearchResponse;
 import com.postgraduate.domain.senior.application.mapper.SeniorMapper;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
@@ -17,7 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.postgraduate.domain.senior.application.mapper.SeniorMapper.*;
+import static com.postgraduate.domain.senior.application.mapper.SeniorMapper.mapToSeniorDetail;
+import static com.postgraduate.domain.senior.application.mapper.SeniorMapper.mapToSeniorProfile;
 
 @Service
 @Transactional
@@ -42,7 +46,8 @@ public class SeniorInfoUseCase {
         List<SeniorSearchResponse> selectSeniors = seniors.stream()
                 .map(SeniorMapper::mapToSeniorSearch)
                 .toList();
-        return new AllSeniorSearchResponse(selectSeniors);
+        long totalElements = seniors.getTotalElements();
+        return new AllSeniorSearchResponse(selectSeniors, totalElements);
     }
 
     public AllSeniorSearchResponse getFieldSenior(String field, String postgradu, Integer page) {
@@ -50,7 +55,8 @@ public class SeniorInfoUseCase {
         List<SeniorSearchResponse> selectSeniors = seniors.stream()
                 .map(SeniorMapper::mapToSeniorSearch)
                 .toList();
-        return new AllSeniorSearchResponse(selectSeniors);
+        long totalElements = seniors.getTotalElements();
+        return new AllSeniorSearchResponse(selectSeniors, totalElements);
     }
 
     public SeniorProfileResponse getSeniorProfile(Long seniorId) {
@@ -65,6 +71,6 @@ public class SeniorInfoUseCase {
         List<AvailableTimeResponse> times = availables.stream()
                 .map(AvailableMapper::mapToAvailableTimes)
                 .toList();
-        return new AvailableTimesResponse(times);
+        return new AvailableTimesResponse(senior.getUser().getNickName(), times);
     }
 }

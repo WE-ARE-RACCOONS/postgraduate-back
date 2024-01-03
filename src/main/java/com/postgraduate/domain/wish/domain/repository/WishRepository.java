@@ -8,4 +8,6 @@ import java.util.Optional;
 
 public interface WishRepository extends JpaRepository<Wish, Long>, WishDslRepository {
     Optional<Wish> findByUser(User user);
+
+    Optional<Wish> findByWishIdAndMatchingReceiveIsTrue(Long wishId);
 }

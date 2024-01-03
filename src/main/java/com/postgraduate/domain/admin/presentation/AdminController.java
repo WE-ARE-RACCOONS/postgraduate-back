@@ -3,6 +3,7 @@ package com.postgraduate.domain.admin.presentation;
 import com.postgraduate.domain.admin.application.dto.req.SeniorStatusRequest;
 import com.postgraduate.domain.admin.application.dto.res.*;
 import com.postgraduate.domain.admin.application.usecase.*;
+import com.postgraduate.domain.admin.presentation.constant.AdminResponseMessage;
 import com.postgraduate.domain.wish.application.mapper.dto.res.WishResponse;
 import com.postgraduate.global.dto.ResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -113,6 +114,13 @@ public class AdminController {
     public ResponseDto<MentoringManageResponse> getSeniorMentorings(@PathVariable Long seniorId) {
         MentoringManageResponse mentorings = mentoringManageUseCase.getSeniorMentorings(seniorId);
         return ResponseDto.create(ADMIN_FIND.getCode(), GET_LIST.getMessage(), mentorings);
+    }
+
+    @PatchMapping("/mentoring/{mentoringId}")
+    @Operation(summary = "[관리자] 멘토링 취소 및 환불", description = "멘토링을 취소 및 환불합니다.")
+    public ResponseDto cancelMentoring(@PathVariable Long mentoringId) {
+        mentoringManageUseCase.cancelMentoring(mentoringId);
+        return ResponseDto.create(ADMIN_UPDATE.getCode(), UPDATE_MENTORING_STATUS.getMessage());
     }
 
     @GetMapping("/payments")

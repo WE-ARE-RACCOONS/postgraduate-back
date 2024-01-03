@@ -52,9 +52,12 @@ public class SecurityConfig {
                 .logout(logout -> logout.disable());
         http
                 .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers(PASS).permitAll()
-                        .requestMatchers("/admin/**").hasAuthority(Role.ADMIN.name())
-                        .anyRequest().permitAll()
+                                .requestMatchers(PASS).permitAll()
+                                .requestMatchers("/admin/**").hasAuthority(Role.ADMIN.name())
+//                        .requestMatchers("/senior/field").permitAll()
+//                        .requestMatchers("/senior/search").permitAll()
+//                        .requestMatchers("/senior/**").authenticated()
+                                .anyRequest().permitAll()
                 )
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling((exceptions) -> exceptions
