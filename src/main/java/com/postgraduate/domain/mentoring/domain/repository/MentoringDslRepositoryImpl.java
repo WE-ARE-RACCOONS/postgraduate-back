@@ -36,8 +36,6 @@ public class MentoringDslRepositoryImpl implements MentoringDslRepository {
     public List<Mentoring> findAllBySeniorAndStatus(Senior inputSenior, Status status) {
         return queryFactory.selectFrom(mentoring)
                 .distinct()
-                .leftJoin(mentoring.senior, senior)
-                .fetchJoin()
                 .leftJoin(mentoring.user, user)
                 .fetchJoin()
                 .where(mentoring.senior.eq(inputSenior), mentoring.status.eq(status))
