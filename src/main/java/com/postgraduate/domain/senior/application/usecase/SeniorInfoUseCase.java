@@ -71,6 +71,6 @@ public class SeniorInfoUseCase {
         List<AvailableTimeResponse> times = availables.stream()
                 .map(AvailableMapper::mapToAvailableTimes)
                 .toList();
-        return new AvailableTimesResponse(times);
+        return new AvailableTimesResponse(senior.getUser().getNickName(), times);
     }
 }
