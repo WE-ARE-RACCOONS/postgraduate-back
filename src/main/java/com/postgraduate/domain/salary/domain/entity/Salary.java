@@ -27,7 +27,7 @@ public class Salary {
     @Builder.Default
     private Boolean status = false;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Senior senior;
 
     @OneToMany(mappedBy = "salary", cascade = CascadeType.ALL)
