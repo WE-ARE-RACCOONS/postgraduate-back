@@ -7,8 +7,13 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class SalaryUpdateService {
+    private static int AMOUNT = 20000; //todo : 20000 tnwjd
 
     public void updateStatus(Salary salary, Boolean status) {
         salary.updateStatus(status);
+    }
+
+    public void updateTotalAmount(Salary salary) {
+        salary.plusAmount(AMOUNT);
     }
 }

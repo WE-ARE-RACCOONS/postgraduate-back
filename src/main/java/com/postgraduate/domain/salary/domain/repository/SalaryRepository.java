@@ -14,5 +14,8 @@ import java.util.Optional;
 
 public interface SalaryRepository extends JpaRepository<Salary, Long>, SalaryDslRepository {
     List<Salary> findAllBySeniorAndSalaryDateAndStatus(Senior senior, LocalDate salaryDate, Boolean status);
-    Optional<Salary> findByMentoring(Mentoring mentoring);
+    Optional<Salary> findBySeniorAndSalaryDateAndStatusIsTrue(Senior senior, LocalDate salaryDate);
+    Optional<Salary> findByPayments_Mentoring(Mentoring mentoring);
+    Optional<Salary> findBySeniorAndSalaryDate(Senior senior, LocalDate salaryDate);
+    Optional<Salary> findBySenior_SeniorIdAndSalaryDate(Long senior, LocalDate salaryDate);
 }

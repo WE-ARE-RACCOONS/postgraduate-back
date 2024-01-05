@@ -1,5 +1,6 @@
 package com.postgraduate.domain.salary.domain.repository;
 
+import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.salary.application.dto.SeniorSalary;
 import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.senior.domain.entity.Senior;

@@ -10,4 +10,8 @@ public record SalaryInfo(
         String bank,
         String accountNumber,
         LocalDateTime salaryDoneDate
-) {}
+) {
+    public SalaryInfo(String nickName, String phoneNumber, int totalAmount, LocalDateTime salaryDoneDate) {
+        this(nickName, phoneNumber, totalAmount, null, null, null, salaryDoneDate);
+    }
+}
