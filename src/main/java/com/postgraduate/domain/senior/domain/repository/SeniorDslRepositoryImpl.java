@@ -105,10 +105,18 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
         return new PageImpl<>(seniors, pageable, total);
     }
 
-    private BooleanExpression fieldSpecifier(String field) {
-        if (field.equals("others"))
-            return senior.info.etcField.isTrue();
-        return senior.info.field.like("%"+field+"%");
+    private BooleanExpression fieldSpecifier(String fields) {
+        String[] field = fields.split(",");
+        if (fields.contains("others"))
+            return Arrays.stream(field)
+                    .map(fieldName -> senior.info.etcField.isTrue()
+                            .or(senior.info.field.like("%"+fieldName+"%")))
+                    .reduce(BooleanExpression::or)
+                    .orElse(FALSE);
+        return Arrays.stream(field)
+                .map(fieldName -> (senior.info.field.like("%"+fieldName+"%")))
+                .reduce(BooleanExpression::or)
+                .orElse(FALSE);
     }
 
     private BooleanExpression postgraduSpecifier(String postgradu) {
