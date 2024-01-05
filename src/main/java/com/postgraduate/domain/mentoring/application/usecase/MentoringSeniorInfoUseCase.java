@@ -69,18 +69,17 @@ public class MentoringSeniorInfoUseCase {
     }
 
     public SeniorMentoringResponse getSeniorDone(User user) {
-        List<Mentoring> mentorings = getMentorings(user, DONE);
-        List<DoneSeniorMentoringInfo> doneMentoringInfos = mentorings.stream()
-                .map(mentoring -> {
-                    Salary salary = salaryGetService.byMentoring(mentoring);
-                    return mapToSeniorDoneInfo(mentoring, salary);
-                })
-                .toList();
+        List<DoneSeniorMentoringInfo> doneMentoringInfos = getDoneMentorings(user);
         return new SeniorMentoringResponse(doneMentoringInfos);
     }
 
     private List<Mentoring> getMentorings(User user, Status status) {
         Senior senior = seniorGetService.byUser(user);
         return mentoringGetService.mentoringBySenior(senior, status);
+    }
+
+    private List<DoneSeniorMentoringInfo> getDoneMentorings(User user) {
+        Senior senior = seniorGetService.byUser(user);
+        return mentoringGetService.mentoringBySenior(senior);
     }
 }
