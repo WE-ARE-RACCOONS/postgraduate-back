@@ -52,8 +52,8 @@ public class SeniorManageByAdminUseCase {
         Page<Senior> seniors = seniorGetService.all(page, search);
         List<SeniorInfo> seniorInfos = seniors.stream()
                 .map(senior -> {
-                    List<Salary> salaries = salaryGetService.bySeniorAndSalaryDate(senior, getSalaryDate());
-                    SalaryStatus salaryStatus = getStatus(salaries);
+                    Salary salary = salaryGetService.bySenior(senior);
+                    SalaryStatus salaryStatus = getStatus(salary);
                     Optional<Wish> wish = wishGetService.byUser(senior.getUser());
                     return AdminMapper.mapToSeniorInfo(senior, salaryStatus, wish.isPresent());
                 })
