@@ -31,6 +31,7 @@ public class PaymentDslRepositoryImpl implements PaymentDslRepository {
                         payment.salary.status.eq(status)
                 )
                 .join(payment.mentoring, mentoring)
+                .fetchJoin()
                 .join(payment.mentoring.user, user)
                 .fetchJoin()
                 .orderBy(payment.salary.salaryDate.desc())
@@ -44,6 +45,10 @@ public class PaymentDslRepositoryImpl implements PaymentDslRepository {
                         searchLike(search),
                         payment.mentoring.user.isDelete.eq(FALSE)
                 )
+                .join(payment.mentoring, mentoring)
+                .fetchJoin()
+                .join(payment.mentoring.user, user)
+                .fetchJoin()
                 .orderBy(payment.paidAt.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())

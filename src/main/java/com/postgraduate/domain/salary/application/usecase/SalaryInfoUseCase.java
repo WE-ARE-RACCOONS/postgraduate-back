@@ -40,18 +40,9 @@ public class SalaryInfoUseCase {
     public SalaryDetailsResponse getSalaryDetail(User user, Boolean status) {
         Senior senior = seniorGetService.byUser(user);
         List<Payment> payments = paymentGetService.bySeniorAndStatus(senior, status);
-//        List<Salary> salaries = salaryGetService.bySeniorAndStatus(senior, status);
-//        List<SalaryDetails> salaryDetails = new ArrayList<>();
-//        salaries.forEach(salary -> {
-//                    List<Payment> payments = salary.getPayments();
-//                    payments.forEach(payment -> {
-//                        salaryDetails.add(SalaryMapper.mapToSalaryDetail(salary, payment));
-//                    });
-//                });
-        List<SalaryDetails> salaryDetails = payments.stream().
-                map(payment -> {
-                    return SalaryMapper.mapToSalaryDetail(payment.getSalary(), payment);
-                }).toList();
+        List<SalaryDetails> salaryDetails = payments.stream()
+                .map(payment -> SalaryMapper.mapToSalaryDetail(payment.getSalary(), payment))
+                .toList();
         return new SalaryDetailsResponse(salaryDetails);
     }
 }
