@@ -175,7 +175,7 @@ public class AdminMapper {
                 mentoring.getDate(),
                 mentoring.getTerm(),
                 payment.getPay(),
-                (int) (payment.getPay() * 0.2)
+                4000 //todo : 수수료 변경
         );
     }
 
