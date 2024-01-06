@@ -26,8 +26,7 @@ class SalaryUpdateServiceTest {
     @DisplayName("정산 완료 테스트")
     void updateStatusTRUE() {
         Senior senior = mock(Senior.class);
-        Mentoring mentoring = mock(Mentoring.class);
-        Salary salary = new Salary(1L, FALSE, senior, mentoring, LocalDate.now(), LocalDateTime.now());
+        Salary salary = new Salary(1L, FALSE, senior, null, 100, LocalDate.now(), LocalDateTime.now(), "a", "b", "c");
 
         salaryUpdateService.updateStatus(salary, TRUE);
 
@@ -36,15 +35,14 @@ class SalaryUpdateServiceTest {
     }
 
     @Test
-    @DisplayName("정산 미완료 테스트")
+    @DisplayName("정산 금액 증가 테스트")
     void updateStatusFALSE() {
         Senior senior = mock(Senior.class);
-        Mentoring mentoring = mock(Mentoring.class);
-        Salary salary = new Salary(1L, TRUE, senior, mentoring, LocalDate.now(), LocalDateTime.now());
+        Salary salary = new Salary(1L, TRUE, senior, null, 0, LocalDate.now(), LocalDateTime.now(), "a", "b", "c");
 
-        salaryUpdateService.updateStatus(salary, FALSE);
+        salaryUpdateService.updateTotalAmount(salary);
 
-        assertThat(salary.getStatus())
-                .isFalse();
+        assertThat(salary.getTotalAmount())
+                .isEqualTo(20000);
     }
 }

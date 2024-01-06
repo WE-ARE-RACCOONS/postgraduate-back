@@ -72,7 +72,8 @@ public class SalaryManageByAdminUseCase {
     }
 
     public void updateSalaryStatus(Long seniorId, Boolean status) {
-        Salary salary = salaryGetService.bySeniorId(seniorId);
+        Senior senior = seniorGetService.bySeniorId(seniorId);
+        Salary salary = salaryGetService.bySenior(senior);
         salaryUpdateService.updateStatus(salary, status);
     }
 }

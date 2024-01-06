@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.postgraduate.domain.salary.util.SalaryUtil.getSalaryDate;
@@ -34,7 +33,7 @@ public class SalaryInfoUseCase {
         LocalDate salaryDate = getSalaryDate();
         Salary salary = salaryGetService.bySenior(senior);
         int amount = salary.getTotalAmount();
-        return new SalaryInfoResponse(salaryDate, amount); //TODO 수수료
+        return new SalaryInfoResponse(salaryDate, amount);
     }
 
     public SalaryDetailsResponse getSalaryDetail(User user, Boolean status) {
