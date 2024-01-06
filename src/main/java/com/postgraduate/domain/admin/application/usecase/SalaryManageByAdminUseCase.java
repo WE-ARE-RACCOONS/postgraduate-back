@@ -38,42 +38,48 @@ public class SalaryManageByAdminUseCase {
 
     public SalaryDetailsResponse getSalary(Long seniorId) {
         Senior senior = seniorGetService.bySeniorId(seniorId);
-        Salary salary = salaryGetService.bySenior(senior);
+        List<Salary> salaries = salaryGetService.bySeniorAndSalaryDate(senior, getSalaryDate());
+        int totalAmount = getAmount(salaries);
+        SalaryStatus status = getStatus(salaries);
 
         Optional<Account> optionalAccount = accountGetService.bySenior(senior);
         if (optionalAccount.isPresent()) {
             Account account = optionalAccount.get();
             String accountNumber = encryptorUtils.decryptData(account.getAccountNumber());
-            return AdminMapper.mapToSalaryDetailsResponse(senior, account, accountNumber, salary.getTotalAmount(), salary.getStatus());
+            return AdminMapper.mapToSalaryDetailsResponse(senior, account, accountNumber, totalAmount, status);
         }
-        return AdminMapper.mapToSalaryDetailsResponse(senior, salary.getTotalAmount(), salary.getStatus());
+        return AdminMapper.mapToSalaryDetailsResponse(senior, totalAmount, status);
     }
 
     public SalaryManageResponse getSalaries(Integer page, String search) {
         Page<SeniorSalary> seniors = salaryGetService.findDistinctSeniors(search, page);
-        List<SalaryInfo> salaryInfos = seniors.stream()
-                .map(senior -> {
-                    Salary salary = salaryGetService.bySenior(senior.senior());
-                    return getSalaryInfo(senior.senior(), salary);
-                })
-                .toList();
+        List<SalaryInfo> responses = new ArrayList<>();
+        seniors.forEach(senior -> {
+            List<Salary> salaries = salaryGetService.bySeniorAndSalaryDateAndStatus(senior.senior(), senior.salaryDate(), true);
+            SalaryInfo response = getSalaryInfo(senior.senior(), salaries);
+            responses.add(response);
+        });
         Long totalElements = seniors.getTotalElements();
         int totalPages = seniors.getTotalPages();
-        return new SalaryManageResponse(salaryInfos, totalElements, totalPages);
+        return new SalaryManageResponse(responses, totalElements, totalPages);
     }
 
-    private SalaryInfo getSalaryInfo(Senior senior, Salary salary) {
+    private SalaryInfo getSalaryInfo(Senior senior, List<Salary> salaries) {
+        int totalAmount = getAmount(salaries);
+        LocalDateTime salaryDoneDate = getDoneDate(salaries);
+
         Optional<Account> optionalAccount = accountGetService.bySenior(senior);
         if (optionalAccount.isPresent()) {
-            String accountNumber = encryptorUtils.decryptData(salary.getAccountNumber());
-            return AdminMapper.mapToSalaryResponse(senior, accountNumber, salary);
+            Account account = optionalAccount.get();
+            String accountNumber = encryptorUtils.decryptData(account.getAccountNumber());
+            return AdminMapper.mapToSalaryResponse(senior, account, accountNumber, totalAmount, salaryDoneDate);
         }
-        return AdminMapper.mapToSalaryResponse(senior, salary);
+        return AdminMapper.mapToSalaryResponse(senior, totalAmount, salaryDoneDate);
     }
 
     public void updateSalaryStatus(Long seniorId, Boolean status) {
         Senior senior = seniorGetService.bySeniorId(seniorId);
-        Salary salary = salaryGetService.bySenior(senior);
-        salaryUpdateService.updateStatus(salary, status);
+        List<Salary> salaries = salaryGetService.bySeniorAndSalaryDate(senior, getSalaryDate());
+        salaries.forEach(salary -> salaryUpdateService.updateStatus(salary, status));
     }
 }

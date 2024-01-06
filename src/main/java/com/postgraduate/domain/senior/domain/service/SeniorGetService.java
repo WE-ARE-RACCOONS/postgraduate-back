@@ -10,8 +10,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 import static java.lang.Boolean.FALSE;
 
 @Service
@@ -20,10 +18,6 @@ public class SeniorGetService {
     private final SeniorRepository seniorRepository;
     private static final int SENIOR_PAGE_SIZE = 10;
     private static final int ADMIN_PAGE_SIZE = 15;
-
-    public List<Senior> all() {
-        return seniorRepository.findAll();
-    }
 
     public Senior byUser(User user) {
         return seniorRepository.findByUser(user).orElseThrow(NoneSeniorException::new);

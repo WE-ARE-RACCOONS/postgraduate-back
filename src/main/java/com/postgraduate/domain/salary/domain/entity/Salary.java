@@ -1,7 +1,6 @@
 package com.postgraduate.domain.salary.domain.entity;
 
-import com.postgraduate.domain.admin.presentation.constant.SalaryStatus;
-import com.postgraduate.domain.payment.domain.entity.Payment;
+import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -11,7 +10,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Builder
@@ -30,12 +28,8 @@ public class Salary {
     @ManyToOne(fetch = FetchType.LAZY)
     private Senior senior;
 
-    @OneToMany(mappedBy = "salary", cascade = CascadeType.ALL)
-    private List<Payment> payments;
-
-    @Builder.Default
-    @Column(nullable = false)
-    private int totalAmount = 0;
+    @OneToOne(fetch = FetchType.LAZY)
+    private Mentoring mentoring;
 
     @Column(nullable = false)
     private LocalDate salaryDate;
@@ -43,22 +37,8 @@ public class Salary {
     @Column
     private LocalDateTime salaryDoneDate;
 
-    private String bank;
-    private String accountNumber;
-    private String accountHolder;
-
     public void updateStatus(Boolean status) {
         this.status = status;
         this.salaryDoneDate = LocalDateTime.now();
-    }
-
-    public void updateAccount(String bank, String accountNumber, String accountHolder) {
-        this.bank = bank;
-        this.accountNumber = accountNumber;
-        this.accountHolder = accountHolder;
-    }
-
-    public void plusAmount(int amount) {
-        this.totalAmount += amount;
     }
 }

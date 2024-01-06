@@ -23,12 +23,30 @@ public class SalaryUtil {
         return DateTimeFormatter.ofPattern("yyyy-MM");
     }
 
-    public static SalaryStatus getStatus(Salary salary) {
-        if (salary.getTotalAmount() == 0) {
+    public static int getAmount(List<Salary> salaries) {
+        return salaries.stream()
+                .map(salary -> salary.getMentoring().getPay())
+                .mapToInt(Integer::intValue)
+                .sum();
+    }
+
+    public static SalaryStatus getStatus(List<Salary> salaries) {
+        long count = salaries.stream()
+                .filter(Salary::getStatus)
+                .count();
+        if (salaries.size() == 0) {
             return NONE;
         }
-        if (salary.getStatus())
+        if (count == salaries.size()) {
             return DONE;
+        }
         return YET;
+    }
+
+    public static LocalDateTime getDoneDate(List<Salary> salaries) {
+        if (salaries.size() == 0) {
+            return null;
+        }
+        return salaries.get(0).getSalaryDoneDate();
     }
 }

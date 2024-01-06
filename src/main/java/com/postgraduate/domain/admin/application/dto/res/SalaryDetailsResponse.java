@@ -9,5 +9,5 @@ public record SalaryDetailsResponse(
         String accountHolder,
         String bank,
         String accountNumber,
-        Boolean status
+        SalaryStatus status
 ) {}

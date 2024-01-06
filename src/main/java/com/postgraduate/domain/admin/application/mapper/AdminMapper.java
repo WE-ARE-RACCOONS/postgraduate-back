@@ -8,13 +8,14 @@ import com.postgraduate.domain.admin.application.dto.res.SalaryDetailsResponse;
 import com.postgraduate.domain.admin.presentation.constant.SalaryStatus;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.payment.domain.entity.Payment;
-import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.entity.constant.Role;
 import com.postgraduate.domain.wish.application.dto.res.WishResponse;
 import com.postgraduate.domain.wish.domain.entity.Wish;
+
+import java.time.LocalDateTime;
 
 public class AdminMapper {
 
@@ -88,6 +89,7 @@ public class AdminMapper {
 
     public static UserMentoringInfo mapToUserMentoringInfo(User user) {
         return new UserMentoringInfo(
+                null,
                 user.getPhoneNumber()
         );
     }
@@ -108,36 +110,39 @@ public class AdminMapper {
                 mentoring.getMentoringId(),
                 user.getNickName(),
                 user.getPhoneNumber(),
-                payment.getPaidAt(),
-                payment.getPay(),
+                payment.getCreatedAt(),
+                mentoring.getPay(),
                 payment.getStatus()
         );
     }
 
-    public static SalaryInfo mapToSalaryResponse(Senior senior, String accountNumber, Salary salary) {
+    public static SalaryInfo mapToSalaryResponse(Senior senior, Account account, String accountNumber, int totalAmount, LocalDateTime salaryDoneDate) {
         User user = senior.getUser();
         return new SalaryInfo(
                 user.getNickName(),
                 user.getPhoneNumber(),
-                salary.getTotalAmount(),
-                salary.getAccountHolder(),
-                salary.getBank(),
+                totalAmount,
+                account.getAccountHolder(),
+                account.getBank(),
                 accountNumber,
-                salary.getSalaryDoneDate()
+                salaryDoneDate
         );
     }
 
-    public static SalaryInfo mapToSalaryResponse(Senior senior, Salary salary) {
+    public static SalaryInfo mapToSalaryResponse(Senior senior, int totalAmount, LocalDateTime salaryDoneDate) {
         User user = senior.getUser();
         return new SalaryInfo(
                 user.getNickName(),
                 user.getPhoneNumber(),
-                salary.getTotalAmount(),
-                salary.getSalaryDoneDate()
+                totalAmount,
+                null,
+                null,
+                null,
+                salaryDoneDate
         );
     }
 
-    public static SalaryDetailsResponse mapToSalaryDetailsResponse(Senior senior, Account account, String accountNumber, int totalAmount, Boolean status) {
+    public static SalaryDetailsResponse mapToSalaryDetailsResponse(Senior senior, Account account, String accountNumber, int totalAmount, SalaryStatus status) {
         User user = senior.getUser();
         return new SalaryDetailsResponse(
                 user.getNickName(),
@@ -150,7 +155,7 @@ public class AdminMapper {
         );
     }
 
-    public static SalaryDetailsResponse mapToSalaryDetailsResponse(Senior senior, int totalAmount, Boolean status) {
+    public static SalaryDetailsResponse mapToSalaryDetailsResponse(Senior senior, int totalAmount, SalaryStatus status) {
         User user = senior.getUser();
         return new SalaryDetailsResponse(
                 user.getNickName(),
@@ -174,8 +179,8 @@ public class AdminMapper {
                 senior.getUser().getPhoneNumber(),
                 mentoring.getDate(),
                 mentoring.getTerm(),
-                payment.getPay(),
-                4000 //todo : 수수료 변경
+                (int) (mentoring.getPay() * 1.2),
+                (int) (mentoring.getPay() * 0.2)
         );
     }
 

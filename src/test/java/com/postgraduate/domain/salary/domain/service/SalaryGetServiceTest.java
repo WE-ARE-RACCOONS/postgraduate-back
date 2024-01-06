@@ -4,16 +4,12 @@ import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.salary.domain.repository.SalaryRepository;
 import com.postgraduate.domain.salary.exception.SalaryNotFoundException;
-import com.postgraduate.domain.salary.util.SalaryUtil;
-import com.postgraduate.domain.senior.domain.entity.Senior;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.Optional;
 
 import static java.util.Optional.of;
 import static java.util.Optional.ofNullable;
@@ -30,25 +26,25 @@ class SalaryGetServiceTest {
     private SalaryGetService salaryGetService;
 
     @Test
-    @DisplayName("Senior를 통한 Salary 조회 예외 테스트")
-    void bySeniorFailTest() {
-        Senior senior = mock(Senior.class);
-        given(salaryRepository.findBySeniorAndSalaryDate(senior, SalaryUtil.getSalaryDate()))
+    @DisplayName("정산 조회 예외 테스트")
+    void byMentoringFail() {
+        Mentoring mentoring = mock(Mentoring.class);
+        given(salaryRepository.findByMentoring(mentoring))
                 .willReturn(ofNullable(null));
 
-        assertThatThrownBy(() -> salaryGetService.bySenior(senior))
+        assertThatThrownBy(() -> salaryGetService.byMentoring(mentoring))
                 .isInstanceOf(SalaryNotFoundException.class);
     }
 
     @Test
-    @DisplayName("Senior를 통한 Salary 조회 테스트")
+    @DisplayName("정산 조회 테스트")
     void byMentoring() {
-        Senior senior = mock(Senior.class);
+        Mentoring mentoring = mock(Mentoring.class);
         Salary salary = mock(Salary.class);
-        given(salaryRepository.findBySeniorAndSalaryDate(senior, SalaryUtil.getSalaryDate()))
-                .willReturn(Optional.of(salary));
+        given(salaryRepository.findByMentoring(mentoring))
+                .willReturn(of(salary));
 
-        assertThat(salaryGetService.bySenior(senior))
+        assertThat(salaryGetService.byMentoring(mentoring))
                 .isEqualTo(salary);
     }
 }
