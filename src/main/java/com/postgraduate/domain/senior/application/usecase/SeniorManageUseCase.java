@@ -58,6 +58,7 @@ public class SeniorManageUseCase {
         Profile profile = mapToProfile(profileRequest);
         seniorUpdateService.signUpSeniorProfile(senior, profile);
         List<AvailableCreateRequest> availableCreateRequests = profileRequest.times();
+        availableDeleteService.delete(senior);
         List<Available> sortedAvailable = sortAvailable(availableCreateRequests, senior);
         sortedAvailable.forEach(availableSaveService::save);
     }
