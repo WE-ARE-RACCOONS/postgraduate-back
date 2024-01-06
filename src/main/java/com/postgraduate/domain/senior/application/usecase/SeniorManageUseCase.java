@@ -8,6 +8,8 @@ import com.postgraduate.domain.available.application.dto.req.AvailableCreateRequ
 import com.postgraduate.domain.available.domain.entity.Available;
 import com.postgraduate.domain.available.domain.service.AvailableSaveService;
 import com.postgraduate.domain.available.domain.service.AvailableDeleteService;
+import com.postgraduate.domain.salary.domain.entity.Salary;
+import com.postgraduate.domain.salary.domain.service.SalaryGetService;
 import com.postgraduate.domain.senior.application.dto.req.*;
 import com.postgraduate.domain.senior.application.utils.SeniorUtils;
 import com.postgraduate.domain.senior.domain.entity.Profile;
@@ -44,6 +46,7 @@ public class SeniorManageUseCase {
     private final AccountGetService accountGetService;
     private final AccountSaveService accountSaveService;
     private final AccountUpdateService accountUpdateService;
+    private final SalaryGetService salaryGetService;
     private final EncryptorUtils encryptorUtils;
     private final UserUtils userUtils;
     private final SeniorUtils seniorUtils;
@@ -67,6 +70,7 @@ public class SeniorManageUseCase {
         Senior senior = seniorGetService.byUser(user);
         String accountNumber = encryptorUtils.encryptData(accountRequest.accountNumber());
         accountSaveService.saveAccount(mapToAccount(senior, accountRequest, accountNumber));
+        updateSalaryAccount(senior, accountRequest.bank(), accountNumber, accountRequest.accountHolder());
     }
 
     public void updateSeniorMyPageProfile(User user, SeniorMyPageProfileRequest myPageProfileRequest) {
@@ -95,6 +99,7 @@ public class SeniorManageUseCase {
         String accountNumber = encryptorUtils.encryptData(myPageUserAccountRequest.accountNumber());
         userUpdateService.updateSeniorUserAccount(user, myPageUserAccountRequest);
         accountUpdateService.updateAccount(account, myPageUserAccountRequest, accountNumber);
+        updateSalaryAccount(senior, myPageUserAccountRequest.bank(), accountNumber, myPageUserAccountRequest.accountHolder());
     }
 
     private void updateSeniorMyPageUserAccountNoneAccount(Senior senior, User user, SeniorMyPageUserAccountRequest myPageUserAccountRequest) {
@@ -107,5 +112,11 @@ public class SeniorManageUseCase {
         Account account = mapToAccount(senior, myPageUserAccountRequest, accountNumber);
         userUpdateService.updateSeniorUserAccount(user, myPageUserAccountRequest);
         accountSaveService.saveAccount(account);
+        updateSalaryAccount(senior, myPageUserAccountRequest.bank(), accountNumber, myPageUserAccountRequest.accountHolder());
+    }
+
+    private void updateSalaryAccount(Senior senior, String bank, String accountNumber, String accountHolder) {
+        Salary salary = salaryGetService.bySenior(senior);
+        salary.updateAccount(bank, accountNumber, accountHolder);
     }
 }

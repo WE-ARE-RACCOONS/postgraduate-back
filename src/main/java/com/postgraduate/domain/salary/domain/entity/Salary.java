@@ -52,6 +52,12 @@ public class Salary {
         this.salaryDoneDate = LocalDateTime.now();
     }
 
+    public void updateAccount(String bank, String accountNumber, String accountHolder) {
+        this.bank = bank;
+        this.accountNumber = accountNumber;
+        this.accountHolder = accountHolder;
+    }
+
     public void plusAmount(int amount) {
         this.totalAmount += amount;
     }
