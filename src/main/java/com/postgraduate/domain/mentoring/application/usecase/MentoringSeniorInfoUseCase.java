@@ -9,9 +9,7 @@ import com.postgraduate.domain.mentoring.application.mapper.MentoringMapper;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.entity.constant.Status;
 import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
-import com.postgraduate.domain.mentoring.exception.MentoringDoneException;
-import com.postgraduate.domain.salary.domain.entity.Salary;
-import com.postgraduate.domain.salary.domain.service.SalaryGetService;
+import com.postgraduate.domain.mentoring.exception.MentoringDetailNotFoundException;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.domain.user.domain.entity.User;
@@ -23,7 +21,8 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.postgraduate.domain.mentoring.application.mapper.MentoringMapper.*;
+import static com.postgraduate.domain.mentoring.application.mapper.MentoringMapper.mapToSeniorMentoringDetail;
+import static com.postgraduate.domain.mentoring.application.mapper.MentoringMapper.mapToSeniorWaitingInfo;
 import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.*;
 
 @Service
@@ -33,13 +32,12 @@ public class MentoringSeniorInfoUseCase {
     private final MentoringGetService mentoringGetService;
     private final CheckIsMyMentoringUseCase checkIsMyMentoringUseCase;
     private final SeniorGetService seniorGetService;
-    private final SalaryGetService salaryGetService;
 
     public SeniorMentoringDetailResponse getSeniorMentoringDetail(User user, Long mentoringId) {
         Senior senior = seniorGetService.byUser(user);
         Mentoring mentoring = checkIsMyMentoringUseCase.bySenior(senior, mentoringId);
-        if (mentoring.getStatus() == DONE) {
-            throw new MentoringDoneException();
+        if (!(mentoring.getStatus() == WAITING || mentoring.getStatus() == EXPECTED)) {
+            throw new MentoringDetailNotFoundException();
         }
         return mapToSeniorMentoringDetail(mentoring);
     }
@@ -69,18 +67,17 @@ public class MentoringSeniorInfoUseCase {
     }
 
     public SeniorMentoringResponse getSeniorDone(User user) {
-        List<Mentoring> mentorings = getMentorings(user, DONE);
-        List<DoneSeniorMentoringInfo> doneMentoringInfos = mentorings.stream()
-                .map(mentoring -> {
-                    Salary salary = salaryGetService.byMentoring(mentoring);
-                    return mapToSeniorDoneInfo(mentoring, salary);
-                })
-                .toList();
+        List<DoneSeniorMentoringInfo> doneMentoringInfos = getDoneMentorings(user);
         return new SeniorMentoringResponse(doneMentoringInfos);
     }
 
     private List<Mentoring> getMentorings(User user, Status status) {
         Senior senior = seniorGetService.byUser(user);
         return mentoringGetService.mentoringBySenior(senior, status);
+    }
+
+    private List<DoneSeniorMentoringInfo> getDoneMentorings(User user) {
+        Senior senior = seniorGetService.byUser(user);
+        return mentoringGetService.mentoringBySenior(senior);
     }
 }

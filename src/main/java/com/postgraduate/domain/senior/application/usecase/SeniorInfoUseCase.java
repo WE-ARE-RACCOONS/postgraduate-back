@@ -60,13 +60,13 @@ public class SeniorInfoUseCase {
     }
 
     public SeniorProfileResponse getSeniorProfile(Long seniorId) {
-        Senior senior = seniorGetService.bySeniorId(seniorId);
+        Senior senior = seniorGetService.bySeniorIdWithCertification(seniorId);
         SeniorProfileResponse seniorProfileResponse = mapToSeniorProfile(senior);
         return seniorProfileResponse;
     }
 
     public AvailableTimesResponse getSeniorTimes(Long seniorId) {
-        Senior senior = seniorGetService.bySeniorId(seniorId);
+        Senior senior = seniorGetService.bySeniorIdWithCertification(seniorId);
         List<Available> availables = availableGetService.bySenior(senior);
         List<AvailableTimeResponse> times = availables.stream()
                 .map(AvailableMapper::mapToAvailableTimes)
