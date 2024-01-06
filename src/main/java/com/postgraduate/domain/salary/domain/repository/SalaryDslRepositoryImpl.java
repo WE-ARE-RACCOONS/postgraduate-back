@@ -1,6 +1,10 @@
 package com.postgraduate.domain.salary.domain.repository;
 
+import com.postgraduate.domain.payment.domain.entity.Payment;
+import com.postgraduate.domain.salary.application.dto.SalaryDetails;
 import com.postgraduate.domain.salary.application.dto.SeniorSalary;
+import com.postgraduate.domain.salary.domain.entity.Salary;
+import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -11,10 +15,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static com.postgraduate.domain.account.domain.entity.QAccount.account;
+import static com.postgraduate.domain.mentoring.domain.entity.QMentoring.mentoring;
+import static com.postgraduate.domain.payment.domain.entity.QPayment.payment;
+import static com.postgraduate.domain.salary.application.mapper.SalaryMapper.mapToSalaryDetail;
 import static com.postgraduate.domain.salary.domain.entity.QSalary.salary;
+import static com.postgraduate.domain.user.domain.entity.QUser.user;
 import static com.querydsl.core.types.Projections.constructor;
 import static java.lang.Boolean.FALSE;
 
@@ -74,5 +83,38 @@ public class SalaryDslRepositoryImpl implements SalaryDslRepository {
         }
         return null;
     }
+
+//    @Override
+//    public List<SalaryDetails> findAllDetailBySenior(Senior senior, Boolean status) {
+//        List<Salary> salaries = queryFactory.selectFrom(salary)
+//                .distinct()
+//                .where(
+//                        salary.senior.eq(senior),
+//                        salary.status.eq(status)
+//                )
+//                .orderBy(salary.salaryDate.desc())
+//                .fetch();
+//
+//        List<Payment> payments = queryFactory.selectFrom(payment)
+//                .distinct()
+//                .join(payment.mentoring, mentoring)
+//                .fetchJoin()
+//                .join(payment.mentoring.user, user)
+//                .fetchJoin()
+//                .where(payment.salary.in(salaries))
+//                .orderBy(payment.mentoring.updatedAt.desc())
+//                .fetch();
+//
+//        List<SalaryDetails> salaryDetails = salaries.stream()
+//                .map(salary -> {
+//                    Payment payment = payments.stream()
+//                            .filter(p -> p.getSalary() == salary)
+//                            .
+//                    return mapToSalaryDetail(salary, payment);
+//                })
+//                .toList();
+//
+//        return salaryDetails;
+//    }
 }
 
