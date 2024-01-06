@@ -10,6 +10,7 @@ import com.postgraduate.domain.available.domain.service.AvailableSaveService;
 import com.postgraduate.domain.available.domain.service.AvailableDeleteService;
 import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.salary.domain.service.SalaryGetService;
+import com.postgraduate.domain.salary.domain.service.SalaryUpdateService;
 import com.postgraduate.domain.senior.application.dto.req.*;
 import com.postgraduate.domain.senior.application.utils.SeniorUtils;
 import com.postgraduate.domain.senior.domain.entity.Profile;
@@ -47,6 +48,7 @@ public class SeniorManageUseCase {
     private final AccountSaveService accountSaveService;
     private final AccountUpdateService accountUpdateService;
     private final SalaryGetService salaryGetService;
+    private final SalaryUpdateService salaryUpdateService;
     private final EncryptorUtils encryptorUtils;
     private final UserUtils userUtils;
     private final SeniorUtils seniorUtils;
@@ -117,6 +119,6 @@ public class SeniorManageUseCase {
 
     private void updateSalaryAccount(Senior senior, String bank, String accountNumber, String accountHolder) {
         Salary salary = salaryGetService.bySenior(senior);
-        salary.updateAccount(bank, accountNumber, accountHolder);
+        salaryUpdateService.updateAccount(salary, bank, accountNumber, accountHolder);
     }
 }
