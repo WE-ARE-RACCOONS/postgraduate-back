@@ -28,7 +28,7 @@ class MentoringUpdateServiceTest {
         User user = mock(User.class);
         Senior senior = mock(Senior.class);
         mentoring = new Mentoring(1L, user, senior, "a", "a", "a", 1
-        , 1, WAITING, LocalDateTime.now(), LocalDateTime.now());
+        , WAITING, LocalDateTime.now(), LocalDateTime.now());
     }
 
     @Test
