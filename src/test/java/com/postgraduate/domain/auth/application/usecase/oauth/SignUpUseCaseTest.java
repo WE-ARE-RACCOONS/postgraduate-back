@@ -3,6 +3,8 @@ package com.postgraduate.domain.auth.application.usecase.oauth;
 import com.postgraduate.domain.auth.application.dto.req.SeniorChangeRequest;
 import com.postgraduate.domain.auth.application.dto.req.SeniorSignUpRequest;
 import com.postgraduate.domain.auth.application.dto.req.SignUpRequest;
+import com.postgraduate.domain.salary.domain.entity.Salary;
+import com.postgraduate.domain.salary.domain.service.SalarySaveService;
 import com.postgraduate.domain.senior.application.utils.SeniorUtils;
 import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Profile;
@@ -55,6 +57,8 @@ class SignUpUseCaseTest {
     private WishSaveService wishSaveService;
     @Mock
     private SeniorSaveService seniorSaveService;
+    @Mock
+    private SalarySaveService salarySaveService;
     @Mock
     private UserUtils userUtils;
     @Mock

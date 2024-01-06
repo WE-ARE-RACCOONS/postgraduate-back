@@ -8,7 +8,7 @@ import com.postgraduate.domain.mentoring.application.dto.res.AppliedMentoringRes
 import com.postgraduate.domain.mentoring.application.mapper.MentoringMapper;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
-import com.postgraduate.domain.mentoring.exception.MentoringDoneException;
+import com.postgraduate.domain.mentoring.exception.MentoringDetailNotFoundException;
 import com.postgraduate.domain.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,8 +28,8 @@ public class MentoringUserInfoUseCase {
 
     public AppliedMentoringDetailResponse getMentoringDetail(User user, Long mentoringId) {
         Mentoring mentoring = checkIsMyMentoringUseCase.byUser(user, mentoringId);
-        if (mentoring.getStatus() == DONE) {
-            throw new MentoringDoneException();
+        if (!(mentoring.getStatus() == WAITING || mentoring.getStatus() == EXPECTED)) {
+            throw new MentoringDetailNotFoundException();
         }
         return mapToAppliedDetailInfo(mentoring);
     }

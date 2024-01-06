@@ -4,6 +4,10 @@ import com.postgraduate.domain.auth.application.dto.req.SeniorChangeRequest;
 import com.postgraduate.domain.auth.application.dto.req.SeniorSignUpRequest;
 import com.postgraduate.domain.auth.application.dto.req.SignUpRequest;
 import com.postgraduate.domain.auth.application.dto.req.UserChangeRequest;
+import com.postgraduate.domain.salary.application.mapper.SalaryMapper;
+import com.postgraduate.domain.salary.domain.entity.Salary;
+import com.postgraduate.domain.salary.domain.service.SalarySaveService;
+import com.postgraduate.domain.salary.util.SalaryUtil;
 import com.postgraduate.domain.senior.application.mapper.SeniorMapper;
 import com.postgraduate.domain.senior.application.utils.SeniorUtils;
 import com.postgraduate.domain.senior.domain.entity.Senior;
@@ -22,10 +26,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.postgraduate.domain.salary.util.SalaryUtil.getSalaryDate;
+
 @Transactional
 @Service
 @RequiredArgsConstructor
 public class SignUpUseCase {
+    private final SalarySaveService salarySaveService;
     private final UserSaveService userSaveService;
     private final UserUpdateService userUpdateService;
     private final UserGetService userGetService;
@@ -50,6 +57,8 @@ public class SignUpUseCase {
         userSaveService.saveUser(user);
         Senior senior = SeniorMapper.mapToSenior(user, request);
         seniorSaveService.saveSenior(senior);
+        Salary salary = SalaryMapper.mapToSalary(senior, getSalaryDate());
+        salarySaveService.saveSalary(salary);
         return senior.getUser();
     }
 
@@ -59,6 +68,8 @@ public class SignUpUseCase {
         seniorSaveService.saveSenior(senior);
         user = userGetService.getUser(user.getUserId());
         userUpdateService.updateRole(user, Role.SENIOR);
+        Salary salary = SalaryMapper.mapToSalary(senior, getSalaryDate());
+        salarySaveService.saveSalary(salary);
         return user;
     }
 

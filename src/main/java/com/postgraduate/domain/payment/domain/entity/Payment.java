@@ -2,6 +2,7 @@ package com.postgraduate.domain.payment.domain.entity;
 
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.payment.domain.entity.constant.Status;
+import com.postgraduate.domain.salary.domain.entity.Salary;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,8 +27,17 @@ public class Payment {
     @OneToOne(fetch = FetchType.LAZY)
     private Mentoring mentoring;
 
-    @CreationTimestamp
-    private LocalDateTime createdAt;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Salary salary;
+
+    @Column(nullable = false)
+    private int pay;
+
+    private String cardAuthNumber;
+
+    private String cardReceipt;
+
+    private LocalDateTime paidAt; //결제사에서 받은 결제 시점
 
     private LocalDateTime deletedAt;
 
