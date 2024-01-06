@@ -28,7 +28,7 @@ public class MentoringUserInfoUseCase {
 
     public AppliedMentoringDetailResponse getMentoringDetail(User user, Long mentoringId) {
         Mentoring mentoring = checkIsMyMentoringUseCase.byUser(user, mentoringId);
-        if (!(mentoring.getStatus() == WAITING && mentoring.getStatus() == EXPECTED)) {
+        if (!(mentoring.getStatus() == WAITING || mentoring.getStatus() == EXPECTED)) {
             throw new MentoringDetailNotFoundException();
         }
         return mapToAppliedDetailInfo(mentoring);

@@ -36,7 +36,7 @@ public class MentoringSeniorInfoUseCase {
     public SeniorMentoringDetailResponse getSeniorMentoringDetail(User user, Long mentoringId) {
         Senior senior = seniorGetService.byUser(user);
         Mentoring mentoring = checkIsMyMentoringUseCase.bySenior(senior, mentoringId);
-        if (!(mentoring.getStatus() == WAITING && mentoring.getStatus() == EXPECTED)) {
+        if (!(mentoring.getStatus() == WAITING || mentoring.getStatus() == EXPECTED)) {
             throw new MentoringDetailNotFoundException();
         }
         return mapToSeniorMentoringDetail(mentoring);
