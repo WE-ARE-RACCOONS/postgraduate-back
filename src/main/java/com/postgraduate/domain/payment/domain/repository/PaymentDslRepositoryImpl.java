@@ -15,6 +15,7 @@ import java.util.List;
 
 import static com.postgraduate.domain.mentoring.domain.entity.QMentoring.mentoring;
 import static com.postgraduate.domain.payment.domain.entity.QPayment.payment;
+import static com.postgraduate.domain.salary.domain.entity.QSalary.salary;
 import static com.postgraduate.domain.user.domain.entity.QUser.user;
 import static com.querydsl.core.types.dsl.Expressions.FALSE;
 
@@ -30,11 +31,13 @@ public class PaymentDslRepositoryImpl implements PaymentDslRepository {
                         payment.mentoring.senior.eq(senior),
                         payment.salary.status.eq(status)
                 )
+                .join(payment.salary, salary)
+                .fetchJoin()
                 .join(payment.mentoring, mentoring)
                 .fetchJoin()
                 .join(payment.mentoring.user, user)
                 .fetchJoin()
-                .orderBy(payment.salary.salaryDate.desc())
+                .orderBy(payment.salary.salaryDate.desc(), payment.mentoring.updatedAt.desc())
                 .fetch();
     }
 
