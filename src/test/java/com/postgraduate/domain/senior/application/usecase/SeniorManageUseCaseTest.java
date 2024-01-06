@@ -8,9 +8,6 @@ import com.postgraduate.domain.available.application.dto.req.AvailableCreateRequ
 import com.postgraduate.domain.available.domain.entity.Available;
 import com.postgraduate.domain.available.domain.service.AvailableDeleteService;
 import com.postgraduate.domain.available.domain.service.AvailableSaveService;
-import com.postgraduate.domain.salary.domain.entity.Salary;
-import com.postgraduate.domain.salary.domain.service.SalaryGetService;
-import com.postgraduate.domain.salary.domain.service.SalaryUpdateService;
 import com.postgraduate.domain.senior.application.dto.req.SeniorMyPageProfileRequest;
 import com.postgraduate.domain.senior.application.dto.req.SeniorMyPageUserAccountRequest;
 import com.postgraduate.domain.senior.application.dto.req.SeniorProfileRequest;
@@ -68,10 +65,6 @@ class SeniorManageUseCaseTest {
     @Mock
     private AccountUpdateService accountUpdateService;
     @Mock
-    private SalaryUpdateService salaryUpdateService;
-    @Mock
-    private SalaryGetService salaryGetService;
-    @Mock
     private EncryptorUtils encryptorUtils;
     @Mock
     private UserUtils userUtils;
@@ -125,10 +118,7 @@ class SeniorManageUseCaseTest {
     void updateSeniorMyPageUserAccountWithNonAccount() {
         SeniorMyPageUserAccountRequest request =
                 new SeniorMyPageUserAccountRequest("a", "b", "a" , "b", "a", "b");
-        Salary salary = mock(Salary.class);
 
-        given(salaryGetService.bySenior(senior))
-                .willReturn(salary);
         given(userGetService.getUser(user.getUserId()))
                 .willReturn(user);
         given(seniorGetService.byUser(user))
@@ -148,10 +138,7 @@ class SeniorManageUseCaseTest {
     void updateSeniorMyPageUserAccountWithAccount() {
         SeniorMyPageUserAccountRequest request =
                 new SeniorMyPageUserAccountRequest("a", "b", "a" , "b", "a", "b");
-        Salary salary = mock(Salary.class);
 
-        given(salaryGetService.bySenior(senior))
-                .willReturn(salary);
         given(userGetService.getUser(user.getUserId()))
                 .willReturn(user);
         given(seniorGetService.byUser(user))

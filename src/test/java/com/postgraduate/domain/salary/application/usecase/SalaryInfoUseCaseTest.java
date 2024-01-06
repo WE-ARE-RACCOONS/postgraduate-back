@@ -1,9 +1,6 @@
 package com.postgraduate.domain.salary.application.usecase;
 
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
-import com.postgraduate.domain.payment.domain.entity.Payment;
-import com.postgraduate.domain.payment.domain.entity.constant.Status;
-import com.postgraduate.domain.payment.domain.service.PaymentGetService;
 import com.postgraduate.domain.salary.application.dto.res.SalaryDetailsResponse;
 import com.postgraduate.domain.salary.application.dto.res.SalaryInfoResponse;
 import com.postgraduate.domain.salary.domain.entity.Salary;
@@ -24,11 +21,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.DONE;
-import static com.postgraduate.domain.salary.util.SalaryUtil.getSalaryDate;
+import static com.postgraduate.domain.salary.util.SalaryUtil.*;
 import static java.lang.Boolean.FALSE;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.mock;
+import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class SalaryInfoUseCaseTest {
@@ -36,8 +32,6 @@ class SalaryInfoUseCaseTest {
     private SeniorGetService seniorGetService;
     @Mock
     private SalaryGetService salaryGetService;
-    @Mock
-    private PaymentGetService paymentGetService;
     @InjectMocks
     private SalaryInfoUseCase salaryInfoUseCase;
 
@@ -53,18 +47,26 @@ class SalaryInfoUseCaseTest {
     @DisplayName("정산 예정 금액 및 날짜 확인")
     void getSalary() {
         LocalDate salaryDate = getSalaryDate();
-        Salary salary = new Salary(1L, FALSE, senior, null, 10000, salaryDate, null, "bank", "1234", "holder");
+        Mentoring mentoring = new Mentoring(1L, user, senior
+                , "a", "b", "c"
+                , 40, 40, DONE
+                , LocalDateTime.now(), LocalDateTime.now());
+        Salary salary1 = new Salary(1L, FALSE, senior, mentoring, salaryDate, null);
+        Salary salary2 = new Salary(2L, FALSE, senior, mentoring, salaryDate, null);
+        Salary salary3 = new Salary(3L, FALSE, senior, mentoring, salaryDate, null);
+        List<Salary> salaries = List.of(salary1, salary2, salary3);
+        int amount = getAmount(salaries);
 
         given(seniorGetService.byUser(user))
                 .willReturn(senior);
-        given(salaryGetService.bySenior(senior))
-                .willReturn(salary);
+        given(salaryGetService.bySeniorAndSalaryDate(senior, salaryDate))
+                .willReturn(salaries);
 
-        SalaryInfoResponse salaryInfoResponse = salaryInfoUseCase.getSalary(user);
+        SalaryInfoResponse salary = salaryInfoUseCase.getSalary(user);
 
-        assertThat(salaryInfoResponse.salaryAmount())
-                .isEqualTo(salary.getTotalAmount());
-        assertThat(salaryInfoResponse.salaryDate())
+        assertThat(salary.salaryAmount())
+                .isEqualTo(amount);
+        assertThat(salary.salaryDate())
                 .isEqualTo(salaryDate);
     }
 
@@ -72,50 +74,42 @@ class SalaryInfoUseCaseTest {
     @DisplayName("정산 예정 금액 및 날짜 확인 - 0원")
     void getSalaryWithZero() {
         LocalDate salaryDate = getSalaryDate();
-        Salary salary = new Salary(1L, FALSE, senior, null, 0, salaryDate, null, "bank", "1234", "holder");
+        List<Salary> salaries = List.of();
 
         given(seniorGetService.byUser(user))
                 .willReturn(senior);
-        given(salaryGetService.bySenior(senior))
-                .willReturn(salary);
+        given(salaryGetService.bySeniorAndSalaryDate(senior, salaryDate))
+                .willReturn(salaries);
 
-        SalaryInfoResponse salaryInfoResponse = salaryInfoUseCase.getSalary(user);
+        SalaryInfoResponse salary = salaryInfoUseCase.getSalary(user);
 
-        assertThat(salaryInfoResponse.salaryAmount())
+        assertThat(salary.salaryAmount())
                 .isEqualTo(0);
-        assertThat(salaryInfoResponse.salaryDate())
+        assertThat(salary.salaryDate())
                 .isEqualTo(salaryDate);
     }
 
     @Test
     @DisplayName("정산 내역 확인")
     void getSalaryDetail() {
-        Mentoring mentoring1 = new Mentoring(1L, user, senior
+        LocalDate salaryDate = getSalaryDate();
+        Mentoring mentoring = new Mentoring(1L, user, senior
                 , "a", "b", "c"
-                , 40,  DONE
+                , 40, 40, DONE
                 , LocalDateTime.now(), LocalDateTime.now());
-        Mentoring mentoring2 = new Mentoring(2L, user, senior
-                , "a", "b", "c"
-                , 40,  DONE
-                , LocalDateTime.now(), LocalDateTime.now());
-        Mentoring mentoring3 = new Mentoring(3L, user, senior
-                , "a", "b", "c"
-                , 40,  DONE
-                , LocalDateTime.now(), LocalDateTime.now());
-        Salary salary = mock(Salary.class);
-        Payment payment1 = new Payment(1L, mentoring1, salary, 1000, "a", "a", LocalDateTime.now(), LocalDateTime.now(), Status.DONE);
-        Payment payment2 = new Payment(2L, mentoring2, salary, 1000, "a", "a", LocalDateTime.now(), LocalDateTime.now(), Status.DONE);
-        Payment payment3 = new Payment(3L, mentoring3, salary, 1000, "a", "a", LocalDateTime.now(), LocalDateTime.now(), Status.DONE);
-        List<Payment> payments = List.of(payment1, payment2, payment3);
+        Salary salary1 = new Salary(1L, FALSE, senior, mentoring, salaryDate, null);
+        Salary salary2 = new Salary(2L, FALSE, senior, mentoring, salaryDate, null);
+        Salary salary3 = new Salary(3L, FALSE, senior, mentoring, salaryDate, null);
+        List<Salary> salaries = List.of(salary1, salary2, salary3);
 
         given(seniorGetService.byUser(user))
                 .willReturn(senior);
-        given(paymentGetService.bySeniorAndStatus(senior, FALSE))
-                .willReturn(payments);
+        given(salaryGetService.bySeniorAndStatus(senior, FALSE))
+                .willReturn(salaries);
 
         SalaryDetailsResponse salaryDetail = salaryInfoUseCase.getSalaryDetail(user, FALSE);
 
         assertThat(salaryDetail.salaryDetails().size())
-                .isEqualTo(payments.size());
+                .isEqualTo(salaries.size());
     }
 }

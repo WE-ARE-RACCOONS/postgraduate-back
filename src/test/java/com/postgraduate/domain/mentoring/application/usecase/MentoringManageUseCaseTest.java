@@ -4,7 +4,6 @@ import com.postgraduate.domain.account.domain.entity.Account;
 import com.postgraduate.domain.account.domain.service.AccountGetService;
 import com.postgraduate.domain.mentoring.application.dto.req.MentoringDateRequest;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
-import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
 import com.postgraduate.domain.mentoring.domain.service.MentoringUpdateService;
 import com.postgraduate.domain.mentoring.exception.MentoringNotExpectedException;
 import com.postgraduate.domain.mentoring.exception.MentoringNotWaitingException;
@@ -12,9 +11,7 @@ import com.postgraduate.domain.refuse.application.dto.req.MentoringRefuseRequest
 import com.postgraduate.domain.refuse.domain.entity.Refuse;
 import com.postgraduate.domain.refuse.domain.service.RefuseSaveService;
 import com.postgraduate.domain.salary.domain.entity.Salary;
-import com.postgraduate.domain.salary.domain.service.SalaryGetService;
 import com.postgraduate.domain.salary.domain.service.SalarySaveService;
-import com.postgraduate.domain.salary.domain.service.SalaryUpdateService;
 import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
@@ -54,9 +51,6 @@ class MentoringManageUseCaseTest {
     private MentoringUpdateService mentoringUpdateService;
 
     @Mock
-    private MentoringGetService mentoringGetServicel;
-
-    @Mock
     private RefuseSaveService refuseSaveService;
 
     @Mock
@@ -66,10 +60,7 @@ class MentoringManageUseCaseTest {
     private SeniorGetService seniorGetService;
 
     @Mock
-    private SalaryGetService salaryGetService;
-
-    @Mock
-    private SalaryUpdateService salaryUpdateService;
+    private SalarySaveService salarySaveService;
 
     @InjectMocks
     private MentoringManageUseCase mentoringManageUseCase;
@@ -97,7 +88,7 @@ class MentoringManageUseCaseTest {
     void updateCancel() {
         Mentoring mentoring = new Mentoring(mentoringId, user, senior
                 , "a", "b", "c"
-                , 40, WAITING
+                , 40, 40, WAITING
                 , LocalDateTime.now(), LocalDateTime.now());
 
         given(checkIsMyMentoringUseCase.byUser(user, mentoringId))
@@ -113,7 +104,7 @@ class MentoringManageUseCaseTest {
     void updateCancelFailWithExpected() {
         Mentoring mentoring = new Mentoring(mentoringId, user, senior
                 , "a", "b", "c"
-                , 40, EXPECTED
+                , 40, 40, EXPECTED
                 , LocalDateTime.now(), LocalDateTime.now());
 
         given(checkIsMyMentoringUseCase.byUser(user, mentoringId))
@@ -128,7 +119,7 @@ class MentoringManageUseCaseTest {
     void updateCancelFailWithDone() {
         Mentoring mentoring = new Mentoring(mentoringId, user, senior
                 , "a", "b", "c"
-                , 40, DONE
+                , 40, 40, DONE
                 , LocalDateTime.now(), LocalDateTime.now());
 
         given(checkIsMyMentoringUseCase.byUser(user, mentoringId))
@@ -142,8 +133,8 @@ class MentoringManageUseCaseTest {
     @DisplayName("DONE 상태 변경 실패 테스트 - DONE")
     void updateDoneFailWithDone() {
         Mentoring mentoring = new Mentoring(mentoringId, user, senior
-                , "a", "b", "c",
-                40, DONE
+                , "a", "b", "c"
+                , 40, 40, DONE
                 , LocalDateTime.now(), LocalDateTime.now());
 
         given(checkIsMyMentoringUseCase.byUser(user, mentoringId))
@@ -158,7 +149,7 @@ class MentoringManageUseCaseTest {
     void updateDoneFailWithWaiting() {
         Mentoring mentoring = new Mentoring(mentoringId, user, senior
                 , "a", "b", "c"
-                , 40, WAITING
+                , 40, 40, WAITING
                 , LocalDateTime.now(), LocalDateTime.now());
 
         given(checkIsMyMentoringUseCase.byUser(user, mentoringId))
@@ -173,16 +164,14 @@ class MentoringManageUseCaseTest {
     void updateDone() {
         Mentoring mentoring = new Mentoring(mentoringId, user, senior
                 , "a", "b", "c"
-                , 40, EXPECTED
+                , 40, 40, EXPECTED
                 , LocalDateTime.now(), LocalDateTime.now());
-        Salary salary = mock(Salary.class);
+
         given(checkIsMyMentoringUseCase.byUser(user, mentoringId))
                 .willReturn(mentoring);
-        given(salaryGetService.bySenior(mentoring.getSenior()))
-                .willReturn(salary);
         mentoringManageUseCase.updateDone(user, mentoringId);
 
-        verify(salaryUpdateService).updateTotalAmount(salary);
+        verify(salarySaveService).saveSalary(any(Salary.class));
         verify(mentoringUpdateService).updateStatus(mentoring, DONE);
     }
 
@@ -192,7 +181,7 @@ class MentoringManageUseCaseTest {
         MentoringRefuseRequest request = new MentoringRefuseRequest("abc");
         Mentoring mentoring = new Mentoring(mentoringId, user, senior
                 , "a", "b", "c"
-                , 40, WAITING
+                , 40, 40, WAITING
                 , LocalDateTime.now(), LocalDateTime.now());
 
         given(seniorGetService.byUser(user))
@@ -212,7 +201,7 @@ class MentoringManageUseCaseTest {
         MentoringRefuseRequest request = new MentoringRefuseRequest("abc");
         Mentoring mentoring = new Mentoring(mentoringId, user, senior
                 , "a", "b", "c"
-                , 40, EXPECTED
+                , 40, 40, EXPECTED
                 , LocalDateTime.now(), LocalDateTime.now());
 
         given(seniorGetService.byUser(user))
@@ -230,7 +219,7 @@ class MentoringManageUseCaseTest {
         MentoringRefuseRequest request = new MentoringRefuseRequest("abc");
         Mentoring mentoring = new Mentoring(mentoringId, user, senior
                 , "a", "b", "c"
-                , 40, DONE
+                , 40, 40, DONE
                 , LocalDateTime.now(), LocalDateTime.now());
 
         given(seniorGetService.byUser(user))
@@ -248,7 +237,7 @@ class MentoringManageUseCaseTest {
         MentoringDateRequest dateRequest = new MentoringDateRequest("2023-12-12");
         Mentoring mentoring = new Mentoring(mentoringId, user, senior
                 , "a", "b", "c"
-                , 40, WAITING
+                , 40, 40, WAITING
                 , LocalDateTime.now(), LocalDateTime.now());
 
         given(seniorGetService.byUser(user)).willReturn(senior);
@@ -269,7 +258,7 @@ class MentoringManageUseCaseTest {
         MentoringDateRequest dateRequest = new MentoringDateRequest("2023-12-12");
         Mentoring mentoring = new Mentoring(mentoringId, user, senior
                 , "a", "b", "c"
-                , 40, WAITING
+                , 40, 40, WAITING
                 , LocalDateTime.now(), LocalDateTime.now());
 
         given(seniorGetService.byUser(user))
@@ -292,7 +281,7 @@ class MentoringManageUseCaseTest {
         MentoringDateRequest dateRequest = new MentoringDateRequest("2023-12-12");
         Mentoring mentoring = new Mentoring(mentoringId, user, senior
                 , "a", "b", "c"
-                , 40, EXPECTED
+                , 40, 40, EXPECTED
                 , LocalDateTime.now(), LocalDateTime.now());
 
         given(seniorGetService.byUser(user))
@@ -310,7 +299,7 @@ class MentoringManageUseCaseTest {
         MentoringDateRequest dateRequest = new MentoringDateRequest("2023-12-12");
         Mentoring mentoring = new Mentoring(mentoringId, user, senior
                 , "a", "b", "c"
-                , 40, DONE
+                , 40, 40, DONE
                 , LocalDateTime.now(), LocalDateTime.now());
 
         given(seniorGetService.byUser(user))

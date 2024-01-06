@@ -1,6 +1,5 @@
 package com.postgraduate.domain.mentoring.domain.service;
 
-import com.postgraduate.domain.mentoring.application.dto.DoneSeniorMentoringInfo;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.entity.constant.Status;
 import com.postgraduate.domain.mentoring.domain.repository.MentoringRepository;
@@ -13,6 +12,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static java.lang.Boolean.FALSE;
+
 @Service
 @RequiredArgsConstructor
 public class MentoringGetService {
@@ -24,10 +25,6 @@ public class MentoringGetService {
 
     public List<Mentoring> mentoringBySenior(Senior senior, Status status) {
         return mentoringRepository.findAllBySeniorAndStatus(senior, status);
-    }
-
-    public List<DoneSeniorMentoringInfo> mentoringBySenior(Senior senior) {
-        return mentoringRepository.findAllBySeniorAndDone(senior);
     }
 
     public Mentoring byMentoringId(Long mentoringId) {
