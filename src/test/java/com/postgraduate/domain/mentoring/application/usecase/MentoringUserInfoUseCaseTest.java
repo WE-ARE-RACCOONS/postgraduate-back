@@ -3,7 +3,7 @@ package com.postgraduate.domain.mentoring.application.usecase;
 import com.postgraduate.domain.mentoring.application.dto.res.AppliedMentoringResponse;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
-import com.postgraduate.domain.mentoring.exception.MentoringDoneException;
+import com.postgraduate.domain.mentoring.exception.MentoringDetailNotFoundException;
 import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
@@ -23,7 +23,6 @@ import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.*;
 import static com.postgraduate.domain.senior.domain.entity.constant.Status.APPROVE;
 import static com.postgraduate.domain.user.domain.entity.constant.Role.USER;
 import static java.lang.Boolean.TRUE;
-import static java.time.LocalDate.now;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
@@ -63,7 +62,7 @@ class MentoringUserInfoUseCaseTest {
     void getMentoringDetail() {
         mentoring = new Mentoring(mentoringId, user, senior
                 , "a", "b", "c"
-                , 40, 40, EXPECTED
+                , 40, EXPECTED
                 , LocalDateTime.now(), LocalDateTime.now());
 
         given(checkIsMyMentoringUseCase.byUser(user, mentoringId))
@@ -74,18 +73,48 @@ class MentoringUserInfoUseCaseTest {
     }
 
     @Test
-    @DisplayName("Detail 반환 실패 테스트")
-    void getMentoringDetailFail() {
+    @DisplayName("Detail 반환 실패 테스트 - DONE")
+    void getMentoringDetailFailWithDone() {
         mentoring = new Mentoring(mentoringId, user, senior
                 , "a", "b", "c"
-                , 40, 40, DONE
+                , 40, DONE
                 , LocalDateTime.now(), LocalDateTime.now());
 
         given(checkIsMyMentoringUseCase.byUser(user, mentoringId))
                 .willReturn(mentoring);
 
         assertThatThrownBy(() -> mentoringUserInfoUseCase.getMentoringDetail(user, mentoringId))
-                .isInstanceOf(MentoringDoneException.class);
+                .isInstanceOf(MentoringDetailNotFoundException.class);
+    }
+
+    @Test
+    @DisplayName("Detail 반환 실패 테스트 - REFUSE")
+    void getMentoringDetailFailWithRefuse() {
+        mentoring = new Mentoring(mentoringId, user, senior
+                , "a", "b", "c"
+                , 40, REFUSE
+                , LocalDateTime.now(), LocalDateTime.now());
+
+        given(checkIsMyMentoringUseCase.byUser(user, mentoringId))
+                .willReturn(mentoring);
+
+        assertThatThrownBy(() -> mentoringUserInfoUseCase.getMentoringDetail(user, mentoringId))
+                .isInstanceOf(MentoringDetailNotFoundException.class);
+    }
+
+    @Test
+    @DisplayName("Detail 반환 실패 테스트 - CANCEL")
+    void getMentoringDetailFailWithCancel() {
+        mentoring = new Mentoring(mentoringId, user, senior
+                , "a", "b", "c"
+                , 40, CANCEL
+                , LocalDateTime.now(), LocalDateTime.now());
+
+        given(checkIsMyMentoringUseCase.byUser(user, mentoringId))
+                .willReturn(mentoring);
+
+        assertThatThrownBy(() -> mentoringUserInfoUseCase.getMentoringDetail(user, mentoringId))
+                .isInstanceOf(MentoringDetailNotFoundException.class);
     }
 
     @Test
@@ -93,17 +122,17 @@ class MentoringUserInfoUseCaseTest {
     void getWaiting() {
         Mentoring mentoring1 = new Mentoring(1L, user, senior
                 , "a", "b", "c"
-                , 40, 40, WAITING
+                , 40,  WAITING
                 , LocalDateTime.now(), LocalDateTime.now());
 
         Mentoring mentoring2 = new Mentoring(2L, user, senior
                 , "a", "b", "c"
-                , 40, 40, WAITING
+                , 40,  WAITING
                 , LocalDateTime.now(), LocalDateTime.now());
 
         Mentoring mentoring3 = new Mentoring(3L, user, senior
                 , "a", "b", "c"
-                , 40, 40, WAITING
+                , 40,  WAITING
                 , LocalDateTime.now(), LocalDateTime.now());
         List<Mentoring> mentorings = List.of(mentoring1, mentoring2, mentoring3);
 
@@ -121,17 +150,17 @@ class MentoringUserInfoUseCaseTest {
     void getExpected() {
         Mentoring mentoring1 = new Mentoring(1L, user, senior
                 , "a", "b", "c"
-                , 40, 40, EXPECTED
+                , 40,  EXPECTED
                 , LocalDateTime.now(), LocalDateTime.now());
 
         Mentoring mentoring2 = new Mentoring(2L, user, senior
                 , "a", "b", "c"
-                , 40, 40, EXPECTED
+                , 40,  EXPECTED
                 , LocalDateTime.now(), LocalDateTime.now());
 
         Mentoring mentoring3 = new Mentoring(3L, user, senior
                 , "a", "b", "c"
-                , 40, 40, EXPECTED
+                , 40,  EXPECTED
                 , LocalDateTime.now(), LocalDateTime.now());
         List<Mentoring> mentorings = List.of(mentoring1, mentoring2, mentoring3);
 
@@ -149,17 +178,17 @@ class MentoringUserInfoUseCaseTest {
     void getDone() {
         Mentoring mentoring1 = new Mentoring(1L, user, senior
                 , "a", "b", "c"
-                , 40, 40, DONE
+                , 40,  DONE
                 , LocalDateTime.now(), LocalDateTime.now());
 
         Mentoring mentoring2 = new Mentoring(2L, user, senior
                 , "a", "b", "c"
-                , 40, 40, DONE
+                , 40,  DONE
                 , LocalDateTime.now(), LocalDateTime.now());
 
         Mentoring mentoring3 = new Mentoring(3L, user, senior
                 , "a", "b", "c"
-                , 40, 40, DONE
+                , 40,  DONE
                 , LocalDateTime.now(), LocalDateTime.now());
         List<Mentoring> mentorings = List.of(mentoring1, mentoring2, mentoring3);
 

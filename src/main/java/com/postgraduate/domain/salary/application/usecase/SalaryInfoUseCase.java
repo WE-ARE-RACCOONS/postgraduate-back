@@ -1,5 +1,7 @@
 package com.postgraduate.domain.salary.application.usecase;
 
+import com.postgraduate.domain.payment.domain.entity.Payment;
+import com.postgraduate.domain.payment.domain.service.PaymentGetService;
 import com.postgraduate.domain.salary.application.dto.SalaryDetails;
 import com.postgraduate.domain.salary.application.dto.res.SalaryDetailsResponse;
 import com.postgraduate.domain.salary.application.dto.res.SalaryInfoResponse;
@@ -16,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 
-import static com.postgraduate.domain.salary.util.SalaryUtil.getAmount;
 import static com.postgraduate.domain.salary.util.SalaryUtil.getSalaryDate;
 
 @Service
@@ -25,20 +26,21 @@ import static com.postgraduate.domain.salary.util.SalaryUtil.getSalaryDate;
 public class SalaryInfoUseCase {
     private final SeniorGetService seniorGetService;
     private final SalaryGetService salaryGetService;
+    private final PaymentGetService paymentGetService;
 
     public SalaryInfoResponse getSalary(User user) {
         Senior senior = seniorGetService.byUser(user);
         LocalDate salaryDate = getSalaryDate();
-        List<Salary> salaries = salaryGetService.bySeniorAndSalaryDate(senior, salaryDate);
-        int amount = getAmount(salaries);
-        return new SalaryInfoResponse(salaryDate, amount); //TODO 수수료
+        Salary salary = salaryGetService.bySenior(senior);
+        int amount = salary.getTotalAmount();
+        return new SalaryInfoResponse(salaryDate, amount);
     }
 
     public SalaryDetailsResponse getSalaryDetail(User user, Boolean status) {
         Senior senior = seniorGetService.byUser(user);
-        List<Salary> salaries = salaryGetService.bySeniorAndStatus(senior, status);
-        List<SalaryDetails> salaryDetails = salaries.stream()
-                .map(SalaryMapper::mapToSalaryDetail)
+        List<Payment> payments = paymentGetService.bySeniorAndStatus(senior, status);
+        List<SalaryDetails> salaryDetails = payments.stream()
+                .map(payment -> SalaryMapper.mapToSalaryDetail(payment.getSalary(), payment))
                 .toList();
         return new SalaryDetailsResponse(salaryDetails);
     }
