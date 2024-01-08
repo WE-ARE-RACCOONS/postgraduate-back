@@ -2,7 +2,6 @@ package com.postgraduate.domain.wish.domain.repository;
 
 import com.postgraduate.domain.wish.domain.entity.Wish;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -13,6 +12,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.List;
 
+import static com.postgraduate.domain.user.domain.entity.QUser.user;
 import static com.postgraduate.domain.wish.domain.entity.QWish.wish;
 import static com.querydsl.core.types.dsl.Expressions.FALSE;
 
@@ -23,18 +23,25 @@ public class WishDslRepositoryImpl implements WishDslRepository {
 
     @Override
     public Page<Wish> findAllBySearchWish(String search, Pageable pageable) {
-        JPAQuery<Wish> query = queryFactory.selectFrom(wish)
+        List<Wish> wishes = queryFactory.selectFrom(wish)
+                .distinct()
+                .join(wish.user, user)
+                .fetchJoin()
                 .where(
                         searchLike(search),
                         wish.user.isDelete.eq(FALSE)
                 )
-                .orderBy(wish.user.createdAt.desc());
-
-        List<Wish> wishes = query.offset(pageable.getOffset())
+                .orderBy(wish.user.createdAt.desc()).offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        long total = query.fetchCount();
+        Long total = queryFactory.select(wish.count())
+                .from(wish)
+                .where(
+                        searchLike(search),
+                        wish.user.isDelete.eq(FALSE)
+                )
+                .fetchOne();
 
         return new PageImpl<>(wishes, pageable, total);
     }

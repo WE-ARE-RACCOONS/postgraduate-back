@@ -4,8 +4,6 @@ import com.postgraduate.domain.senior.application.dto.req.SeniorMyPageUserAccoun
 import com.postgraduate.domain.user.application.dto.req.UserInfoRequest;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.entity.constant.Role;
-import com.postgraduate.domain.user.domain.repository.UserRepository;
-import com.postgraduate.domain.user.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,9 +20,9 @@ public class UserUpdateService {
 
     public void updateInfo(User user, UserInfoRequest userInfoRequest) {
         user.updateInfo(
-                userInfoRequest.getProfile(),
-                userInfoRequest.getNickName(),
-                userInfoRequest.getPhoneNumber()
+                userInfoRequest.profile(),
+                userInfoRequest.nickName(),
+                userInfoRequest.phoneNumber()
         );
     }
 

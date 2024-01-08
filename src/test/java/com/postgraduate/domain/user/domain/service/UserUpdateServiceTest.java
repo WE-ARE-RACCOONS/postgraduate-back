@@ -2,16 +2,12 @@ package com.postgraduate.domain.user.domain.service;
 
 import com.postgraduate.domain.senior.application.dto.req.SeniorMyPageUserAccountRequest;
 import com.postgraduate.domain.user.application.dto.req.UserInfoRequest;
-import com.postgraduate.domain.user.application.dto.res.UserInfoResponse;
 import com.postgraduate.domain.user.domain.entity.User;
-import com.postgraduate.domain.user.domain.repository.UserRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static com.postgraduate.domain.user.domain.entity.constant.Role.*;
@@ -19,7 +15,6 @@ import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.time.LocalDateTime.now;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserUpdateServiceTest {
@@ -61,11 +56,11 @@ class UserUpdateServiceTest {
         userUpdateService.updateInfo(user, request);
 
         assertThat(user.getProfile())
-                .isEqualTo(request.getProfile());
+                .isEqualTo(request.profile());
         assertThat(user.getProfile())
-                .isEqualTo(request.getProfile());
+                .isEqualTo(request.profile());
         assertThat(user.getProfile())
-                .isEqualTo(request.getProfile());
+                .isEqualTo(request.profile());
     }
 
     @Test

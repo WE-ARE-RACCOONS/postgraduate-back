@@ -1,6 +1,7 @@
 package com.postgraduate.domain.senior.domain.repository;
 
 import com.postgraduate.domain.senior.domain.entity.Senior;
+import com.postgraduate.domain.user.domain.entity.QUser;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -15,14 +16,16 @@ import org.springframework.util.StringUtils;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
-import static com.postgraduate.domain.account.domain.entity.QAccount.account;
 import static com.postgraduate.domain.senior.domain.entity.QSenior.senior;
 import static com.postgraduate.domain.senior.domain.entity.constant.Status.APPROVE;
+import static com.postgraduate.domain.user.domain.entity.QUser.user;
 import static com.querydsl.core.types.Order.ASC;
 import static com.querydsl.core.types.Order.DESC;
 import static com.querydsl.core.types.dsl.Expressions.FALSE;
 import static com.querydsl.core.types.dsl.Expressions.TRUE;
+import static java.util.Optional.ofNullable;
 
 @RequiredArgsConstructor
 @Repository
@@ -31,20 +34,32 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
 
     @Override
     public Page<Senior> findAllBySearchSenior(String search, String sort, Pageable pageable) {
-        JPAQuery<Senior> query = queryFactory.selectFrom(senior)
+        List<Senior> seniors = queryFactory.selectFrom(senior)
+                .distinct()
+                .leftJoin(senior.user, user)
+                .fetchJoin()
                 .where(
                         senior.info.totalInfo.like("%" + search + "%"),
                         senior.status.eq(APPROVE),
                         senior.user.isDelete.eq(FALSE)
                 )
                 .orderBy(orderSpecifier(sort))
-                .orderBy(senior.user.nickName.asc());
-
-        List<Senior> seniors = query.offset(pageable.getOffset())
+                .orderBy(senior.user.nickName.asc()).
+                offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        long total = query.fetchCount();
+        Long total = queryFactory.select(senior.count())
+                .from(senior)
+                .distinct()
+                .leftJoin(senior.user, user)
+                .where(
+                        senior.info.totalInfo.like("%" + search + "%"),
+                        senior.status.eq(APPROVE),
+                        senior.user.isDelete.eq(FALSE)
+                )
+                .fetchOne();
+
 
         return new PageImpl<>(seniors, pageable, total);
     }
@@ -59,7 +74,10 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
 
     @Override
     public Page<Senior> findAllByFieldSenior(String field, String postgradu, Pageable pageable) {
-        JPAQuery<Senior> query = queryFactory.selectFrom(senior)
+        List<Senior> seniors = queryFactory.selectFrom(senior)
+                .distinct()
+                .leftJoin(senior.user, user)
+                .fetchJoin()
                 .where(
                         fieldSpecifier(field),
                         postgraduSpecifier(postgradu),
@@ -67,21 +85,38 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
                         senior.user.isDelete.eq(FALSE)
                 )
                 .orderBy(senior.hit.desc())
-                .orderBy(senior.user.nickName.asc());
-
-        List<Senior> seniors = query.offset(pageable.getOffset())
+                .orderBy(senior.user.nickName.asc())
+                .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        long total = query.fetchCount();
+        Long total = queryFactory.select(senior.count())
+                .from(senior)
+                .distinct()
+                .leftJoin(senior.user, user)
+                .where(
+                        fieldSpecifier(field),
+                        postgraduSpecifier(postgradu),
+                        senior.status.eq(APPROVE),
+                        senior.user.isDelete.eq(FALSE)
+                )
+                .fetchOne();
 
         return new PageImpl<>(seniors, pageable, total);
     }
 
-    private BooleanExpression fieldSpecifier(String field) {
-        if (field.equals("others"))
-            return senior.info.etcField.isTrue();
-        return senior.info.field.like("%"+field+"%");
+    private BooleanExpression fieldSpecifier(String fields) {
+        String[] field = fields.split(",");
+        if (fields.contains("others"))
+            return Arrays.stream(field)
+                    .map(fieldName -> senior.info.etcField.isTrue()
+                            .or(senior.info.field.like("%"+fieldName+"%")))
+                    .reduce(BooleanExpression::or)
+                    .orElse(FALSE);
+        return Arrays.stream(field)
+                .map(fieldName -> (senior.info.field.like("%"+fieldName+"%")))
+                .reduce(BooleanExpression::or)
+                .orElse(FALSE);
     }
 
     private BooleanExpression postgraduSpecifier(String postgradu) {
@@ -105,19 +140,29 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
     }
 
     @Override
-    public Page<Senior> findAllBySearchSenior(String search, Pageable pageable) {
-        JPAQuery<Senior> query = queryFactory.selectFrom(senior)
+    public Page<Senior> findAllBySearchSeniorWithAdmin(String search, Pageable pageable) {
+        List<Senior> seniors = queryFactory.selectFrom(senior)
                 .where(
                         searchLike(search),
                         senior.user.isDelete.eq(FALSE)
                 )
-                .orderBy(senior.createdAt.desc());
-
-        List<Senior> seniors = query.offset(pageable.getOffset())
+                .distinct()
+                .innerJoin(senior.user, user)
+                .fetchJoin()
+                .orderBy(senior.createdAt.desc())
+                .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        long total = query.fetchCount();
+        Long total = queryFactory.select(senior.count())
+                .from(senior)
+                .where(
+                        searchLike(search),
+                        senior.user.isDelete.eq(FALSE)
+                )
+                .distinct()
+                .innerJoin(senior.user, user)
+                .fetchOne();
 
         return new PageImpl<>(seniors, pageable, total);
     }
@@ -128,5 +173,20 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
                     .or(senior.user.nickName.contains(search));
         }
         return null;
+    }
+
+    @Override
+    public Optional<Senior> findBySeniorId(Long seniorId) {
+        return ofNullable(queryFactory.selectFrom(senior)
+                .distinct()
+                .leftJoin(senior.user, user)
+                .fetchJoin()
+                .where(
+                        senior.seniorId.eq(seniorId),
+                        senior.profile.isNotNull(),
+                        senior.status.eq(APPROVE)
+                        ,senior.user.isDelete.isFalse()
+                )
+                .fetchOne());
     }
 }

@@ -1,8 +1,8 @@
 package com.postgraduate.domain.payment.domain.repository;
 
 import com.postgraduate.domain.payment.domain.entity.Payment;
+import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -13,7 +13,10 @@ import org.springframework.util.StringUtils;
 
 import java.util.List;
 
+import static com.postgraduate.domain.mentoring.domain.entity.QMentoring.mentoring;
 import static com.postgraduate.domain.payment.domain.entity.QPayment.payment;
+import static com.postgraduate.domain.salary.domain.entity.QSalary.salary;
+import static com.postgraduate.domain.user.domain.entity.QUser.user;
 import static com.querydsl.core.types.dsl.Expressions.FALSE;
 
 @Repository
@@ -22,21 +25,48 @@ public class PaymentDslRepositoryImpl implements PaymentDslRepository {
     private final JPAQueryFactory queryFactory;
 
     @Override
+    public List<Payment> findAllBySeniorAndStatus(Senior senior, Boolean status) {
+        return queryFactory.selectFrom(payment)
+                .where(
+                        payment.mentoring.senior.eq(senior),
+                        payment.salary.status.eq(status)
+                )
+                .join(payment.salary, salary)
+                .fetchJoin()
+                .join(payment.mentoring, mentoring)
+                .fetchJoin()
+                .join(payment.mentoring.user, user)
+                .fetchJoin()
+                .orderBy(payment.salary.salaryDate.desc(), payment.mentoring.updatedAt.desc())
+                .fetch();
+    }
+
+    @Override
     public Page<Payment> findAllBySearchPayment(String search, Pageable pageable) {
-        JPAQuery<Payment> query = queryFactory.selectFrom(payment)
+        List<Payment> payments = queryFactory.selectFrom(payment)
                 .where(
                         searchLike(search),
                         payment.mentoring.user.isDelete.eq(FALSE)
                 )
-                .orderBy(payment.createdAt.desc());
-
-        List<Payment> seniors = query.offset(pageable.getOffset())
+                .join(payment.mentoring, mentoring)
+                .fetchJoin()
+                .join(payment.mentoring.user, user)
+                .fetchJoin()
+                .orderBy(payment.paidAt.desc())
+                .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        long total = query.fetchCount();
+        Long total = queryFactory.select(payment.count())
+                .distinct()
+                .from(payment)
+                .where(
+                        searchLike(search),
+                        payment.mentoring.user.isDelete.eq(FALSE)
+                )
+                .fetchOne();
 
-        return new PageImpl<>(seniors, pageable, total);
+        return new PageImpl<>(payments, pageable, total);
     }
 
 

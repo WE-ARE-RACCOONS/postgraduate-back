@@ -5,6 +5,7 @@ import com.postgraduate.domain.mentoring.application.dto.req.MentoringApplyReque
 import com.postgraduate.domain.mentoring.application.dto.res.AppliedMentoringDetailResponse;
 import com.postgraduate.domain.mentoring.application.dto.res.SeniorMentoringDetailResponse;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
+import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Profile;
@@ -102,7 +103,8 @@ public class MentoringMapper {
                 mentoring.getDate());
     }
 
-    public static DoneSeniorMentoringInfo mapToSeniorDoneInfo(Mentoring mentoring, Salary salary) {
+    public static DoneSeniorMentoringInfo mapToSeniorDoneInfo(Mentoring mentoring, Payment payment) {
+        Salary salary = payment.getSalary();
         User user = mentoring.getUser();
         return new DoneSeniorMentoringInfo(mentoring.getMentoringId(),
                 user.getProfile(), user.getNickName(),

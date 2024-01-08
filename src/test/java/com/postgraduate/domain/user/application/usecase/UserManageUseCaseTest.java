@@ -6,19 +6,14 @@ import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.service.UserGetService;
 import com.postgraduate.domain.user.domain.service.UserUpdateService;
 import com.postgraduate.domain.user.exception.PhoneNumberException;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 
@@ -41,7 +36,7 @@ class UserManageUseCaseTest {
 
         doThrow(PhoneNumberException.class)
                 .when(userUtils)
-                .checkPhoneNumber(request.getPhoneNumber());
+                .checkPhoneNumber(request.phoneNumber());
 
         assertThatThrownBy(() -> userManageUseCase.updateInfo(user, request))
                 .isInstanceOf(PhoneNumberException.class);

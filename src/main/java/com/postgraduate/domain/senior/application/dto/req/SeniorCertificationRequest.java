@@ -1,8 +1,8 @@
 package com.postgraduate.domain.senior.application.dto.req;
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 
 public record SeniorCertificationRequest(
-        @NotNull
+        @NotBlank
         String certification
 ) { }

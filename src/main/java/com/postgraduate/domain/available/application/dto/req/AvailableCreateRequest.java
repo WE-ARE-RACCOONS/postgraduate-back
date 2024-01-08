@@ -1,5 +1,5 @@
 package com.postgraduate.domain.available.application.dto.req;
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 
-public record AvailableCreateRequest(@NotNull String day, @NotNull String startTime, @NotNull String endTime) {}
+public record AvailableCreateRequest(@NotBlank String day, @NotBlank String startTime, @NotBlank String endTime) {}

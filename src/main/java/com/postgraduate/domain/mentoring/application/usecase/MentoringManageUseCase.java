@@ -12,10 +12,9 @@ import com.postgraduate.domain.refuse.application.dto.req.MentoringRefuseRequest
 import com.postgraduate.domain.refuse.application.mapper.RefuseMapper;
 import com.postgraduate.domain.refuse.domain.entity.Refuse;
 import com.postgraduate.domain.refuse.domain.service.RefuseSaveService;
-import com.postgraduate.domain.salary.application.mapper.SalaryMapper;
 import com.postgraduate.domain.salary.domain.entity.Salary;
-import com.postgraduate.domain.salary.domain.service.SalarySaveService;
-import com.postgraduate.domain.salary.util.SalaryUtil;
+import com.postgraduate.domain.salary.domain.service.SalaryGetService;
+import com.postgraduate.domain.salary.domain.service.SalaryUpdateService;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.domain.user.domain.entity.User;
@@ -24,7 +23,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -39,9 +37,10 @@ public class MentoringManageUseCase {
     private final MentoringUpdateService mentoringUpdateService;
     private final MentoringGetService mentoringGetService;
     private final RefuseSaveService refuseSaveService;
-    private final SalarySaveService salarySaveService;
     private final AccountGetService accountGetService;
     private final SeniorGetService seniorGetService;
+    private final SalaryGetService salaryGetService;
+    private final SalaryUpdateService salaryUpdateService;
 
     public void updateCancel(User user, Long mentoringId) {
         Mentoring mentoring = checkIsMyMentoringUseCase.byUser(user, mentoringId);
@@ -54,14 +53,9 @@ public class MentoringManageUseCase {
         Mentoring mentoring = checkIsMyMentoringUseCase.byUser(user, mentoringId);
         if (mentoring.getStatus() != EXPECTED)
             throw new MentoringNotExpectedException();
-        createSalary(mentoring);
+        Salary salary = salaryGetService.bySenior(mentoring.getSenior());
+        salaryUpdateService.updateTotalAmount(salary);
         mentoringUpdateService.updateStatus(mentoring, DONE);
-    }
-
-    private void createSalary(Mentoring mentoring) {
-        LocalDate salaryDate = SalaryUtil.getSalaryDate();
-        Salary salary = SalaryMapper.mapToSalary(mentoring, salaryDate);
-        salarySaveService.saveSalary(salary);
     }
 
     public void updateRefuse(User user, Long mentoringId, MentoringRefuseRequest request) {
@@ -79,7 +73,7 @@ public class MentoringManageUseCase {
         Mentoring mentoring = checkIsMyMentoringUseCase.bySenior(senior, mentoringId);
         if (mentoring.getStatus() != WAITING)
             throw new MentoringNotWaitingException();
-        mentoringUpdateService.updateDate(mentoring, dateRequest.getDate());
+        mentoringUpdateService.updateDate(mentoring, dateRequest.date());
         mentoringUpdateService.updateStatus(mentoring, EXPECTED);
         Optional<Account> account = accountGetService.bySenior(senior);
         return account.isPresent();
@@ -105,8 +99,10 @@ public class MentoringManageUseCase {
         expectedMentorings.stream()
                 .filter(Mentoring::checkAutoDone)
                 .forEach(mentoring -> {
-                    createSalary(mentoring);
                     mentoringUpdateService.updateStatus(mentoring, DONE);
+                    Senior senior = mentoring.getSenior();
+                    Salary salary = salaryGetService.bySenior(senior);
+                    salaryUpdateService.updateTotalAmount(salary);
                     //TODO : 알림 보내거나 나머지 작업
                 });
     }

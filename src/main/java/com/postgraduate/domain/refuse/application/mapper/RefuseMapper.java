@@ -9,7 +9,7 @@ public class RefuseMapper {
     public static Refuse mapToRefuse(Mentoring mentoring, MentoringRefuseRequest request) {
         return Refuse.builder()
                 .mentoring(mentoring)
-                .reason(request.getReason())
+                .reason(request.reason())
                 .build();
     }
 

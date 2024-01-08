@@ -1,12 +1,12 @@
 package com.postgraduate.domain.senior.application.dto.req;
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 
 public record SeniorAccountRequest(
-        @NotNull
+        @NotBlank
         String accountNumber,
-        @NotNull
+        @NotBlank
         String bank,
-        @NotNull
+        @NotBlank
         String accountHolder
 ) { }

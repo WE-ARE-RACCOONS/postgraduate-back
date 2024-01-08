@@ -1,7 +1,6 @@
 package com.postgraduate.domain.senior.domain.service;
 
 import com.postgraduate.domain.senior.domain.entity.Senior;
-import com.postgraduate.domain.senior.domain.entity.constant.Status;
 import com.postgraduate.domain.senior.domain.repository.SeniorRepository;
 import com.postgraduate.domain.senior.exception.NoneSeniorException;
 import com.postgraduate.domain.user.domain.entity.User;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.postgraduate.domain.senior.domain.entity.constant.Status.APPROVE;
 import static java.lang.Boolean.FALSE;
 
 @Service
@@ -23,30 +21,28 @@ public class SeniorGetService {
     private static final int SENIOR_PAGE_SIZE = 10;
     private static final int ADMIN_PAGE_SIZE = 15;
 
+    public List<Senior> all() {
+        return seniorRepository.findAll();
+    }
+
     public Senior byUser(User user) {
         return seniorRepository.findByUser(user).orElseThrow(NoneSeniorException::new);
     }
 
     public Senior bySeniorId(Long seniorId) {
-        return seniorRepository.findBySeniorIdAndUser_IsDelete(seniorId, FALSE).orElseThrow(NoneSeniorException::new);
+        return seniorRepository.findBySeniorIdAndUser_IsDelete(seniorId, FALSE)
+                .orElseThrow(NoneSeniorException::new);
     }
 
     public Senior bySeniorIdWithCertification(Long seniorId) {
-        return seniorRepository.findBySeniorIdAndProfileNotNullAndStatusAndUser_IsDelete(seniorId, APPROVE, FALSE).orElseThrow(NoneSeniorException::new);
-    }
-
-    public List<Senior> byStatus(Status status) {
-        return seniorRepository.findAllByStatus(status);
+        return seniorRepository.findBySeniorId(seniorId)
+                .orElseThrow(NoneSeniorException::new);
     }
 
     public Page<Senior> all(Integer page, String search) {
         page = page == null ? 1 : page;
         Pageable pageable = PageRequest.of(page - 1, ADMIN_PAGE_SIZE);
-        return seniorRepository.findAllBySearchSenior(search, pageable);
-    }
-
-    public List<Senior> all() {
-        return seniorRepository.findAllByUser_IsDelete(FALSE);
+        return seniorRepository.findAllBySearchSeniorWithAdmin(search, pageable);
     }
 
     public Page<Senior> bySearch(String search, Integer page, String sort) {
