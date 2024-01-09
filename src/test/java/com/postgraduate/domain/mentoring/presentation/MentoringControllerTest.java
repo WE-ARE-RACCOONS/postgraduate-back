@@ -1,6 +1,8 @@
 package com.postgraduate.domain.mentoring.presentation;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.postgraduate.IntegrationTest;
+import com.postgraduate.domain.mentoring.application.dto.req.MentoringApplyRequest;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.entity.constant.Status;
 import com.postgraduate.domain.mentoring.domain.repository.MentoringRepository;
@@ -18,19 +20,22 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 
 import java.util.stream.Stream;
 
 import static com.postgraduate.domain.senior.domain.entity.constant.Status.WAITING;
 import static java.time.LocalDateTime.now;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class MentoringControllerTest extends IntegrationTest {
     private static final String AUTHORIZATION = "Authorization";
     private static final String BEARER = "Bearer ";
-
+    @Autowired
+    private ObjectMapper objectMapper;
     @Autowired
     private JwtUtils jwtUtil;
     @Autowired
@@ -130,6 +135,21 @@ class MentoringControllerTest extends IntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value("EX701"))
                 .andExpect(jsonPath("$.message").value("볼 수 없는 신청서 입니다."));
+    }
+
+    @Test
+    @DisplayName("대학생이 멘토링을 신청한다.")
+    void applyMentoring() throws Exception {
+        String request = objectMapper.writeValueAsString(new MentoringApplyRequest(senior.getSeniorId(), "topic", "question", "date1,date2,date3"));
+
+        mvc.perform(post("/mentoring/applying")
+                        .header(AUTHORIZATION, BEARER + accessToken)
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value("MT202"))
+                .andExpect(jsonPath("$.message").value("멘토링 신청에 성공하였습니다."));
     }
 
 }
