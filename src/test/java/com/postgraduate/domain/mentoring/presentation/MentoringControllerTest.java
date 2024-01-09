@@ -15,17 +15,21 @@ import com.postgraduate.global.config.security.jwt.util.JwtUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.test.context.support.WithMockUser;
+
+import java.util.stream.Stream;
 
 import static com.postgraduate.domain.senior.domain.entity.constant.Status.WAITING;
 import static java.time.LocalDateTime.now;
-import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class MentoringControllerTest extends IntegrationTest {
+    private static final String AUTHORIZATION = "Authorization";
+    private static final String BEARER = "Bearer ";
 
     @Autowired
     private JwtUtils jwtUtil;
@@ -37,14 +41,20 @@ class MentoringControllerTest extends IntegrationTest {
     private MentoringRepository mentoringRepository;
     private User user;
     private Senior senior;
-    private Long userId;
     private String accessToken;
+
+    private static Stream<Status> statusProvider() {
+        return Stream.of(Status.DONE, Status.CANCEL, Status.REFUSE);
+    }
+
+    private static Stream<Status> waitingAndDoneProvider() {
+        return Stream.of(Status.DONE, Status.WAITING);
+    }
 
     @BeforeEach
     void setUp() {
         user = new User(0L, 1L, "mail", "후배", "011", "profile", 0, Role.USER, true, now(), now(), false);
         userRepository.save(user);
-        userId = user.getUserId();
 
         User userOfSenior = new User(0L, 2L, "mail", "선배", "012", "profile", 0, Role.SENIOR, true, now(), now(), false);
         userRepository.save(userOfSenior);
@@ -54,39 +64,38 @@ class MentoringControllerTest extends IntegrationTest {
         senior = new Senior(0L, userOfSenior, "certification", WAITING, 0, info, profile, now(), now());
         seniorRepository.save(senior);
 
-        accessToken = jwtUtil.generateAccessToken(userId, Role.USER);
+        accessToken = jwtUtil.generateAccessToken(user.getUserId(), Role.USER);
     }
 
-    @Test
-    @DisplayName("대학생이 신청한 멘토링 목록을 조회한다")
-    @WithMockUser
-    void getWaitingMentorings() throws Exception {
-        Mentoring waitingMentoring = new Mentoring(0L, user, senior, "topic", "question", "date", 40, Status.WAITING, now(), now());
-        mentoringRepository.save(waitingMentoring);
+    @ParameterizedTest
+    @MethodSource("waitingAndDoneProvider")
+    @DisplayName("대학생이 확정대기 및 완료 상태의 멘토링 목록을 조회한다")
+    void getWaitingMentorings(Status status) throws Exception {
+        Mentoring mentoring = new Mentoring(0L, user, senior, "topic", "question", "date", 40, status, now(), now());
+        mentoringRepository.save(mentoring);
 
-        mvc.perform(get("/mentoring/me/waiting")
-                        .header("Authorization", "Bearer " + accessToken))
+        mvc.perform(get("/mentoring/me/{status}", status.name().toLowerCase())
+                        .header(AUTHORIZATION, BEARER + accessToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value("MT200"))
                 .andExpect(jsonPath("$.message").value("멘토링 리스트 조회에 성공하였습니다."))
-                .andExpect(jsonPath("$.data.mentoringInfos[0].profile").value(containsString("profile")))
-                .andExpect(jsonPath("$.data.mentoringInfos[0].nickName").value(containsString("선배")))
-                .andExpect(jsonPath("$.data.mentoringInfos[0].postgradu").value(containsString("서울대학교")))
-                .andExpect(jsonPath("$.data.mentoringInfos[0].major").value(containsString("major")))
-                .andExpect(jsonPath("$.data.mentoringInfos[0].lab").value(containsString("랩실")))
+                .andExpect(jsonPath("$.data.mentoringInfos[0].profile").value("profile"))
+                .andExpect(jsonPath("$.data.mentoringInfos[0].nickName").value("선배"))
+                .andExpect(jsonPath("$.data.mentoringInfos[0].postgradu").value("서울대학교"))
+                .andExpect(jsonPath("$.data.mentoringInfos[0].major").value("major"))
+                .andExpect(jsonPath("$.data.mentoringInfos[0].lab").value("랩실"))
                 .andExpect(jsonPath("$.data.mentoringInfos[0].term").value(40))
                 .andExpect(jsonPath("$.data.mentoringInfos[0].chatLink").doesNotExist());
     }
 
     @Test
     @DisplayName("대학생이 예정된 멘토링 목록을 조회한다")
-    @WithMockUser
     void getExpectedMentorings() throws Exception {
         Mentoring expectedMentoring = new Mentoring(0L, user, senior, "topic", "question", "date", 40, Status.EXPECTED, now(), now());
         mentoringRepository.save(expectedMentoring);
 
         mvc.perform(get("/mentoring/me/expected")
-                        .header("Authorization", "Bearer " + accessToken))
+                        .header(AUTHORIZATION, BEARER + accessToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value("MT200"))
                 .andExpect(jsonPath("$.message").value("멘토링 리스트 조회에 성공하였습니다."))
@@ -95,17 +104,32 @@ class MentoringControllerTest extends IntegrationTest {
     }
 
     @Test
-    @DisplayName("대학생이 완료된 멘토링 목록을 조회한다")
-    @WithMockUser
-    void getDoneMentorings() throws Exception {
-        Mentoring doneMentoring = new Mentoring(0L, user, senior, "topic", "question", "date", 40, Status.DONE, now(), now());
-        mentoringRepository.save(doneMentoring);
+    @DisplayName("대학생이 멘토링을 상세조회한다.")
+    void getMentoringDetail() throws Exception {
+        Mentoring mentoring = new Mentoring(0L, user, senior, "topic", "question", "date", 40, Status.WAITING, now(), now());
+        mentoringRepository.save(mentoring);
 
-        mvc.perform(get("/mentoring/me/done")
-                        .header("Authorization", "Bearer " + accessToken))
+        mvc.perform(get("/mentoring/me/{mentoringId}", mentoring.getMentoringId())
+                        .header(AUTHORIZATION, BEARER + accessToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value("MT200"))
-                .andExpect(jsonPath("$.message").value("멘토링 리스트 조회에 성공하였습니다."))
+                .andExpect(jsonPath("$.message").value("멘토링 상세 조회에 성공하였습니다."))
                 .andExpect(jsonPath("$.data.mentoringInfos[0].chatLink").doesNotExist());
     }
+
+
+    @ParameterizedTest
+    @MethodSource("statusProvider")
+    @DisplayName("완료, 취소, 거절 상태의 멘토링은 상세조회되지 않는다.")
+    void getDoneMentoringDetail(Status status) throws Exception {
+        Mentoring mentoring = new Mentoring(0L, user, senior, "topic", "question", "date", 40, status, now(), now());
+        mentoringRepository.save(mentoring);
+
+        mvc.perform(get("/mentoring/me/{mentoringId}", mentoring.getMentoringId())
+                        .header(AUTHORIZATION, BEARER + accessToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value("EX701"))
+                .andExpect(jsonPath("$.message").value("볼 수 없는 신청서 입니다."));
+    }
+
 }
