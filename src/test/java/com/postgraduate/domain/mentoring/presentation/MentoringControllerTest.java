@@ -6,6 +6,8 @@ import com.postgraduate.domain.mentoring.application.dto.req.MentoringApplyReque
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.entity.constant.Status;
 import com.postgraduate.domain.mentoring.domain.repository.MentoringRepository;
+import com.postgraduate.domain.salary.domain.entity.Salary;
+import com.postgraduate.domain.salary.domain.repository.SalaryRepository;
 import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
@@ -22,12 +24,12 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 
+import java.time.LocalDate;
 import java.util.stream.Stream;
 
 import static com.postgraduate.domain.senior.domain.entity.constant.Status.WAITING;
 import static java.time.LocalDateTime.now;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -44,6 +46,8 @@ class MentoringControllerTest extends IntegrationTest {
     private SeniorRepository seniorRepository;
     @Autowired
     private MentoringRepository mentoringRepository;
+    @Autowired
+    private SalaryRepository salaryRepository;
     private User user;
     private Senior senior;
     private String accessToken;
@@ -152,4 +156,32 @@ class MentoringControllerTest extends IntegrationTest {
                 .andExpect(jsonPath("$.message").value("멘토링 신청에 성공하였습니다."));
     }
 
+    @Test
+    @DisplayName("대학생이 멘토링을 완료한다.")
+    void updateMentoringDone() throws Exception {
+        Mentoring mentoring = new Mentoring(0L, user, senior, "topic", "question", "date", 40, Status.EXPECTED, now(), now());
+        mentoringRepository.save(mentoring);
+
+        Salary salary = new Salary(0L, false, senior, null, 10000, LocalDate.now(), now(), null, null, null);
+        salaryRepository.save(salary);
+
+        mvc.perform(patch("/mentoring/me/{mentoringId}/done", mentoring.getMentoringId())
+                        .header(AUTHORIZATION, BEARER + accessToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value("MT201"))
+                .andExpect(jsonPath("$.message").value("멘토링 상태 갱신에 성공하였습니다."));
+    }
+
+    @Test
+    @DisplayName("대학생이 멘토링을 취소한다.")
+    void updateMentoringCancel() throws Exception {
+        Mentoring mentoring = new Mentoring(0L, user, senior, "topic", "question", "date", 40, Status.WAITING, now(), now());
+        mentoringRepository.save(mentoring);
+
+        mvc.perform(patch("/mentoring/me/{mentoringId}/cancel", mentoring.getMentoringId())
+                        .header(AUTHORIZATION, BEARER + accessToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value("MT201"))
+                .andExpect(jsonPath("$.message").value("멘토링 상태 갱신에 성공하였습니다."));
+    }
 }
