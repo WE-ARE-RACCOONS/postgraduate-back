@@ -7,11 +7,13 @@ import com.postgraduate.domain.salary.domain.service.SalarySaveService;
 import com.postgraduate.domain.salary.util.SalaryUtil;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
+import com.postgraduate.global.slack.SlackMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -21,9 +23,11 @@ import java.util.List;
 public class SalaryManageUseCase {
     private final SalarySaveService salarySaveService;
     private final SeniorGetService seniorGetService;
+    private final SlackMessage slackMessage;
 
     @Scheduled(cron = "0 0 0 10 * *", zone = "Asia/Seoul")
-    public void createSalary() {
+    public void createSalary() throws IOException {
+        slackMessage.sendSlackSalary();
         List<Senior> seniors = seniorGetService.all();
         LocalDate salaryDate = SalaryUtil.getSalaryDate();
         seniors.forEach(senior -> {

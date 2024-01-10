@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -30,5 +31,9 @@ public class SalaryGetService {
         page = page == null ? 1 : page;
         Pageable pageable = PageRequest.of(page - 1, ADMIN_PAGE_SIZE);
         return salaryRepository.findDistinctBySearchSenior(search, pageable);
+    }
+
+    public List<Salary> findAll() {
+        return salaryRepository.findAll();
     }
 }
