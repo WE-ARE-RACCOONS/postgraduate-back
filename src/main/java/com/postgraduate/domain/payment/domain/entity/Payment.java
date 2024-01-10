@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -32,6 +31,8 @@ public class Payment {
 
     @Column(nullable = false)
     private int pay;
+
+    private String orderId;
 
     private String cardAuthNumber;
 
