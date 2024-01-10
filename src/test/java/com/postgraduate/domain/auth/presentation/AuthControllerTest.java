@@ -210,6 +210,16 @@ class AuthControllerTest extends IntegrationTest {
     }
 
     @Test
-    void refresh() {
+    void refresh() throws Exception {
+        Wish wish = new Wish(0L, "major", "field", true, user, Status.MATCHED);
+        wishRepository.save(wish);
+
+        String refreshToken = jwtUtil.generateRefreshToken(user.getUserId(), Role.USER);
+
+        mvc.perform(post("/auth/refresh")
+                        .header(AUTHORIZATION, BEARER + refreshToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.accessToken").exists())
+                .andExpect(jsonPath("$.data.role").value("USER"));
     }
 }
