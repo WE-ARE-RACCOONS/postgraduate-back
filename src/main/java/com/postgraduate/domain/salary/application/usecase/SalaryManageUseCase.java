@@ -29,7 +29,7 @@ public class SalaryManageUseCase {
     private final SlackMessage slackMessage;
 
     @Scheduled(cron = "0 0 0 10 * *", zone = "Asia/Seoul")
-    private void createSalary() throws IOException {
+    public void createSalary() throws IOException {
         List<Salary> salaries = salaryGetService.findAll();
         slackMessage.sendSlackSalary(salaries);
 

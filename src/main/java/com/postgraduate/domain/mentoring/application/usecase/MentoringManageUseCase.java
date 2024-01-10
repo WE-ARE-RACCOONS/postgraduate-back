@@ -87,7 +87,7 @@ public class MentoringManageUseCase {
     }
 
     @Scheduled(cron = "0 59 23 * * *", zone = "Asia/Seoul")
-    private void updateAutoCancel() {
+    public void updateAutoCancel() {
         LocalDateTime now = LocalDateTime.now()
                 .toLocalDate()
                 .atStartOfDay();
@@ -101,7 +101,7 @@ public class MentoringManageUseCase {
     }
 
     @Scheduled(cron = "0 59 23 * * *", zone = "Asia/Seoul")
-    private void updateAutoDone() {
+    public void updateAutoDone() {
         List<Mentoring> expectedMentorings = mentoringGetService.byStatus(EXPECTED);
         expectedMentorings.stream()
                 .filter(Mentoring::checkAutoDone)
