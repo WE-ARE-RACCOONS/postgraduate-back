@@ -1,8 +1,10 @@
 package com.postgraduate.domain.salary.application.usecase;
 
-import com.postgraduate.domain.payment.domain.entity.Payment;
+import com.postgraduate.domain.account.domain.entity.Account;
+import com.postgraduate.domain.account.domain.service.AccountGetService;
 import com.postgraduate.domain.salary.application.mapper.SalaryMapper;
 import com.postgraduate.domain.salary.domain.entity.Salary;
+import com.postgraduate.domain.salary.domain.service.SalaryGetService;
 import com.postgraduate.domain.salary.domain.service.SalarySaveService;
 import com.postgraduate.domain.salary.util.SalaryUtil;
 import com.postgraduate.domain.senior.domain.entity.Senior;
@@ -22,16 +24,22 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SalaryManageUseCase {
     private final SalarySaveService salarySaveService;
+    private final AccountGetService accountGetService;
+    private final SalaryGetService salaryGetService;
     private final SeniorGetService seniorGetService;
     private final SlackMessage slackMessage;
 
     @Scheduled(cron = "0 0 0 10 * *", zone = "Asia/Seoul")
     public void createSalary() throws IOException {
-        slackMessage.sendSlackSalary();
+        List<Salary> salaries = salaryGetService.findAll();
+        slackMessage.sendSlackSalary(salaries);
+
         List<Senior> seniors = seniorGetService.all();
         LocalDate salaryDate = SalaryUtil.getSalaryDate();
         seniors.forEach(senior -> {
-            Salary salary = SalaryMapper.mapToSalary(senior, salaryDate);
+            Account account = accountGetService.bySenior(senior)
+                    .orElse(null);
+            Salary salary = SalaryMapper.mapToSalary(senior, salaryDate, account);
             salarySaveService.saveSalary(salary);
         });
     }

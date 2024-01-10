@@ -34,6 +34,6 @@ public class SalaryGetService {
     }
 
     public List<Salary> findAll() {
-        return salaryRepository.findAll();
+        return salaryRepository.findAllSalary();
     }
 }
