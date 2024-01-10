@@ -20,13 +20,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SlackMessage {
     private final Slack slackClient = Slack.getInstance();
-    private final SalaryGetService salaryGetService;
 
     @Value("${slack.url}")
     private String webHookUrl;
 
-    public void sendSlackSalary() throws IOException{
-        List<Salary> salaries = salaryGetService.findAll();
+    public void sendSlackSalary(List<Salary> salaries) throws IOException{
         List<Attachment> attachments = salaries.stream()
                 .filter(salary -> salary.getTotalAmount() > 0)
                 .map(salary -> generateSalarySlackAttachment(salary))
