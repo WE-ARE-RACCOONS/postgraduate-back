@@ -184,4 +184,56 @@ class MentoringControllerTest extends IntegrationTest {
                 .andExpect(jsonPath("$.code").value("MT201"))
                 .andExpect(jsonPath("$.message").value("멘토링 상태 갱신에 성공하였습니다."));
     }
+
+    @ParameterizedTest
+    @EnumSource(value = Status.class, names = {"WAITING", "EXPECTED", "DONE"})
+    @DisplayName("대학원생이 멘토링 목록을 조회한다.")
+    void getSeniorMentorings(Status status) throws Exception {
+        Mentoring mentoring = new Mentoring(0L, user, senior, "topic", "question", "date", 40, status, now(), now());
+        mentoringRepository.save(mentoring);
+
+        Salary salary = new Salary(0L, false, senior, null, 10000, LocalDate.now(), now(), null, null, null);
+        salaryRepository.save(salary);
+
+        Payment payment = new Payment(0L, mentoring, salary, 10000, "cardAuthNumber", "cardReceipt", now(), null, DONE);
+        paymentRepository.save(payment);
+
+        mvc.perform(get("/mentoring/senior/me/{status}", status.name().toLowerCase())
+                        .header(AUTHORIZATION, BEARER + seniorAccessToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value("MT200"))
+                .andExpect(jsonPath("$.message").value("멘토링 리스트 조회에 성공하였습니다."))
+                .andExpect(jsonPath("$.data.seniorMentoringInfos[0].mentoringId").value(mentoring.getMentoringId()));
+    }
+
+    @ParameterizedTest
+    @EnumSource(value = Status.class, names = {"WAITING", "EXPECTED"})
+    @DisplayName("대학원생이 멘토링을 상세조회합니다.")
+    void getSeniorMentoringDetails(Status status) throws Exception {
+        Mentoring mentoring = new Mentoring(0L, user, senior, "topic", "question", "date", 40, status, now(), now());
+        mentoringRepository.save(mentoring);
+
+        mvc.perform(get("/mentoring/senior/me/{mentoringId}", mentoring.getMentoringId())
+                        .header(AUTHORIZATION, BEARER + seniorAccessToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value("MT200"))
+                .andExpect(jsonPath("$.message").value("멘토링 상세 조회에 성공하였습니다."))
+                .andExpect(jsonPath("$.data.nickName").value("후배"));
+
+    }
+
+    @ParameterizedTest
+    @EnumSource(value = Status.class, names = {"DONE", "CANCEL", "REFUSE"})
+    @DisplayName("대학원생의 완료, 취소, 거절 상태의 멘토링은 상세조회되지 않는다.")
+    void doNotGetMentoringDetails(Status status) throws Exception {
+        Mentoring mentoring = new Mentoring(0L, user, senior, "topic", "question", "date", 40, status, now(), now());
+        mentoringRepository.save(mentoring);
+
+        mvc.perform(get("/mentoring/senior/me/{mentoringId}", mentoring.getMentoringId())
+                        .header(AUTHORIZATION, BEARER + seniorAccessToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value("EX701"))
+                .andExpect(jsonPath("$.message").value("볼 수 없는 신청서 입니다."));
+
+    }
 }
