@@ -152,8 +152,8 @@ class AuthControllerTest extends IntegrationTest {
     }
 
     @Test
+    @DisplayName("선배가 회원가입한다.")
     void singUpSenior() throws Exception {
-
         authLoginByAnonymousUser();
 
         String request = objectMapper.writeValueAsString(
@@ -210,6 +210,7 @@ class AuthControllerTest extends IntegrationTest {
     }
 
     @Test
+    @DisplayName("토큰을 재발급한다.")
     void refresh() throws Exception {
         Wish wish = new Wish(0L, "major", "field", true, user, Status.MATCHED);
         wishRepository.save(wish);
@@ -219,7 +220,21 @@ class AuthControllerTest extends IntegrationTest {
         mvc.perform(post("/auth/refresh")
                         .header(AUTHORIZATION, BEARER + refreshToken))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value("AU201"))
+                .andExpect(jsonPath("$.message").value("토큰 재발급에 성공하였습니다."))
                 .andExpect(jsonPath("$.data.accessToken").exists())
                 .andExpect(jsonPath("$.data.role").value("USER"));
+    }
+
+    @Test
+    @DisplayName("로그아웃한다.")
+    void logout() throws Exception {
+        String accessToken = jwtUtil.generateAccessToken(user.getUserId(), Role.USER);
+
+        mvc.perform(post("/auth/logout")
+                        .header(AUTHORIZATION, BEARER + accessToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value("AU203"))
+                .andExpect(jsonPath("$.message").value("로그아웃에 성공하였습니다."));
     }
 }
