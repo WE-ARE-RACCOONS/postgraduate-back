@@ -2,9 +2,7 @@ package com.postgraduate.domain.auth.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.postgraduate.IntegrationTest;
-import com.postgraduate.domain.auth.application.dto.req.CodeRequest;
-import com.postgraduate.domain.auth.application.dto.req.SeniorSignUpRequest;
-import com.postgraduate.domain.auth.application.dto.req.SignUpRequest;
+import com.postgraduate.domain.auth.application.dto.req.*;
 import com.postgraduate.domain.auth.application.dto.res.KakaoUserInfoResponse;
 import com.postgraduate.domain.auth.application.usecase.oauth.kakao.KakaoAccessTokenUseCase;
 import com.postgraduate.domain.user.domain.entity.User;
@@ -13,6 +11,7 @@ import com.postgraduate.domain.user.domain.repository.UserRepository;
 import com.postgraduate.domain.wish.domain.entity.Wish;
 import com.postgraduate.domain.wish.domain.entity.constant.Status;
 import com.postgraduate.domain.wish.domain.repository.WishRepository;
+import com.postgraduate.global.config.security.jwt.util.JwtUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,6 +27,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class AuthControllerTest extends IntegrationTest {
+    private static final String AUTHORIZATION = "Authorization";
+    private static final String BEARER = "Bearer ";
+    @Autowired
+    private JwtUtils jwtUtil;
     @Autowired
     private ObjectMapper objectMapper;
     @MockBean
@@ -115,7 +118,24 @@ class AuthControllerTest extends IntegrationTest {
     }
 
     @Test
-    void changeUser() {
+    @DisplayName("선배가 후배로 추가 가입합니다.")
+    void changeUser() throws Exception {
+        String seniorAccessToken = jwtUtil.generateAccessToken(user.getUserId(), Role.SENIOR);
+
+        String request = objectMapper.writeValueAsString(
+                new UserChangeRequest("major", "field", true)
+        );
+
+        mvc.perform(post("/auth/user/change")
+                        .header(AUTHORIZATION, BEARER + seniorAccessToken)
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value("AU202"))
+                .andExpect(jsonPath("$.message").value("사용자 인증에 성공하였습니다."))
+                .andExpect(jsonPath("$.data.accessToken").exists())
+                .andExpect(jsonPath("$.data.role").value("USER"));
     }
 
     @Test
@@ -141,7 +161,25 @@ class AuthControllerTest extends IntegrationTest {
     }
 
     @Test
-    void changeSenior() {
+    @DisplayName("후배가 선배로 추가 가입합니다.")
+    void changeSenior() throws Exception {
+        String userAccessToken = jwtUtil.generateAccessToken(user.getUserId(), Role.USER);
+
+        String request = objectMapper.writeValueAsString(
+                new SeniorChangeRequest("major", "field", "교수", "연구실",
+                        "AI", "키워드", "certification")
+        );
+
+        mvc.perform(post("/auth/senior/change")
+                        .header(AUTHORIZATION, BEARER + userAccessToken)
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value("SNR202"))
+                .andExpect(jsonPath("$.message").value("대학원생 가입에 성공하였습니다."))
+                .andExpect(jsonPath("$.data.accessToken").exists())
+                .andExpect(jsonPath("$.data.role").value("SENIOR"));
     }
 
     @Test
