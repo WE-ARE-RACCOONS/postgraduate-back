@@ -6,6 +6,8 @@ import com.postgraduate.domain.mentoring.application.dto.req.MentoringApplyReque
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.entity.constant.Status;
 import com.postgraduate.domain.mentoring.domain.repository.MentoringRepository;
+import com.postgraduate.domain.payment.domain.entity.Payment;
+import com.postgraduate.domain.payment.domain.repository.PaymentRepository;
 import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.salary.domain.repository.SalaryRepository;
 import com.postgraduate.domain.senior.domain.entity.Info;
@@ -20,13 +22,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 
 import java.time.LocalDate;
-import java.util.stream.Stream;
 
+import static com.postgraduate.domain.payment.domain.entity.constant.Status.DONE;
 import static com.postgraduate.domain.senior.domain.entity.constant.Status.WAITING;
 import static java.time.LocalDateTime.now;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -48,17 +50,12 @@ class MentoringControllerTest extends IntegrationTest {
     private MentoringRepository mentoringRepository;
     @Autowired
     private SalaryRepository salaryRepository;
+    @Autowired
+    private PaymentRepository paymentRepository;
     private User user;
     private Senior senior;
-    private String accessToken;
-
-    private static Stream<Status> statusProvider() {
-        return Stream.of(Status.DONE, Status.CANCEL, Status.REFUSE);
-    }
-
-    private static Stream<Status> waitingAndDoneProvider() {
-        return Stream.of(Status.DONE, Status.WAITING);
-    }
+    private String userAccessToken;
+    private String seniorAccessToken;
 
     @BeforeEach
     void setUp() {
@@ -73,21 +70,23 @@ class MentoringControllerTest extends IntegrationTest {
         senior = new Senior(0L, userOfSenior, "certification", WAITING, 0, info, profile, now(), now());
         seniorRepository.save(senior);
 
-        accessToken = jwtUtil.generateAccessToken(user.getUserId(), Role.USER);
+        userAccessToken = jwtUtil.generateAccessToken(user.getUserId(), Role.USER);
+        seniorAccessToken = jwtUtil.generateAccessToken(userOfSenior.getUserId(), Role.SENIOR);
     }
 
     @ParameterizedTest
-    @MethodSource("waitingAndDoneProvider")
+    @EnumSource(value = Status.class, names = {"WAITING", "DONE"})
     @DisplayName("대학생이 확정대기 및 완료 상태의 멘토링 목록을 조회한다")
     void getWaitingMentorings(Status status) throws Exception {
         Mentoring mentoring = new Mentoring(0L, user, senior, "topic", "question", "date", 40, status, now(), now());
         mentoringRepository.save(mentoring);
 
         mvc.perform(get("/mentoring/me/{status}", status.name().toLowerCase())
-                        .header(AUTHORIZATION, BEARER + accessToken))
+                        .header(AUTHORIZATION, BEARER + userAccessToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value("MT200"))
                 .andExpect(jsonPath("$.message").value("멘토링 리스트 조회에 성공하였습니다."))
+                .andExpect(jsonPath("$.data.mentoringInfos[0].mentoringId").value(mentoring.getMentoringId()))
                 .andExpect(jsonPath("$.data.mentoringInfos[0].profile").value("profile"))
                 .andExpect(jsonPath("$.data.mentoringInfos[0].nickName").value("선배"))
                 .andExpect(jsonPath("$.data.mentoringInfos[0].postgradu").value("서울대학교"))
@@ -100,42 +99,44 @@ class MentoringControllerTest extends IntegrationTest {
     @Test
     @DisplayName("대학생이 예정된 멘토링 목록을 조회한다")
     void getExpectedMentorings() throws Exception {
-        Mentoring expectedMentoring = new Mentoring(0L, user, senior, "topic", "question", "date", 40, Status.EXPECTED, now(), now());
-        mentoringRepository.save(expectedMentoring);
+        Mentoring mentoring = new Mentoring(0L, user, senior, "topic", "question", "date", 40, Status.EXPECTED, now(), now());
+        mentoringRepository.save(mentoring);
 
         mvc.perform(get("/mentoring/me/expected")
-                        .header(AUTHORIZATION, BEARER + accessToken))
+                        .header(AUTHORIZATION, BEARER + userAccessToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value("MT200"))
                 .andExpect(jsonPath("$.message").value("멘토링 리스트 조회에 성공하였습니다."))
+                .andExpect(jsonPath("$.data.mentoringInfos[0].mentoringId").value(mentoring.getMentoringId()))
                 .andExpect(jsonPath("$.data.mentoringInfos[0].chatLink").value("chatLink"))
                 .andExpect(jsonPath("$.data.mentoringInfos[0].date").value("date"));
     }
 
-    @Test
+    @ParameterizedTest
+    @EnumSource(value = Status.class, names = {"WAITING", "EXPECTED"})
     @DisplayName("대학생이 멘토링을 상세조회한다.")
-    void getMentoringDetail() throws Exception {
-        Mentoring mentoring = new Mentoring(0L, user, senior, "topic", "question", "date", 40, Status.WAITING, now(), now());
+    void getMentoringDetail(Status status) throws Exception {
+        Mentoring mentoring = new Mentoring(0L, user, senior, "topic", "question", "date", 40, status, now(), now());
         mentoringRepository.save(mentoring);
 
         mvc.perform(get("/mentoring/me/{mentoringId}", mentoring.getMentoringId())
-                        .header(AUTHORIZATION, BEARER + accessToken))
+                        .header(AUTHORIZATION, BEARER + userAccessToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value("MT200"))
                 .andExpect(jsonPath("$.message").value("멘토링 상세 조회에 성공하였습니다."))
-                .andExpect(jsonPath("$.data.mentoringInfos[0].chatLink").doesNotExist());
+                .andExpect(jsonPath("$.data.seniorId").value(senior.getSeniorId()));
     }
 
 
     @ParameterizedTest
-    @MethodSource("statusProvider")
-    @DisplayName("완료, 취소, 거절 상태의 멘토링은 상세조회되지 않는다.")
+    @EnumSource(value = Status.class, names = {"DONE", "CANCEL", "REFUSE"})
+    @DisplayName("대학생의 완료, 취소, 거절 상태의 멘토링은 상세조회되지 않는다.")
     void getDoneMentoringDetail(Status status) throws Exception {
         Mentoring mentoring = new Mentoring(0L, user, senior, "topic", "question", "date", 40, status, now(), now());
         mentoringRepository.save(mentoring);
 
         mvc.perform(get("/mentoring/me/{mentoringId}", mentoring.getMentoringId())
-                        .header(AUTHORIZATION, BEARER + accessToken))
+                        .header(AUTHORIZATION, BEARER + userAccessToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value("EX701"))
                 .andExpect(jsonPath("$.message").value("볼 수 없는 신청서 입니다."));
@@ -147,7 +148,7 @@ class MentoringControllerTest extends IntegrationTest {
         String request = objectMapper.writeValueAsString(new MentoringApplyRequest(senior.getSeniorId(), "topic", "question", "date1,date2,date3"));
 
         mvc.perform(post("/mentoring/applying")
-                        .header(AUTHORIZATION, BEARER + accessToken)
+                        .header(AUTHORIZATION, BEARER + userAccessToken)
                         .content(request)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -166,7 +167,7 @@ class MentoringControllerTest extends IntegrationTest {
         salaryRepository.save(salary);
 
         mvc.perform(patch("/mentoring/me/{mentoringId}/done", mentoring.getMentoringId())
-                        .header(AUTHORIZATION, BEARER + accessToken))
+                        .header(AUTHORIZATION, BEARER + userAccessToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value("MT201"))
                 .andExpect(jsonPath("$.message").value("멘토링 상태 갱신에 성공하였습니다."));
@@ -179,7 +180,7 @@ class MentoringControllerTest extends IntegrationTest {
         mentoringRepository.save(mentoring);
 
         mvc.perform(patch("/mentoring/me/{mentoringId}/cancel", mentoring.getMentoringId())
-                        .header(AUTHORIZATION, BEARER + accessToken))
+                        .header(AUTHORIZATION, BEARER + userAccessToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value("MT201"))
                 .andExpect(jsonPath("$.message").value("멘토링 상태 갱신에 성공하였습니다."));
@@ -234,6 +235,5 @@ class MentoringControllerTest extends IntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value("EX701"))
                 .andExpect(jsonPath("$.message").value("볼 수 없는 신청서 입니다."));
-
     }
 }
