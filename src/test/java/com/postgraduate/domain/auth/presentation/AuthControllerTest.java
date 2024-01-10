@@ -114,7 +114,20 @@ class AuthControllerTest extends IntegrationTest {
     }
 
     @Test
-    void changeUserToken() {
+    @DisplayName("대학원생이 대학생으로 변경한다.")
+    void changeUserToken() throws Exception {
+        Wish wish = new Wish(0L, "major", "field", true, user, Status.MATCHED);
+        wishRepository.save(wish);
+
+        String token = jwtUtil.generateAccessToken(user.getUserId(), Role.SENIOR);
+
+        mvc.perform(post("/auth/user/token")
+                        .header(AUTHORIZATION, BEARER + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value("AU202"))
+                .andExpect(jsonPath("$.message").value("사용자 인증에 성공하였습니다."))
+                .andExpect(jsonPath("$.data.accessToken").exists())
+                .andExpect(jsonPath("$.data.role").value("USER"));
     }
 
     @Test
@@ -183,7 +196,17 @@ class AuthControllerTest extends IntegrationTest {
     }
 
     @Test
-    void changeSeniorToken() {
+    @DisplayName("대학생이 대학원생으로 변경한다.")
+    void changeSeniorToken() throws Exception {
+        String token = jwtUtil.generateAccessToken(user.getUserId(), Role.USER);
+
+        mvc.perform(post("/auth/senior/token")
+                        .header(AUTHORIZATION, BEARER + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value("AU202"))
+                .andExpect(jsonPath("$.message").value("사용자 인증에 성공하였습니다."))
+                .andExpect(jsonPath("$.data.accessToken").exists())
+                .andExpect(jsonPath("$.data.role").value("SENIOR"));
     }
 
     @Test
