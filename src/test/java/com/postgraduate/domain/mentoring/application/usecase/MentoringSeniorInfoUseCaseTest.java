@@ -185,9 +185,9 @@ class MentoringSeniorInfoUseCaseTest {
         Mentoring mentoring2 = new Mentoring(2L, user, senior, "A", "b", "a", 40, WAITING, LocalDateTime.now(), LocalDateTime.now());
         Mentoring mentoring3 = new Mentoring(3L, user, senior, "A", "b", "a", 40, WAITING, LocalDateTime.now(), LocalDateTime.now());
         List<Mentoring> mentorings = List.of(mentoring1, mentoring2, mentoring3);
-        Payment payment1 = new Payment(1l, mentoring1, salary, 10000, "1", "1", LocalDateTime.now(), LocalDateTime.now(), Status.DONE);
-        Payment payment2 = new Payment(2l, mentoring2, salary, 10000, "1", "1", LocalDateTime.now(), LocalDateTime.now(), Status.DONE);
-        Payment payment3 = new Payment(3l, mentoring3, salary, 10000, "1", "1", LocalDateTime.now(), LocalDateTime.now(), Status.DONE);
+        Payment payment1 = new Payment(1l, mentoring1, salary, 10000, "1", "1", "a", LocalDateTime.now(), LocalDateTime.now(), Status.DONE);
+        Payment payment2 = new Payment(2l, mentoring2, salary, 10000, "1", "1", "a", LocalDateTime.now(), LocalDateTime.now(), Status.DONE);
+        Payment payment3 = new Payment(3l, mentoring3, salary, 10000, "1", "1", "a", LocalDateTime.now(), LocalDateTime.now(), Status.DONE);
         DoneSeniorMentoringInfo done1 = MentoringMapper.mapToSeniorDoneInfo(mentoring1, payment1);
         DoneSeniorMentoringInfo done2 = MentoringMapper.mapToSeniorDoneInfo(mentoring2, payment2);
         DoneSeniorMentoringInfo done3 = MentoringMapper.mapToSeniorDoneInfo(mentoring3, payment3);
