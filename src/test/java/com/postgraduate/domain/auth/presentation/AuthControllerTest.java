@@ -11,6 +11,7 @@ import com.postgraduate.domain.user.domain.repository.UserRepository;
 import com.postgraduate.domain.wish.domain.entity.Wish;
 import com.postgraduate.domain.wish.domain.entity.constant.Status;
 import com.postgraduate.domain.wish.domain.repository.WishRepository;
+import com.postgraduate.global.config.redis.RedisRepository;
 import com.postgraduate.global.config.security.jwt.util.JwtUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,6 +19,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+
+import java.util.Optional;
 
 import static java.time.LocalDateTime.now;
 import static org.mockito.ArgumentMatchers.any;
@@ -39,6 +42,8 @@ class AuthControllerTest extends IntegrationTest {
     private UserRepository userRepository;
     @Autowired
     private WishRepository wishRepository;
+    @MockBean
+    RedisRepository redisRepository;
     private User user;
     private final Long anonymousUserSocialId = 2L;
 
@@ -216,6 +221,7 @@ class AuthControllerTest extends IntegrationTest {
         wishRepository.save(wish);
 
         String refreshToken = jwtUtil.generateRefreshToken(user.getUserId(), Role.USER);
+        when(redisRepository.getValues(any())).thenReturn(Optional.of(refreshToken));
 
         mvc.perform(post("/auth/refresh")
                         .header(AUTHORIZATION, BEARER + refreshToken))
