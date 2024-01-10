@@ -3,6 +3,8 @@ package com.postgraduate.domain.auth.presentation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.postgraduate.IntegrationTest;
 import com.postgraduate.domain.auth.application.dto.req.CodeRequest;
+import com.postgraduate.domain.auth.application.dto.req.SeniorSignUpRequest;
+import com.postgraduate.domain.auth.application.dto.req.SignUpRequest;
 import com.postgraduate.domain.auth.application.dto.res.KakaoUserInfoResponse;
 import com.postgraduate.domain.auth.application.usecase.oauth.kakao.KakaoAccessTokenUseCase;
 import com.postgraduate.domain.user.domain.entity.User;
@@ -35,6 +37,8 @@ class AuthControllerTest extends IntegrationTest {
     @Autowired
     private WishRepository wishRepository;
     private User user;
+    private final Long anonymousUserSocialId = 2L;
+
 
     @BeforeEach
     void setUp() {
@@ -71,9 +75,8 @@ class AuthControllerTest extends IntegrationTest {
         CodeRequest codeRequest = new CodeRequest("code");
         String request = objectMapper.writeValueAsString(codeRequest);
 
-        Long socialId = 2L;
         when(kakaoAccessTokenUseCase.getAccessToken(codeRequest))
-                .thenReturn(new KakaoUserInfoResponse(socialId, any()));
+                .thenReturn(new KakaoUserInfoResponse(anonymousUserSocialId, any()));
 
         mvc.perform(post("/auth/login/KAKAO")
                         .content(request)
@@ -83,19 +86,28 @@ class AuthControllerTest extends IntegrationTest {
                 .andExpect(jsonPath("$.code").value("AU205"))
                 .andExpect(jsonPath("$.message").value("가입하지 않은 유저입니다."))
                 .andExpect(jsonPath("$.data.accessToken").doesNotExist())
-                .andExpect(jsonPath("$.data.socialId").value(socialId));
+                .andExpect(jsonPath("$.data.socialId").value(anonymousUserSocialId));
     }
 
     @Test
-    void logout() {
-    }
+    @DisplayName("대학생이 회원가입 한다.")
+    void signUpUser() throws Exception {
+        authLoginByAnonymousUser();
 
-    @Test
-    void signOut() {
-    }
+        String request = objectMapper.writeValueAsString(
+                new SignUpRequest(anonymousUserSocialId, "01012345678", "nickname",
+                        true, "major", "field", true)
+        );
 
-    @Test
-    void signUpUser() {
+        mvc.perform(post("/auth/user/signup")
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value("AU202"))
+                .andExpect(jsonPath("$.message").value("사용자 인증에 성공하였습니다."))
+                .andExpect(jsonPath("$.data.accessToken").exists())
+                .andExpect(jsonPath("$.data.role").value("USER"));
     }
 
     @Test
@@ -107,7 +119,25 @@ class AuthControllerTest extends IntegrationTest {
     }
 
     @Test
-    void singUpSenior() {
+    void singUpSenior() throws Exception {
+
+        authLoginByAnonymousUser();
+
+        String request = objectMapper.writeValueAsString(
+                new SeniorSignUpRequest(anonymousUserSocialId, "01012345678", "nickname",
+                        true, "전공", "서울대학교", "교수", "연구실",
+                        "AI", "키워드", "certification")
+        );
+
+        mvc.perform(post("/auth/senior/signup")
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value("SNR202"))
+                .andExpect(jsonPath("$.message").value("대학원생 가입에 성공하였습니다."))
+                .andExpect(jsonPath("$.data.accessToken").exists())
+                .andExpect(jsonPath("$.data.role").value("SENIOR"));
     }
 
     @Test
