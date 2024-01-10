@@ -3,11 +3,13 @@ package com.postgraduate.domain.mentoring.presentation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.postgraduate.IntegrationTest;
 import com.postgraduate.domain.mentoring.application.dto.req.MentoringApplyRequest;
+import com.postgraduate.domain.mentoring.application.dto.req.MentoringDateRequest;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.entity.constant.Status;
 import com.postgraduate.domain.mentoring.domain.repository.MentoringRepository;
 import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.payment.domain.repository.PaymentRepository;
+import com.postgraduate.domain.refuse.application.dto.req.MentoringRefuseRequest;
 import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.salary.domain.repository.SalaryRepository;
 import com.postgraduate.domain.senior.domain.entity.Info;
@@ -235,5 +237,39 @@ class MentoringControllerTest extends IntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value("EX701"))
                 .andExpect(jsonPath("$.message").value("볼 수 없는 신청서 입니다."));
+    }
+
+    @Test
+    @DisplayName("대학원생이 멘토링을 수락한다.")
+    void updateSeniorMentoringExpected() throws Exception {
+        Mentoring mentoring = new Mentoring(0L, user, senior, "topic", "question", "date1,date2,date3", 40, Status.WAITING, now(), now());
+        mentoringRepository.save(mentoring);
+
+        String request = objectMapper.writeValueAsString(new MentoringDateRequest("date1"));
+        mvc.perform(patch("/mentoring/senior/me/{mentoringId}/expected", mentoring.getMentoringId())
+                        .header(AUTHORIZATION, BEARER + seniorAccessToken)
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value("MT201"))
+                .andExpect(jsonPath("$.message").value("멘토링 상태 갱신에 성공하였습니다."));
+    }
+
+    @Test
+    @DisplayName("대학원생이 멘토링을 거절한다.")
+    void updateSeniorMentoringRefuse() throws Exception {
+        Mentoring mentoring = new Mentoring(0L, user, senior, "topic", "question", "date1,date2,date3", 40, Status.WAITING, now(), now());
+        mentoringRepository.save(mentoring);
+
+        String request = objectMapper.writeValueAsString(new MentoringRefuseRequest("reason"));
+        mvc.perform(patch("/mentoring/senior/me/{mentoringId}/refuse", mentoring.getMentoringId())
+                        .header(AUTHORIZATION, BEARER + seniorAccessToken)
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value("MT201"))
+                .andExpect(jsonPath("$.message").value("멘토링 상태 갱신에 성공하였습니다."));
     }
 }
