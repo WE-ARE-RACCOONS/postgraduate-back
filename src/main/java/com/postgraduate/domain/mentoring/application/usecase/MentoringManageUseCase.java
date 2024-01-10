@@ -4,6 +4,7 @@ import com.postgraduate.domain.account.domain.entity.Account;
 import com.postgraduate.domain.account.domain.service.AccountGetService;
 import com.postgraduate.domain.mentoring.application.dto.req.MentoringDateRequest;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
+import com.postgraduate.domain.mentoring.domain.service.MentoringDeleteService;
 import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
 import com.postgraduate.domain.mentoring.domain.service.MentoringUpdateService;
 import com.postgraduate.domain.mentoring.exception.MentoringNotExpectedException;
@@ -36,6 +37,7 @@ public class MentoringManageUseCase {
     private final CheckIsMyMentoringUseCase checkIsMyMentoringUseCase;
     private final MentoringUpdateService mentoringUpdateService;
     private final MentoringGetService mentoringGetService;
+    private final MentoringDeleteService mentoringDeleteService;
     private final RefuseSaveService refuseSaveService;
     private final AccountGetService accountGetService;
     private final SeniorGetService seniorGetService;
@@ -77,6 +79,11 @@ public class MentoringManageUseCase {
         mentoringUpdateService.updateStatus(mentoring, EXPECTED);
         Optional<Account> account = accountGetService.bySenior(senior);
         return account.isPresent();
+    }
+
+    public void delete(User user, Long mentoringId) {
+        Mentoring mentoring = checkIsMyMentoringUseCase.byUser(user, mentoringId);
+        mentoringDeleteService.deleteMentoring(mentoring);
     }
 
     @Scheduled(cron = "0 59 23 * * *", zone = "Asia/Seoul")
