@@ -22,6 +22,10 @@ import org.springframework.http.MediaType;
 
 import java.util.Optional;
 
+import static com.postgraduate.domain.auth.presentation.constant.AuthResponseCode.*;
+import static com.postgraduate.domain.auth.presentation.constant.AuthResponseMessage.*;
+import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseCode.SENIOR_CREATE;
+import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseMessage.CREATE_SENIOR;
 import static java.time.LocalDateTime.now;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -71,8 +75,8 @@ class AuthControllerTest extends IntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value("AU204"))
-                .andExpect(jsonPath("$.message").value("사용자 인증에 성공하였습니다."))
+                .andExpect(jsonPath("$.code").value(AUTH_ALREADY.getCode()))
+                .andExpect(jsonPath("$.message").value(SUCCESS_AUTH.getMessage()))
                 .andExpect(jsonPath("$.data.accessToken").exists())
                 .andExpect(jsonPath("$.data.socialId").doesNotExist());
     }
@@ -91,8 +95,8 @@ class AuthControllerTest extends IntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value("AU205"))
-                .andExpect(jsonPath("$.message").value("가입하지 않은 유저입니다."))
+                .andExpect(jsonPath("$.code").value(AUTH_NONE.getCode()))
+                .andExpect(jsonPath("$.message").value(NOT_REGISTERED_USER.getMessage()))
                 .andExpect(jsonPath("$.data.accessToken").doesNotExist())
                 .andExpect(jsonPath("$.data.socialId").value(anonymousUserSocialId));
     }
@@ -112,8 +116,8 @@ class AuthControllerTest extends IntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value("AU202"))
-                .andExpect(jsonPath("$.message").value("사용자 인증에 성공하였습니다."))
+                .andExpect(jsonPath("$.code").value(AUTH_CREATE.getCode()))
+                .andExpect(jsonPath("$.message").value(SUCCESS_AUTH.getMessage()))
                 .andExpect(jsonPath("$.data.accessToken").exists())
                 .andExpect(jsonPath("$.data.role").value("USER"));
     }
@@ -129,8 +133,8 @@ class AuthControllerTest extends IntegrationTest {
         mvc.perform(post("/auth/user/token")
                         .header(AUTHORIZATION, BEARER + token))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value("AU202"))
-                .andExpect(jsonPath("$.message").value("사용자 인증에 성공하였습니다."))
+                .andExpect(jsonPath("$.code").value(AUTH_CREATE.getCode()))
+                .andExpect(jsonPath("$.message").value(SUCCESS_AUTH.getMessage()))
                 .andExpect(jsonPath("$.data.accessToken").exists())
                 .andExpect(jsonPath("$.data.role").value("USER"));
     }
@@ -150,8 +154,8 @@ class AuthControllerTest extends IntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value("AU202"))
-                .andExpect(jsonPath("$.message").value("사용자 인증에 성공하였습니다."))
+                .andExpect(jsonPath("$.code").value(AUTH_CREATE.getCode()))
+                .andExpect(jsonPath("$.message").value(SUCCESS_AUTH.getMessage()))
                 .andExpect(jsonPath("$.data.accessToken").exists())
                 .andExpect(jsonPath("$.data.role").value("USER"));
     }
@@ -172,8 +176,8 @@ class AuthControllerTest extends IntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value("SNR202"))
-                .andExpect(jsonPath("$.message").value("대학원생 가입에 성공하였습니다."))
+                .andExpect(jsonPath("$.code").value(SENIOR_CREATE.getCode()))
+                .andExpect(jsonPath("$.message").value(CREATE_SENIOR.getMessage()))
                 .andExpect(jsonPath("$.data.accessToken").exists())
                 .andExpect(jsonPath("$.data.role").value("SENIOR"));
     }
@@ -194,8 +198,8 @@ class AuthControllerTest extends IntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value("SNR202"))
-                .andExpect(jsonPath("$.message").value("대학원생 가입에 성공하였습니다."))
+                .andExpect(jsonPath("$.code").value(SENIOR_CREATE.getCode()))
+                .andExpect(jsonPath("$.message").value(CREATE_SENIOR.getMessage()))
                 .andExpect(jsonPath("$.data.accessToken").exists())
                 .andExpect(jsonPath("$.data.role").value("SENIOR"));
     }
@@ -208,8 +212,8 @@ class AuthControllerTest extends IntegrationTest {
         mvc.perform(post("/auth/senior/token")
                         .header(AUTHORIZATION, BEARER + token))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value("AU202"))
-                .andExpect(jsonPath("$.message").value("사용자 인증에 성공하였습니다."))
+                .andExpect(jsonPath("$.code").value(AUTH_CREATE.getCode()))
+                .andExpect(jsonPath("$.message").value(SUCCESS_AUTH.getMessage()))
                 .andExpect(jsonPath("$.data.accessToken").exists())
                 .andExpect(jsonPath("$.data.role").value("SENIOR"));
     }
@@ -226,8 +230,8 @@ class AuthControllerTest extends IntegrationTest {
         mvc.perform(post("/auth/refresh")
                         .header(AUTHORIZATION, BEARER + refreshToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value("AU201"))
-                .andExpect(jsonPath("$.message").value("토큰 재발급에 성공하였습니다."))
+                .andExpect(jsonPath("$.code").value(AUTH_UPDATE.getCode()))
+                .andExpect(jsonPath("$.message").value(SUCCESS_REGENERATE_TOKEN.getMessage()))
                 .andExpect(jsonPath("$.data.accessToken").exists())
                 .andExpect(jsonPath("$.data.role").value("USER"));
     }
@@ -240,7 +244,7 @@ class AuthControllerTest extends IntegrationTest {
         mvc.perform(post("/auth/logout")
                         .header(AUTHORIZATION, BEARER + accessToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value("AU203"))
-                .andExpect(jsonPath("$.message").value("로그아웃에 성공하였습니다."));
+                .andExpect(jsonPath("$.code").value(AUTH_DELETE.getCode()))
+                .andExpect(jsonPath("$.message").value(LOGOUT_USER.getMessage()));
     }
 }

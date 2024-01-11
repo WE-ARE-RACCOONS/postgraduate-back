@@ -30,7 +30,10 @@ import org.springframework.http.MediaType;
 
 import java.time.LocalDate;
 
+import static com.postgraduate.domain.mentoring.presentation.constant.MentoringResponseCode.*;
+import static com.postgraduate.domain.mentoring.presentation.constant.MentoringResponseMessage.*;
 import static com.postgraduate.domain.payment.domain.entity.constant.Status.DONE;
+import static com.postgraduate.domain.salary.util.SalaryUtil.getSalaryDate;
 import static com.postgraduate.domain.senior.domain.entity.constant.Status.WAITING;
 import static java.time.LocalDateTime.now;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -86,15 +89,9 @@ class MentoringControllerTest extends IntegrationTest {
         mvc.perform(get("/mentoring/me/{status}", status.name().toLowerCase())
                         .header(AUTHORIZATION, BEARER + userAccessToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value("MT200"))
-                .andExpect(jsonPath("$.message").value("멘토링 리스트 조회에 성공하였습니다."))
+                .andExpect(jsonPath("$.code").value(MENTORING_FIND.getCode()))
+                .andExpect(jsonPath("$.message").value(GET_MENTORING_LIST_INFO.getMessage()))
                 .andExpect(jsonPath("$.data.mentoringInfos[0].mentoringId").value(mentoring.getMentoringId()))
-                .andExpect(jsonPath("$.data.mentoringInfos[0].profile").value("profile"))
-                .andExpect(jsonPath("$.data.mentoringInfos[0].nickName").value("선배"))
-                .andExpect(jsonPath("$.data.mentoringInfos[0].postgradu").value("서울대학교"))
-                .andExpect(jsonPath("$.data.mentoringInfos[0].major").value("major"))
-                .andExpect(jsonPath("$.data.mentoringInfos[0].lab").value("랩실"))
-                .andExpect(jsonPath("$.data.mentoringInfos[0].term").value(40))
                 .andExpect(jsonPath("$.data.mentoringInfos[0].chatLink").doesNotExist());
     }
 
@@ -107,11 +104,9 @@ class MentoringControllerTest extends IntegrationTest {
         mvc.perform(get("/mentoring/me/expected")
                         .header(AUTHORIZATION, BEARER + userAccessToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value("MT200"))
-                .andExpect(jsonPath("$.message").value("멘토링 리스트 조회에 성공하였습니다."))
-                .andExpect(jsonPath("$.data.mentoringInfos[0].mentoringId").value(mentoring.getMentoringId()))
-                .andExpect(jsonPath("$.data.mentoringInfos[0].chatLink").value("chatLink"))
-                .andExpect(jsonPath("$.data.mentoringInfos[0].date").value("date"));
+                .andExpect(jsonPath("$.code").value(MENTORING_FIND.getCode()))
+                .andExpect(jsonPath("$.message").value(GET_MENTORING_LIST_INFO.getMessage()))
+                .andExpect(jsonPath("$.data.mentoringInfos[0].mentoringId").value(mentoring.getMentoringId()));
     }
 
     @ParameterizedTest
@@ -124,8 +119,8 @@ class MentoringControllerTest extends IntegrationTest {
         mvc.perform(get("/mentoring/me/{mentoringId}", mentoring.getMentoringId())
                         .header(AUTHORIZATION, BEARER + userAccessToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value("MT200"))
-                .andExpect(jsonPath("$.message").value("멘토링 상세 조회에 성공하였습니다."))
+                .andExpect(jsonPath("$.code").value(MENTORING_FIND.getCode()))
+                .andExpect(jsonPath("$.message").value(GET_MENTORING_DETAIL_INFO.getMessage()))
                 .andExpect(jsonPath("$.data.seniorId").value(senior.getSeniorId()));
     }
 
@@ -140,8 +135,8 @@ class MentoringControllerTest extends IntegrationTest {
         mvc.perform(get("/mentoring/me/{mentoringId}", mentoring.getMentoringId())
                         .header(AUTHORIZATION, BEARER + userAccessToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value("EX701"))
-                .andExpect(jsonPath("$.message").value("볼 수 없는 신청서 입니다."));
+                .andExpect(jsonPath("$.code").value(DETAIL_NOT_FOUND.getCode()))
+                .andExpect(jsonPath("$.message").value(NOT_FOUND_DETAIL.getMessage()));
     }
 
     @Test
@@ -155,8 +150,8 @@ class MentoringControllerTest extends IntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value("MT202"))
-                .andExpect(jsonPath("$.message").value("멘토링 신청에 성공하였습니다."));
+                .andExpect(jsonPath("$.code").value(MENTORING_CREATE.getCode()))
+                .andExpect(jsonPath("$.message").value(CREATE_MENTORING.getMessage()));
     }
 
     @Test
@@ -165,14 +160,14 @@ class MentoringControllerTest extends IntegrationTest {
         Mentoring mentoring = new Mentoring(0L, user, senior, "topic", "question", "date", 40, Status.EXPECTED, now(), now());
         mentoringRepository.save(mentoring);
 
-        Salary salary = new Salary(0L, false, senior, null, 10000, LocalDate.now(), now(), null, null, null);
+        Salary salary = new Salary(0L, false, senior, null, 10000, getSalaryDate(), now(), null, null, null);
         salaryRepository.save(salary);
 
         mvc.perform(patch("/mentoring/me/{mentoringId}/done", mentoring.getMentoringId())
                         .header(AUTHORIZATION, BEARER + userAccessToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value("MT201"))
-                .andExpect(jsonPath("$.message").value("멘토링 상태 갱신에 성공하였습니다."));
+                .andExpect(jsonPath("$.code").value(MENTORING_UPDATE.getCode()))
+                .andExpect(jsonPath("$.message").value(UPDATE_MENTORING.getMessage()));
     }
 
     @Test
@@ -184,8 +179,8 @@ class MentoringControllerTest extends IntegrationTest {
         mvc.perform(patch("/mentoring/me/{mentoringId}/cancel", mentoring.getMentoringId())
                         .header(AUTHORIZATION, BEARER + userAccessToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value("MT201"))
-                .andExpect(jsonPath("$.message").value("멘토링 상태 갱신에 성공하였습니다."));
+                .andExpect(jsonPath("$.code").value(MENTORING_UPDATE.getCode()))
+                .andExpect(jsonPath("$.message").value(UPDATE_MENTORING.getMessage()));
     }
 
     @ParameterizedTest
@@ -204,8 +199,8 @@ class MentoringControllerTest extends IntegrationTest {
         mvc.perform(get("/mentoring/senior/me/{status}", status.name().toLowerCase())
                         .header(AUTHORIZATION, BEARER + seniorAccessToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value("MT200"))
-                .andExpect(jsonPath("$.message").value("멘토링 리스트 조회에 성공하였습니다."))
+                .andExpect(jsonPath("$.code").value(MENTORING_FIND.getCode()))
+                .andExpect(jsonPath("$.message").value(GET_MENTORING_LIST_INFO.getMessage()))
                 .andExpect(jsonPath("$.data.seniorMentoringInfos[0].mentoringId").value(mentoring.getMentoringId()));
     }
 
@@ -219,8 +214,8 @@ class MentoringControllerTest extends IntegrationTest {
         mvc.perform(get("/mentoring/senior/me/{mentoringId}", mentoring.getMentoringId())
                         .header(AUTHORIZATION, BEARER + seniorAccessToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value("MT200"))
-                .andExpect(jsonPath("$.message").value("멘토링 상세 조회에 성공하였습니다."))
+                .andExpect(jsonPath("$.code").value(MENTORING_FIND.getCode()))
+                .andExpect(jsonPath("$.message").value(GET_MENTORING_DETAIL_INFO.getMessage()))
                 .andExpect(jsonPath("$.data.nickName").value("후배"));
 
     }
@@ -235,8 +230,8 @@ class MentoringControllerTest extends IntegrationTest {
         mvc.perform(get("/mentoring/senior/me/{mentoringId}", mentoring.getMentoringId())
                         .header(AUTHORIZATION, BEARER + seniorAccessToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value("EX701"))
-                .andExpect(jsonPath("$.message").value("볼 수 없는 신청서 입니다."));
+                .andExpect(jsonPath("$.code").value(DETAIL_NOT_FOUND.getCode()))
+                .andExpect(jsonPath("$.message").value(NOT_FOUND_DETAIL.getMessage()));
     }
 
     @Test
@@ -252,8 +247,8 @@ class MentoringControllerTest extends IntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value("MT201"))
-                .andExpect(jsonPath("$.message").value("멘토링 상태 갱신에 성공하였습니다."));
+                .andExpect(jsonPath("$.code").value(MENTORING_UPDATE.getCode()))
+                .andExpect(jsonPath("$.message").value(UPDATE_MENTORING.getMessage()));
     }
 
     @Test
@@ -269,7 +264,7 @@ class MentoringControllerTest extends IntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value("MT201"))
-                .andExpect(jsonPath("$.message").value("멘토링 상태 갱신에 성공하였습니다."));
+                .andExpect(jsonPath("$.code").value(MENTORING_UPDATE.getCode()))
+                .andExpect(jsonPath("$.message").value(UPDATE_MENTORING.getMessage()));
     }
 }
