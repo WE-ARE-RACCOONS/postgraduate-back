@@ -15,6 +15,6 @@ public class LogService {
 
     public void save(LogRequest logRequest) throws JsonProcessingException {
         log.info("log save");
-        messageProducer.sendMessage(logRequest);
+//        messageProducer.sendMessage(logRequest);
     }
 }
