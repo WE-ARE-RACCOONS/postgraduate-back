@@ -7,6 +7,8 @@ import com.postgraduate.domain.mentoring.application.dto.req.MentoringDateReques
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.entity.constant.Status;
 import com.postgraduate.domain.mentoring.domain.repository.MentoringRepository;
+import com.postgraduate.domain.mentoring.presentation.constant.MentoringResponseCode;
+import com.postgraduate.domain.mentoring.presentation.constant.MentoringResponseMessage;
 import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.payment.domain.repository.PaymentRepository;
 import com.postgraduate.domain.refuse.application.dto.req.MentoringRefuseRequest;
@@ -25,6 +27,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 
@@ -152,6 +155,23 @@ class MentoringControllerTest extends IntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(MENTORING_CREATE.getCode()))
                 .andExpect(jsonPath("$.message").value(CREATE_MENTORING.getMessage()));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"date1", "date1,date2", "date1,date2,date3,date4"})
+    @DisplayName("날짜가 3개가 아니라면 멘토링을 신청할 수 없다.")
+    void applyMentoringWithoutThreeDates(String date) throws Exception {
+        String request = objectMapper.writeValueAsString(new MentoringApplyRequest(senior.getSeniorId(), "topic", "question", date));
+
+        mvc.perform(post("/mentoring/applying")
+                        .header(AUTHORIZATION, BEARER + userAccessToken)
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(MentoringResponseCode.INVALID_DATE.getCode()))
+                .andExpect(jsonPath("$.message").value(MentoringResponseMessage.INVALID_DATE.getMessage()));
+
     }
 
     @Test
