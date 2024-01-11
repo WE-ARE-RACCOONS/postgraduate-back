@@ -141,6 +141,18 @@ class AuthControllerTest extends IntegrationTest {
     }
 
     @Test
+    @DisplayName("대학생으로 가입하지 않은 경우 대학생으로 변경할 수 없다.")
+    void changeUserTokenWithoutWish() throws Exception {
+        String token = jwtUtil.generateAccessToken(user.getUserId(), SENIOR);
+
+        mvc.perform(post("/auth/user/token")
+                        .header(AUTHORIZATION, BEARER + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(USER_NOT_FOUND.getCode()))
+                .andExpect(jsonPath("$.message").value(NOT_FOUND_USER.getMessage()));
+    }
+
+    @Test
     @DisplayName("선배가 후배로 추가 가입합니다.")
     void changeUser() throws Exception {
         String seniorAccessToken = jwtUtil.generateAccessToken(user.getUserId(), SENIOR);
