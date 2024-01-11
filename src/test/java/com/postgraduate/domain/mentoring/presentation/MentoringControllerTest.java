@@ -170,6 +170,23 @@ class MentoringControllerTest extends IntegrationTest {
                 .andExpect(jsonPath("$.message").value(UPDATE_MENTORING.getMessage()));
     }
 
+    @ParameterizedTest
+    @EnumSource(value = Status.class, names = {"WAITING", "DONE", "CANCEL", "REFUSE"})
+    @DisplayName("진행예정이 아닌 멘토링의 경우 완료할 수 없다.")
+    void updateMentoringDoneWithoutExpected(Status status) throws Exception {
+        Mentoring mentoring = new Mentoring(0L, user, senior, "topic", "question", "date", 40, status, now(), now());
+        mentoringRepository.save(mentoring);
+
+        Salary salary = new Salary(0L, false, senior, null, 10000, getSalaryDate(), now(), null, null, null);
+        salaryRepository.save(salary);
+
+        mvc.perform(patch("/mentoring/me/{mentoringId}/done", mentoring.getMentoringId())
+                        .header(AUTHORIZATION, BEARER + userAccessToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(MENTORING_NOT_EXPECTED.getCode()))
+                .andExpect(jsonPath("$.message").value(NOT_EXPECTED_MENTORING.getMessage()));
+    }
+
     @Test
     @DisplayName("대학생이 멘토링을 취소한다.")
     void updateMentoringCancel() throws Exception {
@@ -181,6 +198,20 @@ class MentoringControllerTest extends IntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(MENTORING_UPDATE.getCode()))
                 .andExpect(jsonPath("$.message").value(UPDATE_MENTORING.getMessage()));
+    }
+
+    @ParameterizedTest
+    @EnumSource(value = Status.class, names = {"EXPECTED", "DONE", "CANCEL", "REFUSE"})
+    @DisplayName("멘토링이 확정대기 상태가 아니라면 취소할 수 없다.")
+    void updateMentoringCancelWithoutWaiting(Status status) throws Exception {
+        Mentoring mentoring = new Mentoring(0L, user, senior, "topic", "question", "date", 40, status, now(), now());
+        mentoringRepository.save(mentoring);
+
+        mvc.perform(patch("/mentoring/me/{mentoringId}/cancel", mentoring.getMentoringId())
+                        .header(AUTHORIZATION, BEARER + userAccessToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(MENTORING_NOT_WAITING.getCode()))
+                .andExpect(jsonPath("$.message").value(NOT_WAITING_MENTORING.getMessage()));
     }
 
     @ParameterizedTest
@@ -251,6 +282,24 @@ class MentoringControllerTest extends IntegrationTest {
                 .andExpect(jsonPath("$.message").value(UPDATE_MENTORING.getMessage()));
     }
 
+    @ParameterizedTest
+    @EnumSource(value = Status.class, names = {"EXPECTED", "DONE", "CANCEL", "REFUSE"})
+    @DisplayName("멘토링이 확정대기 상태가 아니라면 수락할 수 없다.")
+    void updateSeniorMentoringExpectedWithoutWaiting(Status status) throws Exception {
+        Mentoring mentoring = new Mentoring(0L, user, senior, "topic", "question", "date1,date2,date3", 40, status, now(), now());
+        mentoringRepository.save(mentoring);
+
+        String request = objectMapper.writeValueAsString(new MentoringDateRequest("date1"));
+        mvc.perform(patch("/mentoring/senior/me/{mentoringId}/expected", mentoring.getMentoringId())
+                        .header(AUTHORIZATION, BEARER + seniorAccessToken)
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(MENTORING_NOT_WAITING.getCode()))
+                .andExpect(jsonPath("$.message").value(NOT_WAITING_MENTORING.getMessage()));
+    }
+
     @Test
     @DisplayName("대학원생이 멘토링을 거절한다.")
     void updateSeniorMentoringRefuse() throws Exception {
@@ -266,5 +315,23 @@ class MentoringControllerTest extends IntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(MENTORING_UPDATE.getCode()))
                 .andExpect(jsonPath("$.message").value(UPDATE_MENTORING.getMessage()));
+    }
+
+    @ParameterizedTest
+    @EnumSource(value = Status.class, names = {"EXPECTED", "DONE", "CANCEL", "REFUSE"})
+    @DisplayName("멘토링이 확정대기 상태가 아니라면 거절할 수 없다.")
+    void updateSeniorMentoringRefuseWithoutWaiting(Status status) throws Exception {
+        Mentoring mentoring = new Mentoring(0L, user, senior, "topic", "question", "date", 40, status, now(), now());
+        mentoringRepository.save(mentoring);
+
+        String request = objectMapper.writeValueAsString(new MentoringRefuseRequest("reason"));
+        mvc.perform(patch("/mentoring/senior/me/{mentoringId}/refuse", mentoring.getMentoringId())
+                        .header(AUTHORIZATION, BEARER + seniorAccessToken)
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(MENTORING_NOT_WAITING.getCode()))
+                .andExpect(jsonPath("$.message").value(NOT_WAITING_MENTORING.getMessage()));
     }
 }
