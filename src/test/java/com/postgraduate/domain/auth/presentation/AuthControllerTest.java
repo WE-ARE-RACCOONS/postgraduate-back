@@ -6,7 +6,6 @@ import com.postgraduate.domain.auth.application.dto.req.*;
 import com.postgraduate.domain.auth.application.dto.res.KakaoUserInfoResponse;
 import com.postgraduate.domain.auth.application.usecase.oauth.kakao.KakaoAccessTokenUseCase;
 import com.postgraduate.domain.user.domain.entity.User;
-import com.postgraduate.domain.user.domain.entity.constant.Role;
 import com.postgraduate.domain.user.domain.repository.UserRepository;
 import com.postgraduate.domain.wish.domain.entity.Wish;
 import com.postgraduate.domain.wish.domain.entity.constant.Status;
@@ -26,6 +25,8 @@ import static com.postgraduate.domain.auth.presentation.constant.AuthResponseCod
 import static com.postgraduate.domain.auth.presentation.constant.AuthResponseMessage.*;
 import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseCode.SENIOR_CREATE;
 import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseMessage.CREATE_SENIOR;
+import static com.postgraduate.domain.user.domain.entity.constant.Role.SENIOR;
+import static com.postgraduate.domain.user.domain.entity.constant.Role.USER;
 import static java.time.LocalDateTime.now;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -54,7 +55,7 @@ class AuthControllerTest extends IntegrationTest {
 
     @BeforeEach
     void setUp() {
-        user = new User(0L, 1L, "mail", "후배", "011", "profile", 0, Role.USER, true, now(), now(), false);
+        user = new User(0L, 1L, "mail", "후배", "011", "profile", 0, USER, true, now(), now(), false);
         userRepository.save(user);
     }
 
@@ -119,7 +120,7 @@ class AuthControllerTest extends IntegrationTest {
                 .andExpect(jsonPath("$.code").value(AUTH_CREATE.getCode()))
                 .andExpect(jsonPath("$.message").value(SUCCESS_AUTH.getMessage()))
                 .andExpect(jsonPath("$.data.accessToken").exists())
-                .andExpect(jsonPath("$.data.role").value("USER"));
+                .andExpect(jsonPath("$.data.role").value(USER.name()));
     }
 
     @Test
@@ -128,7 +129,7 @@ class AuthControllerTest extends IntegrationTest {
         Wish wish = new Wish(0L, "major", "field", true, user, Status.MATCHED);
         wishRepository.save(wish);
 
-        String token = jwtUtil.generateAccessToken(user.getUserId(), Role.SENIOR);
+        String token = jwtUtil.generateAccessToken(user.getUserId(), SENIOR);
 
         mvc.perform(post("/auth/user/token")
                         .header(AUTHORIZATION, BEARER + token))
@@ -136,13 +137,13 @@ class AuthControllerTest extends IntegrationTest {
                 .andExpect(jsonPath("$.code").value(AUTH_CREATE.getCode()))
                 .andExpect(jsonPath("$.message").value(SUCCESS_AUTH.getMessage()))
                 .andExpect(jsonPath("$.data.accessToken").exists())
-                .andExpect(jsonPath("$.data.role").value("USER"));
+                .andExpect(jsonPath("$.data.role").value(USER.name()));
     }
 
     @Test
     @DisplayName("선배가 후배로 추가 가입합니다.")
     void changeUser() throws Exception {
-        String seniorAccessToken = jwtUtil.generateAccessToken(user.getUserId(), Role.SENIOR);
+        String seniorAccessToken = jwtUtil.generateAccessToken(user.getUserId(), SENIOR);
 
         String request = objectMapper.writeValueAsString(
                 new UserChangeRequest("major", "field", true)
@@ -157,7 +158,7 @@ class AuthControllerTest extends IntegrationTest {
                 .andExpect(jsonPath("$.code").value(AUTH_CREATE.getCode()))
                 .andExpect(jsonPath("$.message").value(SUCCESS_AUTH.getMessage()))
                 .andExpect(jsonPath("$.data.accessToken").exists())
-                .andExpect(jsonPath("$.data.role").value("USER"));
+                .andExpect(jsonPath("$.data.role").value(USER.name()));
     }
 
     @Test
@@ -179,13 +180,13 @@ class AuthControllerTest extends IntegrationTest {
                 .andExpect(jsonPath("$.code").value(SENIOR_CREATE.getCode()))
                 .andExpect(jsonPath("$.message").value(CREATE_SENIOR.getMessage()))
                 .andExpect(jsonPath("$.data.accessToken").exists())
-                .andExpect(jsonPath("$.data.role").value("SENIOR"));
+                .andExpect(jsonPath("$.data.role").value(SENIOR.name()));
     }
 
     @Test
     @DisplayName("후배가 선배로 추가 가입합니다.")
     void changeSenior() throws Exception {
-        String userAccessToken = jwtUtil.generateAccessToken(user.getUserId(), Role.USER);
+        String userAccessToken = jwtUtil.generateAccessToken(user.getUserId(), USER);
 
         String request = objectMapper.writeValueAsString(
                 new SeniorChangeRequest("major", "field", "교수", "연구실",
@@ -201,13 +202,13 @@ class AuthControllerTest extends IntegrationTest {
                 .andExpect(jsonPath("$.code").value(SENIOR_CREATE.getCode()))
                 .andExpect(jsonPath("$.message").value(CREATE_SENIOR.getMessage()))
                 .andExpect(jsonPath("$.data.accessToken").exists())
-                .andExpect(jsonPath("$.data.role").value("SENIOR"));
+                .andExpect(jsonPath("$.data.role").value(SENIOR.name()));
     }
 
     @Test
     @DisplayName("대학생이 대학원생으로 변경한다.")
     void changeSeniorToken() throws Exception {
-        String token = jwtUtil.generateAccessToken(user.getUserId(), Role.USER);
+        String token = jwtUtil.generateAccessToken(user.getUserId(), USER);
 
         mvc.perform(post("/auth/senior/token")
                         .header(AUTHORIZATION, BEARER + token))
@@ -215,7 +216,7 @@ class AuthControllerTest extends IntegrationTest {
                 .andExpect(jsonPath("$.code").value(AUTH_CREATE.getCode()))
                 .andExpect(jsonPath("$.message").value(SUCCESS_AUTH.getMessage()))
                 .andExpect(jsonPath("$.data.accessToken").exists())
-                .andExpect(jsonPath("$.data.role").value("SENIOR"));
+                .andExpect(jsonPath("$.data.role").value(SENIOR.name()));
     }
 
     @Test
@@ -224,7 +225,7 @@ class AuthControllerTest extends IntegrationTest {
         Wish wish = new Wish(0L, "major", "field", true, user, Status.MATCHED);
         wishRepository.save(wish);
 
-        String refreshToken = jwtUtil.generateRefreshToken(user.getUserId(), Role.USER);
+        String refreshToken = jwtUtil.generateRefreshToken(user.getUserId(), USER);
         when(redisRepository.getValues(any())).thenReturn(Optional.of(refreshToken));
 
         mvc.perform(post("/auth/refresh")
@@ -233,13 +234,13 @@ class AuthControllerTest extends IntegrationTest {
                 .andExpect(jsonPath("$.code").value(AUTH_UPDATE.getCode()))
                 .andExpect(jsonPath("$.message").value(SUCCESS_REGENERATE_TOKEN.getMessage()))
                 .andExpect(jsonPath("$.data.accessToken").exists())
-                .andExpect(jsonPath("$.data.role").value("USER"));
+                .andExpect(jsonPath("$.data.role").value(USER.name()));
     }
 
     @Test
     @DisplayName("로그아웃한다.")
     void logout() throws Exception {
-        String accessToken = jwtUtil.generateAccessToken(user.getUserId(), Role.USER);
+        String accessToken = jwtUtil.generateAccessToken(user.getUserId(), USER);
 
         mvc.perform(post("/auth/logout")
                         .header(AUTHORIZATION, BEARER + accessToken))
