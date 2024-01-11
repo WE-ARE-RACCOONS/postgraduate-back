@@ -5,6 +5,8 @@ import com.postgraduate.IntegrationTest;
 import com.postgraduate.domain.auth.application.dto.req.*;
 import com.postgraduate.domain.auth.application.dto.res.KakaoUserInfoResponse;
 import com.postgraduate.domain.auth.application.usecase.oauth.kakao.KakaoAccessTokenUseCase;
+import com.postgraduate.domain.senior.presentation.constant.SeniorResponseCode;
+import com.postgraduate.domain.senior.presentation.constant.SeniorResponseMessage;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.repository.UserRepository;
 import com.postgraduate.domain.wish.domain.entity.Wish;
@@ -27,6 +29,8 @@ import static com.postgraduate.domain.senior.presentation.constant.SeniorRespons
 import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseMessage.CREATE_SENIOR;
 import static com.postgraduate.domain.user.domain.entity.constant.Role.SENIOR;
 import static com.postgraduate.domain.user.domain.entity.constant.Role.USER;
+import static com.postgraduate.domain.user.presentation.constant.UserResponseCode.USER_NOT_FOUND;
+import static com.postgraduate.domain.user.presentation.constant.UserResponseMessage.NOT_FOUND_USER;
 import static java.time.LocalDateTime.now;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -220,7 +224,10 @@ class AuthControllerTest extends IntegrationTest {
     @Test
     @DisplayName("대학생이 대학원생으로 변경한다.")
     void changeSeniorToken() throws Exception {
-        String token = jwtUtil.generateAccessToken(user.getUserId(), USER);
+        User senior = new User(0L, 2L, "mail", "선배", "011", "profile", 0, SENIOR, true, now(), now(), false);
+        userRepository.save(senior);
+
+        String token = jwtUtil.generateAccessToken(senior.getUserId(), USER);
 
         mvc.perform(post("/auth/senior/token")
                         .header(AUTHORIZATION, BEARER + token))
@@ -229,6 +236,18 @@ class AuthControllerTest extends IntegrationTest {
                 .andExpect(jsonPath("$.message").value(SUCCESS_AUTH.getMessage()))
                 .andExpect(jsonPath("$.data.accessToken").exists())
                 .andExpect(jsonPath("$.data.role").value(SENIOR.name()));
+    }
+
+    @Test
+    @DisplayName("대학원생으로 가입하지 않은 경우 대학원생으로 변경할 수 없다.")
+    void changeSeniorTokenWithoutWish() throws Exception {
+        String token = jwtUtil.generateAccessToken(user.getUserId(), USER);
+
+        mvc.perform(post("/auth/senior/token")
+                        .header(AUTHORIZATION, BEARER + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(SeniorResponseCode.NONE_SENIOR.getCode()))
+                .andExpect(jsonPath("$.message").value(SeniorResponseMessage.NONE_SENIOR.getMessage()));
     }
 
     @Test
