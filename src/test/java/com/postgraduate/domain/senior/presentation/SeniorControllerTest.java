@@ -20,6 +20,8 @@ import com.postgraduate.global.config.security.jwt.util.JwtUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 
@@ -194,15 +196,43 @@ class SeniorControllerTest extends IntegrationTest {
     }
 
     @Test
-    void getSeniorDetails() {
+    @DisplayName("대학원생을 상세 조회한다")
+    void getSeniorDetails() throws Exception {
+        mvc.perform(get("/senior/{seniorId}", senior.getSeniorId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(SENIOR_FIND.getCode()))
+                .andExpect(jsonPath("$.message").value(GET_SENIOR_INFO.getMessage()));
+    }
+
+    @ParameterizedTest
+    @EnumSource(value = Status.class, names = {"NOT_APPROVE", "WAITING"})
+    @DisplayName("승인되지 않은 대학원생은 조회되지 않는다.")
+    void getNotApprovedSeniorDetails(Status status) throws Exception {
+        senior.updateStatus(status);
+        seniorRepository.save(senior);
+
+        mvc.perform(get("/senior/{seniorId}", senior.getSeniorId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(SeniorResponseCode.NONE_SENIOR.getCode()))
+                .andExpect(jsonPath("$.message").value(SeniorResponseMessage.NONE_SENIOR.getMessage()));
     }
 
     @Test
-    void testGetSeniorProfile() {
+    @DisplayName("결제 시 대학원생의 기본 정보를 확인한다")
+    void testGetSeniorProfile() throws Exception {
+        mvc.perform(get("/senior/{seniorId}/profile", senior.getSeniorId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(SENIOR_FIND.getCode()))
+                .andExpect(jsonPath("$.message").value(GET_SENIOR_INFO.getMessage()));
     }
 
     @Test
-    void getSeniorTimes() {
+    @DisplayName("신청서 작성 시 대학원생의 가능 시간 정보를 조회한다")
+    void getSeniorTimes() throws Exception {
+        mvc.perform(get("/senior/{seniorId}/times", senior.getSeniorId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(SENIOR_FIND.getCode()))
+                .andExpect(jsonPath("$.message").value(GET_SENIOR_TIME.getMessage()));
     }
 
     @Test
