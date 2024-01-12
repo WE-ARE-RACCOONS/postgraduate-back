@@ -259,6 +259,12 @@ class SeniorControllerTest extends IntegrationTest {
     }
 
     @Test
-    void checkRole() {
+    @DisplayName("후배 전환시 가능 여부를 확인한다")
+    void checkRole() throws Exception {
+        mvc.perform(get("/senior/me/role")
+                        .header(AUTHORIZATION, BEARER + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(SENIOR_FIND.getCode()))
+                .andExpect(jsonPath("$.message").value(GET_USER_CHECK.getMessage()));
     }
 }
