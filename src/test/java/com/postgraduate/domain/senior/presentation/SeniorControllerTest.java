@@ -236,11 +236,26 @@ class SeniorControllerTest extends IntegrationTest {
     }
 
     @Test
-    void getSearchSenior() {
+    @DisplayName("대학원생을 검색한다")
+    void getSearchSenior() throws Exception {
+        mvc.perform(get("/senior/search", senior.getSeniorId())
+                        .param("find", "keyword"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(SENIOR_FIND.getCode()))
+                .andExpect(jsonPath("$.message").value(GET_SENIOR_LIST_INFO.getMessage()))
+                .andExpect(jsonPath("$.data.seniorSearchResponses[0].seniorId").value(senior.getSeniorId()));
     }
 
     @Test
-    void getFieldSenior() {
+    @DisplayName("대학원생을 분야와 대학교로 검색한다")
+    void getFieldSenior() throws Exception {
+        mvc.perform(get("/senior/field", senior.getSeniorId())
+                        .param("field", "field")
+                        .param("postgradu", "postgradu"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(SENIOR_FIND.getCode()))
+                .andExpect(jsonPath("$.message").value(GET_SENIOR_LIST_INFO.getMessage()))
+                .andExpect(jsonPath("$.data.seniorSearchResponses[0].seniorId").value(senior.getSeniorId()));
     }
 
     @Test
