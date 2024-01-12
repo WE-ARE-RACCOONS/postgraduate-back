@@ -3,12 +3,16 @@ package com.postgraduate.domain.senior.presentation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.postgraduate.IntegrationTest;
 import com.postgraduate.domain.available.application.dto.req.AvailableCreateRequest;
-import com.postgraduate.domain.senior.application.dto.req.SeniorCertificationRequest;
-import com.postgraduate.domain.senior.application.dto.req.SeniorProfileRequest;
+import com.postgraduate.domain.salary.domain.entity.Salary;
+import com.postgraduate.domain.salary.domain.repository.SalaryRepository;
+import com.postgraduate.domain.senior.application.dto.req.*;
 import com.postgraduate.domain.senior.domain.entity.Info;
+import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.entity.constant.Status;
 import com.postgraduate.domain.senior.domain.repository.SeniorRepository;
+import com.postgraduate.domain.senior.presentation.constant.SeniorResponseCode;
+import com.postgraduate.domain.senior.presentation.constant.SeniorResponseMessage;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.entity.constant.Role;
 import com.postgraduate.domain.user.domain.repository.UserRepository;
@@ -21,11 +25,11 @@ import org.springframework.http.MediaType;
 
 import java.util.List;
 
-import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseCode.SENIOR_UPDATE;
-import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseMessage.UPDATE_CERTIFICATION;
-import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseMessage.UPDATE_PROFILE;
+import static com.postgraduate.domain.salary.util.SalaryUtil.getSalaryDate;
+import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseCode.*;
+import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseMessage.*;
 import static java.time.LocalDateTime.now;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -40,6 +44,9 @@ class SeniorControllerTest extends IntegrationTest {
     private UserRepository userRepository;
     @Autowired
     private SeniorRepository seniorRepository;
+    @Autowired
+    private SalaryRepository salaryRepository;
+    private Senior senior;
     private String token;
 
     @BeforeEach
@@ -47,8 +54,9 @@ class SeniorControllerTest extends IntegrationTest {
         User user = new User(0L, 1L, "mail", "후배", "011", "profile", 0, Role.SENIOR, true, now(), now(), false);
         userRepository.save(user);
 
-        Info info = new Info("major", "서울대학교", "교수님", "키워드1,키워드2", "랩실", "인공지능", false, false, "인공지능,키워드1,키워드2");
-        Senior senior = new Senior(0L, user, "certification", Status.WAITING, 0, info, null, now(), now());
+        Info info = new Info("major", "postgradu", "교수님", "keyword1,keyword2", "랩실", "field", false, false, "field,keyword1,keyword2");
+        Profile profile = new Profile("저는요", "한줄소개", "대상", "chatLink", 40);
+        senior = new Senior(0L, user, "certification", Status.APPROVE, 0, info, profile, now(), now());
         seniorRepository.save(senior);
 
         token = jwtUtil.generateAccessToken(user.getUserId(), Role.SENIOR);
@@ -93,7 +101,23 @@ class SeniorControllerTest extends IntegrationTest {
     }
 
     @Test
-    void updateAccount() {
+    @DisplayName("대학원생 정산 계좌를 생성한다")
+    void updateAccount() throws Exception {
+        Salary salary = new Salary(0L, false, senior, null, 10000, getSalaryDate(), now(), null, null, null);
+        salaryRepository.save(salary);
+
+        String request = objectMapper.writeValueAsString(
+                new SeniorAccountRequest("농협", "주인", "123123123456")
+        );
+
+        mvc.perform(post("/senior/account")
+                        .header(AUTHORIZATION, BEARER + token)
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(SENIOR_CREATE.getCode()))
+                .andExpect(jsonPath("$.message").value(CREATE_ACCOUNT.getMessage()));
     }
 
     @Test
