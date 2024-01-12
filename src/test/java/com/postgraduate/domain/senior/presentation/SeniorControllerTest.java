@@ -63,7 +63,7 @@ class SeniorControllerTest extends IntegrationTest {
     }
 
     @Test
-    @DisplayName("대학원생 인증합니다")
+    @DisplayName("대학원생 인증한다")
     void updateCertification() throws Exception {
         String request = objectMapper.writeValueAsString(
                 new SeniorCertificationRequest("certification")
@@ -79,7 +79,7 @@ class SeniorControllerTest extends IntegrationTest {
     }
 
     @Test
-    @DisplayName("대학원생 프로필을 등록합니다")
+    @DisplayName("대학원생 프로필을 등록한다")
     void singUpSenior() throws Exception {
         List<AvailableCreateRequest> availableCreateRequests = List.of(
                 new AvailableCreateRequest("월", "17:00", "23:00"),
@@ -87,7 +87,7 @@ class SeniorControllerTest extends IntegrationTest {
                 new AvailableCreateRequest("토", "10:00", "20:00")
         );
         String request = objectMapper.writeValueAsString(
-                new SeniorProfileRequest("저는요", "한줄소개", "대상", "chatLink", availableCreateRequests)
+                new SeniorProfileRequest("저는요", "대상", "chatLink", "한줄소개", availableCreateRequests)
         );
 
         mvc.perform(patch("/senior/profile")
@@ -121,23 +121,76 @@ class SeniorControllerTest extends IntegrationTest {
     }
 
     @Test
-    void getSeniorInfo() {
+    @DisplayName("대학원생 마이페이지 기본 정보를 조회한다")
+    void getSeniorInfo() throws Exception {
+        mvc.perform(get("/senior/me")
+                        .header(AUTHORIZATION, BEARER + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(SENIOR_FIND.getCode()))
+                .andExpect(jsonPath("$.message").value(GET_SENIOR_INFO.getMessage()))
+                .andExpect(jsonPath("$.data.seniorId").value(senior.getSeniorId()));
     }
 
     @Test
-    void getSeniorProfile() {
+    @DisplayName("대학원생 마이페이지 프로필 수정시 기존 정보를 조회한다")
+    void getSeniorProfile() throws Exception {
+        mvc.perform(get("/senior/me/profile")
+                        .header(AUTHORIZATION, BEARER + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(SENIOR_FIND.getCode()))
+                .andExpect(jsonPath("$.message").value(GET_SENIOR_MYPAGE_PROFILE.getMessage()));
     }
 
     @Test
-    void updateSeniorProfile() {
+    @DisplayName("대학원생 마이페이지 프로필을 수정한다")
+    void updateSeniorProfile() throws Exception {
+        List<AvailableCreateRequest> availableCreateRequests = List.of(
+                new AvailableCreateRequest("월", "17:00", "23:00"),
+                new AvailableCreateRequest("금", "10:00", "20:00"),
+                new AvailableCreateRequest("토", "10:00", "20:00")
+        );
+        String request = objectMapper.writeValueAsString(
+                new SeniorMyPageProfileRequest("lab", "keyword1,keyword2", "info", "target", "chatLink", "AI", "oneliner", availableCreateRequests)
+        );
+
+        mvc.perform(patch("/senior/me/profile")
+                        .header(AUTHORIZATION, BEARER + token)
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(SENIOR_UPDATE.getCode()))
+                .andExpect(jsonPath("$.message").value(UPDATE_MYPAGE_PROFILE.getMessage()));
     }
 
     @Test
-    void getSeniorUserAccount() {
+    @DisplayName("대학원생 마이페이지 계정 설정시 기존 정보를 조회한다")
+    void getSeniorUserAccount() throws Exception {
+        mvc.perform(get("/senior/me/account")
+                        .header(AUTHORIZATION, BEARER + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(SENIOR_FIND.getCode()))
+                .andExpect(jsonPath("$.message").value(GET_SENIOR_MYPAGE_ACCOUNT.getMessage()));
     }
 
     @Test
-    void updateSeniorUserAccount() {
+    @DisplayName("대학원생 마이페이지 계정을 설정한다")
+    void updateSeniorUserAccount() throws Exception {
+        Salary salary = new Salary(0L, false, senior, null, 10000, getSalaryDate(), now(), null, null, null);
+        salaryRepository.save(salary);
+
+        String request = objectMapper.writeValueAsString(
+                new SeniorMyPageUserAccountRequest("뉴닉", "01098765432", "profile", "98765", "국민", "예금주")
+        );
+
+        mvc.perform(patch("/senior/me/account")
+                        .header(AUTHORIZATION, BEARER + token)
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(SENIOR_UPDATE.getCode()))
+                .andExpect(jsonPath("$.message").value(UPDATE_MYPAGE_ACCOOUNT.getMessage()));
     }
 
     @Test
