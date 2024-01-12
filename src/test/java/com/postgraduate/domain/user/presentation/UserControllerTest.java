@@ -6,10 +6,13 @@ import com.postgraduate.domain.user.application.dto.req.UserInfoRequest;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.entity.constant.Role;
 import com.postgraduate.domain.user.domain.repository.UserRepository;
+import com.postgraduate.domain.user.presentation.constant.UserResponseCode;
 import com.postgraduate.global.config.security.jwt.util.JwtUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 
@@ -78,6 +81,23 @@ class UserControllerTest extends IntegrationTest {
                 .andExpect(jsonPath("$.message").value(UPDATE_USER_INFO.getMessage()))
                 .andDo(print());
 
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"0101234567", "번호를한글열하나글자로"})
+    @DisplayName("잘못된 번호로 수정할 수 없다")
+    void updateInvalidPhoneNumber(String phoneNumber) throws Exception {
+        String request = objectMapper.writeValueAsString(
+                new UserInfoRequest("new_profile", "new후배", phoneNumber)
+        );
+        mvc.perform(patch("/user/me/info")
+                        .header(AUTHORIZATION, BEARER + token)
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(UserResponseCode.INVALID_PHONE_NUMBER.getCode()))
+                .andExpect(jsonPath("$.message").value(INVALID_PHONE_NUMBER.getMessage()));
     }
 
     @Test
