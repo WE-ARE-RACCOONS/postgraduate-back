@@ -1,6 +1,7 @@
 package com.postgraduate.domain.auth.application.usecase.jwt;
 
 import com.postgraduate.domain.auth.application.dto.res.JwtTokenResponse;
+import com.postgraduate.domain.senior.exception.NoneSeniorException;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.entity.constant.Role;
 import com.postgraduate.domain.user.exception.DeletedUserException;
@@ -32,7 +33,7 @@ public class JwtUseCase {
             return adminToken(user);
         return userToken(user);
     }
-    
+
     public void logout(User user) {
         jwtUtils.makeExpired(user.getUserId());
     }
@@ -52,7 +53,8 @@ public class JwtUseCase {
     }
 
     public JwtTokenResponse changeSenior(User user) {
-        checkDelete(user);
+        if (!SENIOR.equals(user.getRole()))
+            throw new NoneSeniorException();
         return seniorToken(user);
     }
 
