@@ -166,6 +166,28 @@ class SeniorControllerTest extends IntegrationTest {
     }
 
     @Test
+    @DisplayName("키워드가 6개 초과라면 예외가 발생한다")
+    void updateInvalidKeyword() throws Exception {
+        List<AvailableCreateRequest> availableCreateRequests = List.of(
+                new AvailableCreateRequest("월", "17:00", "23:00"),
+                new AvailableCreateRequest("금", "10:00", "20:00"),
+                new AvailableCreateRequest("토", "10:00", "20:00")
+        );
+        String request = objectMapper.writeValueAsString(
+                new SeniorMyPageProfileRequest("lab", "1,2,3,4,5,6,7", "info", "target", "chatLink", "AI", "oneliner", availableCreateRequests)
+        );
+
+        mvc.perform(patch("/senior/me/profile")
+                        .header(AUTHORIZATION, BEARER + token)
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(SeniorResponseCode.INVALID_KEYWORD.getCode()))
+                .andExpect(jsonPath("$.message").value(SeniorResponseMessage.INVALID_KEYWORD.getMessage()));
+    }
+
+    @Test
     @DisplayName("대학원생 마이페이지 계정 설정시 기존 정보를 조회한다")
     void getSeniorUserAccount() throws Exception {
         mvc.perform(get("/senior/me/account")
