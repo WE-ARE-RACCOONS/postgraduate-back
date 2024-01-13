@@ -2,6 +2,8 @@ package com.postgraduate.domain.senior.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.postgraduate.IntegrationTest;
+import com.postgraduate.domain.account.domain.entity.Account;
+import com.postgraduate.domain.account.domain.repository.AccountRepository;
 import com.postgraduate.domain.available.application.dto.req.AvailableCreateRequest;
 import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.salary.domain.repository.SalaryRepository;
@@ -48,6 +50,8 @@ class SeniorControllerTest extends IntegrationTest {
     private SeniorRepository seniorRepository;
     @Autowired
     private SalaryRepository salaryRepository;
+    @Autowired
+    private AccountRepository accountRepository;
     private Senior senior;
     private String token;
 
@@ -237,6 +241,29 @@ class SeniorControllerTest extends IntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(SENIOR_UPDATE.getCode()))
                 .andExpect(jsonPath("$.message").value(UPDATE_MYPAGE_ACCOOUNT.getMessage()));
+    }
+
+    @Test
+    @DisplayName("계좌등록을 한 선배가 수정할 때 계좌를 입력하지 않으면 예외가 발생한다")
+    void updateSeniorUserWithoutAccount() throws Exception {
+        Account account = new Account(0L, "accountNumber", "bank", "accountHolder", senior);
+        accountRepository.save(account);
+
+        Salary salary = new Salary(0L, false, senior, null, 10000, getSalaryDate(), now(), null, null, null);
+        salaryRepository.save(salary);
+
+        String request = objectMapper.writeValueAsString(
+                new SeniorMyPageUserAccountRequest("뉴닉", "01098765432", "profile", "", "", "")
+        );
+
+        mvc.perform(patch("/senior/me/account")
+                        .header(AUTHORIZATION, BEARER + token)
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(SeniorResponseCode.NONE_ACCOUNT.getCode()))
+                .andExpect(jsonPath("$.message").value(SeniorResponseMessage.NONE_ACCOUNT.getMessage()));
     }
 
     @Test
