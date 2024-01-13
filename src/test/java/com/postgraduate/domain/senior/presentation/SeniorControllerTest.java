@@ -103,6 +103,28 @@ class SeniorControllerTest extends IntegrationTest {
     }
 
     @Test
+    @DisplayName("월-일 외 요일을 입력하면 예외가 발생한다")
+    void InvalidDay() throws Exception {
+        List<AvailableCreateRequest> availableCreateRequests = List.of(
+                new AvailableCreateRequest("월", "17:00", "23:00"),
+                new AvailableCreateRequest("잉", "17:00", "23:00")
+        );
+
+        String request = objectMapper.writeValueAsString(
+                new SeniorProfileRequest("저는요", "대상", "chatLink", "한줄소개", availableCreateRequests)
+        );
+
+        mvc.perform(patch("/senior/profile")
+                        .header(AUTHORIZATION, BEARER + token)
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(SeniorResponseCode.INVALID_DAY.getCode()))
+                .andExpect(jsonPath("$.message").value(SeniorResponseMessage.INVALID_DAY.getMessage()));
+    }
+
+    @Test
     @DisplayName("대학원생 정산 계좌를 생성한다")
     void updateAccount() throws Exception {
         Salary salary = new Salary(0L, false, senior, null, 10000, getSalaryDate(), now(), null, null, null);
