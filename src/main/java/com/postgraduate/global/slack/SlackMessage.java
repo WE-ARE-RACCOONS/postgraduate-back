@@ -13,6 +13,8 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Slf4j
@@ -21,21 +23,23 @@ import java.util.List;
 public class SlackMessage {
     private final Slack slackClient = Slack.getInstance();
 
-    @Value("${slack.url}")
-    private String webHookUrl;
+    @Value("${slack.salary_url}")
+    private String salaryWebHookUrl;
+    @Value("${slack.log_url}")
+    private String logWebHookUrl;
 
     public void sendSlackSalary(List<Salary> salaries) throws IOException{
         List<Attachment> attachments = salaries.stream()
                 .filter(salary -> salary.getTotalAmount() > 0)
                 .map(salary -> generateSalarySlackAttachment(salary))
                 .toList();
-        slackClient.send(webHookUrl, Payload.builder()
+        slackClient.send(salaryWebHookUrl, Payload.builder()
                 .text("---" + LocalDate.now() + "에 정산할 목록 ---")
                 .attachments(attachments)
                 .build());
 
         Attachment attachment = generateSalarySlackAttachment(salaries);
-        slackClient.send(webHookUrl, Payload.builder()
+        slackClient.send(salaryWebHookUrl, Payload.builder()
                 .attachments(List.of(attachment))
                 .build());
     }
@@ -60,7 +64,7 @@ public class SlackMessage {
                 generateSlackField(
                         "선배 닉네임 : " + salary.getSenior().getUser().getNickName(),
                         "금액 : " + salary.getTotalAmount()
-        ));
+                ));
     }
 
     private List<Field> generateTotalField(List<Salary> salaries) {
@@ -70,8 +74,28 @@ public class SlackMessage {
 
         return List.of(
                 generateSlackField(
-                         "총 정산 금액", String.valueOf(totalAmount) + "원"
+                        "총 정산 금액", String.valueOf(totalAmount) + "원"
                 ));
+    }
+
+    public void sendSlackLog(Exception ex) throws IOException{
+        slackClient.send(logWebHookUrl, Payload.builder()
+                .text("로그 서버 에러 발생!! 백엔드팀 확인 요망!!")
+                .attachments(
+                        List.of(generateLogSlackAttachment(ex))
+                )
+                .build());
+    }
+
+    private Attachment generateLogSlackAttachment(Exception ex) {
+        String requestTime = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:SS").format(LocalDateTime.now());
+        return Attachment.builder()
+                .color("ff0000")
+                .title(requestTime + "에 발생한 에러 로그")
+                .fields(List.of(
+                        generateSlackField("Error Message", ex.getMessage())
+                ))
+                .build();
     }
 
     // Field 생성 메서드
