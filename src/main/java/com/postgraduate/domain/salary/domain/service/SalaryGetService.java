@@ -33,7 +33,10 @@ public class SalaryGetService {
         return salaryRepository.findDistinctBySearchSenior(search, pageable);
     }
 
-    public List<Salary> findAll() {
-        return salaryRepository.findAllSalary();
+    public List<Salary> findAllLastMonth() {
+        LocalDate salaryDate =
+                SalaryUtil.getSalaryDate()
+                .minusMonths(1);
+        return salaryRepository.findAllLastSalary(salaryDate);
     }
 }

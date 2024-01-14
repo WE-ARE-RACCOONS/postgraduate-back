@@ -197,6 +197,7 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
     @Override
     public List<SeniorAndAccount> findAllSeniorAndAccount() {
         List<Senior> seniors = queryFactory.selectFrom(senior)
+                .where(senior.user.isDelete.isFalse())
                 .fetch();
         List<Account> accounts = queryFactory.selectFrom(account)
                 .where(account.senior.in(seniors))

@@ -1,6 +1,5 @@
 package com.postgraduate.domain.salary.application.usecase;
 
-import com.postgraduate.domain.account.domain.service.AccountGetService;
 import com.postgraduate.domain.salary.application.dto.SeniorAndAccount;
 import com.postgraduate.domain.salary.application.mapper.SalaryMapper;
 import com.postgraduate.domain.salary.domain.entity.Salary;
@@ -23,14 +22,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SalaryManageUseCase {
     private final SalarySaveService salarySaveService;
-    private final AccountGetService accountGetService;
     private final SalaryGetService salaryGetService;
     private final SeniorGetService seniorGetService;
     private final SlackMessage slackMessage;
 
     @Scheduled(cron = "0 0 0 10 * *", zone = "Asia/Seoul")
     public void createSalary() throws IOException {
-        List<Salary> salaries = salaryGetService.findAll();
+        List<Salary> salaries = salaryGetService.findAllLastMonth();
         slackMessage.sendSlackSalary(salaries);
 
         List<SeniorAndAccount> seniorAndAccounts = seniorGetService.findAllSeniorAndAccount();

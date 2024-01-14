@@ -89,9 +89,10 @@ public class SalaryDslRepositoryImpl implements SalaryDslRepository {
 
 
     @Override
-    public List<Salary> findAllSalary() {
+    public List<Salary> findAllLastSalary(LocalDate salaryDate) {
         return queryFactory.selectFrom(salary)
                 .distinct()
+                .where(salary.salaryDate.eq(salaryDate))
                 .join(salary.senior, senior)
                 .fetchJoin()
                 .join(salary.senior.user, user)
