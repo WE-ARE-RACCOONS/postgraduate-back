@@ -244,7 +244,7 @@ class MentoringControllerTest extends IntegrationTest {
         Salary salary = new Salary(0L, false, senior, null, 10000, LocalDate.now(), now(), null, null, null);
         salaryRepository.save(salary);
 
-        Payment payment = new Payment(0L, mentoring, salary, 10000, "cardAuthNumber", "cardReceipt", now(), null, DONE);
+        Payment payment = new Payment(0L, mentoring, salary, 10000, "a", "cardAuthNumber", "cardReceipt", now(), null, DONE);
         paymentRepository.save(payment);
 
         mvc.perform(get("/mentoring/senior/me/{status}", status.name().toLowerCase())

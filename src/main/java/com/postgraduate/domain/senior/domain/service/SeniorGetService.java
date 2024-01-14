@@ -1,5 +1,6 @@
 package com.postgraduate.domain.senior.domain.service;
 
+import com.postgraduate.domain.salary.application.dto.SeniorAndAccount;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.repository.SeniorRepository;
 import com.postgraduate.domain.senior.exception.NoneSeniorException;
@@ -21,8 +22,8 @@ public class SeniorGetService {
     private static final int SENIOR_PAGE_SIZE = 10;
     private static final int ADMIN_PAGE_SIZE = 15;
 
-    public List<Senior> all() {
-        return seniorRepository.findAll();
+    public List<SeniorAndAccount> findAllSeniorAndAccount() {
+        return seniorRepository.findAllSeniorAndAccount();
     }
 
     public Senior byUser(User user) {

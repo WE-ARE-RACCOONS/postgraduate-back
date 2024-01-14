@@ -59,12 +59,20 @@ public class MentoringController {
         return ResponseDto.create(MENTORING_FIND.getCode(), GET_MENTORING_DETAIL_INFO.getMessage(), mentoringDetail);
     }
 
+    @DeleteMapping("/me/{mentoringId}")
+    @Operation(summary = "[대학생] 결제 오류/취소시 멘토링 삭제", description = "대학생이 신청한 멘토링을 삭제합니다. (취소/거절 아닌 삭제)")
+    public ResponseDto<AppliedMentoringDetailResponse> deleteMentoring(@AuthenticationPrincipal User user,
+                                                                          @PathVariable Long mentoringId) {
+        manageUseCase.delete(user, mentoringId);
+        return ResponseDto.create(MENTORING_DELETE.getCode(), DELETE_MENTORING.getMessage());
+    }
+
     @PostMapping("/applying")
     @Operation(summary = "[대학생] 멘토링 신청", description = "대학생이 멘토링을 신청합니다.")
-    public ResponseDto applyMentoring(@AuthenticationPrincipal User user,
+    public ResponseDto<Long> applyMentoring(@AuthenticationPrincipal User user,
                                       @RequestBody @Valid MentoringApplyRequest request) {
-        applyUseCase.applyMentoring(user, request);
-        return ResponseDto.create(MENTORING_CREATE.getCode(), CREATE_MENTORING.getMessage());
+        Long mentoringId = applyUseCase.applyMentoring(user, request);
+        return ResponseDto.create(MENTORING_CREATE.getCode(), CREATE_MENTORING.getMessage(), mentoringId);
     }
 
     @PatchMapping("/me/{mentoringId}/done")

@@ -1,4 +1,4 @@
-package com.postgraduate.domain.payment.application.dto.req;
+package com.postgraduate.domain.admin.application.dto.req;
 
 public record PaymentResultRequest(
         String PCD_PAY_RST, //요청 결과 "success, error, close"
@@ -8,7 +8,7 @@ public record PaymentResultRequest(
 //        String PCD_PAY_HOST,
 //        String PCD_PAYER_NAME,
 //        String PCD_PAYER_EMAIL,
-//        String PCD_PAY_OID, //주문번호
+        String PCD_PAY_OID, //주문번호
         String PCD_PAY_GOODS, //상품명
 //        String PCD_PAY_AMOUNT,
 //        String PCD_PAY_AMOUNT_REAL,

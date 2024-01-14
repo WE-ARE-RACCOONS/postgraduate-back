@@ -19,12 +19,13 @@ public class MentoringApplyUseCase {
     private final MentoringSaveService mentoringSaveService;
     private final SeniorGetService seniorGetService;
 
-    public void applyMentoring(User user, MentoringApplyRequest request) {
+    public Long applyMentoring(User user, MentoringApplyRequest request) {
         String[] dates = request.date().split(",");
         if (dates.length != 3)
             throw new MentoringDateException();
         Senior senior = seniorGetService.bySeniorId(request.seniorId());
         Mentoring mentoring = MentoringMapper.mapToMentoring(user, senior, request);
-        mentoringSaveService.save(mentoring);
+        Mentoring save = mentoringSaveService.save(mentoring);
+        return save.getMentoringId();
     }
 }

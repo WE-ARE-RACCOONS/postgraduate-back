@@ -11,7 +11,6 @@ import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
 import com.postgraduate.domain.mentoring.domain.service.MentoringUpdateService;
 import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.payment.domain.service.PaymentGetService;
-import com.postgraduate.domain.payment.domain.service.PaymentUpdateService;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.domain.user.domain.entity.User;
@@ -22,8 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.postgraduate.domain.payment.domain.entity.constant.Status.CANCEL;
-
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -33,7 +30,7 @@ public class MentoringManageByAdminUseCase {
     private final UserGetService userGetService;
     private final SeniorGetService seniorGetService;
     private final PaymentGetService paymentGetService;
-    private final PaymentUpdateService paymentUpdateService;
+    private final PaymentManageByAdminUseCase paymentManageUseCase;
 
     public MentoringManageResponse getUserMentorings(Long userId) {
         List<Mentoring> mentorings = mentoringGetService.byUserId(userId);
@@ -64,8 +61,6 @@ public class MentoringManageByAdminUseCase {
     public void cancelMentoring(Long mentoringId) {
         Mentoring mentoring = mentoringGetService.byMentoringId(mentoringId);
         mentoringUpdateService.updateStatus(mentoring, Status.CANCEL);
-        Payment payment = paymentGetService.byMentoring(mentoring);
-        paymentUpdateService.updateStatus(payment, CANCEL);
-        //todo: 결제 취소 로직 추가
+//        paymentManageUseCase.refundPayment(mentoringId); 환불 가능해지면 다시 추가
     }
 }

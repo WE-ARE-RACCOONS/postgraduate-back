@@ -1,6 +1,5 @@
 package com.postgraduate.global.exception;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.postgraduate.global.dto.ErrorResponse;
 import com.postgraduate.global.dto.ResponseDto;
 import com.postgraduate.global.exception.constant.ErrorCode;
@@ -13,7 +12,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import static java.util.Arrays.stream;
+import java.io.IOException;
 
 @Slf4j
 @RestControllerAdvice
@@ -28,7 +27,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseDto<ErrorResponse> handleArgumentValidException() throws JsonProcessingException {
+    public ResponseDto<ErrorResponse> handleArgumentValidException() throws IOException {
         logService.save(new LogRequest("@Valid", ErrorMessage.VALID_BLANK.getMessage()));
         return ResponseDto.create(ErrorCode.VALID_BLANK.getCode(), ErrorMessage.VALID_BLANK.getMessage());
     }

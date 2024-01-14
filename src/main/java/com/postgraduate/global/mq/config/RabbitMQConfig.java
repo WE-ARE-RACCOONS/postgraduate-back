@@ -77,6 +77,7 @@ public class RabbitMQConfig {
         CachingConnectionFactory connectionFactory = new CachingConnectionFactory();
         connectionFactory.setHost(rabbitmqHost);
         connectionFactory.setPort(rabbitmqPort);
+        connectionFactory.setConnectionTimeout(300);
         connectionFactory.setUsername(rabbitmqUsername);
         connectionFactory.setPassword(rabbitmqPassword);
         return connectionFactory;
