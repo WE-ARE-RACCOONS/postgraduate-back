@@ -8,18 +8,24 @@ import com.postgraduate.domain.user.domain.entity.constant.Role;
 import com.postgraduate.domain.user.domain.repository.UserRepository;
 import com.postgraduate.domain.user.presentation.constant.UserResponseCode;
 import com.postgraduate.global.config.security.jwt.util.JwtUtils;
+import com.postgraduate.global.slack.SlackMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+
+import java.io.IOException;
 
 import static com.postgraduate.domain.user.presentation.constant.UserResponseCode.USER_FIND;
 import static com.postgraduate.domain.user.presentation.constant.UserResponseCode.USER_UPDATE;
 import static com.postgraduate.domain.user.presentation.constant.UserResponseMessage.*;
 import static java.time.LocalDateTime.now;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -35,14 +41,18 @@ class UserControllerTest extends IntegrationTest {
     private JwtUtils jwtUtil;
     @Autowired
     private UserRepository userRepository;
+    @MockBean
+    private SlackMessage slackMessage;
     private String token;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws IOException {
         User user = new User(0L, 1L, "mail", "후배", "011", "profile", 0, Role.USER, true, now(), now(), false);
         userRepository.save(user);
 
         token = jwtUtil.generateAccessToken(user.getUserId(), Role.USER);
+
+        doNothing().when(slackMessage).sendSlackLog(any());
     }
 
     @Test

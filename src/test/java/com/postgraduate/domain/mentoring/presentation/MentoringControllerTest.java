@@ -22,6 +22,7 @@ import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.entity.constant.Role;
 import com.postgraduate.domain.user.domain.repository.UserRepository;
 import com.postgraduate.global.config.security.jwt.util.JwtUtils;
+import com.postgraduate.global.slack.SlackMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,8 +30,10 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 
+import java.io.IOException;
 import java.time.LocalDate;
 
 import static com.postgraduate.domain.mentoring.presentation.constant.MentoringResponseCode.*;
@@ -39,6 +42,8 @@ import static com.postgraduate.domain.payment.domain.entity.constant.Status.DONE
 import static com.postgraduate.domain.salary.util.SalaryUtil.getSalaryDate;
 import static com.postgraduate.domain.senior.domain.entity.constant.Status.WAITING;
 import static java.time.LocalDateTime.now;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -60,13 +65,15 @@ class MentoringControllerTest extends IntegrationTest {
     private SalaryRepository salaryRepository;
     @Autowired
     private PaymentRepository paymentRepository;
+    @MockBean
+    private SlackMessage slackMessage;
     private User user;
     private Senior senior;
     private String userAccessToken;
     private String seniorAccessToken;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws IOException {
         user = new User(0L, 1L, "mail", "후배", "011", "profile", 0, Role.USER, true, now(), now(), false);
         userRepository.save(user);
 
@@ -80,6 +87,8 @@ class MentoringControllerTest extends IntegrationTest {
 
         userAccessToken = jwtUtil.generateAccessToken(user.getUserId(), Role.USER);
         seniorAccessToken = jwtUtil.generateAccessToken(userOfSenior.getUserId(), Role.SENIOR);
+
+        doNothing().when(slackMessage).sendSlackLog(any());
     }
 
     @ParameterizedTest

@@ -13,15 +13,21 @@ import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.entity.constant.Role;
 import com.postgraduate.domain.user.domain.repository.UserRepository;
 import com.postgraduate.global.config.security.jwt.util.JwtUtils;
+import com.postgraduate.global.slack.SlackMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
+
+import java.io.IOException;
 
 import static com.postgraduate.domain.salary.presentation.constant.SalaryResponseCode.SALARY_FIND;
 import static com.postgraduate.domain.salary.presentation.constant.SalaryResponseMessage.GET_SALARY_INFO;
 import static com.postgraduate.domain.salary.presentation.constant.SalaryResponseMessage.GET_SALARY_LIST_INFO;
 import static java.time.LocalDateTime.now;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -37,11 +43,13 @@ class SalaryControllerTest extends IntegrationTest {
     private SeniorRepository seniorRepository;
     @Autowired
     private SalaryRepository salaryRepository;
+    @MockBean
+    private SlackMessage slackMessage;
     private String token;
 
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws IOException {
         User user = new User(0L, 1L, "mail", "후배", "011", "profile", 0, Role.SENIOR, true, now(), now(), false);
         userRepository.save(user);
 
@@ -54,6 +62,8 @@ class SalaryControllerTest extends IntegrationTest {
         salaryRepository.save(salary);
 
         token = jwtUtil.generateAccessToken(user.getUserId(), Role.SENIOR);
+
+        doNothing().when(slackMessage).sendSlackLog(any());
     }
 
     @Test

@@ -14,6 +14,7 @@ import com.postgraduate.domain.wish.domain.entity.constant.Status;
 import com.postgraduate.domain.wish.domain.repository.WishRepository;
 import com.postgraduate.global.config.redis.RedisRepository;
 import com.postgraduate.global.config.security.jwt.util.JwtUtils;
+import com.postgraduate.global.slack.SlackMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 
+import java.io.IOException;
 import java.util.Optional;
 
 import static com.postgraduate.domain.auth.presentation.constant.AuthResponseCode.*;
@@ -33,6 +35,7 @@ import static com.postgraduate.domain.user.presentation.constant.UserResponseCod
 import static com.postgraduate.domain.user.presentation.constant.UserResponseMessage.NOT_FOUND_USER;
 import static java.time.LocalDateTime.now;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -53,14 +56,17 @@ class AuthControllerTest extends IntegrationTest {
     private WishRepository wishRepository;
     @MockBean
     RedisRepository redisRepository;
+    @MockBean
+    private SlackMessage slackMessage;
     private User user;
     private final Long anonymousUserSocialId = 2L;
 
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws IOException {
         user = new User(0L, 1L, "mail", "후배", "011", "profile", 0, USER, true, now(), now(), false);
         userRepository.save(user);
+        doNothing().when(slackMessage).sendSlackLog(any());
     }
 
     @Test
