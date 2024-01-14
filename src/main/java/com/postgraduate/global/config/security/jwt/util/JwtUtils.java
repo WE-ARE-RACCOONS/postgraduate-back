@@ -23,6 +23,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -39,6 +40,8 @@ import java.util.List;
 
 import static com.postgraduate.global.config.security.jwt.constant.Type.ACCESS;
 import static com.postgraduate.global.config.security.jwt.constant.Type.REFRESH;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @Component
 @RequiredArgsConstructor
@@ -57,7 +60,6 @@ public class JwtUtils {
     private static final String ROLE = "role";
     private static final String TYPE = "type";
     private static final String AUTHORIZATION = "Authorization";
-    private static final int STATUS = 500;
     private static final String CONTENT_TYPE = "application/json";
     private static final String CHARACTER_ENCODING = "UTF-8";
 
@@ -111,7 +113,7 @@ public class JwtUtils {
             AuthDetails authDetails = authDetailsService.loadUserByUsername(claims.getSubject());
             return authDetails;
         } catch (UserNotFoundException ex) {
-            jwtExceptionHandler(response, ex);
+            jwtExceptionHandler(BAD_REQUEST, response, ex);
             throw ex;
         }
     }
@@ -123,10 +125,10 @@ public class JwtUtils {
                 throw new InvalidTokenException();
             return true;
         } catch (ApplicationException | SignatureException | UnsupportedJwtException | IllegalArgumentException | MalformedJwtException e) {
-            jwtExceptionHandler(response, new InvalidTokenException());
+            jwtExceptionHandler(BAD_REQUEST, response, new InvalidTokenException());
             return false;
         } catch (ExpiredJwtException e) {
-            jwtExceptionHandler(response, new TokenExpiredException());
+            jwtExceptionHandler(UNAUTHORIZED, response, new TokenExpiredException());
             return false;
         }
     }
@@ -136,8 +138,8 @@ public class JwtUtils {
         return parser.parseClaimsJws(token).getBody();
     }
 
-    private void jwtExceptionHandler(HttpServletResponse response, ApplicationException ex) {
-        response.setStatus(STATUS);
+    private void jwtExceptionHandler(HttpStatus status, HttpServletResponse response, ApplicationException ex) {
+        response.setStatus(status.value());
         response.setContentType(CONTENT_TYPE);
         response.setCharacterEncoding(CHARACTER_ENCODING);
         try {

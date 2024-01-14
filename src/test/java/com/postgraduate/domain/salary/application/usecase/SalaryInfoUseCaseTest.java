@@ -103,9 +103,9 @@ class SalaryInfoUseCaseTest {
                 , 40,  DONE
                 , LocalDateTime.now(), LocalDateTime.now());
         Salary salary = mock(Salary.class);
-        Payment payment1 = new Payment(1L, mentoring1, salary, 1000, "a", "a", LocalDateTime.now(), LocalDateTime.now(), Status.DONE);
-        Payment payment2 = new Payment(2L, mentoring2, salary, 1000, "a", "a", LocalDateTime.now(), LocalDateTime.now(), Status.DONE);
-        Payment payment3 = new Payment(3L, mentoring3, salary, 1000, "a", "a", LocalDateTime.now(), LocalDateTime.now(), Status.DONE);
+        Payment payment1 = new Payment(1L, mentoring1, salary, 1000, "a", "a", "a", LocalDateTime.now(), LocalDateTime.now(), Status.DONE);
+        Payment payment2 = new Payment(2L, mentoring2, salary, 1000, "a", "a", "a", LocalDateTime.now(), LocalDateTime.now(), Status.DONE);
+        Payment payment3 = new Payment(3L, mentoring3, salary, 1000, "a", "a", "a", LocalDateTime.now(), LocalDateTime.now(), Status.DONE);
         List<Payment> payments = List.of(payment1, payment2, payment3);
 
         given(seniorGetService.byUser(user))

@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.postgraduate.domain.payment.domain.entity.constant.Status.DONE;
+
 @Service
 @RequiredArgsConstructor
 public class PaymentGetService {
@@ -26,6 +28,10 @@ public class PaymentGetService {
 
     public Payment byMentoring(Mentoring mentoring) {
         return paymentRepository.findByMentoring(mentoring).orElseThrow(PaymentNotFoundException::new);
+    }
+
+    public Payment byMentoringId(Long mentoringId) {
+        return paymentRepository.findByMentoring_MentoringIdAndStatus(mentoringId, DONE).orElseThrow(PaymentNotFoundException::new);
     }
 
     public List<Payment> bySeniorAndStatus(Senior senior, Boolean status) {

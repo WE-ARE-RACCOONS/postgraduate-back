@@ -1,7 +1,7 @@
 package com.postgraduate.domain.payment.application.mapper;
 
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
-import com.postgraduate.domain.payment.application.dto.req.PaymentResultRequest;
+import com.postgraduate.domain.admin.application.dto.req.PaymentResultRequest;
 import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.salary.domain.entity.Salary;
 
@@ -15,6 +15,7 @@ public class PaymentMapper {
                 .mentoring(mentoring)
                 .salary(salary)
                 .pay(Integer.parseInt(request.PCD_PAY_TOTAL()))
+                .orderId(request.PCD_PAY_OID())
                 .cardAuthNumber(request.PCD_PAY_CARDAUTHNO())
                 .cardReceipt(request.PCD_PAY_CARDRECEIPT())
                 .paidAt(LocalDateTime.parse(request.PCD_PAY_TIME(), formatter))
