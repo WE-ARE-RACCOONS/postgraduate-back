@@ -9,6 +9,10 @@ import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
 import com.postgraduate.domain.mentoring.domain.service.MentoringUpdateService;
 import com.postgraduate.domain.mentoring.exception.MentoringNotExpectedException;
 import com.postgraduate.domain.mentoring.exception.MentoringNotWaitingException;
+import com.postgraduate.domain.payment.domain.entity.Payment;
+import com.postgraduate.domain.payment.domain.entity.constant.Status;
+import com.postgraduate.domain.payment.domain.service.PaymentGetService;
+import com.postgraduate.domain.payment.domain.service.PaymentUpdateService;
 import com.postgraduate.domain.refuse.application.dto.req.MentoringRefuseRequest;
 import com.postgraduate.domain.refuse.application.mapper.RefuseMapper;
 import com.postgraduate.domain.refuse.domain.entity.Refuse;
@@ -43,12 +47,16 @@ public class MentoringManageUseCase {
     private final SeniorGetService seniorGetService;
     private final SalaryGetService salaryGetService;
     private final SalaryUpdateService salaryUpdateService;
+    private final PaymentGetService paymentGetService;
+    private final PaymentUpdateService paymentUpdateService;
 
     public void updateCancel(User user, Long mentoringId) {
         Mentoring mentoring = checkIsMyMentoringUseCase.byUser(user, mentoringId);
         if (mentoring.getStatus() != WAITING)
             throw new MentoringNotWaitingException();
         mentoringUpdateService.updateStatus(mentoring, CANCEL);
+        Payment payment = paymentGetService.byMentoring(mentoring);
+        paymentUpdateService.updateStatus(payment, Status.CANCEL);
     }
 
     public void updateDone(User user, Long mentoringId) {
