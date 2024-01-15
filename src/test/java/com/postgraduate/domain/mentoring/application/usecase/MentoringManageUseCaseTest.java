@@ -8,12 +8,15 @@ import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
 import com.postgraduate.domain.mentoring.domain.service.MentoringUpdateService;
 import com.postgraduate.domain.mentoring.exception.MentoringNotExpectedException;
 import com.postgraduate.domain.mentoring.exception.MentoringNotWaitingException;
+import com.postgraduate.domain.payment.domain.entity.Payment;
+import com.postgraduate.domain.payment.domain.entity.constant.Status;
+import com.postgraduate.domain.payment.domain.service.PaymentGetService;
+import com.postgraduate.domain.payment.domain.service.PaymentUpdateService;
 import com.postgraduate.domain.refuse.application.dto.req.MentoringRefuseRequest;
 import com.postgraduate.domain.refuse.domain.entity.Refuse;
 import com.postgraduate.domain.refuse.domain.service.RefuseSaveService;
 import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.salary.domain.service.SalaryGetService;
-import com.postgraduate.domain.salary.domain.service.SalarySaveService;
 import com.postgraduate.domain.salary.domain.service.SalaryUpdateService;
 import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Profile;
@@ -36,7 +39,6 @@ import static com.postgraduate.domain.senior.domain.entity.constant.Status.APPRO
 import static com.postgraduate.domain.user.domain.entity.constant.Role.USER;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
-import static java.time.LocalDateTime.now;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -54,7 +56,7 @@ class MentoringManageUseCaseTest {
     private MentoringUpdateService mentoringUpdateService;
 
     @Mock
-    private MentoringGetService mentoringGetServicel;
+    private MentoringGetService mentoringGetService;
 
     @Mock
     private RefuseSaveService refuseSaveService;
@@ -70,6 +72,12 @@ class MentoringManageUseCaseTest {
 
     @Mock
     private SalaryUpdateService salaryUpdateService;
+
+    @Mock
+    private PaymentGetService paymentGetService;
+
+    @Mock
+    private PaymentUpdateService paymentUpdateService;
 
     @InjectMocks
     private MentoringManageUseCase mentoringManageUseCase;
@@ -100,8 +108,14 @@ class MentoringManageUseCaseTest {
                 , 40, WAITING
                 , LocalDateTime.now(), LocalDateTime.now());
 
+        Payment payment = new Payment(0L, mentoring, null, 24000, null
+                , null, null, null, null, Status.DONE);
+
         given(checkIsMyMentoringUseCase.byUser(user, mentoringId))
                 .willReturn(mentoring);
+
+        given(paymentGetService.byMentoring(mentoring))
+                .willReturn(payment);
 
         mentoringManageUseCase.updateCancel(user, mentoringId);
 

@@ -222,6 +222,9 @@ class MentoringControllerTest extends IntegrationTest {
         Mentoring mentoring = new Mentoring(0L, user, senior, "topic", "question", "date", 40, Status.WAITING, now(), now());
         mentoringRepository.save(mentoring);
 
+        Payment payment = new Payment(0L, mentoring, null, 24000, null, null, null, null, null, DONE);
+        paymentRepository.save(payment);
+
         mvc.perform(patch("/mentoring/me/{mentoringId}/cancel", mentoring.getMentoringId())
                         .header(AUTHORIZATION, BEARER + userAccessToken))
                 .andExpect(status().isOk())
