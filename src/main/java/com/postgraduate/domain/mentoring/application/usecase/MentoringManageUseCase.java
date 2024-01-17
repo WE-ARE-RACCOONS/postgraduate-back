@@ -57,6 +57,7 @@ public class MentoringManageUseCase {
         mentoringUpdateService.updateStatus(mentoring, CANCEL);
         Payment payment = paymentGetService.byMentoring(mentoring);
         paymentUpdateService.updateStatus(payment, Status.CANCEL);
+        // todo 환불 구현 후 수정
     }
 
     public void updateDone(User user, Long mentoringId) {
