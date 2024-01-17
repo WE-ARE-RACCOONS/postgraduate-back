@@ -158,9 +158,9 @@ class MentoringSeniorInfoUseCaseTest {
         User user = mock(User.class);
         Senior senior = mock(Senior.class);
 
-        Mentoring mentoring1 = new Mentoring(1L, user, senior, "A", "b", "a", 40, WAITING, LocalDateTime.now(), LocalDateTime.now());
-        Mentoring mentoring2 = new Mentoring(2L, user, senior, "A", "b", "a", 40, WAITING, LocalDateTime.now(), LocalDateTime.now());
-        Mentoring mentoring3 = new Mentoring(3L, user, senior, "A", "b", "a", 40, WAITING, LocalDateTime.now(), LocalDateTime.now());
+        Mentoring mentoring1 = new Mentoring(1L, user, senior, "A", "b", "2024-01-20-17-00", 40, WAITING, LocalDateTime.now(), LocalDateTime.now());
+        Mentoring mentoring2 = new Mentoring(2L, user, senior, "A", "b", "2024-01-20-17-00", 40, WAITING, LocalDateTime.now(), LocalDateTime.now());
+        Mentoring mentoring3 = new Mentoring(3L, user, senior, "A", "b", "2024-01-20-17-00", 40, WAITING, LocalDateTime.now(), LocalDateTime.now());
         List<Mentoring> mentorings = List.of(mentoring1, mentoring2, mentoring3);
 
         given(seniorGetService.byUser(user))
