@@ -114,7 +114,7 @@ public class SeniorMapper {
 
     public static SeniorMyPageResponse mapToSeniorMyPageInfo(Senior senior, Status certificationRegister, boolean profileRegister) {
         User user = senior.getUser();
-        return new SeniorMyPageResponse(senior.getSeniorId(), user.getNickName(), user.getProfile(), certificationRegister, profileRegister);
+        return new SeniorMyPageResponse(user.getSocialId(), senior.getSeniorId(), user.getNickName(), user.getProfile(), certificationRegister, profileRegister);
     }
 
     public static SeniorMyPageProfileResponse mapToMyPageProfile(Senior senior, List<AvailableTimeResponse> times) {
