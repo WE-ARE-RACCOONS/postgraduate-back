@@ -86,7 +86,7 @@ public class MentoringMapper {
                 .build();
     }
 
-    public static WaitingSeniorMentoringInfo mapToSeniorWaitingInfo(Mentoring mentoring, long remainTime) {
+    public static WaitingSeniorMentoringInfo mapToSeniorWaitingInfo(Mentoring mentoring, String remainTime) {
         User user = mentoring.getUser();
         return new WaitingSeniorMentoringInfo(
                 mentoring.getMentoringId(),
@@ -95,12 +95,13 @@ public class MentoringMapper {
                 remainTime);
     }
 
-    public static ExpectedSeniorMentoringInfo mapToSeniorExpectedInfo(Mentoring mentoring) {
+    public static ExpectedSeniorMentoringInfo mapToSeniorExpectedInfo(Mentoring mentoring, long dDay) {
         User user = mentoring.getUser();
         return new ExpectedSeniorMentoringInfo(mentoring.getMentoringId(),
                 user.getProfile(), user.getNickName(),
                 mentoring.getTerm(),
-                mentoring.getDate());
+                mentoring.getDate(),
+                dDay);
     }
 
     public static DoneSeniorMentoringInfo mapToSeniorDoneInfo(Mentoring mentoring, Payment payment) {

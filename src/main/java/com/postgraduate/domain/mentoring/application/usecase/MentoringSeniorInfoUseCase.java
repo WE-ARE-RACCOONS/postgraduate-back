@@ -10,6 +10,7 @@ import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.entity.constant.Status;
 import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
 import com.postgraduate.domain.mentoring.exception.MentoringDetailNotFoundException;
+import com.postgraduate.domain.mentoring.util.DateUtils;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.domain.user.domain.entity.User;
@@ -19,11 +20,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import static com.postgraduate.domain.mentoring.application.mapper.MentoringMapper.mapToSeniorMentoringDetail;
-import static com.postgraduate.domain.mentoring.application.mapper.MentoringMapper.mapToSeniorWaitingInfo;
+import static com.postgraduate.domain.mentoring.application.mapper.MentoringMapper.*;
 import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.*;
+import static java.time.Duration.between;
 
 @Service
 @Transactional
@@ -51,7 +53,7 @@ public class MentoringSeniorInfoUseCase {
                             .toLocalDate()
                             .atStartOfDay();
                     LocalDateTime now = LocalDateTime.now();
-                    long remain = Duration.between(now, expiredAt).toMinutes();
+                    String remain = DateUtils.remainTime(between(now, expiredAt));
                     return mapToSeniorWaitingInfo(mentoring, remain);
                 })
                 .toList();
@@ -61,7 +63,12 @@ public class MentoringSeniorInfoUseCase {
     public SeniorMentoringResponse getSeniorExpected(User user) {
         List<Mentoring> mentorings = getMentorings(user, EXPECTED);
         List<ExpectedSeniorMentoringInfo> expectedMentoringInfos = mentorings.stream()
-                .map(MentoringMapper::mapToSeniorExpectedInfo)
+                .map(mentoring -> {
+                    LocalDateTime date = DateUtils.stringToLocalDateTime(mentoring.getDate());
+                    LocalDateTime now = LocalDateTime.now();
+                    long dDay = between(now, date).toDays();
+                    return mapToSeniorExpectedInfo(mentoring, dDay);
+                })
                 .toList();
         return new SeniorMentoringResponse(expectedMentoringInfos);
     }
