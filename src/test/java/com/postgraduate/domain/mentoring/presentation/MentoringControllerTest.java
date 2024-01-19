@@ -22,12 +22,15 @@ import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.entity.constant.Role;
 import com.postgraduate.domain.user.domain.repository.UserRepository;
 import com.postgraduate.global.config.security.jwt.util.JwtUtils;
+import com.postgraduate.global.exception.constant.ErrorCode;
+import com.postgraduate.global.exception.constant.ErrorMessage;
 import com.postgraduate.global.slack.SlackMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -200,6 +203,22 @@ class MentoringControllerTest extends IntegrationTest {
 
     }
 
+    @ParameterizedTest
+    @NullAndEmptySource
+    @DisplayName("신청서가 빈 칸이라면 멘토링을 신청할 수 없다")
+    void emptyApplyMentoring(String empty) throws Exception {
+        String request = objectMapper.writeValueAsString(new MentoringApplyRequest(senior.getSeniorId(), empty, empty, empty));
+
+        mvc.perform(post("/mentoring/applying")
+                        .header(AUTHORIZATION, BEARER + userAccessToken)
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(ErrorCode.VALID_BLANK.getCode()))
+                .andExpect(jsonPath("$.message").value(ErrorMessage.VALID_BLANK.getMessage()));
+    }
+
     @Test
     @DisplayName("대학생이 멘토링을 완료한다.")
     void updateMentoringDone() throws Exception {
@@ -369,6 +388,24 @@ class MentoringControllerTest extends IntegrationTest {
                 .andExpect(jsonPath("$.message").value(NOT_WAITING_MENTORING.getMessage()));
     }
 
+    @ParameterizedTest
+    @NullAndEmptySource
+    @DisplayName("확정날짜가 비어있다면 멘토링을 수락할 수 없다")
+    void updateSeniorMentoringExpectedWithoutDate(String empty) throws Exception {
+        Mentoring mentoring = new Mentoring(0L, user, senior, "topic", "question", "date1,date2,date3", 40, Status.WAITING, now(), now());
+        mentoringRepository.save(mentoring);
+
+        String request = objectMapper.writeValueAsString(new MentoringDateRequest(empty));
+        mvc.perform(patch("/mentoring/senior/me/{mentoringId}/expected", mentoring.getMentoringId())
+                        .header(AUTHORIZATION, BEARER + seniorAccessToken)
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(ErrorCode.VALID_BLANK.getCode()))
+                .andExpect(jsonPath("$.message").value(ErrorMessage.VALID_BLANK.getMessage()));
+    }
+
     @Test
     @DisplayName("대학원생이 멘토링을 거절한다.")
     void updateSeniorMentoringRefuse() throws Exception {
@@ -402,5 +439,23 @@ class MentoringControllerTest extends IntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(MENTORING_NOT_WAITING.getCode()))
                 .andExpect(jsonPath("$.message").value(NOT_WAITING_MENTORING.getMessage()));
+    }
+
+    @ParameterizedTest
+    @NullAndEmptySource
+    @DisplayName("사유가 비어있다면 멘토링을 거절할 수 없다")
+    void updateSeniorMentoringExpectedWithoutRefuse(String empty) throws Exception {
+        Mentoring mentoring = new Mentoring(0L, user, senior, "topic", "question", "date1,date2,date3", 40, Status.WAITING, now(), now());
+        mentoringRepository.save(mentoring);
+
+        String request = objectMapper.writeValueAsString(new MentoringRefuseRequest(empty));
+        mvc.perform(patch("/mentoring/senior/me/{mentoringId}/refuse", mentoring.getMentoringId())
+                        .header(AUTHORIZATION, BEARER + seniorAccessToken)
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(ErrorCode.VALID_BLANK.getCode()))
+                .andExpect(jsonPath("$.message").value(ErrorMessage.VALID_BLANK.getMessage()));
     }
 }
