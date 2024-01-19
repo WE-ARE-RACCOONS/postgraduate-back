@@ -45,6 +45,7 @@ import static java.time.LocalDateTime.now;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -304,6 +305,56 @@ class SeniorControllerTest extends IntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(SENIOR_UPDATE.getCode()))
                 .andExpect(jsonPath("$.message").value(UPDATE_MYPAGE_PROFILE.getMessage()));
+    }
+
+    @ParameterizedTest
+    @NullAndEmptySource
+    @DisplayName("가능 시간대가 비어있으면 예외가 발생한다")
+    void updateInvalidAvailableSeniorProfile(String empty) throws Exception {
+        List<AvailableCreateRequest> availableCreateRequests = List.of(
+                new AvailableCreateRequest(empty, empty, empty),
+                new AvailableCreateRequest(empty, empty, empty),
+                new AvailableCreateRequest(empty, empty, empty)
+        );
+
+        String request = objectMapper.writeValueAsString(
+                new SeniorMyPageProfileRequest("lab", "keyword1,keyword2", "info", "target", "chatLink", "AI", "oneliner", availableCreateRequests)
+        );
+
+        mvc.perform(patch("/senior/me/profile")
+                        .header(AUTHORIZATION, BEARER + token)
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(ErrorCode.VALID_BLANK.getCode()))
+                .andExpect(jsonPath("$.message").value(ErrorMessage.VALID_BLANK.getMessage()))
+                .andDo(print());
+    }
+
+    @ParameterizedTest
+    @NullAndEmptySource
+    @DisplayName("프로필이 비어있으면 예외가 발생한다")
+    void updateInvalidSeniorProfile(String empty) throws Exception {
+        List<AvailableCreateRequest> availableCreateRequests = List.of(
+                new AvailableCreateRequest("월", "17:00", "23:00"),
+                new AvailableCreateRequest("금", "10:00", "20:00"),
+                new AvailableCreateRequest("토", "10:00", "20:00")
+        );
+
+        String request = objectMapper.writeValueAsString(
+                new SeniorMyPageProfileRequest(empty, empty, empty, empty, empty, empty, empty, availableCreateRequests)
+        );
+
+        mvc.perform(patch("/senior/me/profile")
+                        .header(AUTHORIZATION, BEARER + token)
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(ErrorCode.VALID_BLANK.getCode()))
+                .andExpect(jsonPath("$.message").value(ErrorMessage.VALID_BLANK.getMessage()))
+                .andDo(print());
     }
 
     @Test
