@@ -28,6 +28,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EmptySource;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -430,9 +431,31 @@ class SeniorControllerTest extends IntegrationTest {
                 .andExpect(jsonPath("$.message").value(UPDATE_MYPAGE_ACCOOUNT.getMessage()));
     }
 
-    @Test
+    @ParameterizedTest
+    @NullAndEmptySource
+    @DisplayName("대학원생 마이페이지 계정을 수정 요청에 닉네임, 전화번호, 프로필사진이 없다면 예외가 발생한다")
+    void updateEmptySeniorUserAccount(String empty) throws Exception {
+        Salary salary = new Salary(0L, false, senior, null, 10000, getSalaryDate(), now(), null, null, null);
+        salaryRepository.save(salary);
+
+        String request = objectMapper.writeValueAsString(
+                new SeniorMyPageUserAccountRequest(empty, empty, empty, "98765", "국민", "예금주")
+        );
+
+        mvc.perform(patch("/senior/me/account")
+                        .header(AUTHORIZATION, BEARER + token)
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(ErrorCode.VALID_BLANK.getCode()))
+                .andExpect(jsonPath("$.message").value(ErrorMessage.VALID_BLANK.getMessage()));
+    }
+
+    @ParameterizedTest
+    @EmptySource
     @DisplayName("계좌등록을 한 선배가 수정할 때 계좌를 입력하지 않으면 예외가 발생한다")
-    void updateSeniorUserWithoutAccount() throws Exception {
+    void updateSeniorUserWithoutAccount(String empty) throws Exception {
         Account account = new Account(0L, "accountNumber", "bank", "accountHolder", senior);
         accountRepository.save(account);
 
@@ -440,7 +463,7 @@ class SeniorControllerTest extends IntegrationTest {
         salaryRepository.save(salary);
 
         String request = objectMapper.writeValueAsString(
-                new SeniorMyPageUserAccountRequest("뉴닉", "01098765432", "profile", "", "", "")
+                new SeniorMyPageUserAccountRequest("뉴닉", "01098765432", "profile", empty, empty, empty)
         );
 
         mvc.perform(patch("/senior/me/account")
