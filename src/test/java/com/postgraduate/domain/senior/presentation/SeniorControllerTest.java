@@ -45,7 +45,6 @@ import static java.time.LocalDateTime.now;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -328,8 +327,7 @@ class SeniorControllerTest extends IntegrationTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(ErrorCode.VALID_BLANK.getCode()))
-                .andExpect(jsonPath("$.message").value(ErrorMessage.VALID_BLANK.getMessage()))
-                .andDo(print());
+                .andExpect(jsonPath("$.message").value(ErrorMessage.VALID_BLANK.getMessage()));
     }
 
     @ParameterizedTest
@@ -353,8 +351,7 @@ class SeniorControllerTest extends IntegrationTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(ErrorCode.VALID_BLANK.getCode()))
-                .andExpect(jsonPath("$.message").value(ErrorMessage.VALID_BLANK.getMessage()))
-                .andDo(print());
+                .andExpect(jsonPath("$.message").value(ErrorMessage.VALID_BLANK.getMessage()));
     }
 
     @Test
@@ -380,13 +377,37 @@ class SeniorControllerTest extends IntegrationTest {
     }
 
     @Test
-    @DisplayName("대학원생 마이페이지 계정 설정시 기존 정보를 조회한다")
-    void getSeniorUserAccount() throws Exception {
+    @DisplayName("등록한 계좌가 없다면 null을 반환한다.")
+    void getSeniorUserEmptyAccount() throws Exception {
         mvc.perform(get("/senior/me/account")
                         .header(AUTHORIZATION, BEARER + token))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(SENIOR_FIND.getCode()))
-                .andExpect(jsonPath("$.message").value(GET_SENIOR_MYPAGE_ACCOUNT.getMessage()));
+                .andExpect(jsonPath("$.message").value(GET_SENIOR_MYPAGE_ACCOUNT.getMessage()))
+                .andExpect(jsonPath("$.data.profile").isNotEmpty())
+                .andExpect(jsonPath("$.data.phoneNumber").isNotEmpty())
+                .andExpect(jsonPath("$.data.nickName").isNotEmpty())
+                .andExpect(jsonPath("$.data.bank").isEmpty())
+                .andExpect(jsonPath("$.data.accountNumber").isEmpty())
+                .andExpect(jsonPath("$.data.accountHolder").isEmpty());
+    }
+
+    @Test
+    @DisplayName("대학원생 마이페이지 계정 설정시 기존 정보를 조회한다")
+    void getSeniorUserAccount() throws Exception {
+        updateAccount();
+
+        mvc.perform(get("/senior/me/account")
+                        .header(AUTHORIZATION, BEARER + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(SENIOR_FIND.getCode()))
+                .andExpect(jsonPath("$.message").value(GET_SENIOR_MYPAGE_ACCOUNT.getMessage()))
+                .andExpect(jsonPath("$.data.profile").isNotEmpty())
+                .andExpect(jsonPath("$.data.phoneNumber").isNotEmpty())
+                .andExpect(jsonPath("$.data.nickName").isNotEmpty())
+                .andExpect(jsonPath("$.data.bank").isNotEmpty())
+                .andExpect(jsonPath("$.data.accountNumber").isNotEmpty())
+                .andExpect(jsonPath("$.data.accountHolder").isNotEmpty());
     }
 
     @Test
