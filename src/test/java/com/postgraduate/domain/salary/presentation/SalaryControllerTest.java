@@ -23,8 +23,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import java.io.IOException;
 
 import static com.postgraduate.domain.salary.presentation.constant.SalaryResponseCode.SALARY_FIND;
-import static com.postgraduate.domain.salary.presentation.constant.SalaryResponseMessage.GET_SALARY_INFO;
-import static com.postgraduate.domain.salary.presentation.constant.SalaryResponseMessage.GET_SALARY_LIST_INFO;
+import static com.postgraduate.domain.salary.presentation.constant.SalaryResponseCode.SALARY_NOT_FOUND;
+import static com.postgraduate.domain.salary.presentation.constant.SalaryResponseMessage.*;
 import static java.time.LocalDateTime.now;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
@@ -46,6 +46,7 @@ class SalaryControllerTest extends IntegrationTest {
     @MockBean
     private SlackMessage slackMessage;
     private String token;
+    private Salary salary;
 
 
     @BeforeEach
@@ -58,7 +59,7 @@ class SalaryControllerTest extends IntegrationTest {
         Senior senior = new Senior(0L, user, "certification", Status.APPROVE, 0, info, profile, now(), now());
         seniorRepository.save(senior);
 
-        Salary salary = new Salary(0L, false, senior, null, 0, SalaryUtil.getSalaryDate(), null, "bank", "account", "holder");
+        salary = new Salary(0L, false, senior, null, 0, SalaryUtil.getSalaryDate(), null, "bank", "account", "holder");
         salaryRepository.save(salary);
 
         token = jwtUtil.generateAccessToken(user.getUserId(), Role.SENIOR);
@@ -74,6 +75,18 @@ class SalaryControllerTest extends IntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(SALARY_FIND.getCode()))
                 .andExpect(jsonPath("$.message").value(GET_SALARY_INFO.getMessage()));
+    }
+
+    @Test
+    @DisplayName("정산이 없다면 예외가 발생한다")
+    void getEmptySalary() throws Exception {
+        salaryRepository.delete(salary);
+
+        mvc.perform(get("/salary")
+                        .header(AUTHORIZATION, BEARER + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(SALARY_NOT_FOUND.getCode()))
+                .andExpect(jsonPath("$.message").value(NOT_FOUND_SALARY.getMessage()));
     }
 
     @Test
