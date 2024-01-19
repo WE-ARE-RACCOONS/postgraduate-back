@@ -36,6 +36,8 @@ import org.springframework.http.MediaType;
 import java.io.IOException;
 import java.time.LocalDate;
 
+import static com.postgraduate.domain.auth.presentation.constant.AuthResponseCode.AUTH_DENIED;
+import static com.postgraduate.domain.auth.presentation.constant.AuthResponseMessage.PERMISSION_DENIED;
 import static com.postgraduate.domain.mentoring.presentation.constant.MentoringResponseCode.*;
 import static com.postgraduate.domain.mentoring.presentation.constant.MentoringResponseMessage.*;
 import static com.postgraduate.domain.payment.domain.entity.constant.Status.DONE;
@@ -134,6 +136,21 @@ class MentoringControllerTest extends IntegrationTest {
                 .andExpect(jsonPath("$.code").value(MENTORING_FIND.getCode()))
                 .andExpect(jsonPath("$.message").value(GET_MENTORING_DETAIL_INFO.getMessage()))
                 .andExpect(jsonPath("$.data.seniorId").value(senior.getSeniorId()));
+    }
+
+    @Test
+    @DisplayName("자신이 신청한 멘토링이 아니라면 상세조회되지 않는다")
+    void getOtherMentoringDetail() throws Exception {
+        User otherUser = new User(-1L, 0L, "mail", "다른 후배", "011", "profile", 0, Role.USER, true, now(), now(), false);
+        userRepository.save(otherUser);
+        Mentoring mentoring = new Mentoring(0L, otherUser, senior, "topic", "question", "date", 40, Status.EXPECTED, now(), now());
+        mentoringRepository.save(mentoring);
+
+        mvc.perform(get("/mentoring/me/{mentoringId}", mentoring.getMentoringId())
+                        .header(AUTHORIZATION, BEARER + userAccessToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(AUTH_DENIED.getCode()))
+                .andExpect(jsonPath("$.message").value(PERMISSION_DENIED.getMessage()));
     }
 
 
@@ -281,6 +298,26 @@ class MentoringControllerTest extends IntegrationTest {
                 .andExpect(jsonPath("$.message").value(GET_MENTORING_DETAIL_INFO.getMessage()))
                 .andExpect(jsonPath("$.data.nickName").value("후배"));
 
+    }
+
+    @Test
+    @DisplayName("자신이 신청받은 멘토링이 아니라면 상세조회되지 않는다")
+    void getOtherSeniorMentoringDetail() throws Exception {
+        User otherUser = new User(-1L, 0L, "mail", "다른 후배", "011", "profile", 0, Role.USER, true, now(), now(), false);
+        userRepository.save(otherUser);
+
+        Info info = new Info("major", "서울대학교", "교수님", "키워드1,키워드2", "랩실", "인공지능", false, false, "인공지능,키워드1,키워드2");
+        Senior otherSenior = new Senior(-1L, otherUser, "certification", WAITING, 0, info, null, now(), now());
+        seniorRepository.save(otherSenior);
+
+        Mentoring mentoring = new Mentoring(0L, otherUser, otherSenior, "topic", "question", "date", 40, Status.EXPECTED, now(), now());
+        mentoringRepository.save(mentoring);
+
+        mvc.perform(get("/mentoring/me/{mentoringId}", mentoring.getMentoringId())
+                        .header(AUTHORIZATION, BEARER + userAccessToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(AUTH_DENIED.getCode()))
+                .andExpect(jsonPath("$.message").value(PERMISSION_DENIED.getMessage()));
     }
 
     @ParameterizedTest
