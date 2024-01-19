@@ -480,11 +480,25 @@ class SeniorControllerTest extends IntegrationTest {
     @DisplayName("대학원생을 상세 조회한다")
     void getSeniorDetails() throws Exception {
         updateProfile();
+        updateAvailable();
 
         mvc.perform(get("/senior/{seniorId}", senior.getSeniorId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(SENIOR_FIND.getCode()))
-                .andExpect(jsonPath("$.message").value(GET_SENIOR_INFO.getMessage()));
+                .andExpect(jsonPath("$.message").value(GET_SENIOR_INFO.getMessage()))
+                .andExpect(jsonPath("$.data.nickName").isNotEmpty())
+                .andExpect(jsonPath("$.data.term").isNotEmpty())
+                .andExpect(jsonPath("$.data.profile").isNotEmpty())
+                .andExpect(jsonPath("$.data.postgradu").isNotEmpty())
+                .andExpect(jsonPath("$.data.major").isNotEmpty())
+                .andExpect(jsonPath("$.data.lab").isNotEmpty())
+                .andExpect(jsonPath("$.data.professor").isNotEmpty())
+                .andExpect(jsonPath("$.data.keyword").isNotEmpty())
+                .andExpect(jsonPath("$.data.info").isNotEmpty())
+                .andExpect(jsonPath("$.data.oneLiner").isNotEmpty())
+                .andExpect(jsonPath("$.data.target").isNotEmpty())
+                .andExpect(jsonPath("$.data.times").isNotEmpty())
+        ;
     }
 
     @ParameterizedTest
@@ -504,22 +518,31 @@ class SeniorControllerTest extends IntegrationTest {
     @DisplayName("결제 시 대학원생의 기본 정보를 확인한다")
     void testGetSeniorProfile() throws Exception {
         updateProfile();
+        updateAvailable();
 
         mvc.perform(get("/senior/{seniorId}/profile", senior.getSeniorId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(SENIOR_FIND.getCode()))
-                .andExpect(jsonPath("$.message").value(GET_SENIOR_INFO.getMessage()));
+                .andExpect(jsonPath("$.message").value(GET_SENIOR_INFO.getMessage()))
+                .andExpect(jsonPath("$.data.nickName").isNotEmpty())
+                .andExpect(jsonPath("$.data.profile").isNotEmpty())
+                .andExpect(jsonPath("$.data.major").isNotEmpty())
+                .andExpect(jsonPath("$.data.lab").isNotEmpty())
+                .andExpect(jsonPath("$.data.term").isNotEmpty());
     }
 
     @Test
     @DisplayName("신청서 작성 시 대학원생의 가능 시간 정보를 조회한다")
     void getSeniorTimes() throws Exception {
         updateProfile();
+        updateAvailable();
 
         mvc.perform(get("/senior/{seniorId}/times", senior.getSeniorId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(SENIOR_FIND.getCode()))
-                .andExpect(jsonPath("$.message").value(GET_SENIOR_TIME.getMessage()));
+                .andExpect(jsonPath("$.message").value(GET_SENIOR_TIME.getMessage()))
+                .andExpect(jsonPath("$.data.nickName").isNotEmpty())
+                .andExpect(jsonPath("$.data.times").isNotEmpty());
     }
 
     @Test
@@ -530,7 +553,13 @@ class SeniorControllerTest extends IntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(SENIOR_FIND.getCode()))
                 .andExpect(jsonPath("$.message").value(GET_SENIOR_LIST_INFO.getMessage()))
-                .andExpect(jsonPath("$.data.seniorSearchResponses[0].seniorId").value(senior.getSeniorId()));
+                .andExpect(jsonPath("$.data.seniorSearchResponses[0].seniorId").value(senior.getSeniorId()))
+                .andExpect(jsonPath("$.data.seniorSearchResponses[0].profile").isNotEmpty())
+                .andExpect(jsonPath("$.data.seniorSearchResponses[0].nickName").isNotEmpty())
+                .andExpect(jsonPath("$.data.seniorSearchResponses[0].postgradu").isNotEmpty())
+                .andExpect(jsonPath("$.data.seniorSearchResponses[0].major").isNotEmpty())
+                .andExpect(jsonPath("$.data.seniorSearchResponses[0].lab").isNotEmpty())
+                .andExpect(jsonPath("$.data.seniorSearchResponses[0].keyword").isNotEmpty());
     }
 
     @Test
@@ -542,7 +571,13 @@ class SeniorControllerTest extends IntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(SENIOR_FIND.getCode()))
                 .andExpect(jsonPath("$.message").value(GET_SENIOR_LIST_INFO.getMessage()))
-                .andExpect(jsonPath("$.data.seniorSearchResponses[0].seniorId").value(senior.getSeniorId()));
+                .andExpect(jsonPath("$.data.seniorSearchResponses[0].seniorId").value(senior.getSeniorId()))
+                .andExpect(jsonPath("$.data.seniorSearchResponses[0].profile").isNotEmpty())
+                .andExpect(jsonPath("$.data.seniorSearchResponses[0].nickName").isNotEmpty())
+                .andExpect(jsonPath("$.data.seniorSearchResponses[0].postgradu").isNotEmpty())
+                .andExpect(jsonPath("$.data.seniorSearchResponses[0].major").isNotEmpty())
+                .andExpect(jsonPath("$.data.seniorSearchResponses[0].lab").isNotEmpty())
+                .andExpect(jsonPath("$.data.seniorSearchResponses[0].keyword").isNotEmpty());
     }
 
     @Test
@@ -552,6 +587,7 @@ class SeniorControllerTest extends IntegrationTest {
                         .header(AUTHORIZATION, BEARER + token))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(SENIOR_FIND.getCode()))
-                .andExpect(jsonPath("$.message").value(GET_USER_CHECK.getMessage()));
+                .andExpect(jsonPath("$.message").value(GET_USER_CHECK.getMessage()))
+                .andExpect(jsonPath("$.data.possible").isNotEmpty());
     }
 }

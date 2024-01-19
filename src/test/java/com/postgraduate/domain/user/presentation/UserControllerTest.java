@@ -28,7 +28,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -62,7 +61,9 @@ class UserControllerTest extends IntegrationTest {
                         .header(AUTHORIZATION, BEARER + token))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(USER_FIND.getCode()))
-                .andExpect(jsonPath("$.message").value(GET_USER_INFO.getMessage()));
+                .andExpect(jsonPath("$.message").value(GET_USER_INFO.getMessage()))
+                .andExpect(jsonPath("$.data.nickName").isNotEmpty())
+                .andExpect(jsonPath("$.data.profile").isNotEmpty());
     }
 
     @Test
@@ -72,7 +73,10 @@ class UserControllerTest extends IntegrationTest {
                         .header(AUTHORIZATION, BEARER + token))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(USER_FIND.getCode()))
-                .andExpect(jsonPath("$.message").value(GET_USER_INFO.getMessage()));
+                .andExpect(jsonPath("$.message").value(GET_USER_INFO.getMessage()))
+                .andExpect(jsonPath("$.data.profile").isNotEmpty())
+                .andExpect(jsonPath("$.data.nickName").isNotEmpty())
+                .andExpect(jsonPath("$.data.phoneNumber").isNotEmpty());
     }
 
     @Test
@@ -88,9 +92,7 @@ class UserControllerTest extends IntegrationTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(USER_UPDATE.getCode()))
-                .andExpect(jsonPath("$.message").value(UPDATE_USER_INFO.getMessage()))
-                .andDo(print());
-
+                .andExpect(jsonPath("$.message").value(UPDATE_USER_INFO.getMessage()));
     }
 
     @ParameterizedTest
@@ -117,7 +119,9 @@ class UserControllerTest extends IntegrationTest {
                         .header(AUTHORIZATION, BEARER + token))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(USER_FIND.getCode()))
-                .andExpect(jsonPath("$.message").value(GET_SENIOR_CHECK.getMessage()));
+                .andExpect(jsonPath("$.message").value(GET_SENIOR_CHECK.getMessage()))
+                .andExpect(jsonPath("$.data.possible").isNotEmpty())
+                .andExpect(jsonPath("$.data.socialId").isNotEmpty());
     }
 
     @Test
@@ -128,9 +132,7 @@ class UserControllerTest extends IntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(USER_FIND.getCode()))
                 .andExpect(jsonPath("$.message").value(GET_NICKNAME_CHECK.getMessage()))
-                .andExpect(jsonPath("$.data").value(true))
-                .andDo(print());
-
+                .andExpect(jsonPath("$.data").value(true));
     }
 
     @Test
@@ -141,7 +143,6 @@ class UserControllerTest extends IntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(USER_FIND.getCode()))
                 .andExpect(jsonPath("$.message").value(GET_NICKNAME_CHECK.getMessage()))
-                .andExpect(jsonPath("$.data").value(false))
-                .andDo(print());
+                .andExpect(jsonPath("$.data").value(false));
     }
 }
