@@ -5,6 +5,8 @@ import com.postgraduate.IntegrationTest;
 import com.postgraduate.domain.account.domain.entity.Account;
 import com.postgraduate.domain.account.domain.repository.AccountRepository;
 import com.postgraduate.domain.available.application.dto.req.AvailableCreateRequest;
+import com.postgraduate.domain.available.domain.entity.Available;
+import com.postgraduate.domain.available.domain.repository.AvailableRepository;
 import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.salary.domain.repository.SalaryRepository;
 import com.postgraduate.domain.senior.application.dto.req.*;
@@ -243,7 +245,12 @@ class SeniorControllerTest extends IntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(SENIOR_FIND.getCode()))
                 .andExpect(jsonPath("$.message").value(GET_SENIOR_INFO.getMessage()))
-                .andExpect(jsonPath("$.data.seniorId").value(senior.getSeniorId()));
+                .andExpect(jsonPath("$.data.seniorId").value(senior.getSeniorId()))
+                .andExpect(jsonPath("$.data.socialId").isNotEmpty())
+                .andExpect(jsonPath("$.data.nickName").isNotEmpty())
+                .andExpect(jsonPath("$.data.profile").isNotEmpty())
+                .andExpect(jsonPath("$.data.certificationRegister").isNotEmpty())
+                .andExpect(jsonPath("$.data.profileRegister").isNotEmpty());
     }
 
     @Test
