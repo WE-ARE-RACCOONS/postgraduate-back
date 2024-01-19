@@ -1,6 +1,7 @@
 package com.postgraduate.domain.senior.application.dto.req;
 
 import com.postgraduate.domain.available.application.dto.req.AvailableCreateRequest;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 
@@ -22,5 +23,7 @@ public record SeniorMyPageProfileRequest(
         @NotBlank
         String oneLiner,
         @NotEmpty
+        @Valid
         List<AvailableCreateRequest> times
-) {}
+) {
+}
