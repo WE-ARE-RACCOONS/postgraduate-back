@@ -19,6 +19,8 @@ import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.entity.constant.Role;
 import com.postgraduate.domain.user.domain.repository.UserRepository;
 import com.postgraduate.global.config.security.jwt.util.JwtUtils;
+import com.postgraduate.global.exception.constant.ErrorCode;
+import com.postgraduate.global.exception.constant.ErrorMessage;
 import com.postgraduate.global.slack.SlackMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -30,6 +32,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.postgraduate.domain.salary.util.SalaryUtil.getSalaryDate;
@@ -57,6 +60,8 @@ class SeniorControllerTest extends IntegrationTest {
     private SalaryRepository salaryRepository;
     @Autowired
     private AccountRepository accountRepository;
+    @Autowired
+    private AvailableRepository availableRepository;
     @MockBean
     private SlackMessage slackMessage;
     private Senior senior;
@@ -68,13 +73,28 @@ class SeniorControllerTest extends IntegrationTest {
         userRepository.save(user);
 
         Info info = new Info("major", "postgradu", "교수님", "keyword1,keyword2", "랩실", "field", false, false, "field,keyword1,keyword2");
-        Profile profile = new Profile("저는요", "한줄소개", "대상", "chatLink", 40);
-        senior = new Senior(0L, user, "certification", Status.APPROVE, 0, info, profile, now(), now());
+        senior = new Senior(0L, user, "certification", Status.APPROVE, 0, info, null, now(), now());
         seniorRepository.save(senior);
 
         token = jwtUtil.generateAccessToken(user.getUserId(), Role.SENIOR);
 
         doNothing().when(slackMessage).sendSlackLog(any());
+    }
+
+
+    private void updateProfile() {
+        Profile profile = new Profile("저는요", "한줄소개", "대상", "chatLink", 30);
+        senior.updateProfile(profile);
+        seniorRepository.save(senior);
+    }
+
+    private void updateAvailable() {
+        List<Available> availables = List.of(
+                new Available(0L, "월", "17:00", "23:00", senior),
+                new Available(0L, "금", "10:00", "20:00", senior),
+                new Available(0L, "토", "10:00", "20:00", senior)
+        );
+        availableRepository.saveAll(availables);
     }
 
     @Test
@@ -171,11 +191,32 @@ class SeniorControllerTest extends IntegrationTest {
     @Test
     @DisplayName("대학원생 마이페이지 프로필 수정시 기존 정보를 조회한다")
     void getSeniorProfile() throws Exception {
+        updateProfile();
+        updateAvailable();
+
         mvc.perform(get("/senior/me/profile")
                         .header(AUTHORIZATION, BEARER + token))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(SENIOR_FIND.getCode()))
-                .andExpect(jsonPath("$.message").value(GET_SENIOR_MYPAGE_PROFILE.getMessage()));
+                .andExpect(jsonPath("$.message").value(GET_SENIOR_MYPAGE_PROFILE.getMessage()))
+                .andExpect(jsonPath("$.data.lab").isNotEmpty())
+                .andExpect(jsonPath("$.data.keyword").isNotEmpty())
+                .andExpect(jsonPath("$.data.info").isNotEmpty())
+                .andExpect(jsonPath("$.data.target").isNotEmpty())
+                .andExpect(jsonPath("$.data.chatLink").isNotEmpty())
+                .andExpect(jsonPath("$.data.field").isNotEmpty())
+                .andExpect(jsonPath("$.data.oneLiner").isNotEmpty())
+                .andExpect(jsonPath("$.data.times").exists());
+    }
+
+    @Test
+    @DisplayName("등록된 프로필이 없다면 [내 프로필 수정] 기본 정보를 조회할 수 없다")
+    void getEmptySeniorProfile() throws Exception {
+        mvc.perform(get("/senior/me/profile")
+                        .header(AUTHORIZATION, BEARER + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(SeniorResponseCode.NONE_PROFILE.getCode()))
+                .andExpect(jsonPath("$.message").value(SeniorResponseMessage.NONE_PROFILE.getMessage()));
     }
 
     @Test
@@ -278,6 +319,8 @@ class SeniorControllerTest extends IntegrationTest {
     @Test
     @DisplayName("대학원생을 상세 조회한다")
     void getSeniorDetails() throws Exception {
+        updateProfile();
+
         mvc.perform(get("/senior/{seniorId}", senior.getSeniorId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(SENIOR_FIND.getCode()))
@@ -300,6 +343,8 @@ class SeniorControllerTest extends IntegrationTest {
     @Test
     @DisplayName("결제 시 대학원생의 기본 정보를 확인한다")
     void testGetSeniorProfile() throws Exception {
+        updateProfile();
+
         mvc.perform(get("/senior/{seniorId}/profile", senior.getSeniorId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(SENIOR_FIND.getCode()))
@@ -309,6 +354,8 @@ class SeniorControllerTest extends IntegrationTest {
     @Test
     @DisplayName("신청서 작성 시 대학원생의 가능 시간 정보를 조회한다")
     void getSeniorTimes() throws Exception {
+        updateProfile();
+
         mvc.perform(get("/senior/{seniorId}/times", senior.getSeniorId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(SENIOR_FIND.getCode()))
