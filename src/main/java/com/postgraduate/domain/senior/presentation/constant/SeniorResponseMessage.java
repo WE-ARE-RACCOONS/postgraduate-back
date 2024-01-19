@@ -28,6 +28,7 @@ public enum SeniorResponseMessage {
     NOT_WAITING_STATUS("승인대기 상태의 선배가 아닙니다."),
     EMPTY_TIME("가능 시간이 비었습니다."),
     INVALID_DAY("잘못된 요일입니다."),
+    NONE_PROFILE("등록한 프로필이 없습니다."),
     ;
 
     private final String message;

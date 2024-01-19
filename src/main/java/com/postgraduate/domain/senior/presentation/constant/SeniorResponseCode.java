@@ -17,6 +17,7 @@ public enum SeniorResponseCode {
     INVALID_KEYWORD("EX402"),
     EMPTY_TIME("EX403"),
     INVALID_DAY("EX404"),
+    NONE_PROFILE("EX405"),
     ;
     private final String code;
 }
