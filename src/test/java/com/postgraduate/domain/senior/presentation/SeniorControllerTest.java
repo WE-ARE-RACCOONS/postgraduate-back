@@ -27,6 +27,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -113,6 +114,23 @@ class SeniorControllerTest extends IntegrationTest {
                 .andExpect(jsonPath("$.message").value(UPDATE_CERTIFICATION.getMessage()));
     }
 
+    @ParameterizedTest
+    @NullAndEmptySource
+    @DisplayName("잘못된 이미지로 인증한다")
+    void updateInvalidCertification(String certification) throws Exception {
+        String request = objectMapper.writeValueAsString(
+                new SeniorCertificationRequest(certification)
+        );
+        mvc.perform(patch("/senior/certification")
+                        .header(AUTHORIZATION, BEARER + token)
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(ErrorCode.VALID_BLANK.getCode()))
+                .andExpect(jsonPath("$.message").value(ErrorMessage.VALID_BLANK.getMessage()));
+    }
+
     @Test
     @DisplayName("대학원생 프로필을 등록한다")
     void singUpSenior() throws Exception {
@@ -133,6 +151,25 @@ class SeniorControllerTest extends IntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(SENIOR_UPDATE.getCode()))
                 .andExpect(jsonPath("$.message").value(UPDATE_PROFILE.getMessage()));
+    }
+
+    @ParameterizedTest
+    @NullAndEmptySource
+    @DisplayName("잘못된 대학원생 프로필을 등록한다")
+    void singUpInvalidSenior(String empty) throws Exception {
+        List<AvailableCreateRequest> availableCreateRequests = new ArrayList<>();
+        String request = objectMapper.writeValueAsString(
+                new SeniorProfileRequest(empty, empty, empty, empty, availableCreateRequests)
+        );
+
+        mvc.perform(patch("/senior/profile")
+                        .header(AUTHORIZATION, BEARER + token)
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(ErrorCode.VALID_BLANK.getCode()))
+                .andExpect(jsonPath("$.message").value(ErrorMessage.VALID_BLANK.getMessage()));
     }
 
     @Test
@@ -175,6 +212,27 @@ class SeniorControllerTest extends IntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(SENIOR_CREATE.getCode()))
                 .andExpect(jsonPath("$.message").value(CREATE_ACCOUNT.getMessage()));
+    }
+
+    @ParameterizedTest
+    @NullAndEmptySource
+    @DisplayName("빈 정산 계좌를 입력으면 예외가 발생한다")
+    void updateInvalidAccount(String empty) throws Exception {
+        Salary salary = new Salary(0L, false, senior, null, 10000, getSalaryDate(), now(), null, null, null);
+        salaryRepository.save(salary);
+
+        String request = objectMapper.writeValueAsString(
+                new SeniorAccountRequest(empty, empty, empty)
+        );
+
+        mvc.perform(post("/senior/account")
+                        .header(AUTHORIZATION, BEARER + token)
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(ErrorCode.VALID_BLANK.getCode()))
+                .andExpect(jsonPath("$.message").value(ErrorMessage.VALID_BLANK.getMessage()));
     }
 
     @Test
