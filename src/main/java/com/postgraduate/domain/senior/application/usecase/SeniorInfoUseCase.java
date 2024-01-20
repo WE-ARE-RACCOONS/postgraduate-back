@@ -5,10 +5,7 @@ import com.postgraduate.domain.available.application.dto.res.AvailableTimesRespo
 import com.postgraduate.domain.available.application.mapper.AvailableMapper;
 import com.postgraduate.domain.available.domain.entity.Available;
 import com.postgraduate.domain.available.domain.service.AvailableGetService;
-import com.postgraduate.domain.senior.application.dto.res.AllSeniorSearchResponse;
-import com.postgraduate.domain.senior.application.dto.res.SeniorDetailResponse;
-import com.postgraduate.domain.senior.application.dto.res.SeniorProfileResponse;
-import com.postgraduate.domain.senior.application.dto.res.SeniorSearchResponse;
+import com.postgraduate.domain.senior.application.dto.res.*;
 import com.postgraduate.domain.senior.application.mapper.SeniorMapper;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
@@ -72,5 +69,13 @@ public class SeniorInfoUseCase {
                 .map(AvailableMapper::mapToAvailableTimes)
                 .toList();
         return new AvailableTimesResponse(senior.getUser().getNickName(), times);
+    }
+
+    public AllSeniorIdResponse getAllSeniorId() {
+        List<Senior> seniors = seniorGetService.allSeniorId();
+        List<Long> seniorIds = seniors.stream()
+                .map(senior -> senior.getSeniorId())
+                .toList();
+        return new AllSeniorIdResponse(seniorIds);
     }
 }
