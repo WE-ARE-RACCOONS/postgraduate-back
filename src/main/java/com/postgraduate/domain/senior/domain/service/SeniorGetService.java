@@ -60,4 +60,8 @@ public class SeniorGetService {
         Page<Senior> allByFieldSenior = seniorRepository.findAllByFieldSenior(field, postgradu, pageable);
         return allByFieldSenior;
     }
+
+    public List<Senior> allSeniorId() {
+        return seniorRepository.findAllByUser_IsDelete(FALSE);
+    }
 }

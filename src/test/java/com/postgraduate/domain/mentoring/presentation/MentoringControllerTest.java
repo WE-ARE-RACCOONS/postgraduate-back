@@ -286,7 +286,7 @@ class MentoringControllerTest extends IntegrationTest {
     @EnumSource(value = Status.class, names = {"WAITING", "EXPECTED", "DONE"})
     @DisplayName("대학원생이 멘토링 목록을 조회한다.")
     void getSeniorMentorings(Status status) throws Exception {
-        Mentoring mentoring = new Mentoring(0L, user, senior, "topic", "question", "date", 40, status, now(), now());
+        Mentoring mentoring = new Mentoring(0L, user, senior, "topic", "question", "2024-01-20-18-00", 40, status, now(), now());
         mentoringRepository.save(mentoring);
 
         Salary salary = new Salary(0L, false, senior, null, 10000, LocalDate.now(), now(), null, null, null);

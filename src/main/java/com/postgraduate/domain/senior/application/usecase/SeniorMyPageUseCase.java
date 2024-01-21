@@ -73,7 +73,7 @@ public class SeniorMyPageUseCase {
     public SeniorPossibleResponse checkUser(User user) {
         Optional<Wish> wish = wishGetService.byUser(user);
         if (wish.isEmpty())
-            return new SeniorPossibleResponse(FALSE);
-        return new SeniorPossibleResponse(TRUE);
+            return new SeniorPossibleResponse(FALSE, user.getSocialId());
+        return new SeniorPossibleResponse(TRUE, user.getSocialId());
     }
 }

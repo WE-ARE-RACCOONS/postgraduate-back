@@ -18,6 +18,7 @@ public enum SeniorResponseMessage {
     GET_SENIOR_MYPAGE_ACCOUNT("대학원생 마이페이지 계정 조회에 성공하였습니다"),
     GET_SENIOR_PROFILE("대학원생 프로필 조회에 성공하였습니다"),
     GET_SENIOR_LIST_INFO("대학원생 리스트 조회에 성공하였습니다."),
+    GET_SENIOR_ID_LIST("SeniorId 리스트 조회에 성공하였습니다."),
     UPDATE_CERTIFICATION("대학원생 인증사진 업로드에 성공하였습니다"),
     UPDATE_STATUS("대학원생 승인 요청 응답에 성공하였습니다"),
     GET_USER_CHECK("후배 변경 가능 여부 확인에 성공하였습니다"),

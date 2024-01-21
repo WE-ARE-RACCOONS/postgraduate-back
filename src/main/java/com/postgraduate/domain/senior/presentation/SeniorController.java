@@ -28,6 +28,13 @@ public class SeniorController {
     private final SeniorManageUseCase seniorManageUseCase;
     private final SeniorInfoUseCase seniorInfoUseCase;
 
+    @GetMapping("/all")
+    @Operation(summary = "모든 SeniorID 조회")
+    public ResponseDto<AllSeniorIdResponse> getAllSeniorId() {
+        AllSeniorIdResponse seniorIds = seniorInfoUseCase.getAllSeniorId();
+        return ResponseDto.create(SENIOR_FIND.getCode(), GET_SENIOR_ID_LIST.getMessage(), seniorIds);
+    }
+
     @PatchMapping("/certification")
     @Operation(summary = "대학원생 인증 | 토큰 필요", description = "이미지 업로드 이후 url 담아서 요청")
     public ResponseDto updateCertification(@AuthenticationPrincipal User user,
