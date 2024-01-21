@@ -5,4 +5,6 @@ import com.postgraduate.domain.auth.application.dto.res.AuthUserResponse;
 
 public interface SignInUseCase {
     AuthUserResponse getUser(CodeRequest request);
+
+    AuthUserResponse getDevUser(CodeRequest codeRequest);
 }
