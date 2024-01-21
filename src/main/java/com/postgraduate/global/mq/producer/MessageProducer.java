@@ -29,7 +29,6 @@ public class MessageProducer {
      * @param logRequest 발행할 메시지의 DTO 객체
      */
     public void sendMessage(LogRequest logRequest) throws JsonProcessingException {
-        log.info("message sent: {}", logRequest.toString());
         rabbitTemplate.convertAndSend(exchangeName, routingKey, objectMapper.writeValueAsString(logRequest));
     }
 }
