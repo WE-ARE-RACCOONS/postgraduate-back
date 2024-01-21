@@ -2,8 +2,11 @@ package com.postgraduate.domain.available.application.util;
 
 import com.postgraduate.domain.available.application.dto.req.AvailableCreateRequest;
 import com.postgraduate.domain.available.domain.entity.Available;
+import com.postgraduate.domain.available.exception.DayAvailableException;
 import com.postgraduate.domain.senior.domain.entity.Senior;
+import lombok.AllArgsConstructor;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
@@ -16,21 +19,7 @@ public class AvailableUtil {
                         Comparator.comparing(
                                 (AvailableCreateRequest availableCreateRequest) -> {
                                     String day = availableCreateRequest.day();
-                                    if (day.equals("월"))
-                                        return 0;
-                                    if (day.equals("화"))
-                                        return 1;
-                                    if (day.equals("수"))
-                                        return 2;
-                                    if (day.equals("목"))
-                                        return 3;
-                                    if (day.equals("금"))
-                                        return 4;
-                                    if (day.equals("토"))
-                                        return 5;
-                                    if (day.equals("일"))
-                                        return 6;
-                                    throw new IllegalArgumentException();
+                                    return Day.sortDay(day);
                                 }
                         ).thenComparingInt(
                                 availableCreateRequest -> {
@@ -46,4 +35,17 @@ public class AvailableUtil {
         return sortedAvailable;
     }
 
+    @AllArgsConstructor
+    private enum Day {
+        월(0), 화(1), 수(2), 목(3), 금(4), 토(5), 일(6);
+        private final int day;
+
+        private static int sortDay(String inputDay) {
+            return Arrays.stream(Day.values())
+                    .filter(day -> day.name().equals(inputDay))
+                    .findFirst()
+                    .orElseThrow(DayAvailableException::new)
+                    .day;
+        }
+    }
 }

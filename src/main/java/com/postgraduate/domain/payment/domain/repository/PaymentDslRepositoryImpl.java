@@ -1,6 +1,7 @@
 package com.postgraduate.domain.payment.domain.repository;
 
 import com.postgraduate.domain.payment.domain.entity.Payment;
+import com.postgraduate.domain.payment.domain.entity.constant.Status;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -29,6 +30,7 @@ public class PaymentDslRepositoryImpl implements PaymentDslRepository {
         return queryFactory.selectFrom(payment)
                 .where(
                         payment.mentoring.senior.eq(senior),
+                        payment.status.eq(Status.DONE),
                         payment.salary.status.eq(status)
                 )
                 .join(payment.salary, salary)

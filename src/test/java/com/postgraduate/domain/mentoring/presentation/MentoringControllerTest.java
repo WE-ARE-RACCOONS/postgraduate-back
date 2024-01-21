@@ -22,23 +22,33 @@ import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.entity.constant.Role;
 import com.postgraduate.domain.user.domain.repository.UserRepository;
 import com.postgraduate.global.config.security.jwt.util.JwtUtils;
+import com.postgraduate.global.exception.constant.ErrorCode;
+import com.postgraduate.global.exception.constant.ErrorMessage;
+import com.postgraduate.global.slack.SlackMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 
+import java.io.IOException;
 import java.time.LocalDate;
 
+import static com.postgraduate.domain.auth.presentation.constant.AuthResponseCode.AUTH_DENIED;
+import static com.postgraduate.domain.auth.presentation.constant.AuthResponseMessage.PERMISSION_DENIED;
 import static com.postgraduate.domain.mentoring.presentation.constant.MentoringResponseCode.*;
 import static com.postgraduate.domain.mentoring.presentation.constant.MentoringResponseMessage.*;
 import static com.postgraduate.domain.payment.domain.entity.constant.Status.DONE;
 import static com.postgraduate.domain.salary.util.SalaryUtil.getSalaryDate;
 import static com.postgraduate.domain.senior.domain.entity.constant.Status.WAITING;
 import static java.time.LocalDateTime.now;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -60,13 +70,15 @@ class MentoringControllerTest extends IntegrationTest {
     private SalaryRepository salaryRepository;
     @Autowired
     private PaymentRepository paymentRepository;
+    @MockBean
+    private SlackMessage slackMessage;
     private User user;
     private Senior senior;
     private String userAccessToken;
     private String seniorAccessToken;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws IOException {
         user = new User(0L, 1L, "mail", "후배", "011", "profile", 0, Role.USER, true, now(), now(), false);
         userRepository.save(user);
 
@@ -80,6 +92,8 @@ class MentoringControllerTest extends IntegrationTest {
 
         userAccessToken = jwtUtil.generateAccessToken(user.getUserId(), Role.USER);
         seniorAccessToken = jwtUtil.generateAccessToken(userOfSenior.getUserId(), Role.SENIOR);
+
+        doNothing().when(slackMessage).sendSlackLog(any());
     }
 
     @ParameterizedTest
@@ -125,6 +139,21 @@ class MentoringControllerTest extends IntegrationTest {
                 .andExpect(jsonPath("$.code").value(MENTORING_FIND.getCode()))
                 .andExpect(jsonPath("$.message").value(GET_MENTORING_DETAIL_INFO.getMessage()))
                 .andExpect(jsonPath("$.data.seniorId").value(senior.getSeniorId()));
+    }
+
+    @Test
+    @DisplayName("자신이 신청한 멘토링이 아니라면 상세조회되지 않는다")
+    void getOtherMentoringDetail() throws Exception {
+        User otherUser = new User(-1L, 0L, "mail", "다른 후배", "011", "profile", 0, Role.USER, true, now(), now(), false);
+        userRepository.save(otherUser);
+        Mentoring mentoring = new Mentoring(0L, otherUser, senior, "topic", "question", "date", 40, Status.EXPECTED, now(), now());
+        mentoringRepository.save(mentoring);
+
+        mvc.perform(get("/mentoring/me/{mentoringId}", mentoring.getMentoringId())
+                        .header(AUTHORIZATION, BEARER + userAccessToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(AUTH_DENIED.getCode()))
+                .andExpect(jsonPath("$.message").value(PERMISSION_DENIED.getMessage()));
     }
 
 
@@ -174,6 +203,22 @@ class MentoringControllerTest extends IntegrationTest {
 
     }
 
+    @ParameterizedTest
+    @NullAndEmptySource
+    @DisplayName("신청서가 빈 칸이라면 멘토링을 신청할 수 없다")
+    void emptyApplyMentoring(String empty) throws Exception {
+        String request = objectMapper.writeValueAsString(new MentoringApplyRequest(senior.getSeniorId(), empty, empty, empty));
+
+        mvc.perform(post("/mentoring/applying")
+                        .header(AUTHORIZATION, BEARER + userAccessToken)
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(ErrorCode.VALID_BLANK.getCode()))
+                .andExpect(jsonPath("$.message").value(ErrorMessage.VALID_BLANK.getMessage()));
+    }
+
     @Test
     @DisplayName("대학생이 멘토링을 완료한다.")
     void updateMentoringDone() throws Exception {
@@ -212,6 +257,9 @@ class MentoringControllerTest extends IntegrationTest {
     void updateMentoringCancel() throws Exception {
         Mentoring mentoring = new Mentoring(0L, user, senior, "topic", "question", "date", 40, Status.WAITING, now(), now());
         mentoringRepository.save(mentoring);
+
+        Payment payment = new Payment(0L, mentoring, null, 24000, null, null, null, null, null, DONE);
+        paymentRepository.save(payment);
 
         mvc.perform(patch("/mentoring/me/{mentoringId}/cancel", mentoring.getMentoringId())
                         .header(AUTHORIZATION, BEARER + userAccessToken))
@@ -271,6 +319,26 @@ class MentoringControllerTest extends IntegrationTest {
 
     }
 
+    @Test
+    @DisplayName("자신이 신청받은 멘토링이 아니라면 상세조회되지 않는다")
+    void getOtherSeniorMentoringDetail() throws Exception {
+        User otherUser = new User(-1L, 0L, "mail", "다른 후배", "011", "profile", 0, Role.USER, true, now(), now(), false);
+        userRepository.save(otherUser);
+
+        Info info = new Info("major", "서울대학교", "교수님", "키워드1,키워드2", "랩실", "인공지능", false, false, "인공지능,키워드1,키워드2");
+        Senior otherSenior = new Senior(-1L, otherUser, "certification", WAITING, 0, info, null, now(), now());
+        seniorRepository.save(otherSenior);
+
+        Mentoring mentoring = new Mentoring(0L, otherUser, otherSenior, "topic", "question", "date", 40, Status.EXPECTED, now(), now());
+        mentoringRepository.save(mentoring);
+
+        mvc.perform(get("/mentoring/me/{mentoringId}", mentoring.getMentoringId())
+                        .header(AUTHORIZATION, BEARER + userAccessToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(AUTH_DENIED.getCode()))
+                .andExpect(jsonPath("$.message").value(PERMISSION_DENIED.getMessage()));
+    }
+
     @ParameterizedTest
     @EnumSource(value = Status.class, names = {"DONE", "CANCEL", "REFUSE"})
     @DisplayName("대학원생의 완료, 취소, 거절 상태의 멘토링은 상세조회되지 않는다.")
@@ -320,6 +388,24 @@ class MentoringControllerTest extends IntegrationTest {
                 .andExpect(jsonPath("$.message").value(NOT_WAITING_MENTORING.getMessage()));
     }
 
+    @ParameterizedTest
+    @NullAndEmptySource
+    @DisplayName("확정날짜가 비어있다면 멘토링을 수락할 수 없다")
+    void updateSeniorMentoringExpectedWithoutDate(String empty) throws Exception {
+        Mentoring mentoring = new Mentoring(0L, user, senior, "topic", "question", "date1,date2,date3", 40, Status.WAITING, now(), now());
+        mentoringRepository.save(mentoring);
+
+        String request = objectMapper.writeValueAsString(new MentoringDateRequest(empty));
+        mvc.perform(patch("/mentoring/senior/me/{mentoringId}/expected", mentoring.getMentoringId())
+                        .header(AUTHORIZATION, BEARER + seniorAccessToken)
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(ErrorCode.VALID_BLANK.getCode()))
+                .andExpect(jsonPath("$.message").value(ErrorMessage.VALID_BLANK.getMessage()));
+    }
+
     @Test
     @DisplayName("대학원생이 멘토링을 거절한다.")
     void updateSeniorMentoringRefuse() throws Exception {
@@ -353,5 +439,23 @@ class MentoringControllerTest extends IntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(MENTORING_NOT_WAITING.getCode()))
                 .andExpect(jsonPath("$.message").value(NOT_WAITING_MENTORING.getMessage()));
+    }
+
+    @ParameterizedTest
+    @NullAndEmptySource
+    @DisplayName("사유가 비어있다면 멘토링을 거절할 수 없다")
+    void updateSeniorMentoringExpectedWithoutRefuse(String empty) throws Exception {
+        Mentoring mentoring = new Mentoring(0L, user, senior, "topic", "question", "date1,date2,date3", 40, Status.WAITING, now(), now());
+        mentoringRepository.save(mentoring);
+
+        String request = objectMapper.writeValueAsString(new MentoringRefuseRequest(empty));
+        mvc.perform(patch("/mentoring/senior/me/{mentoringId}/refuse", mentoring.getMentoringId())
+                        .header(AUTHORIZATION, BEARER + seniorAccessToken)
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(ErrorCode.VALID_BLANK.getCode()))
+                .andExpect(jsonPath("$.message").value(ErrorMessage.VALID_BLANK.getMessage()));
     }
 }
