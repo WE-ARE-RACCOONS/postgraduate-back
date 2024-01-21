@@ -19,7 +19,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class GlobalExceptionHandler {
     private final LogService logService;
-    private static final String LOG_FORMAT = "Class : {}, Code : {}, Message : {}";
+    private static final String LOG_FORMAT = "Code : {}, Message : {}";
     @ExceptionHandler(ApplicationException.class)
     public ResponseDto<ErrorResponse> handleApplicationException(ApplicationException ex) {
         return ResponseDto.create(ex.getErrorCode(), ex.getMessage());
@@ -28,7 +28,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseDto<ErrorResponse> handleArgumentValidException() throws IOException {
         logService.save(new LogRequest("@Valid", ErrorMessage.VALID_BLANK.getMessage()));
-        log.error(LOG_FORMAT, "", "@Valid Error", "MethodArgumentNotValidException");
+        log.error(LOG_FORMAT, "@Valid Error", "MethodArgumentNotValidException");
         return ResponseDto.create(ErrorCode.VALID_BLANK.getCode(), ErrorMessage.VALID_BLANK.getMessage());
     }
 }

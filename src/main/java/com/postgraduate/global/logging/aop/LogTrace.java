@@ -11,7 +11,7 @@ import static com.postgraduate.global.logging.aop.LogUtils.getLogId;
 @Slf4j
 public class LogTrace {
     private static final String TRACE_ID = "TraceId";
-    private static final String LOG_FORMAT = "ThreadID : {}, Class : {}, Code : {}, Message : {}";
+    private static final String LOG_FORMAT = "ThreadID : {}, Code : {}, Message : {}";
 
     public TraceStatus start(String method) {
         String id = getLogId();
@@ -29,11 +29,13 @@ public class LogTrace {
     }
 
     public void exception(ApplicationException e, TraceStatus traceStatus) {
-        log.error(LOG_FORMAT, traceStatus.threadId(), traceStatus.methodName(), e.getErrorCode(), e.getMessage());
+        log.error("class : {}, trace : {}", traceStatus.methodName(), e.getStackTrace());
+        log.error(LOG_FORMAT, traceStatus.threadId(), e.getErrorCode(), e.getMessage());
         removeMdcContext();
     }
 
     public void exception(Exception e, TraceStatus traceStatus) {
+        log.error("class : {}, trace : {}", traceStatus.methodName(), e.getStackTrace());
         log.error(LOG_FORMAT, traceStatus.threadId(), traceStatus.methodName(), 500, e.getMessage());
         removeMdcContext();
     }
