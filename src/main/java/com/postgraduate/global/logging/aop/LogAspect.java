@@ -1,5 +1,6 @@
 package com.postgraduate.global.logging.aop;
 
+import com.postgraduate.global.exception.ApplicationException;
 import com.postgraduate.global.logging.dto.LogRequest;
 import com.postgraduate.global.logging.service.LogService;
 import lombok.RequiredArgsConstructor;
@@ -40,8 +41,15 @@ public class LogAspect {
             traceStatus = logTrace.start(joinPoint.getSignature().getDeclaringType().getSimpleName() + " : " + joinPoint.getSignature().getName());
             Object result = joinPoint.proceed();
             Integer executionTime = logTrace.end(traceStatus);
+            log.info("ExecutionTime : {}", executionTime);
             logService.save(new LogRequest(traceStatus.threadId(), executionTime, traceStatus.methodName()));
             return result;
+        }catch (ApplicationException e) {
+            if (traceStatus != null) {
+                logTrace.exception(e, traceStatus);
+                logService.save(new LogRequest(traceStatus.threadId(), traceStatus.methodName(), e.getMessage()));
+            }
+            throw e;
         }catch (Exception e) {
             if (traceStatus != null) {
                 logTrace.exception(e, traceStatus);

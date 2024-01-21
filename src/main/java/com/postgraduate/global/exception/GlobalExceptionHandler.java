@@ -22,13 +22,13 @@ public class GlobalExceptionHandler {
     private static final String LOG_FORMAT = "Class : {}, Code : {}, Message : {}";
     @ExceptionHandler(ApplicationException.class)
     public ResponseDto<ErrorResponse> handleApplicationException(ApplicationException ex) {
-        log.error(LOG_FORMAT, ex.getClass().getSimpleName(), ex.getErrorCode(), ex.getMessage());
         return ResponseDto.create(ex.getErrorCode(), ex.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseDto<ErrorResponse> handleArgumentValidException() throws IOException {
         logService.save(new LogRequest("@Valid", ErrorMessage.VALID_BLANK.getMessage()));
+        log.error(LOG_FORMAT, "", "@Valid Error", "MethodArgumentNotValidException");
         return ResponseDto.create(ErrorCode.VALID_BLANK.getCode(), ErrorMessage.VALID_BLANK.getMessage());
     }
 }
