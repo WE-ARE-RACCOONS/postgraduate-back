@@ -18,6 +18,8 @@ import com.postgraduate.global.slack.SlackMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -33,6 +35,7 @@ import static com.postgraduate.domain.user.domain.entity.constant.Role.SENIOR;
 import static com.postgraduate.domain.user.domain.entity.constant.Role.USER;
 import static com.postgraduate.domain.user.presentation.constant.UserResponseCode.USER_NOT_FOUND;
 import static com.postgraduate.domain.user.presentation.constant.UserResponseMessage.NOT_FOUND_USER;
+import static java.lang.Boolean.FALSE;
 import static java.time.LocalDateTime.now;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
@@ -133,6 +136,28 @@ class AuthControllerTest extends IntegrationTest {
                 .andExpect(jsonPath("$.data.role").value(USER.name()));
     }
 
+    @ParameterizedTest
+    @NullAndEmptySource
+    @DisplayName("희망 대학원/학과와 연구분야를 입력하지 않아도 대학생 회원가입이 가능하다.")
+    void signUpUserWithoutWish(String empty) throws Exception {
+        authLoginByAnonymousUser();
+
+        String request = objectMapper.writeValueAsString(
+                new SignUpRequest(anonymousUserSocialId, "01012345678", "nickname",
+                        true, empty, empty, false)
+        );
+
+        mvc.perform(post("/auth/user/signup")
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(AUTH_CREATE.getCode()))
+                .andExpect(jsonPath("$.message").value(SUCCESS_AUTH.getMessage()))
+                .andExpect(jsonPath("$.data.accessToken").exists())
+                .andExpect(jsonPath("$.data.role").value(USER.name()));
+    }
+
     @Test
     @DisplayName("대학원생이 대학생으로 변경한다.")
     void changeUserToken() throws Exception {
@@ -181,6 +206,26 @@ class AuthControllerTest extends IntegrationTest {
                 .andExpect(jsonPath("$.message").value(SUCCESS_AUTH.getMessage()))
                 .andExpect(jsonPath("$.data.accessToken").exists())
                 .andExpect(jsonPath("$.data.role").value(USER.name()));
+    }
+
+    @ParameterizedTest
+    @NullAndEmptySource
+    @DisplayName("전공과 분야가 없어도 후배로 추가 가입할 수 있다")
+    void changeUser(String empty) throws Exception {
+        String seniorAccessToken = jwtUtil.generateAccessToken(user.getUserId(), SENIOR);
+
+        String request = objectMapper.writeValueAsString(
+                new UserChangeRequest(empty, empty, FALSE)
+        );
+
+        mvc.perform(post("/auth/user/change")
+                        .header(AUTHORIZATION, BEARER + seniorAccessToken)
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(AUTH_CREATE.getCode()))
+                .andExpect(jsonPath("$.message").value(SUCCESS_AUTH.getMessage()));
     }
 
     @Test
