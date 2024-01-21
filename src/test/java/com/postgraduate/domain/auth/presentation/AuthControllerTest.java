@@ -14,6 +14,8 @@ import com.postgraduate.domain.wish.domain.entity.constant.Status;
 import com.postgraduate.domain.wish.domain.repository.WishRepository;
 import com.postgraduate.global.config.redis.RedisRepository;
 import com.postgraduate.global.config.security.jwt.util.JwtUtils;
+import com.postgraduate.global.exception.constant.ErrorCode;
+import com.postgraduate.global.exception.constant.ErrorMessage;
 import com.postgraduate.global.slack.SlackMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -250,6 +252,26 @@ class AuthControllerTest extends IntegrationTest {
                 .andExpect(jsonPath("$.data.role").value(SENIOR.name()));
     }
 
+    @ParameterizedTest
+    @NullAndEmptySource
+    @DisplayName("필수 정보를 입력하지 않으면 선배로 회원가입할 수 없다.")
+    void singUpSenior(String empty) throws Exception {
+        authLoginByAnonymousUser();
+
+        String request = objectMapper.writeValueAsString(
+                new SeniorSignUpRequest(anonymousUserSocialId, "01012345678", "nickname",
+                        true, empty, empty, empty, empty, empty, empty, empty)
+        );
+
+        mvc.perform(post("/auth/senior/signup")
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(ErrorCode.VALID_BLANK.getCode()))
+                .andExpect(jsonPath("$.message").value(ErrorMessage.VALID_BLANK.getMessage()));
+    }
+
     @Test
     @DisplayName("후배가 선배로 추가 가입합니다.")
     void changeSenior() throws Exception {
@@ -270,6 +292,26 @@ class AuthControllerTest extends IntegrationTest {
                 .andExpect(jsonPath("$.message").value(CREATE_SENIOR.getMessage()))
                 .andExpect(jsonPath("$.data.accessToken").exists())
                 .andExpect(jsonPath("$.data.role").value(SENIOR.name()));
+    }
+
+    @ParameterizedTest
+    @NullAndEmptySource
+    @DisplayName("선배 필수 정보가 없으면 선배로 추가 가입할 수 없다")
+    void changeSenior(String empty) throws Exception {
+        String userAccessToken = jwtUtil.generateAccessToken(user.getUserId(), USER);
+
+        String request = objectMapper.writeValueAsString(
+                new SeniorChangeRequest(empty, empty, empty, empty, empty, empty, empty)
+        );
+
+        mvc.perform(post("/auth/senior/change")
+                        .header(AUTHORIZATION, BEARER + userAccessToken)
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(ErrorCode.VALID_BLANK.getCode()))
+                .andExpect(jsonPath("$.message").value(ErrorMessage.VALID_BLANK.getMessage()));
     }
 
     @Test
