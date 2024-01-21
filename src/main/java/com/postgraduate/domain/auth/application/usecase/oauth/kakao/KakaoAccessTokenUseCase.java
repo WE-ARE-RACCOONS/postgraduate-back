@@ -23,7 +23,9 @@ public class KakaoAccessTokenUseCase {
     @Value("${app-id.kakao}")
     private String APP_ID;
     @Value("${kakao.redirect-uri}")
-    private String REDRECT_URI;
+    private String REDIRECT_URI;
+    @Value("${kakao.dev-redirect-uri}")
+    private String DEV_REDIRECT_URI;
     @Value("${kakao.authorization-grant-type}")
     private String AUTHORIZATION_GRANT_TYPE;
     private final WebClient webClient;
@@ -47,11 +49,27 @@ public class KakaoAccessTokenUseCase {
         }
     }
 
+    public KakaoUserInfoResponse getDevAccessToken (CodeRequest codeRequest) {
+        MultiValueMap<String, String> requestBody = getDevRequestBody(codeRequest.code());
+        try {
+            KakaoTokenInfoResponse tokenInfoResponse = webClient.post()
+                    .uri(KAKAO_TOKEN_URI)
+                    .headers(h -> h.setContentType(MediaType.APPLICATION_FORM_URLENCODED))
+                    .bodyValue(requestBody)
+                    .retrieve()
+                    .bodyToMono(KakaoTokenInfoResponse.class)
+                    .block();
+            return getUserInfo(tokenInfoResponse.access_token());
+        } catch (WebClientResponseException ex) {
+            throw new KakaoCodeException();
+        }
+    }
+
     private MultiValueMap<String, String> getRequestBody(String code) {
         MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
         requestBody.add("grant_type", AUTHORIZATION_GRANT_TYPE);
         requestBody.add("client_id", APP_ID);
-        requestBody.add("redirect_uri", REDRECT_URI);
+        requestBody.add("redirect_uri", REDIRECT_URI);
         requestBody.add("code", code);
         return requestBody;
     }
@@ -67,5 +85,14 @@ public class KakaoAccessTokenUseCase {
         } catch (WebClientResponseException ex) {
             throw new KakaoException();
         }
+    }
+
+    private MultiValueMap<String, String> getDevRequestBody(String code) {
+        MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
+        requestBody.add("grant_type", AUTHORIZATION_GRANT_TYPE);
+        requestBody.add("client_id", APP_ID);
+        requestBody.add("redirect_uri", DEV_REDIRECT_URI);
+        requestBody.add("code", code);
+        return requestBody;
     }
 }
