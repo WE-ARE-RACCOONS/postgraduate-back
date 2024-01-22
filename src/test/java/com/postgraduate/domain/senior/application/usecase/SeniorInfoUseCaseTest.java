@@ -72,7 +72,7 @@ class SeniorInfoUseCaseTest {
         given(availableGetService.bySenior(senior))
                 .willReturn(availables);
 
-        SeniorDetailResponse seniorDetail = seniorInfoUseCase.getSeniorDetail(senior.getSeniorId());
+        SeniorDetailResponse seniorDetail = seniorInfoUseCase.getSeniorDetail(user, senior.getSeniorId());
 
         assertThat(seniorDetail.times().size())
                 .isEqualTo(availables.size());

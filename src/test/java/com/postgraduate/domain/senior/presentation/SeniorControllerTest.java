@@ -42,6 +42,8 @@ import java.util.List;
 import static com.postgraduate.domain.salary.util.SalaryUtil.getSalaryDate;
 import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseCode.*;
 import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseMessage.*;
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 import static java.time.LocalDateTime.now;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
@@ -70,17 +72,23 @@ class SeniorControllerTest extends IntegrationTest {
     private SlackMessage slackMessage;
     private Senior senior;
     private String token;
+    private String otherToken;
+    private User user;
+    private User otherUser;
 
     @BeforeEach
     void setUp() throws IOException {
-        User user = new User(0L, 1L, "mail", "후배", "011", "profile", 0, Role.SENIOR, true, now(), now(), false);
+        user = new User(0L, 1L, "mail", "후배1", "011", "profile", 0, Role.SENIOR, true, now(), now(), false);
+        otherUser = new User(1L, 1234L, "mail", "후배2", "011", "profile", 0, Role.SENIOR, true, now(), now(), false);
         userRepository.save(user);
+        userRepository.save(otherUser);
 
         Info info = new Info("major", "postgradu", "교수님", "keyword1,keyword2", "랩실", "field", false, false, "field,keyword1,keyword2");
         senior = new Senior(0L, user, "certification", Status.APPROVE, 0, info, null, now(), now());
         seniorRepository.save(senior);
 
         token = jwtUtil.generateAccessToken(user.getUserId(), Role.SENIOR);
+        otherToken = jwtUtil.generateAccessToken(otherUser.getUserId(), Role.USER);
 
         doNothing().when(slackMessage).sendSlackLog(any());
     }
@@ -477,15 +485,17 @@ class SeniorControllerTest extends IntegrationTest {
     }
 
     @Test
-    @DisplayName("대학원생을 상세 조회한다")
+    @DisplayName("대학원생을 상세 조회한다 - 본인 조회")
     void getSeniorDetails() throws Exception {
         updateProfile();
         updateAvailable();
 
-        mvc.perform(get("/senior/{seniorId}", senior.getSeniorId()))
+        mvc.perform(get("/senior/{seniorId}", senior.getSeniorId())
+                        .header(AUTHORIZATION, BEARER + token))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(SENIOR_FIND.getCode()))
                 .andExpect(jsonPath("$.message").value(GET_SENIOR_INFO.getMessage()))
+                .andExpect(jsonPath("$.data.isMine").value(TRUE))
                 .andExpect(jsonPath("$.data.nickName").isNotEmpty())
                 .andExpect(jsonPath("$.data.term").isNotEmpty())
                 .andExpect(jsonPath("$.data.profile").isNotEmpty())
@@ -497,8 +507,33 @@ class SeniorControllerTest extends IntegrationTest {
                 .andExpect(jsonPath("$.data.info").isNotEmpty())
                 .andExpect(jsonPath("$.data.oneLiner").isNotEmpty())
                 .andExpect(jsonPath("$.data.target").isNotEmpty())
-                .andExpect(jsonPath("$.data.times").isNotEmpty())
-        ;
+                .andExpect(jsonPath("$.data.times").isNotEmpty());
+    }
+
+    @Test
+    @DisplayName("대학원생을 상세 조회한다 - 타인 조회")
+    void getSeniorDetailsOthers() throws Exception {
+        updateProfile();
+        updateAvailable();
+
+        mvc.perform(get("/senior/{seniorId}", senior.getSeniorId())
+                        .header(AUTHORIZATION, BEARER + otherToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(SENIOR_FIND.getCode()))
+                .andExpect(jsonPath("$.message").value(GET_SENIOR_INFO.getMessage()))
+                .andExpect(jsonPath("$.data.isMine").value(FALSE))
+                .andExpect(jsonPath("$.data.nickName").isNotEmpty())
+                .andExpect(jsonPath("$.data.term").isNotEmpty())
+                .andExpect(jsonPath("$.data.profile").isNotEmpty())
+                .andExpect(jsonPath("$.data.postgradu").isNotEmpty())
+                .andExpect(jsonPath("$.data.major").isNotEmpty())
+                .andExpect(jsonPath("$.data.lab").isNotEmpty())
+                .andExpect(jsonPath("$.data.professor").isNotEmpty())
+                .andExpect(jsonPath("$.data.keyword").isNotEmpty())
+                .andExpect(jsonPath("$.data.info").isNotEmpty())
+                .andExpect(jsonPath("$.data.oneLiner").isNotEmpty())
+                .andExpect(jsonPath("$.data.target").isNotEmpty())
+                .andExpect(jsonPath("$.data.times").isNotEmpty());
     }
 
     @ParameterizedTest
