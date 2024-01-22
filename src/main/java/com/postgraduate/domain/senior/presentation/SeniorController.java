@@ -98,8 +98,9 @@ public class SeniorController {
 
     @GetMapping("/{seniorId}")
     @Operation(summary = "대학원생 상세 조회 | 토큰 필요")
-    public ResponseDto<SeniorDetailResponse> getSeniorDetails(@PathVariable Long seniorId) {
-        SeniorDetailResponse seniorDetail = seniorInfoUseCase.getSeniorDetail(seniorId);
+    public ResponseDto<SeniorDetailResponse> getSeniorDetails(@AuthenticationPrincipal User user,
+                                                              @PathVariable Long seniorId) {
+        SeniorDetailResponse seniorDetail = seniorInfoUseCase.getSeniorDetail(user, seniorId);
         return ResponseDto.create(SENIOR_FIND.getCode(), GET_SENIOR_INFO.getMessage(), seniorDetail);
     }
 

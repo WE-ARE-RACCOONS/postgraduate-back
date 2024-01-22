@@ -5,6 +5,7 @@ import com.postgraduate.domain.available.application.dto.res.AvailableTimeRespon
 import java.util.List;
 
 public record SeniorDetailResponse(
+        boolean isMine,
         String nickName,
         int term,
         String profile,

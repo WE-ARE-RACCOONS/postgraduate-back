@@ -153,11 +153,12 @@ public class SeniorMapper {
                 user.getNickName());
     }
 
-    public static SeniorDetailResponse mapToSeniorDetail(Senior senior, List<AvailableTimeResponse> times) {
+    public static SeniorDetailResponse mapToSeniorDetail(Senior senior, List<AvailableTimeResponse> times, User user) {
         Info info = senior.getInfo();
         Profile profile = senior.getProfile();
         String[] keyword = info.getKeyword().split(",");
         return new SeniorDetailResponse(
+                senior.getUser().isEqual(user),
                 senior.getUser().getNickName(),
                 profile.getTerm(),
                 senior.getUser().getProfile(),

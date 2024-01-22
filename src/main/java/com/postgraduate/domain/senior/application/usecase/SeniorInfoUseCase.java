@@ -10,6 +10,7 @@ import com.postgraduate.domain.senior.application.mapper.SeniorMapper;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.domain.senior.domain.service.SeniorUpdateService;
+import com.postgraduate.domain.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -28,14 +29,14 @@ public class SeniorInfoUseCase {
     private final SeniorUpdateService seniorUpdateService;
     private final AvailableGetService availableGetService;
 
-    public SeniorDetailResponse getSeniorDetail(Long seniorId) {
+    public SeniorDetailResponse getSeniorDetail(User user, Long seniorId) {
         Senior senior = seniorGetService.bySeniorIdWithCertification(seniorId);
         seniorUpdateService.updateHit(senior);
         List<Available> availables = availableGetService.bySenior(senior);
         List<AvailableTimeResponse> times = availables.stream()
                 .map(AvailableMapper::mapToAvailableTimes)
                 .toList();
-        return mapToSeniorDetail(senior, times);
+        return mapToSeniorDetail(senior, times, user);
     }
 
     public AllSeniorSearchResponse getSearchSenior(String search, Integer page, String sort) {
