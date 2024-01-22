@@ -72,4 +72,9 @@ public class User {
     public void updateDelete() {
         this.isDelete = true;
     }
+
+    public boolean isEqual(User user) {
+        return user.getUserId()
+                .equals(this.userId);
+    }
 }
