@@ -15,7 +15,7 @@ public enum SeniorResponseCode {
     ACCOUNT_NOT_FOUND("EX401"),
     STATUS_NOT_WAITING("EX402"),
     INVALID_KEYWORD("EX402"),
-    EMPTY_TIME("EX403"),
+    TIME_EMPTY("EX403"),
     INVALID_DAY("EX404"),
     PROFILE_NOT_FOUND("EX405"),
     ;
