@@ -5,7 +5,6 @@ import com.postgraduate.domain.mentoring.application.dto.ExpectedSeniorMentoring
 import com.postgraduate.domain.mentoring.application.dto.WaitingSeniorMentoringInfo;
 import com.postgraduate.domain.mentoring.application.dto.res.SeniorMentoringDetailResponse;
 import com.postgraduate.domain.mentoring.application.dto.res.SeniorMentoringResponse;
-import com.postgraduate.domain.mentoring.application.mapper.MentoringMapper;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.entity.constant.Status;
 import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
@@ -18,13 +17,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static com.postgraduate.domain.mentoring.application.mapper.MentoringMapper.*;
-import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.*;
+import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.EXPECTED;
+import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.WAITING;
 import static java.time.Duration.between;
 
 @Service
@@ -80,11 +78,11 @@ public class MentoringSeniorInfoUseCase {
 
     private List<Mentoring> getMentorings(User user, Status status) {
         Senior senior = seniorGetService.byUser(user);
-        return mentoringGetService.mentoringBySenior(senior, status);
+        return mentoringGetService.bySenior(senior, status);
     }
 
     private List<DoneSeniorMentoringInfo> getDoneMentorings(User user) {
         Senior senior = seniorGetService.byUser(user);
-        return mentoringGetService.mentoringBySenior(senior);
+        return mentoringGetService.bySenior(senior);
     }
 }

@@ -28,7 +28,7 @@ class UserGetServiceTest {
         given(userRepository.findById(userId))
                 .willReturn(Optional.ofNullable(null));
 
-        assertThatThrownBy(() -> userGetService.getUser(userId))
+        assertThatThrownBy(() -> userGetService.byUserId(userId))
                 .isInstanceOf(UserNotFoundException.class);
     }
 }

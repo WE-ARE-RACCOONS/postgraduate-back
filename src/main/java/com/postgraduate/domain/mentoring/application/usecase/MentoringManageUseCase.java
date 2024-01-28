@@ -75,7 +75,7 @@ public class MentoringManageUseCase {
         if (mentoring.getStatus() != WAITING)
             throw new MentoringNotWaitingException();
         Refuse refuse = RefuseMapper.mapToRefuse(mentoring, request);
-        refuseSaveService.saveRefuse(refuse);
+        refuseSaveService.save(refuse);
         mentoringUpdateService.updateStatus(mentoring, REFUSE);
     }
 
@@ -104,7 +104,7 @@ public class MentoringManageUseCase {
         waitingMentorings.forEach(mentoring -> {
             mentoringUpdateService.updateStatus(mentoring, CANCEL);
             Refuse refuse = RefuseMapper.mapToRefuse(mentoring);
-            refuseSaveService.saveRefuse(refuse);
+            refuseSaveService.save(refuse);
             //TODO : 알림 보내거나 나머지 작업
         });
     }

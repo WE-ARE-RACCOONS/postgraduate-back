@@ -3,7 +3,6 @@ package com.postgraduate.domain.auth.application.usecase.oauth;
 import com.postgraduate.domain.auth.application.dto.req.SeniorChangeRequest;
 import com.postgraduate.domain.auth.application.dto.req.SeniorSignUpRequest;
 import com.postgraduate.domain.auth.application.dto.req.SignUpRequest;
-import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.salary.domain.service.SalarySaveService;
 import com.postgraduate.domain.senior.application.utils.SeniorUtils;
 import com.postgraduate.domain.senior.domain.entity.Info;
@@ -24,9 +23,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
-import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -96,9 +92,9 @@ class SignUpUseCaseTest {
         assertThat(saveUser.getRole())
                 .isEqualTo(USER);
         verify(wishSaveService, times(1))
-                .saveWish(any(Wish.class));
+                .save(any(Wish.class));
         verify(userSaveService, times(1))
-                .saveUser(any(User.class));
+                .save(any(User.class));
     }
 
     @Test
@@ -126,7 +122,7 @@ class SignUpUseCaseTest {
         assertThat(saveUser.getRole())
                 .isEqualTo(SENIOR);
         verify(userSaveService, times(1))
-                .saveUser(any(User.class));
+                .save(any(User.class));
         verify(seniorSaveService, times(1))
                 .saveSenior(any(Senior.class));
     }
@@ -153,7 +149,7 @@ class SignUpUseCaseTest {
                 info.getLab(), info.getField(), info.getKeyword(),
                 senior.getCertification());
 
-        given(userGetService.getUser(user.getUserId()))
+        given(userGetService.byUserId(user.getUserId()))
                 .willReturn(user);
 
         signUpUseCase.changeSenior(user, seniorChangeRequest);

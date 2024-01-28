@@ -143,7 +143,7 @@ class MentoringSeniorInfoUseCaseTest {
 
         given(seniorGetService.byUser(user))
                 .willReturn(senior);
-        given(mentoringGetService.mentoringBySenior(senior, WAITING))
+        given(mentoringGetService.bySenior(senior, WAITING))
                 .willReturn(mentorings);
 
         SeniorMentoringResponse seniorWaiting = mentoringSeniorInfoUseCase.getSeniorWaiting(user);
@@ -165,7 +165,7 @@ class MentoringSeniorInfoUseCaseTest {
 
         given(seniorGetService.byUser(user))
                 .willReturn(senior);
-        given(mentoringGetService.mentoringBySenior(senior, EXPECTED))
+        given(mentoringGetService.bySenior(senior, EXPECTED))
                 .willReturn(mentorings);
 
         SeniorMentoringResponse seniorExpected = mentoringSeniorInfoUseCase.getSeniorExpected(user);
@@ -195,7 +195,7 @@ class MentoringSeniorInfoUseCaseTest {
 
         given(seniorGetService.byUser(user))
                 .willReturn(senior);
-        given(mentoringGetService.mentoringBySenior(senior))
+        given(mentoringGetService.bySenior(senior))
                 .willReturn(dones);
 
         SeniorMentoringResponse seniorDone = mentoringSeniorInfoUseCase.getSeniorDone(user);

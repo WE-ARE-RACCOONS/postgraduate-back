@@ -10,8 +10,7 @@ import org.springframework.stereotype.Service;
 public class SalarySaveService {
     private final SalaryRepository salaryRepository;
 
-    public Salary saveSalary(Salary salary) {
-        Salary save = salaryRepository.save(salary);
-        return save;
+    public Salary save(Salary salary) {
+        return salaryRepository.save(salary);
     }
 }

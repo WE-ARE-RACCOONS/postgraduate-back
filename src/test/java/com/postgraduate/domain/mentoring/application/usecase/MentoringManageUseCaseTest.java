@@ -216,7 +216,7 @@ class MentoringManageUseCaseTest {
 
         mentoringManageUseCase.updateRefuse(user, mentoringId, request);
 
-        verify(refuseSaveService).saveRefuse(any(Refuse.class));
+        verify(refuseSaveService).save(any(Refuse.class));
         verify(mentoringUpdateService).updateStatus(mentoring, REFUSE);
     }
 

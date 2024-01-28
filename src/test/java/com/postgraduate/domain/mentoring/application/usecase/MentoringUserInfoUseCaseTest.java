@@ -122,21 +122,21 @@ class MentoringUserInfoUseCaseTest {
     void getWaiting() {
         Mentoring mentoring1 = new Mentoring(1L, user, senior
                 , "a", "b", "c"
-                , 40,  WAITING
+                , 40, WAITING
                 , LocalDateTime.now(), LocalDateTime.now());
 
         Mentoring mentoring2 = new Mentoring(2L, user, senior
                 , "a", "b", "c"
-                , 40,  WAITING
+                , 40, WAITING
                 , LocalDateTime.now(), LocalDateTime.now());
 
         Mentoring mentoring3 = new Mentoring(3L, user, senior
                 , "a", "b", "c"
-                , 40,  WAITING
+                , 40, WAITING
                 , LocalDateTime.now(), LocalDateTime.now());
         List<Mentoring> mentorings = List.of(mentoring1, mentoring2, mentoring3);
 
-        given(mentoringGetService.mentoringByUser(user, WAITING))
+        given(mentoringGetService.byUser(user, WAITING))
                 .willReturn(mentorings);
 
         AppliedMentoringResponse waiting = mentoringUserInfoUseCase.getWaiting(user);
@@ -150,21 +150,21 @@ class MentoringUserInfoUseCaseTest {
     void getExpected() {
         Mentoring mentoring1 = new Mentoring(1L, user, senior
                 , "a", "b", "c"
-                , 40,  EXPECTED
+                , 40, EXPECTED
                 , LocalDateTime.now(), LocalDateTime.now());
 
         Mentoring mentoring2 = new Mentoring(2L, user, senior
                 , "a", "b", "c"
-                , 40,  EXPECTED
+                , 40, EXPECTED
                 , LocalDateTime.now(), LocalDateTime.now());
 
         Mentoring mentoring3 = new Mentoring(3L, user, senior
                 , "a", "b", "c"
-                , 40,  EXPECTED
+                , 40, EXPECTED
                 , LocalDateTime.now(), LocalDateTime.now());
         List<Mentoring> mentorings = List.of(mentoring1, mentoring2, mentoring3);
 
-        given(mentoringGetService.mentoringByUser(user, EXPECTED))
+        given(mentoringGetService.byUser(user, EXPECTED))
                 .willReturn(mentorings);
 
         AppliedMentoringResponse expected = mentoringUserInfoUseCase.getExpected(user);
@@ -178,21 +178,21 @@ class MentoringUserInfoUseCaseTest {
     void getDone() {
         Mentoring mentoring1 = new Mentoring(1L, user, senior
                 , "a", "b", "c"
-                , 40,  DONE
+                , 40, DONE
                 , LocalDateTime.now(), LocalDateTime.now());
 
         Mentoring mentoring2 = new Mentoring(2L, user, senior
                 , "a", "b", "c"
-                , 40,  DONE
+                , 40, DONE
                 , LocalDateTime.now(), LocalDateTime.now());
 
         Mentoring mentoring3 = new Mentoring(3L, user, senior
                 , "a", "b", "c"
-                , 40,  DONE
+                , 40, DONE
                 , LocalDateTime.now(), LocalDateTime.now());
         List<Mentoring> mentorings = List.of(mentoring1, mentoring2, mentoring3);
 
-        given(mentoringGetService.mentoringByUser(user, DONE))
+        given(mentoringGetService.byUser(user, DONE))
                 .willReturn(mentorings);
 
         AppliedMentoringResponse done = mentoringUserInfoUseCase.getDone(user);

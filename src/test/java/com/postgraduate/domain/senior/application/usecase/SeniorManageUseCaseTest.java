@@ -31,8 +31,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -124,12 +122,12 @@ class SeniorManageUseCaseTest {
     @DisplayName("Account없는 경우 계정 수정 테스트")
     void updateSeniorMyPageUserAccountWithNonAccount() {
         SeniorMyPageUserAccountRequest request =
-                new SeniorMyPageUserAccountRequest("a", "b", "a" , "b", "a", "b");
+                new SeniorMyPageUserAccountRequest("a", "b", "a", "b", "a", "b");
         Salary salary = mock(Salary.class);
 
         given(salaryGetService.bySenior(senior))
                 .willReturn(salary);
-        given(userGetService.getUser(user.getUserId()))
+        given(userGetService.byUserId(user.getUserId()))
                 .willReturn(user);
         given(seniorGetService.byUser(user))
                 .willReturn(senior);
@@ -140,19 +138,19 @@ class SeniorManageUseCaseTest {
         verify(userUpdateService)
                 .updateSeniorUserAccount(user, request);
         verify(accountSaveService)
-                .saveAccount(any(Account.class));
+                .save(any(Account.class));
     }
 
     @Test
     @DisplayName("Account있는 경우 계정 수정 테스트")
     void updateSeniorMyPageUserAccountWithAccount() {
         SeniorMyPageUserAccountRequest request =
-                new SeniorMyPageUserAccountRequest("a", "b", "a" , "b", "a", "b");
+                new SeniorMyPageUserAccountRequest("a", "b", "a", "b", "a", "b");
         Salary salary = mock(Salary.class);
 
         given(salaryGetService.bySenior(senior))
                 .willReturn(salary);
-        given(userGetService.getUser(user.getUserId()))
+        given(userGetService.byUserId(user.getUserId()))
                 .willReturn(user);
         given(seniorGetService.byUser(user))
                 .willReturn(senior);
@@ -186,7 +184,7 @@ class SeniorManageUseCaseTest {
     @DisplayName("번호 예외 테스트")
     void userAccountInvalidPhoneNumber() {
         SeniorMyPageUserAccountRequest request =
-                new SeniorMyPageUserAccountRequest("a", "1234", "a" , "b", "a", "b");
+                new SeniorMyPageUserAccountRequest("a", "1234", "a", "b", "a", "b");
 
         doThrow(PhoneNumberException.class)
                 .when(userUtils)

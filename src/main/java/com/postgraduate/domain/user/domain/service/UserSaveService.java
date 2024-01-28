@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 public class UserSaveService {
     private final UserRepository userRepository;
 
-    public void saveUser(User user) {
+    public void save(User user) {
         userRepository.save(user);
     }
 }

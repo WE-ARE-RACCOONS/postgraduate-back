@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 public class WishSaveService {
     private final WishRepository wishRepository;
 
-    public void saveWish(Wish wish) {
+    public void save(Wish wish) {
         wishRepository.save(wish);
     }
 }

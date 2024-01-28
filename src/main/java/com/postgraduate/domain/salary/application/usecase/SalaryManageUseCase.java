@@ -35,7 +35,7 @@ public class SalaryManageUseCase {
         LocalDate salaryDate = SalaryUtil.getSalaryDate();
         seniorAndAccounts.forEach(seniorAndAccount -> {
             Salary salary = SalaryMapper.mapToSalary(seniorAndAccount.senior(), salaryDate, seniorAndAccount.account());
-            salarySaveService.saveSalary(salary);
+            salarySaveService.save(salary);
         });
     }
 }
