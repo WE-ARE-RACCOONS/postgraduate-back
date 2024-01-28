@@ -1,12 +1,6 @@
 package com.postgraduate.domain.image.application.dto.req;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotBlank;
 
-@Getter
-@AllArgsConstructor
-@NoArgsConstructor
-public class PreSignedUrlRequest {
-    private String fileName;
+public record PreSignedUrlRequest(@NotBlank String fileName) {
 }

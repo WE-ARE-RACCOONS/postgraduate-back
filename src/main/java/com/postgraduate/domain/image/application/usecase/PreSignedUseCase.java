@@ -13,16 +13,16 @@ public class PreSignedUseCase {
     private final S3Service s3Service;
 
     public PreSignedUrlResponse getProfileUrl(PreSignedUrlRequest preSignedUrlRequest) {
-        if (preSignedUrlRequest.getFileName().isEmpty())
+        if (preSignedUrlRequest.fileName().isEmpty())
             throw new EmptyFileException();
-        String preSignedUrl = s3Service.getProfilePreSignedUrl(preSignedUrlRequest.getFileName());
+        String preSignedUrl = s3Service.getProfilePreSignedUrl(preSignedUrlRequest.fileName());
         return new PreSignedUrlResponse(preSignedUrl);
     }
 
     public PreSignedUrlResponse getCertificationUrl(PreSignedUrlRequest preSignedUrlRequest) {
-        if (preSignedUrlRequest.getFileName().isEmpty())
+        if (preSignedUrlRequest.fileName().isEmpty())
             throw new EmptyFileException();
-        String preSignedUrl = s3Service.getCertificationPreSignedUrl(preSignedUrlRequest.getFileName());
+        String preSignedUrl = s3Service.getCertificationPreSignedUrl(preSignedUrlRequest.fileName());
         return new PreSignedUrlResponse(preSignedUrl);
     }
 }
