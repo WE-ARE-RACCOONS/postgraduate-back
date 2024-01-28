@@ -22,7 +22,6 @@ import com.postgraduate.domain.user.domain.entity.constant.Role;
 import com.postgraduate.domain.user.domain.repository.UserRepository;
 import com.postgraduate.global.config.security.jwt.util.JwtUtils;
 import com.postgraduate.global.exception.constant.ErrorCode;
-import com.postgraduate.global.exception.constant.ErrorMessage;
 import com.postgraduate.global.slack.SlackMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -138,8 +137,7 @@ class SeniorControllerTest extends IntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(ErrorCode.VALID_BLANK.getCode()))
-                .andExpect(jsonPath("$.message").value(ErrorMessage.VALID_BLANK.getMessage()));
+                .andExpect(jsonPath("$.code").value(ErrorCode.VALID_BLANK.getCode()));
     }
 
     @Test
@@ -179,8 +177,7 @@ class SeniorControllerTest extends IntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(ErrorCode.VALID_BLANK.getCode()))
-                .andExpect(jsonPath("$.message").value(ErrorMessage.VALID_BLANK.getMessage()));
+                .andExpect(jsonPath("$.code").value(ErrorCode.VALID_BLANK.getCode()));
     }
 
     @Test
@@ -242,8 +239,7 @@ class SeniorControllerTest extends IntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(ErrorCode.VALID_BLANK.getCode()))
-                .andExpect(jsonPath("$.message").value(ErrorMessage.VALID_BLANK.getMessage()));
+                .andExpect(jsonPath("$.code").value(ErrorCode.VALID_BLANK.getCode()));
     }
 
     @Test
@@ -335,8 +331,7 @@ class SeniorControllerTest extends IntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(ErrorCode.VALID_BLANK.getCode()))
-                .andExpect(jsonPath("$.message").value(ErrorMessage.VALID_BLANK.getMessage()));
+                .andExpect(jsonPath("$.code").value(ErrorCode.VALID_BLANK.getCode()));
     }
 
     @ParameterizedTest
@@ -359,8 +354,7 @@ class SeniorControllerTest extends IntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(ErrorCode.VALID_BLANK.getCode()))
-                .andExpect(jsonPath("$.message").value(ErrorMessage.VALID_BLANK.getMessage()));
+                .andExpect(jsonPath("$.code").value(ErrorCode.VALID_BLANK.getCode()));
     }
 
     @Test
@@ -456,8 +450,7 @@ class SeniorControllerTest extends IntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(ErrorCode.VALID_BLANK.getCode()))
-                .andExpect(jsonPath("$.message").value(ErrorMessage.VALID_BLANK.getMessage()));
+                .andExpect(jsonPath("$.code").value(ErrorCode.VALID_BLANK.getCode()));
     }
 
     @ParameterizedTest

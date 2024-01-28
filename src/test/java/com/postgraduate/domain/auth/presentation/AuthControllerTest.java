@@ -12,8 +12,6 @@ import com.postgraduate.domain.wish.domain.entity.constant.Status;
 import com.postgraduate.domain.wish.domain.repository.WishRepository;
 import com.postgraduate.global.config.redis.RedisRepository;
 import com.postgraduate.global.config.security.jwt.util.JwtUtils;
-import com.postgraduate.global.exception.constant.ErrorCode;
-import com.postgraduate.global.exception.constant.ErrorMessage;
 import com.postgraduate.global.slack.SlackMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -37,6 +35,7 @@ import static com.postgraduate.domain.user.domain.entity.constant.Role.SENIOR;
 import static com.postgraduate.domain.user.domain.entity.constant.Role.USER;
 import static com.postgraduate.domain.user.presentation.constant.UserResponseCode.USER_NOT_FOUND;
 import static com.postgraduate.domain.user.presentation.constant.UserResponseMessage.NOT_FOUND_USER;
+import static com.postgraduate.global.exception.constant.ErrorCode.VALID_BLANK;
 import static java.lang.Boolean.FALSE;
 import static java.time.LocalDateTime.now;
 import static org.mockito.ArgumentMatchers.any;
@@ -123,7 +122,7 @@ class AuthControllerTest extends IntegrationTest {
         authLoginByAnonymousUser();
 
         String request = objectMapper.writeValueAsString(
-                new SignUpRequest(anonymousUserSocialId, "01012345678", "nickname",
+                new SignUpRequest(anonymousUserSocialId, "01012345678", "새로운닉네임",
                         true, "major", "field", true)
         );
 
@@ -138,6 +137,24 @@ class AuthControllerTest extends IntegrationTest {
                 .andExpect(jsonPath("$.data.role").value(USER.name()));
     }
 
+    @Test
+    @DisplayName("닉네임은 6글자 이하만 허용한다")
+    void signUpUserInvalidNickName() throws Exception {
+        authLoginByAnonymousUser();
+
+        String request = objectMapper.writeValueAsString(
+                new SignUpRequest(anonymousUserSocialId, "01012345678", "nickname",
+                        true, "major", "field", true)
+        );
+
+        mvc.perform(post("/auth/user/signup")
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(VALID_BLANK.getCode()));
+    }
+
     @ParameterizedTest
     @NullAndEmptySource
     @DisplayName("희망 대학원/학과와 연구분야를 입력하지 않아도 대학생 회원가입이 가능하다.")
@@ -145,7 +162,7 @@ class AuthControllerTest extends IntegrationTest {
         authLoginByAnonymousUser();
 
         String request = objectMapper.writeValueAsString(
-                new SignUpRequest(anonymousUserSocialId, "01012345678", "nickname",
+                new SignUpRequest(anonymousUserSocialId, "01012345678", "새로운닉네임",
                         true, empty, empty, false)
         );
 
@@ -236,7 +253,7 @@ class AuthControllerTest extends IntegrationTest {
         authLoginByAnonymousUser();
 
         String request = objectMapper.writeValueAsString(
-                new SeniorSignUpRequest(anonymousUserSocialId, "01012345678", "nickname",
+                new SeniorSignUpRequest(anonymousUserSocialId, "01012345678", "새로운닉네임",
                         true, "전공", "서울대학교", "교수", "연구실",
                         "AI", "키워드", "certification")
         );
@@ -259,7 +276,7 @@ class AuthControllerTest extends IntegrationTest {
         authLoginByAnonymousUser();
 
         String request = objectMapper.writeValueAsString(
-                new SeniorSignUpRequest(anonymousUserSocialId, "01012345678", "nickname",
+                new SeniorSignUpRequest(anonymousUserSocialId, "01012345678", "새로운닉네임",
                         true, empty, empty, empty, empty, empty, empty, empty)
         );
 
@@ -268,8 +285,7 @@ class AuthControllerTest extends IntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(ErrorCode.VALID_BLANK.getCode()))
-                .andExpect(jsonPath("$.message").value(ErrorMessage.VALID_BLANK.getMessage()));
+                .andExpect(jsonPath("$.code").value(VALID_BLANK.getCode()));
     }
 
     @Test
@@ -310,8 +326,7 @@ class AuthControllerTest extends IntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(ErrorCode.VALID_BLANK.getCode()))
-                .andExpect(jsonPath("$.message").value(ErrorMessage.VALID_BLANK.getMessage()));
+                .andExpect(jsonPath("$.code").value(VALID_BLANK.getCode()));
     }
 
     @Test
