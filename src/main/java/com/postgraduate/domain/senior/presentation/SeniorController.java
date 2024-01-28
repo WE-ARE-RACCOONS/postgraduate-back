@@ -93,7 +93,7 @@ public class SeniorController {
     public ResponseDto updateSeniorUserAccount(@AuthenticationPrincipal User user,
                                                @RequestBody @Valid SeniorMyPageUserAccountRequest myPageUserAccountRequest) {
         seniorManageUseCase.updateSeniorMyPageUserAccount(user, myPageUserAccountRequest);
-        return ResponseDto.create(SENIOR_UPDATE.getCode(), UPDATE_MYPAGE_ACCOOUNT.getMessage());
+        return ResponseDto.create(SENIOR_UPDATE.getCode(), UPDATE_MYPAGE_ACCOUNT.getMessage());
     }
 
     @GetMapping("/{seniorId}")

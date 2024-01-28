@@ -289,8 +289,8 @@ class SeniorControllerTest extends IntegrationTest {
         mvc.perform(get("/senior/me/profile")
                         .header(AUTHORIZATION, BEARER + token))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(SeniorResponseCode.NONE_PROFILE.getCode()))
-                .andExpect(jsonPath("$.message").value(SeniorResponseMessage.NONE_PROFILE.getMessage()));
+                .andExpect(jsonPath("$.code").value(PROFILE_NOT_FOUND.getCode()))
+                .andExpect(jsonPath("$.message").value(NOT_FOUND_PROFILE.getMessage()));
     }
 
     @Test
@@ -436,7 +436,7 @@ class SeniorControllerTest extends IntegrationTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(SENIOR_UPDATE.getCode()))
-                .andExpect(jsonPath("$.message").value(UPDATE_MYPAGE_ACCOOUNT.getMessage()));
+                .andExpect(jsonPath("$.message").value(UPDATE_MYPAGE_ACCOUNT.getMessage()));
     }
 
     @ParameterizedTest
@@ -480,8 +480,8 @@ class SeniorControllerTest extends IntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(SeniorResponseCode.NONE_ACCOUNT.getCode()))
-                .andExpect(jsonPath("$.message").value(SeniorResponseMessage.NONE_ACCOUNT.getMessage()));
+                .andExpect(jsonPath("$.code").value(ACCOUNT_NOT_FOUND.getCode()))
+                .andExpect(jsonPath("$.message").value(NOT_FOUND_ACCOUNT.getMessage()));
     }
 
     @Test
@@ -545,8 +545,8 @@ class SeniorControllerTest extends IntegrationTest {
 
         mvc.perform(get("/senior/{seniorId}", senior.getSeniorId()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(SeniorResponseCode.NONE_SENIOR.getCode()))
-                .andExpect(jsonPath("$.message").value(SeniorResponseMessage.NONE_SENIOR.getMessage()));
+                .andExpect(jsonPath("$.code").value(SENIOR_NOT_FOUND.getCode()))
+                .andExpect(jsonPath("$.message").value(NOT_FOUND_SENIOR.getMessage()));
     }
 
     @Test

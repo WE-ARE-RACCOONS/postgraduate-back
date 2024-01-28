@@ -6,6 +6,6 @@ import com.postgraduate.global.exception.ApplicationException;
 
 public class NoneProfileException extends ApplicationException {
     public NoneProfileException() {
-        super(SeniorResponseMessage.NONE_PROFILE.getMessage(), SeniorResponseCode.NONE_PROFILE.getCode());
+        super(SeniorResponseMessage.NOT_FOUND_PROFILE.getMessage(), SeniorResponseCode.PROFILE_NOT_FOUND.getCode());
     }
 }

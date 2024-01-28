@@ -5,8 +5,6 @@ import com.postgraduate.IntegrationTest;
 import com.postgraduate.domain.auth.application.dto.req.*;
 import com.postgraduate.domain.auth.application.dto.res.KakaoUserInfoResponse;
 import com.postgraduate.domain.auth.application.usecase.oauth.kakao.KakaoAccessTokenUseCase;
-import com.postgraduate.domain.senior.presentation.constant.SeniorResponseCode;
-import com.postgraduate.domain.senior.presentation.constant.SeniorResponseMessage;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.repository.UserRepository;
 import com.postgraduate.domain.wish.domain.entity.Wish;
@@ -32,7 +30,9 @@ import java.util.Optional;
 import static com.postgraduate.domain.auth.presentation.constant.AuthResponseCode.*;
 import static com.postgraduate.domain.auth.presentation.constant.AuthResponseMessage.*;
 import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseCode.SENIOR_CREATE;
+import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseCode.SENIOR_NOT_FOUND;
 import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseMessage.CREATE_SENIOR;
+import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseMessage.NOT_FOUND_SENIOR;
 import static com.postgraduate.domain.user.domain.entity.constant.Role.SENIOR;
 import static com.postgraduate.domain.user.domain.entity.constant.Role.USER;
 import static com.postgraduate.domain.user.presentation.constant.UserResponseCode.USER_NOT_FOUND;
@@ -339,8 +339,8 @@ class AuthControllerTest extends IntegrationTest {
         mvc.perform(post("/auth/senior/token")
                         .header(AUTHORIZATION, BEARER + token))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(SeniorResponseCode.NONE_SENIOR.getCode()))
-                .andExpect(jsonPath("$.message").value(SeniorResponseMessage.NONE_SENIOR.getMessage()));
+                .andExpect(jsonPath("$.code").value(SENIOR_NOT_FOUND.getCode()))
+                .andExpect(jsonPath("$.message").value(NOT_FOUND_SENIOR.getMessage()));
     }
 
     @Test
