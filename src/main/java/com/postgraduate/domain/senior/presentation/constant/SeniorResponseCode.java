@@ -14,10 +14,10 @@ public enum SeniorResponseCode {
     SENIOR_NOT_FOUND("EX400"),
     ACCOUNT_NOT_FOUND("EX401"),
     STATUS_NOT_WAITING("EX402"),
-    INVALID_KEYWORD("EX402"),
     TIME_EMPTY("EX403"),
     INVALID_DAY("EX404"),
     PROFILE_NOT_FOUND("EX405"),
+    INVALID_KEYWORD("EX406"),
     ;
     private final String code;
 }
