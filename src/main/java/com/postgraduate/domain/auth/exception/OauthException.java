@@ -1,10 +1,10 @@
 package com.postgraduate.domain.auth.exception;
 
-import static com.postgraduate.domain.auth.presentation.constant.AuthResponseCode.NONE_PROVIDER;
-import static com.postgraduate.domain.auth.presentation.constant.AuthResponseMessage.PROVIDER_NONE;
+import static com.postgraduate.domain.auth.presentation.constant.AuthResponseCode.PROVIDER_NOT_FOUND;
+import static com.postgraduate.domain.auth.presentation.constant.AuthResponseMessage.NOT_FOUND_PROVIDER;
 
-public class OauthException extends AuthException{
+public class OauthException extends AuthException {
     public OauthException() {
-        super(PROVIDER_NONE.getMessage(), NONE_PROVIDER.getCode());
+        super(NOT_FOUND_PROVIDER.getMessage(), PROVIDER_NOT_FOUND.getCode());
     }
 }
