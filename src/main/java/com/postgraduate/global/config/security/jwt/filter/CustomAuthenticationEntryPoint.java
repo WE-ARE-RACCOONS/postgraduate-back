@@ -27,7 +27,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        response.setStatus(HttpStatus.OK.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding("UTF-8");
         logService.save(new LogRequest(CustomAuthenticationEntryPoint.class.getSimpleName(), FAILED_AUTH.getMessage()));

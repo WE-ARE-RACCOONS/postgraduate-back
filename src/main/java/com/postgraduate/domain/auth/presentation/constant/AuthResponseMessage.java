@@ -16,6 +16,6 @@ public enum AuthResponseMessage {
     KAKAO_INVALID("카카오 정보가 유효하지 않습니다."),
     KAKAO_CODE("카카오 코드가 유효하지 않습니다."),
     FAILED_AUTH("사용자 인증에 실패했습니다."),
-    PROVIDER_NONE("PROVIDER가 없습니다.");
+    NOT_FOUND_PROVIDER("PROVIDER가 없습니다.");
     private final String message;
 }

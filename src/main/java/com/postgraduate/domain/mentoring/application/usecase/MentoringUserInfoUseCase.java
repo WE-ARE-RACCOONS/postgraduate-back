@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.postgraduate.domain.mentoring.application.mapper.MentoringMapper.*;
+import static com.postgraduate.domain.mentoring.application.mapper.MentoringMapper.mapToAppliedDetailInfo;
 import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.*;
 
 @Service
@@ -35,7 +35,7 @@ public class MentoringUserInfoUseCase {
     }
 
     public AppliedMentoringResponse getWaiting(User user) {
-        List<Mentoring> mentorings = mentoringGetService.mentoringByUser(user, WAITING);
+        List<Mentoring> mentorings = mentoringGetService.byUser(user, WAITING);
         List<WaitingMentoringInfo> waitingMentoringInfos = mentorings.stream()
                 .map(MentoringMapper::mapToWaitingInfo)
                 .toList();
@@ -43,7 +43,7 @@ public class MentoringUserInfoUseCase {
     }
 
     public AppliedMentoringResponse getExpected(User user) {
-        List<Mentoring> mentorings = mentoringGetService.mentoringByUser(user, EXPECTED);
+        List<Mentoring> mentorings = mentoringGetService.byUser(user, EXPECTED);
         List<ExpectedMentoringInfo> expectedMentoringInfos = mentorings.stream()
                 .map(MentoringMapper::mapToExpectedInfo)
                 .toList();
@@ -51,7 +51,7 @@ public class MentoringUserInfoUseCase {
     }
 
     public AppliedMentoringResponse getDone(User user) {
-        List<Mentoring> mentorings = mentoringGetService.mentoringByUser(user, DONE);
+        List<Mentoring> mentorings = mentoringGetService.byUser(user, DONE);
         List<DoneMentoringInfo> doneMentoringInfos = mentorings.stream()
                 .map(MentoringMapper::mapToDoneInfo)
                 .toList();

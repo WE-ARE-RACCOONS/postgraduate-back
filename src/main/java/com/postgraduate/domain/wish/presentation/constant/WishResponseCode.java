@@ -12,7 +12,7 @@ public enum WishResponseCode {
     WISH_DELETE("WSH203"),
 
     WISH_NOT_FOUND("EX200"),
-    MATCHING_NOT_RECEIVE("EX201"),
+    MATCHING_NOT_AGREE("EX201"),
     WISH_EMPTY("EX202");
     private final String code;
 }

@@ -19,7 +19,7 @@ public class UserManageUseCase {
 
     public void updateInfo(User user, UserInfoRequest userInfoRequest) {
         userUtils.checkPhoneNumber(userInfoRequest.phoneNumber());
-        user = userGetService.getUser(user.getUserId());
+        user = userGetService.byUserId(user.getUserId());
         userUpdateService.updateInfo(user, userInfoRequest);
     }
 

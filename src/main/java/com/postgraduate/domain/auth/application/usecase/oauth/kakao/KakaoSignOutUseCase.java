@@ -34,7 +34,7 @@ public class KakaoSignOutUseCase implements SignOutUseCase {
     @Override
     public void signOut(Long userId) {
         try {
-            User user = userGetService.getUser(userId);
+            User user = userGetService.byUserId(userId);
             MultiValueMap<String, String> requestBody = getRequestBody(user.getSocialId());
             webClient.post()
                     .uri(KAKAO_UNLINK_URI)

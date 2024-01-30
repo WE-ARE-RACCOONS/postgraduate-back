@@ -18,15 +18,15 @@ import java.util.List;
 public class MentoringGetService {
     private final MentoringRepository mentoringRepository;
 
-    public List<Mentoring> mentoringByUser(User user, Status status) {
+    public List<Mentoring> byUser(User user, Status status) {
         return mentoringRepository.findAllByUserAndStatus(user, status);
     }
 
-    public List<Mentoring> mentoringBySenior(Senior senior, Status status) {
+    public List<Mentoring> bySenior(Senior senior, Status status) {
         return mentoringRepository.findAllBySeniorAndStatus(senior, status);
     }
 
-    public List<DoneSeniorMentoringInfo> mentoringBySenior(Senior senior) {
+    public List<DoneSeniorMentoringInfo> bySenior(Senior senior) {
         return mentoringRepository.findAllBySeniorAndDone(senior);
     }
 

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 public class RefuseSaveService {
     private final RefuseRepository refuseRepository;
 
-    public void saveRefuse(Refuse refuse) {
+    public void save(Refuse refuse) {
         refuseRepository.save(refuse);
     }
 }

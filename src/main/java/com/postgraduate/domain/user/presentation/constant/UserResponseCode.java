@@ -12,7 +12,7 @@ public enum UserResponseCode {
     USER_DELETE("UR203"),
 
     USER_NOT_FOUND("EX300"),
-    DELETED_USER("EX301"),
+    USER_DELETED("EX301"),
     INVALID_PHONE_NUMBER("EX302");
     private final String code;
 }

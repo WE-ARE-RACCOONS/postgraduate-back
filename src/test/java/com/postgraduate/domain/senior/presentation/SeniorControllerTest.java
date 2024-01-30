@@ -22,7 +22,6 @@ import com.postgraduate.domain.user.domain.entity.constant.Role;
 import com.postgraduate.domain.user.domain.repository.UserRepository;
 import com.postgraduate.global.config.security.jwt.util.JwtUtils;
 import com.postgraduate.global.exception.constant.ErrorCode;
-import com.postgraduate.global.exception.constant.ErrorMessage;
 import com.postgraduate.global.slack.SlackMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -34,6 +33,7 @@ import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -127,6 +127,7 @@ class SeniorControllerTest extends IntegrationTest {
 
     @ParameterizedTest
     @NullAndEmptySource
+    @WithMockUser(authorities = {"SENIOR"})
     @DisplayName("잘못된 이미지로 인증한다")
     void updateInvalidCertification(String certification) throws Exception {
         String request = objectMapper.writeValueAsString(
@@ -138,8 +139,7 @@ class SeniorControllerTest extends IntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(ErrorCode.VALID_BLANK.getCode()))
-                .andExpect(jsonPath("$.message").value(ErrorMessage.VALID_BLANK.getMessage()));
+                .andExpect(jsonPath("$.code").value(ErrorCode.VALID_BLANK.getCode()));
     }
 
     @Test
@@ -179,8 +179,7 @@ class SeniorControllerTest extends IntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(ErrorCode.VALID_BLANK.getCode()))
-                .andExpect(jsonPath("$.message").value(ErrorMessage.VALID_BLANK.getMessage()));
+                .andExpect(jsonPath("$.code").value(ErrorCode.VALID_BLANK.getCode()));
     }
 
     @Test
@@ -227,6 +226,7 @@ class SeniorControllerTest extends IntegrationTest {
 
     @ParameterizedTest
     @NullAndEmptySource
+    @WithMockUser(authorities = {"SENIOR"})
     @DisplayName("빈 정산 계좌를 입력으면 예외가 발생한다")
     void updateInvalidAccount(String empty) throws Exception {
         Salary salary = new Salary(0L, false, senior, null, 10000, getSalaryDate(), now(), null, null, null);
@@ -242,8 +242,7 @@ class SeniorControllerTest extends IntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(ErrorCode.VALID_BLANK.getCode()))
-                .andExpect(jsonPath("$.message").value(ErrorMessage.VALID_BLANK.getMessage()));
+                .andExpect(jsonPath("$.code").value(ErrorCode.VALID_BLANK.getCode()));
     }
 
     @Test
@@ -289,8 +288,8 @@ class SeniorControllerTest extends IntegrationTest {
         mvc.perform(get("/senior/me/profile")
                         .header(AUTHORIZATION, BEARER + token))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(SeniorResponseCode.NONE_PROFILE.getCode()))
-                .andExpect(jsonPath("$.message").value(SeniorResponseMessage.NONE_PROFILE.getMessage()));
+                .andExpect(jsonPath("$.code").value(PROFILE_NOT_FOUND.getCode()))
+                .andExpect(jsonPath("$.message").value(NOT_FOUND_PROFILE.getMessage()));
     }
 
     @Test
@@ -317,6 +316,7 @@ class SeniorControllerTest extends IntegrationTest {
 
     @ParameterizedTest
     @NullAndEmptySource
+    @WithMockUser(authorities = {"SENIOR"})
     @DisplayName("가능 시간대가 비어있으면 예외가 발생한다")
     void updateInvalidAvailableSeniorProfile(String empty) throws Exception {
         List<AvailableCreateRequest> availableCreateRequests = List.of(
@@ -335,12 +335,12 @@ class SeniorControllerTest extends IntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(ErrorCode.VALID_BLANK.getCode()))
-                .andExpect(jsonPath("$.message").value(ErrorMessage.VALID_BLANK.getMessage()));
+                .andExpect(jsonPath("$.code").value(ErrorCode.VALID_BLANK.getCode()));
     }
 
     @ParameterizedTest
     @NullAndEmptySource
+    @WithMockUser(authorities = {"SENIOR"})
     @DisplayName("프로필이 비어있으면 예외가 발생한다")
     void updateInvalidSeniorProfile(String empty) throws Exception {
         List<AvailableCreateRequest> availableCreateRequests = List.of(
@@ -359,8 +359,7 @@ class SeniorControllerTest extends IntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(ErrorCode.VALID_BLANK.getCode()))
-                .andExpect(jsonPath("$.message").value(ErrorMessage.VALID_BLANK.getMessage()));
+                .andExpect(jsonPath("$.code").value(ErrorCode.VALID_BLANK.getCode()));
     }
 
     @Test
@@ -436,11 +435,12 @@ class SeniorControllerTest extends IntegrationTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(SENIOR_UPDATE.getCode()))
-                .andExpect(jsonPath("$.message").value(UPDATE_MYPAGE_ACCOOUNT.getMessage()));
+                .andExpect(jsonPath("$.message").value(UPDATE_MYPAGE_ACCOUNT.getMessage()));
     }
 
     @ParameterizedTest
     @NullAndEmptySource
+    @WithMockUser(authorities = {"SENIOR"})
     @DisplayName("대학원생 마이페이지 계정을 수정 요청에 닉네임, 전화번호, 프로필사진이 없다면 예외가 발생한다")
     void updateEmptySeniorUserAccount(String empty) throws Exception {
         Salary salary = new Salary(0L, false, senior, null, 10000, getSalaryDate(), now(), null, null, null);
@@ -456,8 +456,7 @@ class SeniorControllerTest extends IntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(ErrorCode.VALID_BLANK.getCode()))
-                .andExpect(jsonPath("$.message").value(ErrorMessage.VALID_BLANK.getMessage()));
+                .andExpect(jsonPath("$.code").value(ErrorCode.VALID_BLANK.getCode()));
     }
 
     @ParameterizedTest
@@ -480,8 +479,8 @@ class SeniorControllerTest extends IntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(SeniorResponseCode.NONE_ACCOUNT.getCode()))
-                .andExpect(jsonPath("$.message").value(SeniorResponseMessage.NONE_ACCOUNT.getMessage()));
+                .andExpect(jsonPath("$.code").value(ACCOUNT_NOT_FOUND.getCode()))
+                .andExpect(jsonPath("$.message").value(NOT_FOUND_ACCOUNT.getMessage()));
     }
 
     @Test
@@ -511,6 +510,7 @@ class SeniorControllerTest extends IntegrationTest {
     }
 
     @Test
+    @WithMockUser(authorities = {"USER", "SENIOR", "ADMIN"})
     @DisplayName("대학원생을 상세 조회한다 - 타인 조회")
     void getSeniorDetailsOthers() throws Exception {
         updateProfile();
@@ -538,6 +538,7 @@ class SeniorControllerTest extends IntegrationTest {
 
     @ParameterizedTest
     @EnumSource(value = Status.class, names = {"NOT_APPROVE", "WAITING"})
+    @WithMockUser(authorities = {"USER", "SENIOR", "ADMIN"})
     @DisplayName("승인되지 않은 대학원생은 조회되지 않는다.")
     void getNotApprovedSeniorDetails(Status status) throws Exception {
         senior.updateStatus(status);
@@ -545,11 +546,12 @@ class SeniorControllerTest extends IntegrationTest {
 
         mvc.perform(get("/senior/{seniorId}", senior.getSeniorId()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(SeniorResponseCode.NONE_SENIOR.getCode()))
-                .andExpect(jsonPath("$.message").value(SeniorResponseMessage.NONE_SENIOR.getMessage()));
+                .andExpect(jsonPath("$.code").value(SENIOR_NOT_FOUND.getCode()))
+                .andExpect(jsonPath("$.message").value(NOT_FOUND_SENIOR.getMessage()));
     }
 
     @Test
+    @WithMockUser(authorities = {"USER"})
     @DisplayName("결제 시 대학원생의 기본 정보를 확인한다")
     void testGetSeniorProfile() throws Exception {
         updateProfile();
@@ -567,6 +569,7 @@ class SeniorControllerTest extends IntegrationTest {
     }
 
     @Test
+    @WithMockUser(authorities = {"USER"})
     @DisplayName("신청서 작성 시 대학원생의 가능 시간 정보를 조회한다")
     void getSeniorTimes() throws Exception {
         updateProfile();

@@ -6,6 +6,6 @@ import com.postgraduate.global.exception.ApplicationException;
 
 public class NoneAccountException extends ApplicationException {
     public NoneAccountException() {
-        super(SeniorResponseMessage.NONE_ACCOUNT.getMessage(), SeniorResponseCode.NONE_ACCOUNT.getCode());
+        super(SeniorResponseMessage.NOT_FOUND_ACCOUNT.getMessage(), SeniorResponseCode.ACCOUNT_NOT_FOUND.getCode());
     }
 }

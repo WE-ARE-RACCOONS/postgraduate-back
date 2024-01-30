@@ -1,10 +1,10 @@
 package com.postgraduate.domain.available.exception;
 
-import com.postgraduate.domain.senior.presentation.constant.SeniorResponseCode;
-import com.postgraduate.domain.senior.presentation.constant.SeniorResponseMessage;
+import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseCode.TIME_EMPTY;
+import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseMessage.EMPTY_TIME;
 
-public class EmptyAvailableException extends AvailableException{
+public class EmptyAvailableException extends AvailableException {
     public EmptyAvailableException() {
-        super(SeniorResponseMessage.EMPTY_TIME.getMessage(), SeniorResponseCode.EMPTY_TIME.getCode());
+        super(EMPTY_TIME.getMessage(), TIME_EMPTY.getCode());
     }
 }

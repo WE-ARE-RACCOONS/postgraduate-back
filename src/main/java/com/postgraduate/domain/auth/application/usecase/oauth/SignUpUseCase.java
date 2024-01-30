@@ -7,7 +7,6 @@ import com.postgraduate.domain.auth.application.dto.req.UserChangeRequest;
 import com.postgraduate.domain.salary.application.mapper.SalaryMapper;
 import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.salary.domain.service.SalarySaveService;
-import com.postgraduate.domain.salary.util.SalaryUtil;
 import com.postgraduate.domain.senior.application.mapper.SeniorMapper;
 import com.postgraduate.domain.senior.application.utils.SeniorUtils;
 import com.postgraduate.domain.senior.domain.entity.Senior;
@@ -45,8 +44,8 @@ public class SignUpUseCase {
         userUtils.checkPhoneNumber(request.phoneNumber());
         User user = UserMapper.mapToUser(request);
         Wish wish = WishMapper.mapToWish(user, request);
-        wishSaveService.saveWish(wish);
-        userSaveService.saveUser(user);
+        wishSaveService.save(wish);
+        userSaveService.save(user);
         return user;
     }
 
@@ -54,11 +53,11 @@ public class SignUpUseCase {
         seniorUtils.checkKeyword(request.keyword());
         userUtils.checkPhoneNumber(request.phoneNumber());
         User user = UserMapper.mapToUser(request);
-        userSaveService.saveUser(user);
+        userSaveService.save(user);
         Senior senior = SeniorMapper.mapToSenior(user, request);
         seniorSaveService.saveSenior(senior);
         Salary salary = SalaryMapper.mapToSalary(senior, getSalaryDate());
-        salarySaveService.saveSalary(salary);
+        salarySaveService.save(salary);
         return senior.getUser();
     }
 
@@ -66,15 +65,15 @@ public class SignUpUseCase {
         seniorUtils.checkKeyword(changeRequest.keyword());
         Senior senior = SeniorMapper.mapToSenior(user, changeRequest); //todo : 예외 처리
         seniorSaveService.saveSenior(senior);
-        user = userGetService.getUser(user.getUserId());
+        user = userGetService.byUserId(user.getUserId());
         userUpdateService.updateRole(user, Role.SENIOR);
         Salary salary = SalaryMapper.mapToSalary(senior, getSalaryDate());
-        salarySaveService.saveSalary(salary);
+        salarySaveService.save(salary);
         return user;
     }
 
     public void changeUser(User user, UserChangeRequest changeRequest) {
         Wish wish = WishMapper.mapToWish(user, changeRequest);
-        wishSaveService.saveWish(wish);
+        wishSaveService.save(wish);
     }
 }

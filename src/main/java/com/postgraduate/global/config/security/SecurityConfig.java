@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
@@ -52,12 +53,39 @@ public class SecurityConfig {
                 .logout(logout -> logout.disable());
         http
                 .authorizeHttpRequests((authorize) -> authorize
-                                .requestMatchers(PASS).permitAll()
-                                .requestMatchers("/admin/**").hasAuthority(Role.ADMIN.name())
-//                        .requestMatchers("/senior/field").permitAll()
-//                        .requestMatchers("/senior/search").permitAll()
-//                        .requestMatchers("/senior/**").authenticated()
-                                .anyRequest().permitAll()
+                        .requestMatchers(PASS).permitAll()
+                        .requestMatchers("/admin/**").hasAuthority(Role.ADMIN.name())
+
+                        .requestMatchers(HttpMethod.PATCH, "/senior/**").hasAuthority(Role.SENIOR.name())
+                        .requestMatchers(HttpMethod.POST, "/senior/**").hasAuthority(Role.SENIOR.name())
+                        .requestMatchers("/senior/me/**").hasAuthority(Role.SENIOR.name())
+                        .requestMatchers("/senior/search").permitAll()
+                        .requestMatchers("/senior/field").permitAll()
+                        .requestMatchers("/senior/all").permitAll()
+                        .requestMatchers("/senior/{seniorId}").authenticated()
+                        .requestMatchers("/senior/{seniorId}/times").hasAuthority(Role.USER.name())
+                        .requestMatchers("/senior/{seniorId}/profile").hasAuthority(Role.USER.name())
+                        .requestMatchers("/senior/**").hasAuthority(Role.SENIOR.name())
+
+                        .requestMatchers("/user/nickname").permitAll()
+                        .requestMatchers("/user/**").hasAuthority(Role.USER.name())
+
+                        .requestMatchers("/image/upload/profile").authenticated()
+
+                        .requestMatchers("/mentoring/applying").hasAuthority(Role.USER.name())
+                        .requestMatchers("/mentoring/me/**").hasAuthority(Role.USER.name())
+                        .requestMatchers("/mentoring/senior/**").hasAuthority(Role.SENIOR.name())
+
+                        .requestMatchers("/salary/**").hasAuthority(Role.SENIOR.name())
+
+                        .requestMatchers("/auth/user/token").hasAuthority(Role.SENIOR.name())
+                        .requestMatchers("/auth/user/change").hasAuthority(Role.SENIOR.name())
+                        .requestMatchers("/auth/senior/token").hasAuthority(Role.USER.name())
+                        .requestMatchers("/auth/senior/change").hasAuthority(Role.USER.name())
+                        .requestMatchers("/auth/refresh").authenticated()
+                        .requestMatchers("/auth/logout").authenticated()
+
+                        .anyRequest().permitAll()
                 )
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling((exceptions) -> exceptions

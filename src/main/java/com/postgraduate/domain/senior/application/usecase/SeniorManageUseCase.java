@@ -71,7 +71,7 @@ public class SeniorManageUseCase {
     public void saveAccount(User user, SeniorAccountRequest accountRequest) {
         Senior senior = seniorGetService.byUser(user);
         String accountNumber = encryptorUtils.encryptData(accountRequest.accountNumber());
-        accountSaveService.saveAccount(mapToAccount(senior, accountRequest, accountNumber));
+        accountSaveService.save(mapToAccount(senior, accountRequest, accountNumber));
         updateSalaryAccount(senior, accountRequest.bank(), accountNumber, accountRequest.accountHolder());
     }
 
@@ -89,7 +89,7 @@ public class SeniorManageUseCase {
     public void updateSeniorMyPageUserAccount(User user, SeniorMyPageUserAccountRequest myPageUserAccountRequest) {
         userUtils.checkPhoneNumber(myPageUserAccountRequest.phoneNumber());
         Senior senior = seniorGetService.byUser(user);
-        user = userGetService.getUser(user.getUserId());
+        user = userGetService.byUserId(user.getUserId());
         userUpdateService.updateSeniorUserAccount(user, myPageUserAccountRequest);
 
         Optional<Account> optionalAccount = accountGetService.bySenior(senior);
@@ -111,7 +111,7 @@ public class SeniorManageUseCase {
         }
         String accountNumber = encryptorUtils.encryptData(myPageUserAccountRequest.accountNumber());
         Account account = mapToAccount(senior, myPageUserAccountRequest, accountNumber);
-        accountSaveService.saveAccount(account);
+        accountSaveService.save(account);
         updateSalaryAccount(senior, myPageUserAccountRequest.bank(), accountNumber, myPageUserAccountRequest.accountHolder());
     }
 

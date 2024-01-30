@@ -17,6 +17,6 @@ public enum AuthResponseCode {
     AUTH_INVALID_KAKAO("EX901"),
     AUTH_KAKAO_CODE("EX902"),
     AUTH_FAILED("EX903"),
-    NONE_PROVIDER("EX904");
+    PROVIDER_NOT_FOUND("EX904");
     private final String code;
 }
