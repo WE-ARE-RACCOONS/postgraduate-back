@@ -62,7 +62,7 @@ public class SecurityConfig {
                         .requestMatchers("/senior/search").permitAll()
                         .requestMatchers("/senior/field").permitAll()
                         .requestMatchers("/senior/all").permitAll()
-                        .requestMatchers("/senior/{seniorId}").authenticated()
+                        .requestMatchers("/senior/{seniorId}").permitAll()
                         .requestMatchers("/senior/{seniorId}/times").hasAuthority(Role.USER.name())
                         .requestMatchers("/senior/{seniorId}/profile").hasAuthority(Role.USER.name())
                         .requestMatchers("/senior/**").hasAuthority(Role.SENIOR.name())

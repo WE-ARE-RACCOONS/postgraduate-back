@@ -74,6 +74,8 @@ public class User {
     }
 
     public boolean isEqual(User user) {
+        if (user == null)
+            return false;
         return user.getUserId()
                 .equals(this.userId);
     }
