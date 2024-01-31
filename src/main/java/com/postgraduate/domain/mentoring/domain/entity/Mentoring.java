@@ -45,7 +45,7 @@ public class Mentoring {
 
     @Column(nullable = false)
     @Builder.Default
-    private int term = 40;
+    private int term = 30;
 
     @Enumerated(EnumType.STRING)
     @Builder.Default
