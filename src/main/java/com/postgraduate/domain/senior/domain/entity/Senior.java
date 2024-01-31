@@ -74,4 +74,9 @@ public class Senior {
     public void updateHit() {
         this.hit++;
     }
+
+    public boolean isEqual(Senior senior) {
+        return senior.getSeniorId()
+                .equals(this.seniorId);
+    }
 }
