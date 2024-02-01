@@ -46,9 +46,8 @@ jobs:
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
 
-      - name: Build and analyze
-        run: |
-          ./gradlew build jacocoTestReport sonar --info
+      - name: SonarCloud scan
+        run: ./gradlew sonar --info --stacktrace
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
