@@ -84,16 +84,100 @@ sonar {
         property 'sonar.host.url', 'https://sonarcloud.io'
         property 'sonar.organization', 'we-are-raccoons'
         property 'sonar.projectKey', 'WE-ARE-RACCOONS_postgraduate-back'
-        property 'sonar.coverage.jacoco.xmlReportPaths', 'build/reports/jacoco/test/jacocoTestReport.xml'
+        property 'sonar.sources', 'src'
+        property 'sonar.language', 'java'
+        property 'sonar.sourceEncoding', 'UTF-8'
+        property 'sonar.test.exclusions', jacocoExcludePatterns.join(',')
+        property 'sonar.test.inclusions', '**/*Test.java'
+        property 'sonar.java.coveragePlugin', 'jacoco'
+        property 'sonar.coverage.jacoco.xmlReportPaths', jacocoDir.get().file("jacoco/index.xml").asFile
+    }
+}
+
+jacoco {
+    toolVersion = "0.8.11"
+}
+
+def QDomains = []
+for (qPattern in '*.QA'..'*.QZ') { // qPattern = '*.QA', '*.QB', ... '*.QZ'
+    QDomains.add(qPattern + '*')
+}
+
+def jacocoExcludePatterns = [
+        // 측정 안하고 싶은 패턴
+        "**/*Application*",
+        "**/dto/**",
+        "**/*Config*",
+        "**/*Exception*",
+        "**/*Request*",
+        "**/*Response*",
+        "**/*Dto*",
+        "**/*Filter*",
+        "**/*Resolver*",
+        "**/entity/**",
+        "**/test/**",
+        "**/resources/**"
+]
+
+jacocoTestCoverageVerification {
+
+    violationRules {
+        rule {
+            // rule 활성화
+            enabled = true
+
+            // 클래스 단위로 룰 체크
+            element = 'CLASS'
+
+            // 라인 커버리지를 최소 80% 만족
+            limit {
+                counter = 'LINE'
+                value = 'COVEREDRATIO'
+//                minimum = 0.80
+            }
+
+            // 브랜치 커버리지를 최소 80% 만족
+            limit {
+                counter = 'BRANCH'
+                value = 'COVEREDRATIO'
+//                minimum = 0.80
+            }
+
+            excludes = jacocoExcludePatterns + QDomains
+        }
     }
 }
 
 jacocoTestReport {
     reports {
-        xml.required = true
+        csv.required = true
     }
 }
 
 tasks.named('test') {
     useJUnitPlatform()
+    finalizedBy 'jacocoTestReport'
+}
+
+def jacocoDir = layout.buildDirectory.dir("reports/")
+
+jacocoTestReport {
+    dependsOn test	// 테스트가 수행되어야만 report를 생성할 수 있도록 설정
+    reports {
+        html.required.set(true)
+        xml.required.set(true)
+        csv.required.set(true)
+        html.destination jacocoDir.get().file("jacoco/index.html").asFile
+        xml.destination jacocoDir.get().file("jacoco/index.xml").asFile
+        csv.destination jacocoDir.get().file("jacoco/index.csv").asFile
+    }
+
+    afterEvaluate {
+        classDirectories.setFrom(
+                files(classDirectories.files.collect {
+                    fileTree(dir: it, excludes: jacocoExcludePatterns + QDomains) // Querydsl 관련 제거
+                })
+        )
+    }
+    finalizedBy jacocoTestCoverageVerification
 }
