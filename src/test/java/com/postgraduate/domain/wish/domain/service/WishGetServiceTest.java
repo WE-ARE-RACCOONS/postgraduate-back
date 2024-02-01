@@ -32,7 +32,7 @@ class WishGetServiceTest {
     void byWishIdFail() {
         long wishId = 1L;
         given(wishRepository.findByWishIdAndMatchingReceiveIsTrue(wishId))
-                .willReturn(ofNullable(null));
+                .willReturn(ofNullable(Wish.builder().build()));
 
         assertThatThrownBy(() -> wishGetService.byWishId(wishId))
                 .isInstanceOf(WishNotFoundException.class);
