@@ -1,9 +1,8 @@
 name: SonarCloudScan
 on:
-  push:
-    branches:
-      - develop
   pull_request:
+    branches:
+      - develop, main
 jobs:
   sonarcloud:
     name: SonarCloud
