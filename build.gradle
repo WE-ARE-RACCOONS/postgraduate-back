@@ -79,24 +79,12 @@ dependencies {
 
 }
 
-sonar {
-    properties {
-        property 'sonar.host.url', 'https://sonarcloud.io'
-        property 'sonar.organization', 'we-are-raccoons'
-        property 'sonar.projectKey', 'WE-ARE-RACCOONS_postgraduate-back'
-        property 'sonar.sources', 'src'
-        property 'sonar.language', 'java'
-        property 'sonar.sourceEncoding', 'UTF-8'
-        property 'sonar.test.exclusions', jacocoExcludePatterns.join(',')
-        property 'sonar.test.inclusions', '**/*Test.java'
-        property 'sonar.java.coveragePlugin', 'jacoco'
-        property 'sonar.coverage.jacoco.xmlReportPaths', jacocoDir.get().file("jacoco/index.xml").asFile
-    }
+tasks.named('test') {
+    useJUnitPlatform()
+    finalizedBy 'jacocoTestReport'
 }
 
-jacoco {
-    toolVersion = "0.8.11"
-}
+def jacocoDir = layout.buildDirectory.dir("reports/")
 
 def QDomains = []
 for (qPattern in '*.QA'..'*.QZ') { // qPattern = '*.QA', '*.QB', ... '*.QZ'
@@ -119,47 +107,24 @@ def jacocoExcludePatterns = [
         "**/resources/**"
 ]
 
-jacocoTestCoverageVerification {
-
-    violationRules {
-        rule {
-            // rule 활성화
-            enabled = true
-
-            // 클래스 단위로 룰 체크
-            element = 'CLASS'
-
-            // 라인 커버리지를 최소 80% 만족
-            limit {
-                counter = 'LINE'
-                value = 'COVEREDRATIO'
-//                minimum = 0.80
-            }
-
-            // 브랜치 커버리지를 최소 80% 만족
-            limit {
-                counter = 'BRANCH'
-                value = 'COVEREDRATIO'
-//                minimum = 0.80
-            }
-
-            excludes = jacocoExcludePatterns + QDomains
-        }
+sonar {
+    properties {
+        property 'sonar.host.url', 'https://sonarcloud.io'
+        property 'sonar.organization', 'we-are-raccoons'
+        property 'sonar.projectKey', 'WE-ARE-RACCOONS_postgraduate-back'
+        property 'sonar.sources', 'src'
+        property 'sonar.language', 'java'
+        property 'sonar.sourceEncoding', 'UTF-8'
+        property 'sonar.test.exclusions', jacocoExcludePatterns.join(',')
+        property 'sonar.test.inclusions', '**/*Test.java'
+        property 'sonar.java.coveragePlugin', 'jacoco'
+        property 'sonar.coverage.jacoco.xmlReportPaths', jacocoDir.get().file("jacoco/index.xml").asFile
     }
 }
 
-jacocoTestReport {
-    reports {
-        csv.required = true
-    }
+jacoco {
+    toolVersion = "0.8.11"
 }
-
-tasks.named('test') {
-    useJUnitPlatform()
-    finalizedBy 'jacocoTestReport'
-}
-
-def jacocoDir = layout.buildDirectory.dir("reports/")
 
 jacocoTestReport {
     dependsOn test	// 테스트가 수행되어야만 report를 생성할 수 있도록 설정
@@ -180,4 +145,33 @@ jacocoTestReport {
         )
     }
     finalizedBy jacocoTestCoverageVerification
+}
+
+jacocoTestCoverageVerification {
+
+    violationRules {
+        rule {
+            // rule 활성화
+            enabled = true
+
+            // 클래스 단위로 룰 체크
+            element = 'CLASS'
+
+            // 라인 커버리지를 최소 80% 만족
+//            limit {
+//                counter = 'LINE'
+//                value = 'COVEREDRATIO'
+//                minimum = 0.80
+//            }
+
+            // 브랜치 커버리지를 최소 80% 만족
+//            limit {
+//                counter = 'BRANCH'
+//                value = 'COVEREDRATIO'
+//                minimum = 0.80
+//            }
+
+            excludes = jacocoExcludePatterns + QDomains
+        }
+    }
 }
