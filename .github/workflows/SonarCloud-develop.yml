@@ -1,5 +1,4 @@
 name: Sonar analysis
-run: ./gradlew build --stacktrace
 
 on:
   push:
