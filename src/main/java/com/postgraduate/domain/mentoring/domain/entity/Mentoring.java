@@ -1,6 +1,7 @@
 package com.postgraduate.domain.mentoring.domain.entity;
 
 import com.postgraduate.domain.mentoring.domain.entity.constant.Status;
+import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.user.domain.entity.User;
 import jakarta.persistence.*;
@@ -33,6 +34,9 @@ public class Mentoring {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Senior senior;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    private Payment payment;
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String topic;

@@ -1,8 +1,8 @@
 package com.postgraduate.domain.payment.domain.entity;
 
-import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.payment.domain.entity.constant.Status;
 import com.postgraduate.domain.salary.domain.entity.Salary;
+import com.postgraduate.domain.user.domain.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,11 +23,11 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long paymentId;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    private Mentoring mentoring;
-
     @ManyToOne(fetch = FetchType.LAZY)
     private Salary salary;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
 
     @Column(nullable = false)
     private int pay;
