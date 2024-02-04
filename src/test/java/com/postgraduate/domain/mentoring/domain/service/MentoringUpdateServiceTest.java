@@ -1,6 +1,7 @@
 package com.postgraduate.domain.mentoring.domain.service;
 
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
+import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.user.domain.entity.User;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,7 +28,9 @@ class MentoringUpdateServiceTest {
     void setting() {
         User user = mock(User.class);
         Senior senior = mock(Senior.class);
-        mentoring = new Mentoring(1L, user, senior, "a", "a", "a", 1
+        Payment payment = mock(Payment.class);
+
+        mentoring = new Mentoring(1L, user, senior, payment, "a", "a", "a", 1
         , WAITING, LocalDateTime.now(), LocalDateTime.now());
     }
 

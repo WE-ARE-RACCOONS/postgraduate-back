@@ -5,6 +5,7 @@ import com.postgraduate.domain.mentoring.application.mapper.MentoringMapper;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.service.MentoringSaveService;
 import com.postgraduate.domain.mentoring.exception.MentoringDateException;
+import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
@@ -50,6 +51,7 @@ class MentoringApplyUseCaseTest {
     @Test
     @DisplayName("정상 실행 여부 테스트")
     void applyMentoring() {
+        Payment payment = mock(Payment.class);
         User user = new User(-1L, -1234L, "abc.com", "abc"
                 , " 123123", "abcab", 0
                 , USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), FALSE);
@@ -59,10 +61,10 @@ class MentoringApplyUseCaseTest {
         Senior senior = new Senior(1L, seniorUser, "a", Status.WAITING,
                 100, new Info(), new Profile(), now(), now());
         MentoringApplyRequest request = new MentoringApplyRequest(senior.getSeniorId(), "topic", "ques", "1201,1202,1203");
-
+        
         given(seniorGetService.bySeniorId(request.seniorId()))
                 .willReturn(senior);
-        Mentoring mentoring = mapToMentoring(user, senior, request);
+        Mentoring mentoring = mapToMentoring(user, senior, payment, request);
         given(mentoringSaveService.save(any()))
                 .willReturn(mentoring);
 

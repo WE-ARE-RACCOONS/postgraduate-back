@@ -1,8 +1,6 @@
 package com.postgraduate.domain.mentoring.application.usecase;
 
-import com.postgraduate.domain.mentoring.application.dto.DoneSeniorMentoringInfo;
 import com.postgraduate.domain.mentoring.application.dto.res.SeniorMentoringResponse;
-import com.postgraduate.domain.mentoring.application.mapper.MentoringMapper;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
 import com.postgraduate.domain.mentoring.exception.MentoringDetailNotFoundException;
@@ -52,8 +50,9 @@ class MentoringSeniorInfoUseCaseTest {
         Long mentoringId = 1L;
         User user = mock(User.class);
         Senior senior = mock(Senior.class);
+        Payment payment = mock(Payment.class);
 
-        Mentoring mentoring = new Mentoring(mentoringId, user, senior
+        Mentoring mentoring = new Mentoring(mentoringId, user, senior, payment
                 , "a", "b", "c"
                 , 40, EXPECTED
                 , LocalDateTime.now(), LocalDateTime.now());
@@ -73,8 +72,9 @@ class MentoringSeniorInfoUseCaseTest {
         Long mentoringId = 1L;
         User user = mock(User.class);
         Senior senior = mock(Senior.class);
+        Payment payment = mock(Payment.class);
 
-        Mentoring mentoring = new Mentoring(mentoringId, user, senior
+        Mentoring mentoring = new Mentoring(mentoringId, user, senior, payment
                 , "a", "b", "c"
                 , 40, DONE
                 , LocalDateTime.now(), LocalDateTime.now());
@@ -94,8 +94,9 @@ class MentoringSeniorInfoUseCaseTest {
         Long mentoringId = 1L;
         User user = mock(User.class);
         Senior senior = mock(Senior.class);
+        Payment payment = mock(Payment.class);
 
-        Mentoring mentoring = new Mentoring(mentoringId, user, senior
+        Mentoring mentoring = new Mentoring(mentoringId, user, senior, payment
                 , "a", "b", "c"
                 , 40, REFUSE
                 , LocalDateTime.now(), LocalDateTime.now());
@@ -115,8 +116,9 @@ class MentoringSeniorInfoUseCaseTest {
         Long mentoringId = 1L;
         User user = mock(User.class);
         Senior senior = mock(Senior.class);
+        Payment payment = mock(Payment.class);
 
-        Mentoring mentoring = new Mentoring(mentoringId, user, senior
+        Mentoring mentoring = new Mentoring(mentoringId, user, senior, payment
                 , "a", "b", "c"
                 , 40, CANCEL
                 , LocalDateTime.now(), LocalDateTime.now());
@@ -135,10 +137,11 @@ class MentoringSeniorInfoUseCaseTest {
     void getSeniorWaiting() {
         User user = mock(User.class);
         Senior senior = mock(Senior.class);
+        Payment payment = mock(Payment.class);
 
-        Mentoring mentoring1 = new Mentoring(1L, user, senior, "A", "b", "a", 40, WAITING, LocalDateTime.now(), LocalDateTime.now());
-        Mentoring mentoring2 = new Mentoring(2L, user, senior, "A", "b", "a", 40, WAITING, LocalDateTime.now(), LocalDateTime.now());
-        Mentoring mentoring3 = new Mentoring(3L, user, senior, "A", "b", "a", 40, WAITING, LocalDateTime.now(), LocalDateTime.now());
+        Mentoring mentoring1 = new Mentoring(1L, user, senior, payment, "A", "b", "a", 40, WAITING, LocalDateTime.now(), LocalDateTime.now());
+        Mentoring mentoring2 = new Mentoring(2L, user, senior, payment, "A", "b", "a", 40, WAITING, LocalDateTime.now(), LocalDateTime.now());
+        Mentoring mentoring3 = new Mentoring(3L, user, senior, payment, "A", "b", "a", 40, WAITING, LocalDateTime.now(), LocalDateTime.now());
         List<Mentoring> mentorings = List.of(mentoring1, mentoring2, mentoring3);
 
         given(seniorGetService.byUser(user))
@@ -157,10 +160,11 @@ class MentoringSeniorInfoUseCaseTest {
     void getSeniorExpected() {
         User user = mock(User.class);
         Senior senior = mock(Senior.class);
+        Payment payment = mock(Payment.class);
 
-        Mentoring mentoring1 = new Mentoring(1L, user, senior, "A", "b", "2024-01-20-17-00", 40, WAITING, LocalDateTime.now(), LocalDateTime.now());
-        Mentoring mentoring2 = new Mentoring(2L, user, senior, "A", "b", "2024-01-20-17-00", 40, WAITING, LocalDateTime.now(), LocalDateTime.now());
-        Mentoring mentoring3 = new Mentoring(3L, user, senior, "A", "b", "2024-01-20-17-00", 40, WAITING, LocalDateTime.now(), LocalDateTime.now());
+        Mentoring mentoring1 = new Mentoring(1L, user, senior, payment, "A", "b", "2024-01-20-17-00", 40, WAITING, LocalDateTime.now(), LocalDateTime.now());
+        Mentoring mentoring2 = new Mentoring(2L, user, senior, payment, "A", "b", "2024-01-20-17-00", 40, WAITING, LocalDateTime.now(), LocalDateTime.now());
+        Mentoring mentoring3 = new Mentoring(3L, user, senior, payment, "A", "b", "2024-01-20-17-00", 40, WAITING, LocalDateTime.now(), LocalDateTime.now());
         List<Mentoring> mentorings = List.of(mentoring1, mentoring2, mentoring3);
 
         given(seniorGetService.byUser(user))
@@ -181,22 +185,19 @@ class MentoringSeniorInfoUseCaseTest {
         Senior senior = mock(Senior.class);
         Salary salary = mock(Salary.class);
 
-        Mentoring mentoring1 = new Mentoring(1L, user, senior, "A", "b", "a", 40, WAITING, LocalDateTime.now(), LocalDateTime.now());
-        Mentoring mentoring2 = new Mentoring(2L, user, senior, "A", "b", "a", 40, WAITING, LocalDateTime.now(), LocalDateTime.now());
-        Mentoring mentoring3 = new Mentoring(3L, user, senior, "A", "b", "a", 40, WAITING, LocalDateTime.now(), LocalDateTime.now());
+        Payment payment1 = new Payment(1l, salary, user, 10000, "1", "1", "a", LocalDateTime.now(), LocalDateTime.now(), Status.DONE);
+        Payment payment2 = new Payment(2l, salary, user, 10000, "1", "1", "a", LocalDateTime.now(), LocalDateTime.now(), Status.DONE);
+        Payment payment3 = new Payment(3l, salary, user, 10000, "1", "1", "a", LocalDateTime.now(), LocalDateTime.now(), Status.DONE);
+
+        Mentoring mentoring1 = new Mentoring(1L, user, senior, payment1, "A", "b", "a", 40, WAITING, LocalDateTime.now(), LocalDateTime.now());
+        Mentoring mentoring2 = new Mentoring(2L, user, senior, payment2, "A", "b", "a", 40, WAITING, LocalDateTime.now(), LocalDateTime.now());
+        Mentoring mentoring3 = new Mentoring(3L, user, senior, payment3, "A", "b", "a", 40, WAITING, LocalDateTime.now(), LocalDateTime.now());
         List<Mentoring> mentorings = List.of(mentoring1, mentoring2, mentoring3);
-        Payment payment1 = new Payment(1l, mentoring1, salary, 10000, "1", "1", "a", LocalDateTime.now(), LocalDateTime.now(), Status.DONE);
-        Payment payment2 = new Payment(2l, mentoring2, salary, 10000, "1", "1", "a", LocalDateTime.now(), LocalDateTime.now(), Status.DONE);
-        Payment payment3 = new Payment(3l, mentoring3, salary, 10000, "1", "1", "a", LocalDateTime.now(), LocalDateTime.now(), Status.DONE);
-        DoneSeniorMentoringInfo done1 = MentoringMapper.mapToSeniorDoneInfo(mentoring1, payment1);
-        DoneSeniorMentoringInfo done2 = MentoringMapper.mapToSeniorDoneInfo(mentoring2, payment2);
-        DoneSeniorMentoringInfo done3 = MentoringMapper.mapToSeniorDoneInfo(mentoring3, payment3);
-        List<DoneSeniorMentoringInfo> dones = List.of(done1, done2, done3);
 
         given(seniorGetService.byUser(user))
                 .willReturn(senior);
         given(mentoringGetService.bySenior(senior))
-                .willReturn(dones);
+                .willReturn(mentorings);
 
         SeniorMentoringResponse seniorDone = mentoringSeniorInfoUseCase.getSeniorDone(user);
 

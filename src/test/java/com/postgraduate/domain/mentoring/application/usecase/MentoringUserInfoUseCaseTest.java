@@ -4,6 +4,7 @@ import com.postgraduate.domain.mentoring.application.dto.res.AppliedMentoringRes
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
 import com.postgraduate.domain.mentoring.exception.MentoringDetailNotFoundException;
+import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
@@ -26,6 +27,7 @@ import static java.lang.Boolean.TRUE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
 class MentoringUserInfoUseCaseTest {
@@ -60,7 +62,9 @@ class MentoringUserInfoUseCaseTest {
     @Test
     @DisplayName("Detail 반환 테스트")
     void getMentoringDetail() {
-        mentoring = new Mentoring(mentoringId, user, senior
+        Payment payment = mock(Payment.class);
+
+        mentoring = new Mentoring(mentoringId, user, senior, payment
                 , "a", "b", "c"
                 , 40, EXPECTED
                 , LocalDateTime.now(), LocalDateTime.now());
@@ -75,7 +79,9 @@ class MentoringUserInfoUseCaseTest {
     @Test
     @DisplayName("Detail 반환 실패 테스트 - DONE")
     void getMentoringDetailFailWithDone() {
-        mentoring = new Mentoring(mentoringId, user, senior
+        Payment payment = mock(Payment.class);
+
+        mentoring = new Mentoring(mentoringId, user, senior, payment
                 , "a", "b", "c"
                 , 40, DONE
                 , LocalDateTime.now(), LocalDateTime.now());
@@ -90,7 +96,9 @@ class MentoringUserInfoUseCaseTest {
     @Test
     @DisplayName("Detail 반환 실패 테스트 - REFUSE")
     void getMentoringDetailFailWithRefuse() {
-        mentoring = new Mentoring(mentoringId, user, senior
+        Payment payment = mock(Payment.class);
+
+        mentoring = new Mentoring(mentoringId, user, senior, payment
                 , "a", "b", "c"
                 , 40, REFUSE
                 , LocalDateTime.now(), LocalDateTime.now());
@@ -105,7 +113,9 @@ class MentoringUserInfoUseCaseTest {
     @Test
     @DisplayName("Detail 반환 실패 테스트 - CANCEL")
     void getMentoringDetailFailWithCancel() {
-        mentoring = new Mentoring(mentoringId, user, senior
+        Payment payment = mock(Payment.class);
+
+        mentoring = new Mentoring(mentoringId, user, senior, payment
                 , "a", "b", "c"
                 , 40, CANCEL
                 , LocalDateTime.now(), LocalDateTime.now());
@@ -120,17 +130,19 @@ class MentoringUserInfoUseCaseTest {
     @Test
     @DisplayName("WAITING 반환 테스트")
     void getWaiting() {
-        Mentoring mentoring1 = new Mentoring(1L, user, senior
+        Payment payment = mock(Payment.class);
+
+        Mentoring mentoring1 = new Mentoring(1L, user, senior, payment
                 , "a", "b", "c"
                 , 40, WAITING
                 , LocalDateTime.now(), LocalDateTime.now());
 
-        Mentoring mentoring2 = new Mentoring(2L, user, senior
+        Mentoring mentoring2 = new Mentoring(2L, user, senior, payment
                 , "a", "b", "c"
                 , 40, WAITING
                 , LocalDateTime.now(), LocalDateTime.now());
 
-        Mentoring mentoring3 = new Mentoring(3L, user, senior
+        Mentoring mentoring3 = new Mentoring(3L, user, senior, payment
                 , "a", "b", "c"
                 , 40, WAITING
                 , LocalDateTime.now(), LocalDateTime.now());
@@ -148,17 +160,19 @@ class MentoringUserInfoUseCaseTest {
     @Test
     @DisplayName("EXPECTED 반환 테스트")
     void getExpected() {
-        Mentoring mentoring1 = new Mentoring(1L, user, senior
+        Payment payment = mock(Payment.class);
+
+        Mentoring mentoring1 = new Mentoring(1L, user, senior, payment
                 , "a", "b", "c"
                 , 40, EXPECTED
                 , LocalDateTime.now(), LocalDateTime.now());
 
-        Mentoring mentoring2 = new Mentoring(2L, user, senior
+        Mentoring mentoring2 = new Mentoring(2L, user, senior, payment
                 , "a", "b", "c"
                 , 40, EXPECTED
                 , LocalDateTime.now(), LocalDateTime.now());
 
-        Mentoring mentoring3 = new Mentoring(3L, user, senior
+        Mentoring mentoring3 = new Mentoring(3L, user, senior, payment
                 , "a", "b", "c"
                 , 40, EXPECTED
                 , LocalDateTime.now(), LocalDateTime.now());
@@ -176,17 +190,19 @@ class MentoringUserInfoUseCaseTest {
     @Test
     @DisplayName("DONE 반환 테스트")
     void getDone() {
-        Mentoring mentoring1 = new Mentoring(1L, user, senior
+        Payment payment = mock(Payment.class);
+
+        Mentoring mentoring1 = new Mentoring(1L, user, senior, payment
                 , "a", "b", "c"
                 , 40, DONE
                 , LocalDateTime.now(), LocalDateTime.now());
 
-        Mentoring mentoring2 = new Mentoring(2L, user, senior
+        Mentoring mentoring2 = new Mentoring(2L, user, senior, payment
                 , "a", "b", "c"
                 , 40, DONE
                 , LocalDateTime.now(), LocalDateTime.now());
 
-        Mentoring mentoring3 = new Mentoring(3L, user, senior
+        Mentoring mentoring3 = new Mentoring(3L, user, senior, payment
                 , "a", "b", "c"
                 , 40, DONE
                 , LocalDateTime.now(), LocalDateTime.now());
