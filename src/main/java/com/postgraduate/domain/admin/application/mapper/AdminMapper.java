@@ -100,8 +100,8 @@ public class AdminMapper {
         );
     }
 
-    public static PaymentInfo mapToPaymentInfo(Payment payment) {
-        Mentoring mentoring = payment.getMentoring();
+    public static PaymentInfo mapToPaymentInfo(Mentoring mentoring) {
+        Payment payment = mentoring.getPayment();
         User user = mentoring.getUser();
         return new PaymentInfo(
                 payment.getPaymentId(),
@@ -163,9 +163,10 @@ public class AdminMapper {
         );
     }
 
-    public static MentoringWithPaymentResponse mapToMentoringWithPaymentResponse(Payment payment, Mentoring mentoring) {
+    public static MentoringWithPaymentResponse mapToMentoringWithPaymentResponse(Mentoring mentoring) {
         User user = mentoring.getUser();
         Senior senior = mentoring.getSenior();
+        Payment payment = mentoring.getPayment();
         return new MentoringWithPaymentResponse(
                 payment.getPaymentId(),
                 user.getNickName(),
