@@ -1,12 +1,13 @@
 package com.postgraduate.domain.payment.application.usecase;
 
 import com.postgraduate.domain.payment.application.dto.req.PaymentResultRequest;
-import com.postgraduate.domain.payment.application.dto.req.PaymentResultWithMentoringRequest;
 import com.postgraduate.domain.payment.application.mapper.PaymentMapper;
 import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.payment.domain.service.PaymentSaveService;
+import com.postgraduate.domain.payment.exception.PaymentFailException;
 import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.salary.domain.service.SalaryGetService;
+import com.postgraduate.domain.salary.domain.service.SalaryUpdateService;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.domain.user.domain.entity.User;
@@ -23,30 +24,19 @@ public class PaymentManageUseCase {
     private final SeniorGetService seniorGetService;
     private final UserGetService userGetService;
     private final SalaryGetService salaryGetService;
+    private final SalaryUpdateService salaryUpdateService;
+    private final static String SUCCESS = "0000";
 
-    public Payment savePay(PaymentResultRequest paymentResultRequest) {
-        check();
-        long seniorId = Long.parseLong(paymentResultRequest.PCD_PAY_GOODS());
-        long userId = Long.parseLong(paymentResultRequest.PCD_PAYER_NO());
+    public void savePay(PaymentResultRequest request) {
+        if (!request.PCD_PAY_CODE().equals(SUCCESS))
+            throw new PaymentFailException();
+        String seniorNickName = request.PCD_PAY_GOODS();
+        long userId = Long.parseLong(request.PCD_PAYER_NO());
         User user = userGetService.byUserId(userId);
-        Senior senior = seniorGetService.bySeniorId(seniorId);
+        Senior senior = seniorGetService.bySeniorNickName(seniorNickName);
         Salary salary = salaryGetService.bySenior(senior);
-        Payment payment = PaymentMapper.resultToPayment(salary, user, paymentResultRequest);
-        return paymentSaveService.save(payment);
-    }
-
-    public Payment savePay(PaymentResultWithMentoringRequest paymentResultRequest) {
-        check();
-        long seniorId = Long.parseLong(paymentResultRequest.PCD_PAY_GOODS());
-        long userId = Long.parseLong(paymentResultRequest.PCD_PAYER_NO());
-        User user = userGetService.byUserId(userId);
-        Senior senior = seniorGetService.bySeniorId(seniorId);
-        Salary salary = salaryGetService.bySenior(senior);
-        Payment payment = PaymentMapper.resultToPayment(salary, user, paymentResultRequest);
-        return paymentSaveService.save(payment);
-    }
-
-    private void check() {
-        // todo payple에 유효성 검사
+        Payment payment = PaymentMapper.resultToPayment(salary, user, request);
+        paymentSaveService.save(payment);
+        salaryUpdateService.updateTotalAmount(salary);
     }
 }

@@ -14,4 +14,8 @@ public class PaymentGetService {
     public Payment byPaymentId(Long paymentId) {
         return paymentRepository.findById(paymentId).orElseThrow(PaymentNotFoundException::new);
     }
+
+    public Payment byOrderId(String orderId) {
+        return paymentRepository.findByOrderId(orderId).orElseThrow(PaymentNotFoundException::new);
+    }
 }
