@@ -54,8 +54,7 @@ public class MentoringManageByAdminUseCase {
 
     public MentoringWithPaymentResponse getMentoringWithPayment(Long mentoringId) {
         Mentoring mentoring = mentoringGetService.byMentoringId(mentoringId);
-        Payment payment = paymentGetService.byMentoring(mentoring);
-        return AdminMapper.mapToMentoringWithPaymentResponse(payment, mentoring);
+        return AdminMapper.mapToMentoringWithPaymentResponse(mentoring);
     }
 
     public void cancelMentoring(Long mentoringId) {

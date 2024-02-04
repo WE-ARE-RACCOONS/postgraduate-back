@@ -5,6 +5,8 @@ import com.postgraduate.domain.mentoring.application.mapper.MentoringMapper;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.service.MentoringSaveService;
 import com.postgraduate.domain.mentoring.exception.MentoringDateException;
+import com.postgraduate.domain.payment.application.dto.req.PaymentResultWithMentoringRequest;
+import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.domain.user.domain.entity.User;
@@ -24,7 +26,17 @@ public class MentoringApplyUseCase {
         if (dates.length != 3)
             throw new MentoringDateException();
         Senior senior = seniorGetService.bySeniorId(request.seniorId());
-        Mentoring mentoring = MentoringMapper.mapToMentoring(user, senior, request);
+        Mentoring mentoring = MentoringMapper.mapToMentoring(user, senior, new Payment(), request);
+        Mentoring save = mentoringSaveService.save(mentoring);
+        return save.getMentoringId();
+    }
+
+    public Long applyMentoringWithPayment(User user, Payment payment, PaymentResultWithMentoringRequest.MentoringApplyRequest request) {
+        String[] dates = request.date().split(",");
+        if (dates.length != 3)
+            throw new MentoringDateException();
+        Senior senior = seniorGetService.bySeniorId(request.seniorId());
+        Mentoring mentoring = MentoringMapper.mapToMentoring(user, senior, payment, request);
         Mentoring save = mentoringSaveService.save(mentoring);
         return save.getMentoringId();
     }
