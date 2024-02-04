@@ -5,6 +5,8 @@ import com.postgraduate.domain.admin.application.dto.res.CertificationResponse;
 import com.postgraduate.domain.admin.application.dto.res.PaymentManageResponse;
 import com.postgraduate.domain.admin.application.dto.res.RefundResponse;
 import com.postgraduate.domain.admin.application.mapper.AdminMapper;
+import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
+import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
 import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.payment.domain.service.PaymentGetService;
 import com.postgraduate.domain.payment.domain.service.PaymentUpdateService;
@@ -27,6 +29,7 @@ import static org.springframework.http.CacheControl.noCache;
 @Transactional
 @RequiredArgsConstructor
 public class PaymentManageByAdminUseCase {
+    private final MentoringGetService mentoringGetService;
     private final PaymentGetService paymentGetService;
     private final PaymentUpdateService paymentUpdateService;
     private final WebClient webClient;
@@ -40,17 +43,20 @@ public class PaymentManageByAdminUseCase {
     private final static String CERTIFICATION_URL = "https://democpay.payple.kr/php/auth.php";
 
     public PaymentManageResponse getPayments(Integer page, String search) {
-        Page<Payment> payments = paymentGetService.all(page, search);
-        List<PaymentInfo> paymentInfos = payments.stream()
+        Page<Mentoring> mentorings = mentoringGetService.all(page, search);
+        List<PaymentInfo> paymentInfos = mentorings.stream()
                 .map(AdminMapper::mapToPaymentInfo)
                 .toList();
-        long totalElements = payments.getTotalElements();
-        int totalPages = payments.getTotalPages();
+        long totalElements = mentorings.getTotalElements();
+        int totalPages = mentorings.getTotalPages();
         return new PaymentManageResponse(paymentInfos, totalElements, totalPages);
     }
 
     public void refundPayment(Long mentoringId) {
-        Payment payment = paymentGetService.byMentoringId(mentoringId);
+        Mentoring mentoring = mentoringGetService.byMentoringId(mentoringId);
+        Payment payment = paymentGetService.byPaymentId(
+                mentoring.getPayment().getPaymentId()
+        );
         CertificationResponse certificationResponse = getCertificationResponse();
         getRefundResponse(certificationResponse, payment);
         paymentUpdateService.updateStatus(payment, CANCEL);
