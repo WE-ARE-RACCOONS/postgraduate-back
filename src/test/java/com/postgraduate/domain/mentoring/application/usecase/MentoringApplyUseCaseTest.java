@@ -6,6 +6,7 @@ import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.service.MentoringSaveService;
 import com.postgraduate.domain.mentoring.exception.MentoringDateException;
 import com.postgraduate.domain.payment.domain.entity.Payment;
+import com.postgraduate.domain.payment.domain.service.PaymentGetService;
 import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
@@ -45,6 +46,9 @@ class MentoringApplyUseCaseTest {
     @Mock
     private MentoringSaveService mentoringSaveService;
 
+    @Mock
+    private PaymentGetService paymentGetService;
+
     @InjectMocks
     private MentoringApplyUseCase mentoringApplyUseCase;
 
@@ -60,15 +64,17 @@ class MentoringApplyUseCaseTest {
                 , USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), FALSE);
         Senior senior = new Senior(1L, seniorUser, "a", Status.WAITING,
                 100, new Info(), new Profile(), now(), now());
-        MentoringApplyRequest request = new MentoringApplyRequest(senior.getSeniorId(), "topic", "ques", "1201,1202,1203");
-        
+        MentoringApplyRequest request = new MentoringApplyRequest("1", senior.getSeniorId(), "topic", "ques", "1201,1202,1203");
+
+        given(paymentGetService.byOrderId(any()))
+                .willReturn(payment);
         given(seniorGetService.bySeniorId(request.seniorId()))
                 .willReturn(senior);
         Mentoring mentoring = mapToMentoring(user, senior, payment, request);
         given(mentoringSaveService.save(any()))
                 .willReturn(mentoring);
 
-        assertThat(mentoringApplyUseCase.applyMentoring(user, request))
+        assertThat(mentoringApplyUseCase.applyMentoringWithPayment(user, request))
                 .isEqualTo(mentoring.getMentoringId());
     }
 
@@ -77,9 +83,12 @@ class MentoringApplyUseCaseTest {
     @DisplayName("날짜 예외 테스트 3보다 작을 경우")
     void applyMentoringWithInvalidDatesSmaller(String dates) {
         User user = mock(User.class);
-        MentoringApplyRequest request = new MentoringApplyRequest(-1L, "topic", "ques", dates);
+        Payment payment = mock(Payment.class);
+        MentoringApplyRequest request = new MentoringApplyRequest("1", -1L, "topic", "ques", dates);
+        given(paymentGetService.byOrderId(any()))
+                .willReturn(payment);
 
-        assertThatThrownBy(()-> mentoringApplyUseCase.applyMentoring(user, request))
+        assertThatThrownBy(()-> mentoringApplyUseCase.applyMentoringWithPayment(user, request))
                 .isInstanceOf(MentoringDateException.class);
     }
 
@@ -88,9 +97,13 @@ class MentoringApplyUseCaseTest {
     @DisplayName("날짜 예외 테스트 3보다 큰 경우")
     void applyMentoringWithInvalidDateBigger(String dates) {
         User user = mock(User.class);
-        MentoringApplyRequest request = new MentoringApplyRequest(-1L, "topic", "ques", dates);
+        Payment payment = mock(Payment.class);
 
-        assertThatThrownBy(()-> mentoringApplyUseCase.applyMentoring(user, request))
+        MentoringApplyRequest request = new MentoringApplyRequest("1", -1L, "topic", "ques", dates);
+        given(paymentGetService.byOrderId(any()))
+                .willReturn(payment);
+
+        assertThatThrownBy(()-> mentoringApplyUseCase.applyMentoringWithPayment(user, request))
                 .isInstanceOf(MentoringDateException.class);
     }
 }
