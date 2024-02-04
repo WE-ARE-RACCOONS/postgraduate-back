@@ -5,7 +5,6 @@ import com.postgraduate.domain.mentoring.application.dto.req.MentoringApplyReque
 import com.postgraduate.domain.mentoring.application.dto.res.AppliedMentoringDetailResponse;
 import com.postgraduate.domain.mentoring.application.dto.res.SeniorMentoringDetailResponse;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
-import com.postgraduate.domain.payment.application.dto.req.PaymentResultWithMentoringRequest;
 import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.senior.domain.entity.Info;
@@ -78,17 +77,6 @@ public class MentoringMapper {
     }
 
     public static Mentoring mapToMentoring(User user, Senior senior, Payment payment, MentoringApplyRequest request) {
-        return Mentoring.builder()
-                .user(user)
-                .senior(senior)
-                .payment(payment)
-                .topic(request.topic())
-                .question(request.question())
-                .date(request.date())
-                .build();
-    }
-
-    public static Mentoring mapToMentoring(User user, Senior senior, Payment payment, PaymentResultWithMentoringRequest.MentoringApplyRequest request) {
         return Mentoring.builder()
                 .user(user)
                 .senior(senior)

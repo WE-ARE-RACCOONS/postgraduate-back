@@ -5,8 +5,8 @@ import com.postgraduate.domain.mentoring.application.mapper.MentoringMapper;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.service.MentoringSaveService;
 import com.postgraduate.domain.mentoring.exception.MentoringDateException;
-import com.postgraduate.domain.payment.application.dto.req.PaymentResultWithMentoringRequest;
 import com.postgraduate.domain.payment.domain.entity.Payment;
+import com.postgraduate.domain.payment.domain.service.PaymentGetService;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.domain.user.domain.entity.User;
@@ -19,19 +19,11 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class MentoringApplyUseCase {
     private final MentoringSaveService mentoringSaveService;
+    private final PaymentGetService paymentGetService;
     private final SeniorGetService seniorGetService;
 
-    public Long applyMentoring(User user, MentoringApplyRequest request) {
-        String[] dates = request.date().split(",");
-        if (dates.length != 3)
-            throw new MentoringDateException();
-        Senior senior = seniorGetService.bySeniorId(request.seniorId());
-        Mentoring mentoring = MentoringMapper.mapToMentoring(user, senior, new Payment(), request);
-        Mentoring save = mentoringSaveService.save(mentoring);
-        return save.getMentoringId();
-    }
-
-    public Long applyMentoringWithPayment(User user, Payment payment, PaymentResultWithMentoringRequest.MentoringApplyRequest request) {
+    public Long applyMentoringWithPayment(User user, MentoringApplyRequest request) {
+        Payment payment = paymentGetService.byOrderId(request.orderId());
         String[] dates = request.date().split(",");
         if (dates.length != 3)
             throw new MentoringDateException();
