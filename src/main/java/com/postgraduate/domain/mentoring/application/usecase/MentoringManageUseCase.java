@@ -55,7 +55,9 @@ public class MentoringManageUseCase {
         if (mentoring.getStatus() != WAITING)
             throw new MentoringNotWaitingException();
         mentoringUpdateService.updateStatus(mentoring, CANCEL);
-        Payment payment = paymentGetService.byMentoring(mentoring);
+        Payment payment = paymentGetService.byPaymentId(
+                mentoring.getPayment().getPaymentId()
+        );
         paymentUpdateService.updateStatus(payment, Status.CANCEL);
         // todo 환불 구현 후 수정
     }
