@@ -106,8 +106,8 @@ public class SeniorController {
 
     @GetMapping("/{seniorId}/profile")
     @Operation(summary = "대학원생 닉네임~연구실 등 기본 정보 확인 | 토큰 필요", description = "신청서 완료 후 결제시 노출 필요")
-    public ResponseDto<SeniorProfileResponse> getSeniorProfile(@PathVariable Long seniorId) {
-        SeniorProfileResponse seniorProfile = seniorInfoUseCase.getSeniorProfile(seniorId);
+    public ResponseDto<SeniorProfileResponse> getSeniorProfile(@AuthenticationPrincipal User user, @PathVariable Long seniorId) {
+        SeniorProfileResponse seniorProfile = seniorInfoUseCase.getSeniorProfile(user, seniorId);
         return ResponseDto.create(SENIOR_FIND.getCode(), GET_SENIOR_INFO.getMessage(), seniorProfile);
     }
 

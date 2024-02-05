@@ -185,11 +185,11 @@ public class SeniorMapper {
                 keyword);
     }
 
-    public static SeniorProfileResponse mapToSeniorProfile(Senior senior) {
-        User user = senior.getUser();
+    public static SeniorProfileResponse mapToSeniorProfile(User user, Senior senior) {
+        User seniorUser = senior.getUser();
         Info info = senior.getInfo();
         Profile profile = senior.getProfile();
-        return new SeniorProfileResponse(user.getNickName(), user.getProfile(),
-                info.getPostgradu(), info.getMajor(), info.getLab(), profile.getTerm());
+        return new SeniorProfileResponse(seniorUser.getNickName(), seniorUser.getProfile(),
+                info.getPostgradu(), info.getMajor(), info.getLab(), profile.getTerm(), user.getUserId(), user.getPhoneNumber());
     }
 }
