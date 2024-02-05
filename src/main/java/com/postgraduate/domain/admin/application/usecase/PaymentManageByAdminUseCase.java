@@ -30,7 +30,6 @@ import static org.springframework.http.CacheControl.noCache;
 @RequiredArgsConstructor
 public class PaymentManageByAdminUseCase {
     private final MentoringGetService mentoringGetService;
-    private final PaymentGetService paymentGetService;
     private final PaymentUpdateService paymentUpdateService;
     private final WebClient webClient;
 
@@ -54,9 +53,7 @@ public class PaymentManageByAdminUseCase {
 
     public void refundPayment(Long mentoringId) {
         Mentoring mentoring = mentoringGetService.byMentoringId(mentoringId);
-        Payment payment = paymentGetService.byPaymentId(
-                mentoring.getPayment().getPaymentId()
-        );
+        Payment payment = mentoring.getPayment();
         CertificationResponse certificationResponse = getCertificationResponse();
         getRefundResponse(certificationResponse, payment);
         paymentUpdateService.updateStatus(payment, CANCEL);

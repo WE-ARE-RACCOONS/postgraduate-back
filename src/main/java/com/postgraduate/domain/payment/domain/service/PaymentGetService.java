@@ -11,10 +11,6 @@ import org.springframework.stereotype.Service;
 public class PaymentGetService {
     private final PaymentRepository paymentRepository;
 
-    public Payment byPaymentId(Long paymentId) {
-        return paymentRepository.findById(paymentId).orElseThrow(PaymentNotFoundException::new);
-    }
-
     public Payment byOrderId(String orderId) {
         return paymentRepository.findByOrderId(orderId).orElseThrow(PaymentNotFoundException::new);
     }
