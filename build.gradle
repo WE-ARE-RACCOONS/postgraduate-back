@@ -158,18 +158,18 @@ jacocoTestCoverageVerification {
             element = 'CLASS'
 
             // 라인 커버리지를 최소 80% 만족
-//            limit {
-//                counter = 'LINE'
-//                value = 'COVEREDRATIO'
-//                minimum = 0.80
-//            }
+            limit {
+                counter = 'LINE'
+                value = 'COVEREDRATIO'
+                minimum = 0.0
+            }
 
-            // 브랜치 커버리지를 최소 80% 만족
-//            limit {
-//                counter = 'BRANCH'
-//                value = 'COVEREDRATIO'
-//                minimum = 0.80
-//            }
+//             브랜치 커버리지를 최소 80% 만족
+            limit {
+                counter = 'BRANCH'
+                value = 'COVEREDRATIO'
+                minimum = 0.0
+            }
 
             excludes = jacocoExcludePatterns + QDomains
         }
