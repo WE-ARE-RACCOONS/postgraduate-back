@@ -153,8 +153,8 @@ class MentoringUserInfoUseCaseTest {
 
         AppliedMentoringResponse waiting = mentoringUserInfoUseCase.getWaiting(user);
 
-        assertThat(waiting.mentoringInfos().size())
-                .isEqualTo(mentorings.size());
+        assertThat(waiting.mentoringInfos())
+                .hasSameSizeAs(mentorings);
     }
 
     @Test
@@ -183,8 +183,8 @@ class MentoringUserInfoUseCaseTest {
 
         AppliedMentoringResponse expected = mentoringUserInfoUseCase.getExpected(user);
 
-        assertThat(expected.mentoringInfos().size())
-                .isEqualTo(mentorings.size());
+        assertThat(expected.mentoringInfos())
+                .hasSameSizeAs(mentorings);
     }
 
     @Test
@@ -213,7 +213,7 @@ class MentoringUserInfoUseCaseTest {
 
         AppliedMentoringResponse done = mentoringUserInfoUseCase.getDone(user);
 
-        assertThat(done.mentoringInfos().size())
-                .isEqualTo(mentorings.size());
+        assertThat(done.mentoringInfos())
+                .hasSameSizeAs(mentorings);
     }
 }

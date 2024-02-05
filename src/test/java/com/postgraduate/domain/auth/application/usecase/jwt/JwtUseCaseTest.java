@@ -31,7 +31,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class JwtUseCaseTest {
+class JwtUseCaseTest {
     @Mock
     private JwtUtils jwtUtils;
     @Mock

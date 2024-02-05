@@ -104,8 +104,8 @@ class SeniorMyPageUseCaseTest {
 
         SeniorMyPageProfileResponse myPageProfile = seniorMyPageUseCase.getSeniorMyPageProfile(user);
 
-        assertThat(myPageProfile.times().size())
-                .isEqualTo(availables.size());
+        assertThat(myPageProfile.times())
+                .hasSameSizeAs(availables);
     }
 
     @Test

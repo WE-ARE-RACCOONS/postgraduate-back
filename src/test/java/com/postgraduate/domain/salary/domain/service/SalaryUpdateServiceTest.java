@@ -30,7 +30,7 @@ class SalaryUpdateServiceTest {
 
         salaryUpdateService.updateStatus(salary, TRUE);
 
-        assertThat(salary.getStatus())
+        assertThat(salary.status())
                 .isTrue();
     }
 

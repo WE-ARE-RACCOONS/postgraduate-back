@@ -83,7 +83,7 @@ class SalaryInfoUseCaseTest {
         SalaryInfoResponse salaryInfoResponse = salaryInfoUseCase.getSalary(user);
 
         assertThat(salaryInfoResponse.salaryAmount())
-                .isEqualTo(0);
+                .isZero();
         assertThat(salaryInfoResponse.salaryDate())
                 .isEqualTo(salaryDate);
     }
@@ -118,7 +118,7 @@ class SalaryInfoUseCaseTest {
 
         SalaryDetailsResponse salaryDetail = salaryInfoUseCase.getSalaryDetail(user, FALSE);
 
-        assertThat(salaryDetail.salaryDetails().size())
-                .isEqualTo(mentorings.size());
+        assertThat(salaryDetail.salaryDetails())
+                .hasSameSizeAs(mentorings);
     }
 }

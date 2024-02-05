@@ -58,7 +58,7 @@ class CheckIsMyMentoringUseCaseTest {
 
     @Test
     @DisplayName("다른 유저의 멘토링의 경우 - USER")
-    public void testCheckUserNotOk() {
+    void testCheckUserNotOk() {
         Mentoring mentoring = mock(Mentoring.class);
         given(mentoring.getUser()).willReturn(user2);
         given(mentoringGetService.byMentoringId(mentoringId)).willReturn(mentoring);
@@ -73,7 +73,7 @@ class CheckIsMyMentoringUseCaseTest {
 
     @Test
     @DisplayName("자신의 멘토링 체크 - USER")
-    public void checkUserIsOk() {
+    void checkUserIsOk() {
         Mentoring mentoring = mock(Mentoring.class);
         given(mentoring.getUser()).willReturn(user1);
         given(mentoringGetService.byMentoringId(mentoringId)).willReturn(mentoring);
@@ -84,7 +84,7 @@ class CheckIsMyMentoringUseCaseTest {
 
     @Test
     @DisplayName("다른 유저의 멘토링의 경우 - SENIOR")
-    public void checkSeniorNotOk() {
+    void checkSeniorNotOk() {
         Mentoring mentoring = mock(Mentoring.class);
         given(mentoring.getUser()).willReturn(senior1);
         given(mentoringGetService.byMentoringId(mentoringId)).willReturn(mentoring);
@@ -99,7 +99,7 @@ class CheckIsMyMentoringUseCaseTest {
 
     @Test
     @DisplayName("자신의 멘토링 체크 - SENIOR")
-    public void checkSeniorIsOk() {
+    void checkSeniorIsOk() {
         Mentoring mentoring = mock(Mentoring.class);
         given(mentoring.getUser()).willReturn(senior1);
         given(mentoringGetService.byMentoringId(mentoringId)).willReturn(mentoring);

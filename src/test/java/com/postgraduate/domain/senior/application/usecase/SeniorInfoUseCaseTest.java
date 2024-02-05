@@ -78,8 +78,8 @@ class SeniorInfoUseCaseTest {
 
         SeniorDetailResponse seniorDetail = seniorInfoUseCase.getSeniorDetail(user, senior.getSeniorId());
 
-        assertThat(seniorDetail.times().size())
-                .isEqualTo(availables.size());
+        assertThat(seniorDetail.times())
+                .hasSameSizeAs(availables);
         assertThat(seniorDetail).isNotNull();
     }
 
@@ -97,8 +97,8 @@ class SeniorInfoUseCaseTest {
 
         AllSeniorSearchResponse searchSenior = seniorInfoUseCase.getSearchSenior("a", null, "low");
 
-        assertThat(searchSenior.seniorSearchResponses().size())
-                .isEqualTo(seniors.size());
+        assertThat(searchSenior.seniorSearchResponses())
+                .hasSameSizeAs(seniors);
     }
 
     @Test
@@ -115,8 +115,8 @@ class SeniorInfoUseCaseTest {
 
         AllSeniorSearchResponse searchSenior = seniorInfoUseCase.getFieldSenior("a", "서울대학교", null);
 
-        assertThat(searchSenior.seniorSearchResponses().size())
-                .isEqualTo(seniors.size());
+        assertThat(searchSenior.seniorSearchResponses())
+                .hasSameSizeAs(seniors);
     }
 
     @Test
@@ -133,8 +133,8 @@ class SeniorInfoUseCaseTest {
 
         AllSeniorSearchResponse fieldSenior = seniorInfoUseCase.getFieldSenior("a", "서울대학교", null);
 
-        assertThat(fieldSenior.seniorSearchResponses().size())
-                .isEqualTo(seniors.size());
+        assertThat(fieldSenior.seniorSearchResponses())
+                .hasSameSizeAs(seniors);
     }
 
     @Test
@@ -151,8 +151,8 @@ class SeniorInfoUseCaseTest {
 
         AllSeniorSearchResponse fieldSenior = seniorInfoUseCase.getFieldSenior("a", "서울대학교", 1);
 
-        assertThat(fieldSenior.seniorSearchResponses().size())
-                .isEqualTo(seniors.size());
+        assertThat(fieldSenior.seniorSearchResponses())
+                .hasSameSizeAs(seniors);
     }
 
     @Test
@@ -194,7 +194,7 @@ class SeniorInfoUseCaseTest {
 
         AvailableTimesResponse seniorTimes = seniorInfoUseCase.getSeniorTimes(senior.getSeniorId());
 
-        assertThat(seniorTimes.times().size())
-                .isEqualTo(availables.size());
+        assertThat(seniorTimes.times())
+                .hasSameSizeAs(availables);
     }
 }
