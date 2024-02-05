@@ -27,23 +27,23 @@ class PaymentGetServiceTest {
 
     @Test
     @DisplayName("payment 조회 안될 경우 예외 테스트")
-    void byMentoringFail() {
-        given(paymentRepository.findById(any()))
+    void byOrderIdFail() {
+        given(paymentRepository.findByOrderId(any()))
                         .willReturn(ofNullable(null));
 
-        assertThatThrownBy(() -> paymentGetService.byPaymentId(any()))
+        assertThatThrownBy(() -> paymentGetService.byOrderId(any()))
                 .isInstanceOf(PaymentNotFoundException.class);
     }
 
     @Test
     @DisplayName("payment 조회 테스트")
-    void byMentoring() {
+    void byOrderId() {
         Payment payment = mock(Payment.class);
 
-        given(paymentRepository.findById(any()))
+        given(paymentRepository.findByOrderId(any()))
                 .willReturn(of(payment));
 
-        assertThat(paymentGetService.byPaymentId(any()))
+        assertThat(paymentGetService.byOrderId(any()))
                 .isEqualTo(payment);
     }
 }

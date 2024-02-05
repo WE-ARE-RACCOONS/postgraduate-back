@@ -74,9 +74,6 @@ class MentoringManageUseCaseTest {
     private SalaryUpdateService salaryUpdateService;
 
     @Mock
-    private PaymentGetService paymentGetService;
-
-    @Mock
     private PaymentUpdateService paymentUpdateService;
 
     @InjectMocks
@@ -114,9 +111,6 @@ class MentoringManageUseCaseTest {
 
         given(checkIsMyMentoringUseCase.byUser(user, mentoringId))
                 .willReturn(mentoring);
-
-        given(paymentGetService.byPaymentId(mentoring.getPayment().getPaymentId()))
-                .willReturn(payment);
 
         mentoringManageUseCase.updateCancel(user, mentoringId);
 
