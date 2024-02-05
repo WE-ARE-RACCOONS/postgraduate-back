@@ -1,7 +1,5 @@
 package com.postgraduate.domain.available.domain.service;
 
-import com.postgraduate.domain.available.application.dto.req.AvailableCreateRequest;
-import com.postgraduate.domain.available.domain.entity.Available;
 import com.postgraduate.domain.available.domain.repository.AvailableRepository;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import lombok.RequiredArgsConstructor;

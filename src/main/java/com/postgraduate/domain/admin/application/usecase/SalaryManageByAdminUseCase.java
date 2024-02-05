@@ -39,9 +39,9 @@ public class SalaryManageByAdminUseCase {
         if (optionalAccount.isPresent()) {
             Account account = optionalAccount.get();
             String accountNumber = encryptorUtils.decryptData(account.getAccountNumber());
-            return AdminMapper.mapToSalaryDetailsResponse(senior, account, accountNumber, salary.getTotalAmount(), salary.getStatus());
+            return AdminMapper.mapToSalaryDetailsResponse(senior, account, accountNumber, salary.getTotalAmount(), salary.status());
         }
-        return AdminMapper.mapToSalaryDetailsResponse(senior, salary.getTotalAmount(), salary.getStatus());
+        return AdminMapper.mapToSalaryDetailsResponse(senior, salary.getTotalAmount(), salary.status());
     }
 
     public SalaryManageResponse getSalaries(Integer page, String search) {

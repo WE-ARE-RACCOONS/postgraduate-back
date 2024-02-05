@@ -116,7 +116,7 @@ public class MentoringMapper {
                 user.getProfile(), user.getNickName(),
                 mentoring.getTerm(),
                 mentoring.getDate(),
-                salary.getSalaryDate(), salary.getStatus());
+                salary.getSalaryDate(), salary.status());
     }
 
     public static SeniorMentoringDetailResponse mapToSeniorMentoringDetail(Mentoring mentoring) {

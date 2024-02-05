@@ -57,7 +57,7 @@ public class User {
 
     @Column(nullable = false)
     @Builder.Default
-    private Boolean isDelete = false;
+    private boolean isDelete = false;
 
     public void updateRole(Role role) {
         this.role = role;
@@ -78,5 +78,9 @@ public class User {
             return false;
         return user.getUserId()
                 .equals(this.userId);
+    }
+
+    public boolean isDelete() {
+        return this.isDelete;
     }
 }

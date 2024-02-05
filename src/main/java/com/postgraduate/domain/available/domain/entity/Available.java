@@ -1,6 +1,5 @@
 package com.postgraduate.domain.available.domain.entity;
 
-import com.postgraduate.domain.available.application.dto.req.AvailableCreateRequest;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

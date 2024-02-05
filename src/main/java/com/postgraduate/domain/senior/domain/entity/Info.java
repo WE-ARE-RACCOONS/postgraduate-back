@@ -1,16 +1,12 @@
 package com.postgraduate.domain.senior.domain.entity;
 
 import com.postgraduate.domain.senior.application.dto.req.SeniorMyPageProfileRequest;
-import com.postgraduate.domain.senior.domain.entity.constant.Field;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import static com.postgraduate.domain.senior.domain.entity.constant.Field.fieldNames;
-import static java.util.Arrays.stream;
 
 @Getter
 @AllArgsConstructor

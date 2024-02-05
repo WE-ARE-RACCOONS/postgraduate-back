@@ -22,8 +22,8 @@ import static com.postgraduate.global.config.security.jwt.constant.Type.REFRESH;
 @Slf4j
 public class JwtFilter extends OncePerRequestFilter {
     private final JwtUtils jwtProvider;
-    private final String AUTHORIZATION = "Authorization";
-    private final String BEARER = "Bearer";
+    private static final String AUTHORIZATION = "Authorization";
+    private static final String BEARER = "Bearer";
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
