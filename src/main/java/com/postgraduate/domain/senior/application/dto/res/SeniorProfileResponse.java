@@ -6,5 +6,7 @@ public record SeniorProfileResponse(
         String postgradu,
         String major,
         String lab,
-        Integer term
+        Integer term,
+        Long userId,
+        String phoneNumber
 ) {}

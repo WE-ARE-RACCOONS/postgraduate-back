@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 public class PaymentSaveService {
     private final PaymentRepository paymentRepository;
 
-    public void save(Payment payment) {
-        paymentRepository.save(payment);
+    public Payment save(Payment payment) {
+        return paymentRepository.save(payment);
     }
 }

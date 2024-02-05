@@ -9,8 +9,6 @@ import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.entity.constant.Status;
 import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
 import com.postgraduate.domain.mentoring.domain.service.MentoringUpdateService;
-import com.postgraduate.domain.payment.domain.entity.Payment;
-import com.postgraduate.domain.payment.domain.service.PaymentGetService;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.domain.user.domain.entity.User;
@@ -29,8 +27,6 @@ public class MentoringManageByAdminUseCase {
     private final MentoringUpdateService mentoringUpdateService;
     private final UserGetService userGetService;
     private final SeniorGetService seniorGetService;
-    private final PaymentGetService paymentGetService;
-    private final PaymentManageByAdminUseCase paymentManageUseCase;
 
     public MentoringManageResponse getUserMentorings(Long userId) {
         List<Mentoring> mentorings = mentoringGetService.byUserId(userId);
@@ -54,8 +50,7 @@ public class MentoringManageByAdminUseCase {
 
     public MentoringWithPaymentResponse getMentoringWithPayment(Long mentoringId) {
         Mentoring mentoring = mentoringGetService.byMentoringId(mentoringId);
-        Payment payment = paymentGetService.byMentoring(mentoring);
-        return AdminMapper.mapToMentoringWithPaymentResponse(payment, mentoring);
+        return AdminMapper.mapToMentoringWithPaymentResponse(mentoring);
     }
 
     public void cancelMentoring(Long mentoringId) {

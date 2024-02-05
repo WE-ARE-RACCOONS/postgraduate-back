@@ -1,12 +1,7 @@
 package com.postgraduate.domain.salary.domain.repository;
 
-import com.postgraduate.domain.payment.domain.entity.Payment;
-import com.postgraduate.domain.salary.application.dto.SalaryDetails;
 import com.postgraduate.domain.salary.application.dto.SeniorSalary;
 import com.postgraduate.domain.salary.domain.entity.Salary;
-import com.postgraduate.domain.senior.domain.entity.QSenior;
-import com.postgraduate.domain.senior.domain.entity.Senior;
-import com.postgraduate.domain.user.domain.entity.QUser;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -21,9 +16,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static com.postgraduate.domain.account.domain.entity.QAccount.account;
-import static com.postgraduate.domain.mentoring.domain.entity.QMentoring.mentoring;
-import static com.postgraduate.domain.payment.domain.entity.QPayment.payment;
-import static com.postgraduate.domain.salary.application.mapper.SalaryMapper.mapToSalaryDetail;
 import static com.postgraduate.domain.salary.domain.entity.QSalary.salary;
 import static com.postgraduate.domain.senior.domain.entity.QSenior.senior;
 import static com.postgraduate.domain.user.domain.entity.QUser.user;

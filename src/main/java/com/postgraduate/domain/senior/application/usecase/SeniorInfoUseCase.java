@@ -57,9 +57,9 @@ public class SeniorInfoUseCase {
         return new AllSeniorSearchResponse(selectSeniors, totalElements);
     }
 
-    public SeniorProfileResponse getSeniorProfile(Long seniorId) {
+    public SeniorProfileResponse getSeniorProfile(User user, Long seniorId) {
         Senior senior = seniorGetService.bySeniorIdWithCertification(seniorId);
-        SeniorProfileResponse seniorProfileResponse = mapToSeniorProfile(senior);
+        SeniorProfileResponse seniorProfileResponse = mapToSeniorProfile(user, senior);
         return seniorProfileResponse;
     }
 

@@ -1,6 +1,7 @@
 package com.postgraduate.domain.salary.application.usecase;
 
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
+import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
 import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.payment.domain.entity.constant.Status;
 import com.postgraduate.domain.payment.domain.service.PaymentGetService;
@@ -37,7 +38,7 @@ class SalaryInfoUseCaseTest {
     @Mock
     private SalaryGetService salaryGetService;
     @Mock
-    private PaymentGetService paymentGetService;
+    private MentoringGetService mentoringGetService;
     @InjectMocks
     private SalaryInfoUseCase salaryInfoUseCase;
 
@@ -90,32 +91,34 @@ class SalaryInfoUseCaseTest {
     @Test
     @DisplayName("정산 내역 확인")
     void getSalaryDetail() {
-        Mentoring mentoring1 = new Mentoring(1L, user, senior
-                , "a", "b", "c"
-                , 40,  DONE
-                , LocalDateTime.now(), LocalDateTime.now());
-        Mentoring mentoring2 = new Mentoring(2L, user, senior
-                , "a", "b", "c"
-                , 40,  DONE
-                , LocalDateTime.now(), LocalDateTime.now());
-        Mentoring mentoring3 = new Mentoring(3L, user, senior
-                , "a", "b", "c"
-                , 40,  DONE
-                , LocalDateTime.now(), LocalDateTime.now());
         Salary salary = mock(Salary.class);
-        Payment payment1 = new Payment(1L, mentoring1, salary, 1000, "a", "a", "a", LocalDateTime.now(), LocalDateTime.now(), Status.DONE);
-        Payment payment2 = new Payment(2L, mentoring2, salary, 1000, "a", "a", "a", LocalDateTime.now(), LocalDateTime.now(), Status.DONE);
-        Payment payment3 = new Payment(3L, mentoring3, salary, 1000, "a", "a", "a", LocalDateTime.now(), LocalDateTime.now(), Status.DONE);
-        List<Payment> payments = List.of(payment1, payment2, payment3);
+
+        Payment payment1 = new Payment(1L, salary, user, 1000, "a", "a", "a", LocalDateTime.now(), LocalDateTime.now(), Status.DONE);
+        Payment payment2 = new Payment(2L, salary, user, 1000, "a", "a", "a", LocalDateTime.now(), LocalDateTime.now(), Status.DONE);
+        Payment payment3 = new Payment(3L, salary, user, 1000, "a", "a", "a", LocalDateTime.now(), LocalDateTime.now(), Status.DONE);
+
+        Mentoring mentoring1 = new Mentoring(1L, user, senior, payment1
+                , "a", "b", "c"
+                , 40,  DONE
+                , LocalDateTime.now(), LocalDateTime.now());
+        Mentoring mentoring2 = new Mentoring(2L, user, senior, payment2
+                , "a", "b", "c"
+                , 40,  DONE
+                , LocalDateTime.now(), LocalDateTime.now());
+        Mentoring mentoring3 = new Mentoring(3L, user, senior, payment3
+                , "a", "b", "c"
+                , 40,  DONE
+                , LocalDateTime.now(), LocalDateTime.now());
+        List<Mentoring> mentorings = List.of(mentoring1, mentoring2, mentoring3);
 
         given(seniorGetService.byUser(user))
                 .willReturn(senior);
-        given(paymentGetService.bySeniorAndStatus(senior, FALSE))
-                .willReturn(payments);
+        given(mentoringGetService.bySeniorAndSalaryStatus(senior, FALSE))
+                .willReturn(mentorings);
 
         SalaryDetailsResponse salaryDetail = salaryInfoUseCase.getSalaryDetail(user, FALSE);
 
         assertThat(salaryDetail.salaryDetails().size())
-                .isEqualTo(payments.size());
+                .isEqualTo(mentorings.size());
     }
 }

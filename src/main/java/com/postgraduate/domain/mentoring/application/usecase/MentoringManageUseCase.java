@@ -11,7 +11,6 @@ import com.postgraduate.domain.mentoring.exception.MentoringNotExpectedException
 import com.postgraduate.domain.mentoring.exception.MentoringNotWaitingException;
 import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.payment.domain.entity.constant.Status;
-import com.postgraduate.domain.payment.domain.service.PaymentGetService;
 import com.postgraduate.domain.payment.domain.service.PaymentUpdateService;
 import com.postgraduate.domain.refuse.application.dto.req.MentoringRefuseRequest;
 import com.postgraduate.domain.refuse.application.mapper.RefuseMapper;
@@ -47,7 +46,6 @@ public class MentoringManageUseCase {
     private final SeniorGetService seniorGetService;
     private final SalaryGetService salaryGetService;
     private final SalaryUpdateService salaryUpdateService;
-    private final PaymentGetService paymentGetService;
     private final PaymentUpdateService paymentUpdateService;
 
     public void updateCancel(User user, Long mentoringId) {
@@ -55,7 +53,7 @@ public class MentoringManageUseCase {
         if (mentoring.getStatus() != WAITING)
             throw new MentoringNotWaitingException();
         mentoringUpdateService.updateStatus(mentoring, CANCEL);
-        Payment payment = paymentGetService.byMentoring(mentoring);
+        Payment payment = mentoring.getPayment();
         paymentUpdateService.updateStatus(payment, Status.CANCEL);
         // todo 환불 구현 후 수정
     }

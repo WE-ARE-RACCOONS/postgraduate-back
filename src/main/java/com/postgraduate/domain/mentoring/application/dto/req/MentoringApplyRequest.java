@@ -4,6 +4,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public record MentoringApplyRequest(
+        @NotBlank
+        String orderId,
         @NotNull
         Long seniorId,
         @NotBlank

@@ -1,7 +1,7 @@
 package com.postgraduate.domain.salary.application.usecase;
 
-import com.postgraduate.domain.payment.domain.entity.Payment;
-import com.postgraduate.domain.payment.domain.service.PaymentGetService;
+import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
+import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
 import com.postgraduate.domain.salary.application.dto.SalaryDetails;
 import com.postgraduate.domain.salary.application.dto.res.SalaryDetailsResponse;
 import com.postgraduate.domain.salary.application.dto.res.SalaryInfoResponse;
@@ -26,7 +26,7 @@ import static com.postgraduate.domain.salary.util.SalaryUtil.getSalaryDate;
 public class SalaryInfoUseCase {
     private final SeniorGetService seniorGetService;
     private final SalaryGetService salaryGetService;
-    private final PaymentGetService paymentGetService;
+    private final MentoringGetService mentoringGetService;
 
     public SalaryInfoResponse getSalary(User user) {
         Senior senior = seniorGetService.byUser(user);
@@ -38,9 +38,9 @@ public class SalaryInfoUseCase {
 
     public SalaryDetailsResponse getSalaryDetail(User user, Boolean status) {
         Senior senior = seniorGetService.byUser(user);
-        List<Payment> payments = paymentGetService.bySeniorAndStatus(senior, status);
-        List<SalaryDetails> salaryDetails = payments.stream()
-                .map(payment -> SalaryMapper.mapToSalaryDetail(payment.getSalary(), payment))
+        List<Mentoring> mentorings = mentoringGetService.bySeniorAndSalaryStatus(senior, status);
+        List<SalaryDetails> salaryDetails = mentorings.stream()
+                .map(mentoring -> SalaryMapper.mapToSalaryDetail(mentoring.getPayment().getSalary(), mentoring))
                 .toList();
         return new SalaryDetailsResponse(salaryDetails);
     }

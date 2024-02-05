@@ -76,10 +76,11 @@ public class MentoringMapper {
         );
     }
 
-    public static Mentoring mapToMentoring(User user, Senior senior, MentoringApplyRequest request) {
+    public static Mentoring mapToMentoring(User user, Senior senior, Payment payment, MentoringApplyRequest request) {
         return Mentoring.builder()
                 .user(user)
                 .senior(senior)
+                .payment(payment)
                 .topic(request.topic())
                 .question(request.question())
                 .date(request.date())

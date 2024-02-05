@@ -44,6 +44,7 @@ class SeniorInfoUseCaseTest {
     private SeniorInfoUseCase seniorInfoUseCase;
 
     private User user;
+    private User originUser;
     private Senior senior;
     private Info info;
     private Profile profile;
@@ -54,6 +55,9 @@ class SeniorInfoUseCaseTest {
         profile = new Profile("a", "a", "a", "a", 40);
         user = new User(1L, 1234L, "a",
                 "a", "123", "a",
+                1, USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE);
+        originUser = new User(2L, 12345L, "a",
+                "a", "12345", "a",
                 1, USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE);
         senior = new Senior(1L, user, "a",
                 APPROVE, 1, info, profile,
@@ -157,7 +161,7 @@ class SeniorInfoUseCaseTest {
         given(seniorGetService.bySeniorIdWithCertification(senior.getSeniorId()))
                 .willReturn(senior);
 
-        SeniorProfileResponse seniorProfile = seniorInfoUseCase.getSeniorProfile(senior.getSeniorId());
+        SeniorProfileResponse seniorProfile = seniorInfoUseCase.getSeniorProfile(originUser, senior.getSeniorId());
 
         assertThat(seniorProfile.profile())
                 .isEqualTo(user.getProfile());
@@ -169,6 +173,10 @@ class SeniorInfoUseCaseTest {
                 .isEqualTo(info.getMajor());
         assertThat(seniorProfile.nickName())
                 .isEqualTo(user.getNickName());
+        assertThat(seniorProfile.userId())
+                .isEqualTo(originUser.getUserId());
+        assertThat(seniorProfile.phoneNumber())
+                .isEqualTo(originUser.getPhoneNumber());
     }
 
     @Test

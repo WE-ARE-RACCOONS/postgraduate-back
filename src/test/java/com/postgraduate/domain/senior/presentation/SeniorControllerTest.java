@@ -557,7 +557,8 @@ class SeniorControllerTest extends IntegrationTest {
         updateProfile();
         updateAvailable();
 
-        mvc.perform(get("/senior/{seniorId}/profile", senior.getSeniorId()))
+        mvc.perform(get("/senior/{seniorId}/profile", senior.getSeniorId())
+                        .header(AUTHORIZATION, BEARER + otherToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(SENIOR_FIND.getCode()))
                 .andExpect(jsonPath("$.message").value(GET_SENIOR_INFO.getMessage()))
@@ -565,7 +566,9 @@ class SeniorControllerTest extends IntegrationTest {
                 .andExpect(jsonPath("$.data.profile").isNotEmpty())
                 .andExpect(jsonPath("$.data.major").isNotEmpty())
                 .andExpect(jsonPath("$.data.lab").isNotEmpty())
-                .andExpect(jsonPath("$.data.term").isNotEmpty());
+                .andExpect(jsonPath("$.data.term").isNotEmpty())
+                .andExpect(jsonPath("$.data.userId").isNotEmpty())
+                .andExpect(jsonPath("$.data.phoneNumber").isNotEmpty());
     }
 
     @Test

@@ -35,6 +35,11 @@ public class SeniorGetService {
                 .orElseThrow(NoneSeniorException::new);
     }
 
+    public Senior bySeniorNickName(String nickName) {
+        return seniorRepository.findByUser_NickNameAndUser_IsDelete(nickName, FALSE)
+                .orElseThrow(NoneSeniorException::new);
+    }
+
     public Senior bySeniorIdWithCertification(Long seniorId) {
         return seniorRepository.findBySeniorId(seniorId)
                 .orElseThrow(NoneSeniorException::new);
