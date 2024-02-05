@@ -6,6 +6,9 @@ import com.postgraduate.domain.senior.application.dto.req.SeniorMyPageUserAccoun
 import com.postgraduate.domain.senior.domain.entity.Senior;
 
 public class AccountMapper {
+    private AccountMapper() {
+        throw new IllegalArgumentException();
+    }
     public static Account mapToAccount(Senior senior, SeniorAccountRequest accountRequest, String accountNumber) {
         return Account.builder()
                 .senior(senior)

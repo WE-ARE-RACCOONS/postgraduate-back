@@ -13,6 +13,10 @@ import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.user.domain.entity.User;
 
 public class MentoringMapper {
+    private MentoringMapper() {
+        throw new IllegalArgumentException();
+    }
+
     public static ExpectedMentoringInfo mapToExpectedInfo(Mentoring mentoring) {
         Senior senior = mentoring.getSenior();
         User user = senior.getUser();

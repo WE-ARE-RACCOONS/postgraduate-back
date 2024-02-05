@@ -20,6 +20,9 @@ import java.util.HashSet;
 import java.util.List;
 
 public class SeniorMapper {
+    private SeniorMapper() {
+        throw new IllegalArgumentException();
+    }
 
     public static Senior mapToSenior(User user, SeniorSignUpRequest request) {
         return Senior.builder()
