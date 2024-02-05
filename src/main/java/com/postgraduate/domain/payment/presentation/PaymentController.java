@@ -18,14 +18,13 @@ public class PaymentController {
     private final PaymentManageUseCase paymentManageUseCase;
 
     @PostMapping("/payple/result")
-    public ResponseDto resultGet(@ModelAttribute PaymentResultRequest request) {
+    public ResponseDto<Void> resultGet(@ModelAttribute PaymentResultRequest request) {
         paymentManageUseCase.savePay(request);
         return ResponseDto.create(PAYMENT_CREATE.getCode(), CREATE_PAYMENT.getMessage());
     }
 
-    @PostMapping("/webhook")
-    public void webhook(@RequestBody PaymentResultRequest request) {
-        System.out.println(request.PCD_PAY_RST());
-        System.out.println(request.PCD_PAY_CARDAUTHNO());
-    }
+//    @PostMapping("/webhook")
+//    public void webhook(@RequestBody PaymentResultRequest request) {
+//
+//    }
 }

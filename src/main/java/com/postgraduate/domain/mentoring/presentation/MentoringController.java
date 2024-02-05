@@ -69,14 +69,14 @@ public class MentoringController {
 
     @PostMapping("/applying")
     @Operation(summary = "[대학생] 멘토링 신청", description = "대학생이 멘토링을 신청합니다.")
-    public ResponseDto applyForMentoringWithPayment(@AuthenticationPrincipal User user, @RequestBody @Valid MentoringApplyRequest request) {
+    public ResponseDto<Void> applyForMentoringWithPayment(@AuthenticationPrincipal User user, @RequestBody @Valid MentoringApplyRequest request) {
         applyUseCase.applyMentoringWithPayment(user, request);
         return ResponseDto.create(MENTORING_CREATE.getCode(), CREATE_MENTORING.getMessage());
     }
 
     @PatchMapping("/me/{mentoringId}/done")
     @Operation(summary = "[대학생] 멘토링 상태 업데이트(완료)", description = "대학생이 멘토링을 완료합니다.")
-    public ResponseDto updateMentoringDone(@AuthenticationPrincipal User user,
+    public ResponseDto<Void> updateMentoringDone(@AuthenticationPrincipal User user,
                                            @PathVariable Long mentoringId) {
         manageUseCase.updateDone(user, mentoringId);
         return ResponseDto.create(MENTORING_UPDATE.getCode(), UPDATE_MENTORING.getMessage());
@@ -84,7 +84,7 @@ public class MentoringController {
 
     @PatchMapping("/me/{mentoringId}/cancel")
     @Operation(summary = "[대학생] 멘토링 상태 업데이트(취소)", description = "대학생이 신청한 멘토링을 취소합니다.")
-    public ResponseDto updateMentoringCancel(@AuthenticationPrincipal User user,
+    public ResponseDto<Void> updateMentoringCancel(@AuthenticationPrincipal User user,
                                              @PathVariable Long mentoringId) {
         manageUseCase.updateCancel(user, mentoringId);
         return ResponseDto.create(MENTORING_UPDATE.getCode(), UPDATE_MENTORING.getMessage());
@@ -121,7 +121,7 @@ public class MentoringController {
 
     @PatchMapping("/senior/me/{mentoringId}/expected")
     @Operation(summary = "[대학원생] 멘토링 상태 업데이트(예정된 멘토링)", description = "대학원생이 멘토링을 수락합니다.")
-    public ResponseDto updateMentoringExpected(@AuthenticationPrincipal User user,
+    public ResponseDto<Boolean> updateMentoringExpected(@AuthenticationPrincipal User user,
                                                @PathVariable Long mentoringId,
                                                @RequestBody @Valid MentoringDateRequest dateRequest) {
         Boolean accountPresent = manageUseCase.updateExpected(user, mentoringId, dateRequest);
@@ -130,7 +130,7 @@ public class MentoringController {
 
     @PatchMapping("/senior/me/{mentoringId}/refuse")
     @Operation(summary = "[대학원생] 멘토링 상태 업데이트(거절)", description = "대학원생이 멘토링을 거절하고 거절사유를 변경합니다.")
-    public ResponseDto updateMentoringCancel(@AuthenticationPrincipal User user,
+    public ResponseDto<Void> updateMentoringCancel(@AuthenticationPrincipal User user,
                                              @PathVariable Long mentoringId,
                                              @RequestBody @Valid MentoringRefuseRequest request) {
         manageUseCase.updateRefuse(user, mentoringId, request);

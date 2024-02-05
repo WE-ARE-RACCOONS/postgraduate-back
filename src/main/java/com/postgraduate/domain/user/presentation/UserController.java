@@ -43,7 +43,7 @@ public class UserController {
 
     @PatchMapping("/me/info")
     @Operation(summary = "대학생 마이페이지 정보 수정 | 토큰 필요", description = "프로필사진, 닉네임, 번호")
-    public ResponseDto updateInfo(@AuthenticationPrincipal User user,
+    public ResponseDto<Void> updateInfo(@AuthenticationPrincipal User user,
                                   @RequestBody @Valid UserInfoRequest userInfoRequest) {
         manageUseCase.updateInfo(user, userInfoRequest);
         return ResponseDto.create(USER_UPDATE.getCode(), UPDATE_USER_INFO.getMessage());

@@ -34,16 +34,9 @@ public class AdminController {
         return ResponseDto.create(ADMIN_FIND.getCode(), GET_DETAILS.getMessage(), certification);
     }
 
-//    @GetMapping("/certification")
-//    @Operation(summary = "[관리자] 선배 프로필 승인 대기 목록", description = "선배 프로필 승인 신청한 유저 목록을 조회합니다.")
-//    public ResponseDto<List<CertificationResponse>> getCertifications() {
-//        List<CertificationResponse> certifications = seniorManageUseCase.getCertifications();
-//        return ResponseDto.create(SENIOR_FIND.getCode(), GET_SENIOR_LIST_INFO.getMessage(), certifications);
-//    }
-
     @PatchMapping("/certification/{seniorId}")
     @Operation(summary = "[관리자] 선배 프로필 승인 요청 응답", description = "선배 승인 신청한 유저를 승인 또는 거부합니다.")
-    public ResponseDto updateSeniorStatus(@PathVariable Long seniorId,
+    public ResponseDto<Void> updateSeniorStatus(@PathVariable Long seniorId,
                                           @RequestBody @Valid SeniorStatusRequest request) {
         seniorManageUseCase.updateSeniorStatus(seniorId, request);
         return ResponseDto.create(ADMIN_UPDATE.getCode(), UPDATE_SENIOR_STATUS.getMessage());
@@ -66,7 +59,7 @@ public class AdminController {
 
     @PatchMapping("/wish/{wishId}")
     @Operation(summary = "[관리자] 후배 매칭 지원 완료", description = "대학생 매칭지원을 완료합니다.")
-    public ResponseDto updateWishStatus(@PathVariable Long wishId) {
+    public ResponseDto<Void> updateWishStatus(@PathVariable Long wishId) {
         userManageUseCase.updateWishStatus(wishId);
         return ResponseDto.create(ADMIN_UPDATE.getCode(), UPDATE_WISH_STATUS.getMessage());
     }
@@ -96,7 +89,7 @@ public class AdminController {
 
     @PatchMapping("/salary/{seniorId}")
     @Operation(summary = "[관리자] 정산 상태 변경", description = "대학원생 선배 정산 상태를 변경합니다.")
-    public ResponseDto updateSalaryStatus(@PathVariable Long seniorId, @RequestParam Boolean status) {
+    public ResponseDto<Void> updateSalaryStatus(@PathVariable Long seniorId, @RequestParam Boolean status) {
         salaryManageUseCase.updateSalaryStatus(seniorId, status);
         return ResponseDto.create(ADMIN_UPDATE.getCode(), UPDATE_SALARY_STATUS.getMessage());
     }
@@ -117,7 +110,7 @@ public class AdminController {
 
     @PatchMapping("/mentoring/{mentoringId}")
     @Operation(summary = "[관리자] 멘토링 취소 및 환불", description = "멘토링을 취소 및 환불합니다.")
-    public ResponseDto cancelMentoring(@PathVariable Long mentoringId) {
+    public ResponseDto<Void> cancelMentoring(@PathVariable Long mentoringId) {
         mentoringManageUseCase.cancelMentoring(mentoringId);
         return ResponseDto.create(ADMIN_UPDATE.getCode(), UPDATE_MENTORING_STATUS.getMessage());
     }
