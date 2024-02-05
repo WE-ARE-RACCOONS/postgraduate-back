@@ -23,7 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-import static com.postgraduate.domain.salary.util.SalaryUtil.getSalaryDate;
 import static com.postgraduate.domain.salary.util.SalaryUtil.getStatus;
 
 @Service

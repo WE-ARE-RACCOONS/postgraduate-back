@@ -185,7 +185,7 @@ class MentoringControllerTest extends IntegrationTest {
     @Test
     @DisplayName("대학생이 멘토링을 신청한다.")
     void applyMentoring() throws Exception {
-        String request = objectMapper.writeValueAsString(new MentoringApplyRequest("1", senior.getSeniorId(), "topic", "question", "date1,date2,date3"));
+        String request = objectMapper.writeValueAsString(new MentoringApplyRequest("1", "topic", "question", "date1,date2,date3"));
 
         mvc.perform(post("/mentoring/applying")
                         .header(AUTHORIZATION, BEARER + userAccessToken)
@@ -201,7 +201,7 @@ class MentoringControllerTest extends IntegrationTest {
     @ValueSource(strings = {"date1", "date1,date2", "date1,date2,date3,date4"})
     @DisplayName("날짜가 3개가 아니라면 멘토링을 신청할 수 없다.")
     void applyMentoringWithoutThreeDates(String date) throws Exception {
-        String request = objectMapper.writeValueAsString(new MentoringApplyRequest("1", senior.getSeniorId(), "topic", "question", date));
+        String request = objectMapper.writeValueAsString(new MentoringApplyRequest("1", "topic", "question", date));
 
         mvc.perform(post("/mentoring/applying")
                         .header(AUTHORIZATION, BEARER + userAccessToken)
@@ -218,7 +218,7 @@ class MentoringControllerTest extends IntegrationTest {
     @NullAndEmptySource
     @DisplayName("신청서가 빈 칸이라면 멘토링을 신청할 수 없다")
     void emptyApplyMentoring(String empty) throws Exception {
-        String request = objectMapper.writeValueAsString(new MentoringApplyRequest("1", senior.getSeniorId(), empty, empty, empty));
+        String request = objectMapper.writeValueAsString(new MentoringApplyRequest("1", empty, empty, empty));
 
         mvc.perform(post("/mentoring/applying")
                         .header(AUTHORIZATION, BEARER + userAccessToken)
