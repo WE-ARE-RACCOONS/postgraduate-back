@@ -18,6 +18,8 @@ import com.postgraduate.global.config.security.jwt.exception.TokenExpiredExcepti
 import com.postgraduate.global.logging.dto.LogRequest;
 import com.postgraduate.global.logging.service.LogService;
 import io.jsonwebtoken.*;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +32,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.SecretKey;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -40,8 +43,7 @@ import java.util.List;
 
 import static com.postgraduate.global.config.security.jwt.constant.Type.ACCESS;
 import static com.postgraduate.global.config.security.jwt.constant.Type.REFRESH;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.UNAUTHORIZED;
+import static org.springframework.http.HttpStatus.*;
 
 @Component
 @RequiredArgsConstructor
@@ -64,24 +66,28 @@ public class JwtUtils {
     private static final String CHARACTER_ENCODING = "UTF-8";
 
     public String generateAccessToken(Long id, Role role) {
+        SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
+
         Instant accessDate = LocalDateTime.now().plusSeconds(accessExpiration).atZone(ZoneId.systemDefault()).toInstant();
         return Jwts.builder()
                 .claim(ROLE, role)
                 .claim(TYPE, ACCESS)
                 .setSubject(String.valueOf(id))
                 .setExpiration(Date.from(accessDate))
-                .signWith(SignatureAlgorithm.HS256, secret)
+                .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 
     public String generateRefreshToken(Long id, Role role) {
+        SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
+
         Instant refreshDate = LocalDateTime.now().plusSeconds(refreshExpiration).atZone(ZoneId.systemDefault()).toInstant();
         String refreshToken = Jwts.builder()
                 .claim(ROLE, role)
                 .claim(TYPE, REFRESH)
                 .setSubject(String.valueOf(id))
                 .setExpiration(Date.from(refreshDate))
-                .signWith(SignatureAlgorithm.HS256, secret)
+                .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
         redisRepository.setValues(REFRESH.toString() + id, refreshToken, Duration.ofSeconds(refreshExpiration));
         return refreshToken;
@@ -110,8 +116,7 @@ public class JwtUtils {
 
     private AuthDetails getDetails(HttpServletResponse response, Claims claims) {
         try {
-            AuthDetails authDetails = authDetailsService.loadUserByUsername(claims.getSubject());
-            return authDetails;
+            return authDetailsService.loadUserByUsername(claims.getSubject());
         } catch (UserNotFoundException ex) {
             jwtExceptionHandler(BAD_REQUEST, response, ex);
             throw ex;
@@ -124,18 +129,23 @@ public class JwtUtils {
             if (!claims.get(TYPE).equals(type.name()))
                 throw new InvalidTokenException();
             return true;
-        } catch (ApplicationException | SignatureException | UnsupportedJwtException | IllegalArgumentException | MalformedJwtException e) {
-            jwtExceptionHandler(BAD_REQUEST, response, new InvalidTokenException());
-            return false;
         } catch (ExpiredJwtException e) {
-            jwtExceptionHandler(UNAUTHORIZED, response, new TokenExpiredException());
+            jwtExceptionHandler(OK, response, new TokenExpiredException());
+            return false;
+        } catch (Exception e) {
+            jwtExceptionHandler(OK, response, new InvalidTokenException());
             return false;
         }
     }
 
     private Claims parseClaims(String token) {
-        JwtParser parser = Jwts.parser().setSigningKey(secret);
-        return parser.parseClaimsJws(token).getBody();
+        SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
+
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 
     private void jwtExceptionHandler(HttpStatus status, HttpServletResponse response, ApplicationException ex) {

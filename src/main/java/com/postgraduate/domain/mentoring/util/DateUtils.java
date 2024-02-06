@@ -7,6 +7,10 @@ import java.time.format.DateTimeFormatter;
 import static java.time.format.DateTimeFormatter.ofPattern;
 
 public class DateUtils {
+    private DateUtils() {
+        throw new IllegalArgumentException();
+    }
+    
     public static LocalDateTime stringToLocalDateTime(String date) {
         DateTimeFormatter formatter = ofPattern("yyyy-MM-dd-HH-mm");
         return LocalDateTime.parse(date, formatter);

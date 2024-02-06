@@ -1,21 +1,22 @@
 package com.postgraduate.domain.senior.domain.entity.constant;
 
 import java.util.HashSet;
+import java.util.Set;
 
 public enum Postgradu {
     SEOUL("서울대"), YONSEI("연세대");
 
-    private final String postgradu;
+    private final String name;
 
     public String getPostgradu() {
-        return postgradu;
+        return name;
     }
 
     Postgradu(String field) {
-        this.postgradu = field;
+        this.name = field;
     }
 
-    public static HashSet<String> postgraduNames() {
+    public static Set<String> postgraduNames() {
         HashSet<String> postgraduNames = new HashSet<>();
         for (Postgradu postgradu : Postgradu.values()) {
             postgraduNames.add(postgradu.getPostgradu());

@@ -57,7 +57,7 @@ public class AuthController {
 
     @PostMapping("/logout")
     @Operation(summary = "로그아웃", description = "토큰 같이 보내주세요")
-    public ResponseDto logout(@AuthenticationPrincipal User user) {
+    public ResponseDto<Void> logout(@AuthenticationPrincipal User user) {
         jwtUseCase.logout(user);
         return ResponseDto.create(AUTH_DELETE.getCode(), LOGOUT_USER.getMessage());
     }
@@ -68,7 +68,7 @@ public class AuthController {
      */
     @PostMapping("/signout/{provider}/{userId}")
     @Operation(summary = "회원 탈퇴 | 관리자 토큰 필요", description = "회원 탈퇴 진행")
-    public ResponseDto signOut(@PathVariable Provider provider, @PathVariable Long userId) {
+    public ResponseDto<Void> signOut(@PathVariable Provider provider, @PathVariable Long userId) {
         SignOutUseCase signOutUseCase = selectOauth.selectSignOut(provider);
         signOutUseCase.signOut(userId);
         return ResponseDto.create(AUTH_DELETE.getCode(), SIGNOUT_USER.getMessage());

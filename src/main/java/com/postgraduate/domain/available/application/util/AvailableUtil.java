@@ -14,7 +14,7 @@ import static com.postgraduate.domain.available.application.mapper.AvailableMapp
 
 public class AvailableUtil {
     public static List<Available> sortAvailable(List<AvailableCreateRequest> availableCreateRequests, Senior senior) {
-        List<Available> sortedAvailable = availableCreateRequests.stream()
+        return availableCreateRequests.stream()
                 .sorted(
                         Comparator.comparing(
                                 (AvailableCreateRequest availableCreateRequest) -> {
@@ -31,21 +31,19 @@ public class AvailableUtil {
                 )
                 .map(availableCreateRequest -> mapToAvailable(senior, availableCreateRequest))
                 .toList();
-
-        return sortedAvailable;
     }
 
     @AllArgsConstructor
     private enum Day {
         월(0), 화(1), 수(2), 목(3), 금(4), 토(5), 일(6);
-        private final int day;
+        private final int dayNum;
 
         private static int sortDay(String inputDay) {
             return Arrays.stream(Day.values())
                     .filter(day -> day.name().equals(inputDay))
                     .findFirst()
                     .orElseThrow(DayAvailableException::new)
-                    .day;
+                    .dayNum;
         }
     }
 }

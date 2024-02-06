@@ -1,6 +1,5 @@
 package com.postgraduate.domain.account.domain.entity;
 
-import com.postgraduate.domain.senior.application.dto.req.SeniorAccountRequest;
 import com.postgraduate.domain.senior.application.dto.req.SeniorMyPageUserAccountRequest;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import jakarta.persistence.*;

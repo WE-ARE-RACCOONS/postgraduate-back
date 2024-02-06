@@ -59,8 +59,7 @@ public class SeniorInfoUseCase {
 
     public SeniorProfileResponse getSeniorProfile(User user, Long seniorId) {
         Senior senior = seniorGetService.bySeniorIdWithCertification(seniorId);
-        SeniorProfileResponse seniorProfileResponse = mapToSeniorProfile(user, senior);
-        return seniorProfileResponse;
+        return mapToSeniorProfile(user, senior);
     }
 
     public AvailableTimesResponse getSeniorTimes(Long seniorId) {
@@ -75,7 +74,7 @@ public class SeniorInfoUseCase {
     public AllSeniorIdResponse getAllSeniorId() {
         List<Senior> seniors = seniorGetService.allSeniorId();
         List<Long> seniorIds = seniors.stream()
-                .map(senior -> senior.getSeniorId())
+                .map(Senior::getSeniorId)
                 .toList();
         return new AllSeniorIdResponse(seniorIds);
     }

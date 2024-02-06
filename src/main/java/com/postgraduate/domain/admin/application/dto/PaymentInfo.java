@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 public record PaymentInfo(
         Long paymentId,
         Long mentoringId,
-        String userNickName, //todo: payple 실명
+        String userNickName,
         String phoneNumber,
         LocalDateTime createdAt,
         Integer pay,

@@ -36,7 +36,7 @@ class UserUpdateServiceTest {
     void delete() {
         userUpdateService.updateDelete(user);
 
-        assertThat(user.getIsDelete())
+        assertThat(user.isDelete())
                 .isTrue();
     }
 

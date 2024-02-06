@@ -31,7 +31,7 @@ class PaymentGetServiceTest {
         given(paymentRepository.findByOrderId(any()))
                         .willReturn(ofNullable(null));
 
-        assertThatThrownBy(() -> paymentGetService.byOrderId(any()))
+        assertThatThrownBy(() -> paymentGetService.byOrderId(null))
                 .isInstanceOf(PaymentNotFoundException.class);
     }
 

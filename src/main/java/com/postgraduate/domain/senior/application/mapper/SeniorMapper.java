@@ -16,10 +16,13 @@ import com.postgraduate.domain.senior.domain.entity.constant.Status;
 import com.postgraduate.domain.user.domain.entity.User;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class SeniorMapper {
+    private SeniorMapper() {
+        throw new IllegalArgumentException();
+    }
 
     public static Senior mapToSenior(User user, SeniorSignUpRequest request) {
         return Senior.builder()
@@ -31,8 +34,8 @@ public class SeniorMapper {
 
     public static Info mapToInfo(SeniorSignUpRequest request) {
         String[] fields = request.field().split(",");
-        HashSet<String> fieldNames = Field.fieldNames();
-        HashSet<String> postgraduNames = Postgradu.postgraduNames();
+        Set<String> fieldNames = Field.fieldNames();
+        Set<String> postgraduNames = Postgradu.postgraduNames();
 
         Info.InfoBuilder infoBuilder = Info.builder()
                 .major(request.major())
@@ -86,8 +89,8 @@ public class SeniorMapper {
 
     public static Info mapToInfo(SeniorChangeRequest request) {
         String[] fields = request.field().split(",");
-        HashSet<String> fieldNames = Field.fieldNames();
-        HashSet<String> postgraduNames = Postgradu.postgraduNames();
+        Set<String> fieldNames = Field.fieldNames();
+        Set<String> postgraduNames = Postgradu.postgraduNames();
 
         Info.InfoBuilder infoBuilder = Info.builder()
                 .major(request.major())

@@ -1,10 +1,12 @@
 package com.postgraduate.domain.admin.exception;
 
-import com.postgraduate.domain.senior.presentation.constant.SeniorResponseCode;
-import com.postgraduate.domain.senior.presentation.constant.SeniorResponseMessage;
+import com.postgraduate.global.exception.ApplicationException;
 
-public class SeniorNotWaitingException extends SeniorException {
+import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseCode.STATUS_NOT_WAITING;
+import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseMessage.NOT_WAITING_STATUS;
+
+public class SeniorNotWaitingException extends ApplicationException {
     public SeniorNotWaitingException() {
-        super(SeniorResponseMessage.NOT_WAITING_STATUS.getMessage(), SeniorResponseCode.STATUS_NOT_WAITING.getCode());
+        super(NOT_WAITING_STATUS.getMessage(), STATUS_NOT_WAITING.getCode());
     }
 }

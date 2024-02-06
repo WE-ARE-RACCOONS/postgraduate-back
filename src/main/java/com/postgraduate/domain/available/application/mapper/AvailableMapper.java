@@ -6,6 +6,10 @@ import com.postgraduate.domain.available.domain.entity.Available;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 
 public class AvailableMapper {
+    private AvailableMapper() {
+        throw new IllegalArgumentException();
+    }
+
     public static Available mapToAvailable(Senior senior, AvailableCreateRequest createRequest) {
         return Available.builder()
                 .senior(senior)

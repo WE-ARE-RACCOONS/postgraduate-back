@@ -7,6 +7,10 @@ import com.postgraduate.domain.wish.domain.entity.Wish;
 import com.postgraduate.domain.wish.domain.entity.constant.Status;
 
 public class WishMapper {
+    private WishMapper() {
+        throw new IllegalArgumentException();
+    }
+
     public static Wish mapToWish(User user, SignUpRequest request) {
         Status matchingStatus = request.matchingReceive() ? Status.WAITING : Status.REJECTED;
         return Wish.builder()

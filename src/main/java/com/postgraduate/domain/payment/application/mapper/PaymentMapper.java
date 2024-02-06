@@ -9,6 +9,10 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class PaymentMapper {
+    private PaymentMapper() {
+        throw new IllegalArgumentException();
+    }
+
     public static Payment resultToPayment(Salary salary, User user, PaymentResultRequest request) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
         return Payment.builder()

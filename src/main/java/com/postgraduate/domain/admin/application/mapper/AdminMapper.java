@@ -17,6 +17,9 @@ import com.postgraduate.domain.wish.application.dto.res.WishResponse;
 import com.postgraduate.domain.wish.domain.entity.Wish;
 
 public class AdminMapper {
+    private AdminMapper() {
+        throw new IllegalStateException();
+    }
 
     public static CertificationDetailsResponse mapToCertificationInfo(Senior senior) {
         User user = senior.getUser();
@@ -176,7 +179,7 @@ public class AdminMapper {
                 mentoring.getDate(),
                 mentoring.getTerm(),
                 payment.getPay(),
-                4000 //todo : 수수료 변경
+                4000
         );
     }
 

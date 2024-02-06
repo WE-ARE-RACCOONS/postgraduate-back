@@ -80,7 +80,7 @@ public class JwtUseCase {
     }
 
     private void checkDelete(User user) {
-        if (user.getIsDelete())
+        if (user.isDelete())
             throw new DeletedUserException();
     }
 }

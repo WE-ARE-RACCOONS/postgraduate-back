@@ -151,8 +151,8 @@ class MentoringSeniorInfoUseCaseTest {
 
         SeniorMentoringResponse seniorWaiting = mentoringSeniorInfoUseCase.getSeniorWaiting(user);
 
-        assertThat(seniorWaiting.seniorMentoringInfos().size())
-                .isEqualTo(mentorings.size());
+        assertThat(seniorWaiting.seniorMentoringInfos())
+                .hasSameSizeAs(mentorings);
     }
 
     @Test
@@ -174,8 +174,8 @@ class MentoringSeniorInfoUseCaseTest {
 
         SeniorMentoringResponse seniorExpected = mentoringSeniorInfoUseCase.getSeniorExpected(user);
 
-        assertThat(seniorExpected.seniorMentoringInfos().size())
-                .isEqualTo(mentorings.size());
+        assertThat(seniorExpected.seniorMentoringInfos())
+                .hasSameSizeAs(mentorings);
     }
 
     @Test
@@ -201,7 +201,7 @@ class MentoringSeniorInfoUseCaseTest {
 
         SeniorMentoringResponse seniorDone = mentoringSeniorInfoUseCase.getSeniorDone(user);
 
-        assertThat(seniorDone.seniorMentoringInfos().size())
-                .isEqualTo(mentorings.size());
+        assertThat(seniorDone.seniorMentoringInfos())
+                .hasSameSizeAs(mentorings);
     }
 }

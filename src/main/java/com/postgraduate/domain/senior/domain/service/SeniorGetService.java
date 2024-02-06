@@ -62,8 +62,7 @@ public class SeniorGetService {
         if (page == null)
             page = 1;
         Pageable pageable = PageRequest.of(page-1, SENIOR_PAGE_SIZE);
-        Page<Senior> allByFieldSenior = seniorRepository.findAllByFieldSenior(field, postgradu, pageable);
-        return allByFieldSenior;
+        return seniorRepository.findAllByFieldSenior(field, postgradu, pageable);
     }
 
     public List<Senior> allSeniorId() {

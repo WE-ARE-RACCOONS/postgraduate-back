@@ -14,7 +14,6 @@ public class AvailableGetService {
     private final AvailableRepository availableRepository;
 
     public List<Available> bySenior(Senior senior) {
-        List<Available> times = availableRepository.findAllBySenior(senior);
-        return times;
+        return availableRepository.findAllBySenior(senior);
     }
 }

@@ -1,6 +1,5 @@
 package com.postgraduate.domain.salary.domain.entity;
 
-import com.postgraduate.domain.admin.presentation.constant.SalaryStatus;
 import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import jakarta.persistence.*;
@@ -25,7 +24,7 @@ public class Salary {
 
     @Column(nullable = false)
     @Builder.Default
-    private Boolean status = false;
+    private boolean status = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Senior senior;
@@ -46,6 +45,10 @@ public class Salary {
     private String bank;
     private String accountNumber;
     private String accountHolder;
+
+    public boolean status() {
+        return this.status;
+    }
 
     public void updateStatus(Boolean status) {
         this.status = status;

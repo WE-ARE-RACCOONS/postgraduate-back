@@ -10,6 +10,10 @@ import com.postgraduate.global.config.s3.Default;
 import static com.postgraduate.domain.user.domain.entity.constant.Role.SENIOR;
 
 public class UserMapper {
+    private UserMapper() {
+        throw new IllegalArgumentException();
+    }
+
     public static UserMyPageResponse mapToMyPageInfo(User user) {
         return new UserMyPageResponse(
                 user.getNickName(),
