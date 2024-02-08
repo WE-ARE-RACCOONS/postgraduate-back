@@ -32,6 +32,7 @@ public class Payment {
     @Column(nullable = false)
     private int pay;
 
+    @Column(unique = true)
     private String orderId;
 
     private String cardAuthNumber;
