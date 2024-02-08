@@ -21,7 +21,7 @@ public class MentoringApplyUseCase {
     private final PaymentGetService paymentGetService;
 
     public void applyMentoringWithPayment(User user, MentoringApplyRequest request) {
-        Payment payment = paymentGetService.byOrderId(request.orderId());
+        Payment payment = paymentGetService.byUserAndOrderId(user, request.orderId());
         String[] dates = request.date().split(",");
         if (dates.length != 3)
             throw new MentoringDateException();
