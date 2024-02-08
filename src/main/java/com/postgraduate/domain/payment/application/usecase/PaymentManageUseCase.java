@@ -32,16 +32,12 @@ public class PaymentManageUseCase {
         if (!request.PCD_PAY_CODE().equals(SUCCESS))
             throw new PaymentFailException();
         String seniorNickName = request.PCD_PAY_GOODS();
-        try {
-            long userId = Long.parseLong(request.PCD_PAYER_NO());
-            User user = userGetService.byUserId(userId);
-            Senior senior = seniorGetService.bySeniorNickName(seniorNickName);
-            Salary salary = salaryGetService.bySenior(senior);
-            Payment payment = PaymentMapper.resultToPayment(salary, user, request);
-            paymentSaveService.save(payment);
-            salaryUpdateService.updateTotalAmount(salary);
-        } catch (Exception e) {
-            //todo : 환불로직
-        }
+        long userId = Long.parseLong(request.PCD_PAYER_NO());
+        User user = userGetService.byUserId(userId);
+        Senior senior = seniorGetService.bySeniorNickName(seniorNickName);
+        Salary salary = salaryGetService.bySenior(senior);
+        Payment payment = PaymentMapper.resultToPayment(salary, user, request);
+        paymentSaveService.save(payment);
+        salaryUpdateService.updateTotalAmount(salary);
     }
 }

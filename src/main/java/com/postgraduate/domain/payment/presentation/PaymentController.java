@@ -2,13 +2,12 @@ package com.postgraduate.domain.payment.presentation;
 
 import com.postgraduate.domain.payment.application.dto.req.PaymentResultRequest;
 import com.postgraduate.domain.payment.application.usecase.PaymentManageUseCase;
-import com.postgraduate.global.dto.ResponseDto;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import static com.postgraduate.domain.payment.presentation.constant.PaymentResponseCode.PAYMENT_CREATE;
-import static com.postgraduate.domain.payment.presentation.constant.PaymentResponseMessage.CREATE_PAYMENT;
+import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,9 +17,14 @@ public class PaymentController {
     private final PaymentManageUseCase paymentManageUseCase;
 
     @PostMapping("/payple/result")
-    public ResponseDto<Void> resultGet(@ModelAttribute PaymentResultRequest request) {
-        paymentManageUseCase.savePay(request);
-        return ResponseDto.create(PAYMENT_CREATE.getCode(), CREATE_PAYMENT.getMessage());
+    public void resultGet(HttpServletResponse response, @ModelAttribute PaymentResultRequest request) throws IOException {
+        try {
+            paymentManageUseCase.savePay(request);
+            response.sendRedirect("https://kimseonbae-develop.vercel.app/result");
+        }
+        catch (Exception ex){
+            response.sendRedirect("https://kimseonbae-develop.vercel.app/result");
+        }
     }
 
 //    @PostMapping("/webhook")
