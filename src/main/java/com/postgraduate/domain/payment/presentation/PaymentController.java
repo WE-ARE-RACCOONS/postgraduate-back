@@ -18,11 +18,19 @@ public class PaymentController {
     private final PaymentManageUseCase paymentManageUseCase;
     @Value("${payple.redirect-uri}")
     private String REDIRECT_URI;
+    @Value("${payple.redirect-uri-dev}")
+    private String REDIRECT_URI_DEV;
 
     @PostMapping("/payple/result")
     public void resultGet(HttpServletResponse response, @ModelAttribute PaymentResultRequest request) throws IOException {
         paymentManageUseCase.savePay(request);
         response.sendRedirect(REDIRECT_URI);
+    }
+
+    @PostMapping("/payple/dev/result")
+    public void resultGetWithDev(HttpServletResponse response, @ModelAttribute PaymentResultRequest request) throws IOException {
+        paymentManageUseCase.savePay(request);
+        response.sendRedirect(REDIRECT_URI_DEV + request.PCD_PAY_OID());
     }
 
 //    @PostMapping("/webhook")
