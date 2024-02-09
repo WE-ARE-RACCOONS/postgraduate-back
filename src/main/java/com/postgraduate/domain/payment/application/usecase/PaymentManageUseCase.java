@@ -13,12 +13,14 @@ import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.service.UserGetService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class PaymentManageUseCase {
     private static final String SUCCESS = "0000";
 
@@ -29,10 +31,10 @@ public class PaymentManageUseCase {
     private final SalaryUpdateService salaryUpdateService;
 
     public void savePay(PaymentResultRequest request) {
-        if (!request.PCD_PAY_CODE().equals(SUCCESS))
-            throw new PaymentFailException();
-        String seniorNickName = request.PCD_PAY_GOODS();
         try {
+            if (!request.PCD_PAY_CODE().equals(SUCCESS))
+                throw new PaymentFailException();
+            String seniorNickName = request.PCD_PAY_GOODS();
             long userId = Long.parseLong(request.PCD_PAYER_NO());
             User user = userGetService.byUserId(userId);
             Senior senior = seniorGetService.bySeniorNickName(seniorNickName);
@@ -40,8 +42,8 @@ public class PaymentManageUseCase {
             Payment payment = PaymentMapper.resultToPayment(salary, user, request);
             paymentSaveService.save(payment);
             salaryUpdateService.updateTotalAmount(salary);
-        } catch (Exception e) {
-            //todo : 환불로직
+        } catch (Exception ex) {
+            log.error("paymentError {}", ex.getMessage());
         }
     }
 }

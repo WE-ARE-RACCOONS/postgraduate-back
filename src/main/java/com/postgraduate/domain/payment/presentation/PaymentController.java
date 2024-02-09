@@ -2,13 +2,13 @@ package com.postgraduate.domain.payment.presentation;
 
 import com.postgraduate.domain.payment.application.dto.req.PaymentResultRequest;
 import com.postgraduate.domain.payment.application.usecase.PaymentManageUseCase;
-import com.postgraduate.global.dto.ResponseDto;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
-import static com.postgraduate.domain.payment.presentation.constant.PaymentResponseCode.PAYMENT_CREATE;
-import static com.postgraduate.domain.payment.presentation.constant.PaymentResponseMessage.CREATE_PAYMENT;
+import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,11 +16,21 @@ import static com.postgraduate.domain.payment.presentation.constant.PaymentRespo
 @Tag(name = "PAYMENT Controller", description = "")
 public class PaymentController {
     private final PaymentManageUseCase paymentManageUseCase;
+    @Value("${payple.redirect-uri}")
+    private String REDIRECT_URI;
+    @Value("${payple.redirect-uri-dev}")
+    private String REDIRECT_URI_DEV;
 
     @PostMapping("/payple/result")
-    public ResponseDto<Void> resultGet(@ModelAttribute PaymentResultRequest request) {
+    public void resultGet(HttpServletResponse response, @ModelAttribute PaymentResultRequest request) throws IOException {
         paymentManageUseCase.savePay(request);
-        return ResponseDto.create(PAYMENT_CREATE.getCode(), CREATE_PAYMENT.getMessage());
+        response.sendRedirect(REDIRECT_URI);
+    }
+
+    @PostMapping("/payple/dev/result")
+    public void resultGetWithDev(HttpServletResponse response, @ModelAttribute PaymentResultRequest request) throws IOException {
+        paymentManageUseCase.savePay(request);
+        response.sendRedirect(REDIRECT_URI_DEV + request.PCD_PAY_OID());
     }
 
 //    @PostMapping("/webhook")

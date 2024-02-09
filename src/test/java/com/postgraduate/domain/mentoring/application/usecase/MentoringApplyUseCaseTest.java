@@ -60,7 +60,7 @@ class MentoringApplyUseCaseTest {
         Salary salary = mock(Salary.class);
         MentoringApplyRequest request = new MentoringApplyRequest("1", "topic", "ques", "1201,1202,1203");
 
-        given(paymentGetService.byOrderId(any()))
+        given(paymentGetService.byUserAndOrderId(any(), any()))
                 .willReturn(payment);
         given(payment.getSalary())
                 .willReturn(salary);
@@ -78,7 +78,7 @@ class MentoringApplyUseCaseTest {
         User user = mock(User.class);
         Payment payment = mock(Payment.class);
         MentoringApplyRequest request = new MentoringApplyRequest("1", "topic", "ques", dates);
-        given(paymentGetService.byOrderId(any()))
+        given(paymentGetService.byUserAndOrderId(any(), any()))
                 .willReturn(payment);
 
         assertThatThrownBy(()-> mentoringApplyUseCase.applyMentoringWithPayment(user, request))
@@ -93,7 +93,7 @@ class MentoringApplyUseCaseTest {
         Payment payment = mock(Payment.class);
 
         MentoringApplyRequest request = new MentoringApplyRequest("1", "topic", "ques", dates);
-        given(paymentGetService.byOrderId(any()))
+        given(paymentGetService.byUserAndOrderId(any(), any()))
                 .willReturn(payment);
 
         assertThatThrownBy(()-> mentoringApplyUseCase.applyMentoringWithPayment(user, request))
