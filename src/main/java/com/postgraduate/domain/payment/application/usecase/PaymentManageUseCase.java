@@ -39,21 +39,21 @@ import static org.springframework.http.CacheControl.noCache;
 @Slf4j
 public class PaymentManageUseCase {
     @Value("${payple.refund.certification-uri}")
-    private String CERTIFICATION_URI;
+    private String certificationUri;
     @Value("${payple.refund.refund-uri}")
-    private String REFUND_URI;
+    private String refundUri;
     @Value("${payple.refund.redirect-uri}")
-    private String REFUND_REDIRECT_URI;
+    private String refundRedirectUri;
     @Value("${payple.cst-id}")
-    private String CUSTOMER_ID;
+    private String custId;
     @Value("${payple.cust-key}")
-    private String CUSTOMER_KEY;
+    private String custKey;
     @Value("${payple.refund.clientKey}")
-    private String CLIENT_KEY;
+    private String clientKey;
     @Value("${payple.refund.refundKey}")
-    private String REFUND_KEY;
+    private String refundKey;
     @Value("${payple.refund.refundFlag}")
-    private String REFUND_FLAG;
+    private String refundFlag;
 
     private final PaymentSaveService paymentSaveService;
     private final PaymentGetService paymentGetService;
@@ -88,10 +88,10 @@ public class PaymentManageUseCase {
 
     private Optional<CertificationResponse> getCertificationResponse() {
         return Optional.ofNullable(webClient.post()
-                .uri(CERTIFICATION_URI)
+                .uri(certificationUri)
                 .headers(h -> {
                     h.setContentType(MediaType.APPLICATION_JSON);
-                    h.set(REFERER.getName(), REFUND_REDIRECT_URI);
+                    h.set(REFERER.getName(), refundRedirectUri);
                 })
                 .bodyValue(getCertificationRequestBody())
                 .retrieve()
@@ -101,9 +101,9 @@ public class PaymentManageUseCase {
 
     private MultiValueMap<String, String> getCertificationRequestBody() {
         MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
-        requestBody.add(CST_ID.getName(), CUSTOMER_ID);
-        requestBody.add(CUST_KEY.getName(), CUSTOMER_KEY);
-        requestBody.add(FLAG.getName(), REFUND_FLAG);
+        requestBody.add(CST_ID.getName(), custId);
+        requestBody.add(CUST_KEY.getName(), custKey);
+        requestBody.add(FLAG.getName(), refundFlag);
         return requestBody;
     }
 
@@ -111,11 +111,11 @@ public class PaymentManageUseCase {
         if (!response.result().equals(SUCCESS.getName()))
             throw new CertificationFailException();
         RefundResponse refundResponse = Optional.ofNullable(webClient.post()
-                .uri(REFUND_URI + response.PCD_PAY_URL())
+                .uri(refundUri + response.PCD_PAY_URL())
                 .headers(h -> {
                     h.setContentType(MediaType.APPLICATION_JSON);
                     h.setCacheControl(noCache());
-                    h.set(REFERER.getName(), REFUND_REDIRECT_URI);
+                    h.set(REFERER.getName(), refundRedirectUri);
                 })
                 .bodyValue(getRefundRequestBody(response, payment))
                 .retrieve()
@@ -132,8 +132,8 @@ public class PaymentManageUseCase {
         requestBody.add(CST_ID.getName(), response.cst_id());
         requestBody.add(CUST_KEY.getName(), response.custKey());
         requestBody.add(AUTH_KEY.getName(), response.AuthKey());
-        requestBody.add(REF_KEY.getName(), REFUND_KEY);
-        requestBody.add(PAYCANCEL_FLAG.getName(), REFUND_FLAG);
+        requestBody.add(REF_KEY.getName(), refundKey);
+        requestBody.add(PAYCANCEL_FLAG.getName(), refundFlag);
         requestBody.add(OID.getName(), payment.getOrderId());
         requestBody.add(DATE.getName(), paidAt);
         requestBody.add(TOTAL.getName(), String.valueOf(payment.getPay()));
