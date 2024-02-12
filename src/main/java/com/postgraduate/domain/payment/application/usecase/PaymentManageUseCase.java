@@ -110,7 +110,7 @@ public class PaymentManageUseCase {
     private void refundProcess(CertificationResponse response, Payment payment) {
         if (!response.result().equals(SUCCESS.getName()))
             throw new CertificationFailException();
-        RefundResponse refundResponse = webClient.post()
+        RefundResponse refundResponse = Optional.ofNullable(webClient.post()
                 .uri(REFUND_URI + response.PCD_PAY_URL())
                 .headers(h -> {
                     h.setContentType(MediaType.APPLICATION_JSON);
@@ -120,7 +120,8 @@ public class PaymentManageUseCase {
                 .bodyValue(getRefundRequestBody(response, payment))
                 .retrieve()
                 .bodyToMono(RefundResponse.class)
-                .block();
+                .block())
+                .orElseThrow();
         if (!refundResponse.PCD_PAY_RST().equals(SUCCESS.getName()))
             throw new RefundFailException(refundResponse.PCD_PAY_CODE());
     }
