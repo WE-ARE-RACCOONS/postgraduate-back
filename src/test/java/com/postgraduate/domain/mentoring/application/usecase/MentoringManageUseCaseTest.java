@@ -2,12 +2,15 @@ package com.postgraduate.domain.mentoring.application.usecase;
 
 import com.postgraduate.domain.account.domain.entity.Account;
 import com.postgraduate.domain.account.domain.service.AccountGetService;
+import com.postgraduate.domain.mentoring.application.dto.req.MentoringApplyRequest;
 import com.postgraduate.domain.mentoring.application.dto.req.MentoringDateRequest;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
+import com.postgraduate.domain.mentoring.domain.service.MentoringSaveService;
 import com.postgraduate.domain.mentoring.domain.service.MentoringUpdateService;
 import com.postgraduate.domain.mentoring.exception.MentoringNotExpectedException;
 import com.postgraduate.domain.mentoring.exception.MentoringNotWaitingException;
+import com.postgraduate.domain.payment.application.usecase.PaymentManageUseCase;
 import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.payment.domain.entity.constant.Status;
 import com.postgraduate.domain.payment.domain.service.PaymentGetService;
@@ -59,6 +62,18 @@ class MentoringManageUseCaseTest {
     private MentoringGetService mentoringGetService;
 
     @Mock
+    private MentoringSaveService mentoringSaveService;
+
+    @Mock
+    private PaymentGetService paymentGetService;
+
+    @Mock
+    private PaymentUpdateService paymentUpdateService;
+
+    @Mock
+    private PaymentManageUseCase paymentManageUseCase;
+
+    @Mock
     private RefuseSaveService refuseSaveService;
 
     @Mock
@@ -73,8 +88,6 @@ class MentoringManageUseCaseTest {
     @Mock
     private SalaryUpdateService salaryUpdateService;
 
-    @Mock
-    private PaymentUpdateService paymentUpdateService;
 
     @InjectMocks
     private MentoringManageUseCase mentoringManageUseCase;
@@ -96,6 +109,58 @@ class MentoringManageUseCaseTest {
                 APPROVE, 1, info, profile,
                 LocalDateTime.now(), LocalDateTime.now());
     }
+
+    @Test
+    @DisplayName("정상 실행 여부 테스트")
+    void applyMentoring() {
+        Payment payment = mock(Payment.class);
+        User user = mock(User.class);
+        Senior senior = mock(Senior.class);
+        Salary salary = mock(Salary.class);
+        MentoringApplyRequest request = new MentoringApplyRequest("1", "topic", "ques", "1201,1202,1203");
+
+        given(paymentGetService.byUserAndOrderId(any(), any()))
+                .willReturn(payment);
+        given(mentoringGetService.byPayment(payment))
+                .willReturn(Optional.ofNullable(null));
+        given(payment.getSalary())
+                .willReturn(salary);
+        given(salary.getSenior())
+                .willReturn(senior);
+
+        mentoringManageUseCase.applyMentoringWithPayment(user, request);
+        verify(mentoringSaveService).save(any());
+    }
+
+//    @ParameterizedTest
+//    @ValueSource(strings = {"1201,1203", "1201", ""})
+//    @DisplayName("날짜 예외 테스트 3보다 작을 경우")
+//    void applyMentoringWithInvalidDatesSmaller(String dates) {
+//        User user = mock(User.class);
+//        Payment payment = mock(Payment.class);
+//        MentoringApplyRequest request = new MentoringApplyRequest("1", "topic", "ques", dates);
+//        given(paymentGetService.byUserAndOrderId(any(), any()))
+//                .willReturn(payment);
+//
+//        assertThatThrownBy(()-> mentoringManageUseCase.applyMentoringWithPayment(user, request))
+//                .isInstanceOf(MentoringDateException.class);
+//    }
+//
+//    @ParameterizedTest
+//    @ValueSource(strings = {"1201,1203,1202,1203", "1201,1202,1203,1204,1205","1201,1202,1203,1204,1205,1206"})
+//    @DisplayName("날짜 예외 테스트 3보다 큰 경우")
+//    void applyMentoringWithInvalidDateBigger(String dates) {
+//        User user = mock(User.class);
+//        Payment payment = mock(Payment.class);
+//
+//        MentoringApplyRequest request = new MentoringApplyRequest("1", "topic", "ques", dates);
+//        given(paymentGetService.byUserAndOrderId(any(), any()))
+//                .willReturn(payment);
+//
+//        assertThatThrownBy(()-> mentoringManageUseCase.applyMentoringWithPayment(user, request))
+//                .isInstanceOf(MentoringDateException.class);
+//    }
+// todo: 환불 처리 관련 필요
 
     @Test
     @DisplayName("CANCEL 상태 변경 성공 테스트")

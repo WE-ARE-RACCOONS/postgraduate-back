@@ -4,6 +4,7 @@ import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.entity.constant.Status;
 import com.postgraduate.domain.mentoring.domain.repository.MentoringRepository;
 import com.postgraduate.domain.mentoring.exception.MentoringNotFoundException;
+import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +23,10 @@ public class MentoringGetService {
     private static final int ADMIN_PAGE_SIZE = 15;
 
     private final MentoringRepository mentoringRepository;
+
+    public Optional<Mentoring> byPayment(Payment payment) {
+        return mentoringRepository.findByPayment(payment);
+    }
 
     public List<Mentoring> byUser(User user, Status status) {
         return mentoringRepository.findAllByUserAndStatus(user, status);
