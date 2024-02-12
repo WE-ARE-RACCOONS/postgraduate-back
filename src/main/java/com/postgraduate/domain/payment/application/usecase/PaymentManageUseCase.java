@@ -74,7 +74,7 @@ public class PaymentManageUseCase {
             Salary salary = salaryGetService.bySeniorWithNull(senior);
             Payment payment = PaymentMapper.resultToPayment(salary, user, request);
             paymentSaveService.save(payment);
-        } catch (PaymentFailException ex) {
+        } catch (Exception ex) {
             log.error("paymentError 발생 {}", ex.getMessage());
         }
     }
