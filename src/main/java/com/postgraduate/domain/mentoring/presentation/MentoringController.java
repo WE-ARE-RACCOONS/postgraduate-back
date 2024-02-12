@@ -3,7 +3,6 @@ package com.postgraduate.domain.mentoring.presentation;
 import com.postgraduate.domain.mentoring.application.dto.req.MentoringApplyRequest;
 import com.postgraduate.domain.mentoring.application.dto.req.MentoringDateRequest;
 import com.postgraduate.domain.mentoring.application.dto.res.*;
-import com.postgraduate.domain.mentoring.application.usecase.MentoringApplyUseCase;
 import com.postgraduate.domain.mentoring.application.usecase.MentoringManageUseCase;
 import com.postgraduate.domain.mentoring.application.usecase.MentoringSeniorInfoUseCase;
 import com.postgraduate.domain.mentoring.application.usecase.MentoringUserInfoUseCase;
@@ -27,7 +26,6 @@ import static com.postgraduate.domain.mentoring.presentation.constant.MentoringR
 public class MentoringController {
     private final MentoringUserInfoUseCase userInfoUseCase;
     private final MentoringSeniorInfoUseCase seniorInfoUseCase;
-    private final MentoringApplyUseCase applyUseCase;
     private final MentoringManageUseCase manageUseCase;
 
     @GetMapping("/me/waiting")
@@ -70,7 +68,7 @@ public class MentoringController {
     @PostMapping("/applying")
     @Operation(summary = "[대학생] 멘토링 신청", description = "대학생이 멘토링을 신청합니다.")
     public ResponseDto<Void> applyForMentoringWithPayment(@AuthenticationPrincipal User user, @RequestBody @Valid MentoringApplyRequest request) {
-        applyUseCase.applyMentoringWithPayment(user, request);
+        manageUseCase.applyMentoringWithPayment(user, request);
         return ResponseDto.create(MENTORING_CREATE.getCode(), CREATE_MENTORING.getMessage());
     }
 
