@@ -44,9 +44,9 @@ public class PaymentManageUseCase {
     private String REFUND_URI;
     @Value("${payple.refund.redirect-uri}")
     private String REFUND_REDIRECT_URI;
-    @Value("${payple.refund.cst_id}")
+    @Value("${payple.cst-id}")
     private String CUSTOMER_ID;
-    @Value("${payple.refund.custKey}")
+    @Value("${payple.cust-key}")
     private String CUSTOMER_KEY;
     @Value("${payple.refund.clientKey}")
     private String CLIENT_KEY;
