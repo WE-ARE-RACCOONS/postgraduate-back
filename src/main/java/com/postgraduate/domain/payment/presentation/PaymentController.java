@@ -5,11 +5,13 @@ import com.postgraduate.domain.payment.application.usecase.PaymentManageUseCase;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/payment")
@@ -17,24 +19,24 @@ import java.io.IOException;
 public class PaymentController {
     private final PaymentManageUseCase paymentManageUseCase;
     @Value("${payple.redirect-uri}")
-    private String REDIRECT_URI;
+    private String redirectUri;
     @Value("${payple.redirect-uri-dev}")
-    private String REDIRECT_URI_DEV;
+    private String redirectUriDev;
 
     @PostMapping("/payple/result")
     public void resultGet(HttpServletResponse response, @ModelAttribute PaymentResultRequest request) throws IOException {
         paymentManageUseCase.savePay(request);
-        response.sendRedirect(REDIRECT_URI + request.PCD_PAY_OID());
+        response.sendRedirect(redirectUri + request.PCD_PAY_OID());
     }
 
     @PostMapping("/payple/dev/result")
     public void resultGetWithDev(HttpServletResponse response, @ModelAttribute PaymentResultRequest request) throws IOException {
         paymentManageUseCase.savePay(request);
-        response.sendRedirect(REDIRECT_URI_DEV + request.PCD_PAY_OID());
+        response.sendRedirect(redirectUriDev + request.PCD_PAY_OID());
     }
 
-//    @PostMapping("/webhook")
-//    public void webhook(@RequestBody PaymentResultRequest request) {
-//
-//    }
+    @PostMapping("/webhook")
+    public void webhook(@RequestBody PaymentResultRequest request) {
+        log.info("payple webhook");
+    }
 }
