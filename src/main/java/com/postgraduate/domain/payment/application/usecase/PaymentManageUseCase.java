@@ -42,14 +42,12 @@ public class PaymentManageUseCase {
     private String certificationUri;
     @Value("${payple.refund.refund-uri}")
     private String refundUri;
-    @Value("${payple.refund.redirect-uri}")
-    private String refundRedirectUri;
+    @Value("${payple.refund.referer-uri}")
+    private String refererUri;
     @Value("${payple.cst-id}")
     private String custId;
     @Value("${payple.cust-key}")
     private String custKey;
-    @Value("${payple.refund.clientKey}")
-    private String clientKey;
     @Value("${payple.refund.refundKey}")
     private String refundKey;
     @Value("${payple.refund.refundFlag}")
@@ -91,7 +89,8 @@ public class PaymentManageUseCase {
                 .uri(certificationUri)
                 .headers(h -> {
                     h.setContentType(MediaType.APPLICATION_JSON);
-                    h.set(REFERER.getName(), refundRedirectUri);
+                    h.setCacheControl(noCache());
+                    h.set(REFERER.getName(), refererUri);
                 })
                 .bodyValue(getCertificationRequestBody())
                 .retrieve()
@@ -115,7 +114,7 @@ public class PaymentManageUseCase {
                 .headers(h -> {
                     h.setContentType(MediaType.APPLICATION_JSON);
                     h.setCacheControl(noCache());
-                    h.set(REFERER.getName(), refundRedirectUri);
+                    h.set(REFERER.getName(), refererUri);
                 })
                 .bodyValue(getRefundRequestBody(response, payment))
                 .retrieve()
