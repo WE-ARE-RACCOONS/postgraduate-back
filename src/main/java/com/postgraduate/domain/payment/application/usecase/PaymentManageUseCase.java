@@ -23,11 +23,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import static com.postgraduate.domain.payment.application.usecase.PaymentParameter.*;
@@ -85,6 +85,7 @@ public class PaymentManageUseCase {
     }
 
     private Optional<CertificationResponse> getCertificationResponse() {
+        Map<String, String> requestBody = getCertificationRequestBody();
         return Optional.ofNullable(webClient.post()
                 .uri(certificationUri)
                 .headers(h -> {
@@ -92,17 +93,17 @@ public class PaymentManageUseCase {
                     h.setCacheControl(noCache());
                     h.set(REFERER.getName(), refererUri);
                 })
-                .bodyValue(getCertificationRequestBody())
+                .bodyValue(requestBody)
                 .retrieve()
                 .bodyToMono(CertificationResponse.class)
                 .block());
     }
 
-    private MultiValueMap<String, String> getCertificationRequestBody() {
-        MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
-        requestBody.add(CUSTOMER_ID.getName(), custId);
-        requestBody.add(CUSTOMER_KEY.getName(), custKey);
-        requestBody.add(FLAG.getName(), refundFlag);
+    private Map<String, String> getCertificationRequestBody() {
+        Map<String, String> requestBody = new HashMap<>();
+        requestBody.put(CUSTOMER_ID.getName(), custId);
+        requestBody.put(CUSTOMER_KEY.getName(), custKey);
+        requestBody.put(FLAG.getName(), refundFlag);
         return requestBody;
     }
 
@@ -110,6 +111,7 @@ public class PaymentManageUseCase {
         if (!response.result().equals(SUCCESS.getName())) {
             throw new CertificationFailException(response.result_msg());
         }
+        Map<String, String> requestBody = getRefundRequestBody(response, payment);
         RefundResponse refundResponse = Optional.ofNullable(webClient.post()
                 .uri(refundUri + response.PCD_PAY_URL())
                 .headers(h -> {
@@ -117,7 +119,7 @@ public class PaymentManageUseCase {
                     h.setCacheControl(noCache());
                     h.set(REFERER.getName(), refererUri);
                 })
-                .bodyValue(getRefundRequestBody(response, payment))
+                .bodyValue(requestBody)
                 .retrieve()
                 .bodyToMono(RefundResponse.class)
                 .block())
@@ -126,17 +128,17 @@ public class PaymentManageUseCase {
             throw new RefundFailException(refundResponse.PCD_PAY_CODE());
     }
 
-    private MultiValueMap<String, String> getRefundRequestBody(CertificationResponse response, Payment payment) {
+    private Map<String, String> getRefundRequestBody(CertificationResponse response, Payment payment) {
         String paidAt = payment.getPaidAt().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-        MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
-        requestBody.add(CST_ID.getName(), response.cst_id());
-        requestBody.add(CUST_KEY.getName(), response.custKey());
-        requestBody.add(AUTH_KEY.getName(), response.AuthKey());
-        requestBody.add(REF_KEY.getName(), refundKey);
-        requestBody.add(PAYCANCEL_FLAG.getName(), refundFlag);
-        requestBody.add(OID.getName(), payment.getOrderId());
-        requestBody.add(DATE.getName(), paidAt);
-        requestBody.add(TOTAL.getName(), String.valueOf(payment.getPay()));
+        Map<String, String> requestBody = new HashMap<>();
+        requestBody.put(CST_ID.getName(), response.cst_id());
+        requestBody.put(CUST_KEY.getName(), response.custKey());
+        requestBody.put(AUTH_KEY.getName(), response.AuthKey());
+        requestBody.put(REF_KEY.getName(), refundKey);
+        requestBody.put(PAYCANCEL_FLAG.getName(), refundFlag);
+        requestBody.put(OID.getName(), payment.getOrderId());
+        requestBody.put(DATE.getName(), paidAt);
+        requestBody.put(TOTAL.getName(), String.valueOf(payment.getPay()));
         return requestBody;
     }
 
