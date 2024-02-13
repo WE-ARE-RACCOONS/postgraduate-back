@@ -30,7 +30,7 @@ public class WebClientConfig {
                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 1000)
                 .doOnConnected(connection -> connection.addHandlerLast(new ReadTimeoutHandler(10))
                         .addHandlerLast(new WriteTimeoutHandler(10)))
-                .responseTimeout(Duration.ofSeconds(1));
+                .responseTimeout(Duration.ofSeconds(10));
 
         ClientHttpConnector connector =
                 new ReactorClientHttpConnector(resourceFactory(), mapper);
