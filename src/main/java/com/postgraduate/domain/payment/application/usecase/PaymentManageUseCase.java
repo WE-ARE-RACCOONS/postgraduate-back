@@ -107,8 +107,9 @@ public class PaymentManageUseCase {
     }
 
     private void refundProcess(CertificationResponse response, Payment payment) {
-        if (!response.result().equals(SUCCESS.getName()))
-            throw new CertificationFailException();
+        if (!response.result().equals(SUCCESS.getName())) {
+            throw new CertificationFailException(response.result_msg());
+        }
         RefundResponse refundResponse = Optional.ofNullable(webClient.post()
                 .uri(refundUri + response.PCD_PAY_URL())
                 .headers(h -> {
