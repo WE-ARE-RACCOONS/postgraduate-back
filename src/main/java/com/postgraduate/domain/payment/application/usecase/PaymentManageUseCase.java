@@ -100,8 +100,8 @@ public class PaymentManageUseCase {
 
     private MultiValueMap<String, String> getCertificationRequestBody() {
         MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
-        requestBody.add(CST_ID.getName(), custId);
-        requestBody.add(CUST_KEY.getName(), custKey);
+        requestBody.add(CUSTOMER_ID.getName(), custId);
+        requestBody.add(CUSTOMER_KEY.getName(), custKey);
         requestBody.add(FLAG.getName(), refundFlag);
         return requestBody;
     }
