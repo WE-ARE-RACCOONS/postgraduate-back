@@ -24,7 +24,7 @@ public class PaymentController {
     @PostMapping("/payple/result")
     public void resultGet(HttpServletResponse response, @ModelAttribute PaymentResultRequest request) throws IOException {
         paymentManageUseCase.savePay(request);
-        response.sendRedirect(REDIRECT_URI);
+        response.sendRedirect(REDIRECT_URI + request.PCD_PAY_OID());
     }
 
     @PostMapping("/payple/dev/result")
