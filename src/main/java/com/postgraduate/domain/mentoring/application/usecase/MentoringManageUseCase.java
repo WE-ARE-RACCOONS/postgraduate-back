@@ -75,9 +75,9 @@ public class MentoringManageUseCase {
         Mentoring mentoring = checkIsMyMentoringUseCase.byUser(user, mentoringId);
         if (mentoring.getStatus() != WAITING)
             throw new MentoringNotWaitingException();
-        mentoringUpdateService.updateStatus(mentoring, CANCEL);
         Payment payment = mentoring.getPayment();
         paymentManageUseCase.refundPay(user, payment.getOrderId());
+        mentoringUpdateService.updateStatus(mentoring, CANCEL);
     }
 
     public void updateDone(User user, Long mentoringId) {
