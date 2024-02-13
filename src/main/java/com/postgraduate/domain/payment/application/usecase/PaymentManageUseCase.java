@@ -79,7 +79,8 @@ public class PaymentManageUseCase {
 
     public void refundPay(User user, String orderId) {
         Payment payment = paymentGetService.byUserAndOrderId(user, orderId);
-        CertificationResponse certificationResponse = getCertificationResponse().orElseThrow();
+        CertificationResponse certificationResponse = getCertificationResponse()
+                .orElseThrow(() -> new CertificationFailException("NPE"));
         refundProcess(certificationResponse, payment);
         paymentUpdateService.updateCancel(payment);
     }
@@ -123,7 +124,7 @@ public class PaymentManageUseCase {
                 .retrieve()
                 .bodyToMono(RefundResponse.class)
                 .block())
-                .orElseThrow();
+                .orElseThrow(() -> new RefundFailException("NPE"));
         if (!refundResponse.PCD_PAY_RST().equals(SUCCESS.getName()))
             throw new RefundFailException(refundResponse.PCD_PAY_CODE());
     }
