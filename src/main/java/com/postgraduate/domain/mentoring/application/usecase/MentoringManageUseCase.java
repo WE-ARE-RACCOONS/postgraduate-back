@@ -59,7 +59,7 @@ public class MentoringManageUseCase {
     private final PaymentGetService paymentGetService;
     private final SlackErrorMessage slackErrorMessage;
 
-    public void applyMentoringWithPayment(User user, MentoringApplyRequest request) {
+    public boolean applyMentoringWithPayment(User user, MentoringApplyRequest request) {
         Payment payment = paymentGetService.byUserAndOrderId(user, request.orderId());
         if (mentoringGetService.byPayment(payment).isPresent())
             throw new MentoringPresentException();
@@ -70,8 +70,10 @@ public class MentoringManageUseCase {
             Senior senior = payment.getSalary().getSenior();
             Mentoring mentoring = MentoringMapper.mapToMentoring(user, senior, payment, request);
             mentoringSaveService.save(mentoring);
+            return true;
         } catch (Exception ex) {
             paymentManageUseCase.refundPay(user, payment.getOrderId());
+            return false;
         }
     }
     public void updateCancel(User user, Long mentoringId) {
