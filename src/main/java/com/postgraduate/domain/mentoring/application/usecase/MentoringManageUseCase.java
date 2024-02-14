@@ -27,7 +27,9 @@ import com.postgraduate.domain.salary.domain.service.SalaryUpdateService;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.global.slack.SlackErrorMessage;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +41,7 @@ import java.util.Optional;
 import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.*;
 
 @Service
+@Slf4j
 @Transactional
 @RequiredArgsConstructor
 public class MentoringManageUseCase {
@@ -54,8 +57,9 @@ public class MentoringManageUseCase {
     private final PaymentManageUseCase paymentManageUseCase;
     private final MentoringSaveService mentoringSaveService;
     private final PaymentGetService paymentGetService;
+    private final SlackErrorMessage slackErrorMessage;
 
-    public void applyMentoringWithPayment(User user, MentoringApplyRequest request) {
+    public boolean applyMentoringWithPayment(User user, MentoringApplyRequest request) {
         Payment payment = paymentGetService.byUserAndOrderId(user, request.orderId());
         if (mentoringGetService.byPayment(payment).isPresent())
             throw new MentoringPresentException();
@@ -64,11 +68,12 @@ public class MentoringManageUseCase {
             if (dates.length != 3)
                 throw new MentoringDateException();
             Senior senior = payment.getSalary().getSenior();
-
             Mentoring mentoring = MentoringMapper.mapToMentoring(user, senior, payment, request);
             mentoringSaveService.save(mentoring);
+            return true;
         } catch (Exception ex) {
             paymentManageUseCase.refundPay(user, payment.getOrderId());
+            return false;
         }
     }
     public void updateCancel(User user, Long mentoringId) {
@@ -122,25 +127,40 @@ public class MentoringManageUseCase {
                 .atStartOfDay();
         List<Mentoring> waitingMentorings = mentoringGetService.byStatusAndCreatedAt(WAITING, now);
         waitingMentorings.forEach(mentoring -> {
-            mentoringUpdateService.updateStatus(mentoring, CANCEL);
-            Refuse refuse = RefuseMapper.mapToRefuse(mentoring);
-            refuseSaveService.save(refuse);
-            paymentManageUseCase.refundPay(mentoring.getUser(), mentoring.getPayment().getOrderId());
-            //TODO : 알림 보내거나 나머지 작업
+            try {
+                mentoringUpdateService.updateStatus(mentoring, CANCEL);
+                Refuse refuse = RefuseMapper.mapToRefuse(mentoring);
+                refuseSaveService.save(refuse);
+                paymentManageUseCase.refundPay(mentoring.getUser(), mentoring.getPayment().getOrderId());
+            } catch (Exception ex) {
+                slackErrorMessage.sendSlackError(mentoring, ex);
+            }
         });
+        //TODO : 알림 보내거나 나머지 작업
     }
 
     @Scheduled(cron = "0 59 23 * * *", zone = "Asia/Seoul")
     public void updateAutoDone() {
         List<Mentoring> expectedMentorings = mentoringGetService.byStatus(EXPECTED);
         expectedMentorings.stream()
-                .filter(Mentoring::checkAutoDone)
+                .filter(mentoring -> {
+                    try {
+                        return mentoring.checkAutoDone();
+                    } catch (Exception ex) {
+                        slackErrorMessage.sendSlackError(mentoring, ex);
+                        return false;
+                    }
+                })
                 .forEach(mentoring -> {
-                    mentoringUpdateService.updateStatus(mentoring, DONE);
-                    Senior senior = mentoring.getSenior();
-                    Salary salary = salaryGetService.bySenior(senior);
-                    salaryUpdateService.updateTotalAmount(salary);
-                    //TODO : 알림 보내거나 나머지 작업
+                    try {
+                        mentoringUpdateService.updateStatus(mentoring, DONE);
+                        Senior senior = mentoring.getSenior();
+                        Salary salary = salaryGetService.bySenior(senior);
+                        salaryUpdateService.updateTotalAmount(salary);
+                    } catch (Exception ex) {
+                        slackErrorMessage.sendSlackError(mentoring, ex);
+                    }
                 });
+        //TODO : 알림 보내거나 나머지 작업
     }
 }

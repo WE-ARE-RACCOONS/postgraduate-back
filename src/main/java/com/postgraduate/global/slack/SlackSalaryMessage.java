@@ -12,35 +12,37 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
+
+import static com.postgraduate.global.slack.SlackUtils.generateSlackField;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class SlackMessage {
+public class SlackSalaryMessage {
     private final Slack slackClient = Slack.getInstance();
 
     @Value("${slack.salary_url}")
     private String salaryWebHookUrl;
-    @Value("${slack.log_url}")
-    private String logWebHookUrl;
 
-    public void sendSlackSalary(List<Salary> salaries) throws IOException{
+    public void sendSlackSalary(List<Salary> salaries) {
         List<Attachment> attachments = salaries.stream()
                 .filter(salary -> salary.getTotalAmount() > 0)
-                .map(salary -> generateSalarySlackAttachment(salary))
+                .map(this::generateSalarySlackAttachment)
                 .toList();
-        slackClient.send(salaryWebHookUrl, Payload.builder()
-                .text("---" + LocalDate.now() + "에 정산할 목록 ---")
-                .attachments(attachments)
-                .build());
+        try {
+            slackClient.send(salaryWebHookUrl, Payload.builder()
+                    .text("---" + LocalDate.now() + "에 정산할 목록 ---")
+                    .attachments(attachments)
+                    .build());
 
-        Attachment attachment = generateSalarySlackAttachment(salaries);
-        slackClient.send(salaryWebHookUrl, Payload.builder()
-                .attachments(List.of(attachment))
-                .build());
+            Attachment attachment = generateSalarySlackAttachment(salaries);
+            slackClient.send(salaryWebHookUrl, Payload.builder()
+                    .attachments(List.of(attachment))
+                    .build());
+        } catch (IOException e) {
+            log.error("slack 전송 오류");
+        }
     }
 
     //attach 생성 -> Field를 리스트로 담자
@@ -75,34 +77,5 @@ public class SlackMessage {
                 generateSlackField(
                         "총 정산 금액", String.valueOf(totalAmount) + "원"
                 ));
-    }
-
-    public void sendSlackLog(Exception ex) throws IOException{
-        slackClient.send(logWebHookUrl, Payload.builder()
-                .text("로그 서버 에러 발생!! 백엔드팀 확인 요망!!")
-                .attachments(
-                        List.of(generateLogSlackAttachment(ex))
-                )
-                .build());
-    }
-
-    private Attachment generateLogSlackAttachment(Exception ex) {
-        String requestTime = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:SS").format(LocalDateTime.now());
-        return Attachment.builder()
-                .color("ff0000")
-                .title(requestTime + "에 발생한 에러 로그")
-                .fields(List.of(
-                        generateSlackField("Error Message", ex.getMessage())
-                ))
-                .build();
-    }
-
-    // Field 생성 메서드
-    private Field generateSlackField(String title, String value) {
-        return Field.builder()
-                .title(title)
-                .value(value)
-                .valueShortEnough(false)
-                .build();
     }
 }

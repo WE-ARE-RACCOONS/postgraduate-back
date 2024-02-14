@@ -25,5 +25,5 @@ public class Profile {
     private String chatLink;
 
     @Builder.Default
-    private Integer term = 40;
+    private Integer term = 30;
 }

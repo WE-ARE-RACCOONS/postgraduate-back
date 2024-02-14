@@ -68,8 +68,9 @@ public class MentoringController {
     @PostMapping("/applying")
     @Operation(summary = "[대학생] 멘토링 신청", description = "대학생이 멘토링을 신청합니다.")
     public ResponseDto<Void> applyForMentoringWithPayment(@AuthenticationPrincipal User user, @RequestBody @Valid MentoringApplyRequest request) {
-        manageUseCase.applyMentoringWithPayment(user, request);
-        return ResponseDto.create(MENTORING_CREATE.getCode(), CREATE_MENTORING.getMessage());
+        if (manageUseCase.applyMentoringWithPayment(user, request))
+            return ResponseDto.create(MENTORING_CREATE.getCode(), CREATE_MENTORING.getMessage());
+        return ResponseDto.create(MENTORING_FAIL.getCode(), FAIL_MENTORING.getMessage());
     }
 
     @PatchMapping("/me/{mentoringId}/done")
