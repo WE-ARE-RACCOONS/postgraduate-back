@@ -7,8 +7,6 @@ import com.postgraduate.domain.mentoring.application.dto.req.MentoringDateReques
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.entity.constant.Status;
 import com.postgraduate.domain.mentoring.domain.repository.MentoringRepository;
-import com.postgraduate.domain.mentoring.presentation.constant.MentoringResponseCode;
-import com.postgraduate.domain.mentoring.presentation.constant.MentoringResponseMessage;
 import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.payment.domain.repository.PaymentRepository;
 import com.postgraduate.domain.refuse.application.dto.req.MentoringRefuseRequest;
@@ -23,14 +21,14 @@ import com.postgraduate.domain.user.domain.entity.constant.Role;
 import com.postgraduate.domain.user.domain.repository.UserRepository;
 import com.postgraduate.global.config.security.jwt.util.JwtUtils;
 import com.postgraduate.global.exception.constant.ErrorCode;
-import com.postgraduate.global.slack.SlackMessage;
+import com.postgraduate.global.slack.SlackLogErrorMessage;
+import com.postgraduate.global.slack.SlackSalaryMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -73,7 +71,7 @@ class MentoringControllerTest extends IntegrationTest {
     @Autowired
     private PaymentRepository paymentRepository;
     @MockBean
-    private SlackMessage slackMessage;
+    private SlackLogErrorMessage slackLogErrorMessage;
     private User user;
     private Senior senior;
     private Payment payment;
@@ -104,7 +102,7 @@ class MentoringControllerTest extends IntegrationTest {
         userAccessToken = jwtUtil.generateAccessToken(user.getUserId(), Role.USER);
         seniorAccessToken = jwtUtil.generateAccessToken(userOfSenior.getUserId(), Role.SENIOR);
 
-        doNothing().when(slackMessage).sendSlackLog(any());
+        doNothing().when(slackLogErrorMessage).sendSlackLog(any());
     }
 
     @ParameterizedTest

@@ -22,7 +22,8 @@ import com.postgraduate.domain.user.domain.entity.constant.Role;
 import com.postgraduate.domain.user.domain.repository.UserRepository;
 import com.postgraduate.global.config.security.jwt.util.JwtUtils;
 import com.postgraduate.global.exception.constant.ErrorCode;
-import com.postgraduate.global.slack.SlackMessage;
+import com.postgraduate.global.slack.SlackLogErrorMessage;
+import com.postgraduate.global.slack.SlackSalaryMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -69,7 +70,7 @@ class SeniorControllerTest extends IntegrationTest {
     @Autowired
     private AvailableRepository availableRepository;
     @MockBean
-    private SlackMessage slackMessage;
+    private SlackLogErrorMessage slackLogErrorMessage;
     private Senior senior;
     private String token;
     private String otherToken;
@@ -90,7 +91,7 @@ class SeniorControllerTest extends IntegrationTest {
         token = jwtUtil.generateAccessToken(user.getUserId(), Role.SENIOR);
         otherToken = jwtUtil.generateAccessToken(otherUser.getUserId(), Role.USER);
 
-        doNothing().when(slackMessage).sendSlackLog(any());
+        doNothing().when(slackLogErrorMessage).sendSlackLog(any());
     }
 
 
