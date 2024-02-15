@@ -72,7 +72,7 @@ public class Mentoring {
     public boolean checkAutoDone() {
         DateTimeFormatter formatter = ofPattern("yyyy-MM-dd-HH-mm");
         LocalDateTime doneDate = parse(this.date, formatter);
-        return now().minusDays(2)
+        return now().minusDays(3)
                 .isAfter(doneDate);
     }
 }

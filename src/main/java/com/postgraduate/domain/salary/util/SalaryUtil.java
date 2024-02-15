@@ -17,7 +17,7 @@ public class SalaryUtil {
 
     public static LocalDate getSalaryDate() {
         LocalDate now = LocalDate.now();
-        return now.getDayOfMonth() <= SALARY_DATE
+        return now.getDayOfMonth() < SALARY_DATE
                 ? now.withDayOfMonth(SALARY_DATE)
                 : now.plusMonths(1).withDayOfMonth(SALARY_DATE);
     }
