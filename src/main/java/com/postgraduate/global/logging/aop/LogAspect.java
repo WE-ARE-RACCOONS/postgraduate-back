@@ -8,15 +8,19 @@ import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import static com.postgraduate.global.logging.aop.LogUtils.*;
+import static com.postgraduate.global.logging.aop.LogUtils.clearLogId;
+import static com.postgraduate.global.logging.aop.LogUtils.setLogId;
 
 @Aspect
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class LogAspect {
+    @Value("${log.Type}")
+    private String env;
     private final LogTrace logTrace;
     private final LogService logService;
 
@@ -42,18 +46,18 @@ public class LogAspect {
             Object result = joinPoint.proceed();
             Integer executionTime = logTrace.end(traceStatus);
             log.info("ExecutionTime : {}", executionTime);
-            logService.save(new LogRequest(traceStatus.threadId(), executionTime, traceStatus.methodName()));
+            logService.save(new LogRequest(env, traceStatus.threadId(), executionTime, traceStatus.methodName()));
             return result;
         }catch (ApplicationException e) {
             if (traceStatus != null) {
                 logTrace.exception(e, traceStatus);
-                logService.save(new LogRequest(traceStatus.threadId(), traceStatus.methodName(), e.getMessage()));
+                logService.save(new LogRequest(env, traceStatus.threadId(), traceStatus.methodName(), e.getMessage()));
             }
             throw e;
         }catch (Exception e) {
             if (traceStatus != null) {
                 logTrace.exception(e, traceStatus);
-                logService.save(new LogRequest(traceStatus.threadId(), traceStatus.methodName(), e.getMessage()));
+                logService.save(new LogRequest(env, traceStatus.threadId(), traceStatus.methodName(), e.getMessage()));
             }
             throw e;
         }

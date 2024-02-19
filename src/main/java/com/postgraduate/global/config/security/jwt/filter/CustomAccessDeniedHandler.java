@@ -7,6 +7,7 @@ import com.postgraduate.global.logging.service.LogService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
@@ -21,6 +22,9 @@ import static com.postgraduate.domain.auth.presentation.constant.AuthResponseMes
 @Component
 @RequiredArgsConstructor
 public class CustomAccessDeniedHandler implements AccessDeniedHandler {
+    @Value("${log.Type}")
+    private String env;
+
     private final ObjectMapper objectMapper;
     private final LogService logService;
 
@@ -29,7 +33,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
         response.setStatus(HttpStatus.OK.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding("UTF-8");
-        logService.save(new LogRequest(CustomAccessDeniedHandler.class.getSimpleName(), PERMISSION_DENIED.getMessage()));
+        logService.save(new LogRequest(env, CustomAccessDeniedHandler.class.getSimpleName(), PERMISSION_DENIED.getMessage()));
         objectMapper.writeValue(
                 response.getOutputStream(),
                 new ErrorResponse(AUTH_DENIED.getCode(), PERMISSION_DENIED.getMessage())

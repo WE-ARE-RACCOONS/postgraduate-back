@@ -59,6 +59,9 @@ public class JwtUtils {
     private int refreshExpiration;
     @Value("${jwt.accessExpiration}")
     private int accessExpiration;
+    @Value("${log.Type}")
+    private String env;
+
     private static final String ROLE = "role";
     private static final String TYPE = "type";
     private static final String AUTHORIZATION = "Authorization";
@@ -153,7 +156,7 @@ public class JwtUtils {
         response.setContentType(CONTENT_TYPE);
         response.setCharacterEncoding(CHARACTER_ENCODING);
         try {
-            logService.save(new LogRequest(JwtFilter.class.getSimpleName(), ex.getMessage()));
+            logService.save(new LogRequest(env, JwtFilter.class.getSimpleName(), ex.getMessage()));
             String json = new ObjectMapper().writeValueAsString(ResponseDto.create(ex.getErrorCode(), ex.getMessage()));
             response.getWriter().write(json);
         } catch (Exception e) {
