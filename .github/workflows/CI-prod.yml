@@ -16,7 +16,27 @@ jobs:
       APPLICATION: ${{ secrets.APPLICATION_PROD }}
 
     steps:
-      - uses: actions/checkout@v2
+      # GET GitHub IP
+      - name: get Github IP
+        id: ip
+        uses: haythem/public-ip@v1.2
+
+      # Configure AWS Credentials
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+
+        # Add github ip to AWS SecurityGroup
+      - name: Add GitHub IP to AWS RDS
+        run: |
+          aws ec2 authorize-security-group-ingress --group-id ${{ secrets.AWS_RDS_SG_ID }} --protocol tcp --port 3306 --cidr ${{ steps.ip.outputs.ipv4 }}/32
+          
+          
+          
+          - uses: actions/checkout@v2
       - name: Set up JDK 17
         uses: actions/setup-java@v2
         with:
@@ -50,3 +70,7 @@ jobs:
         run: |
           rm -f ~/.gradle/caches/modules-2/modules-2.lock
           rm -f ~/.gradle/caches/modules-2/gc.properties
+
+      - name: Remove IP FROM security group RDS
+        run: |
+          aws ec2 revoke-security-group-ingress --group-id ${{ secrets.AWS_RDS_SG_ID }} --protocol tcp --port 3306 --cidr ${{ steps.ip.outputs.ipv4 }}/32
