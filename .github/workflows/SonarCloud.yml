@@ -1,7 +1,7 @@
 name: SonarCloudScan
 on:
   pull_request:
-    branches: [ "develop" ]
+    branches: [ "develop", "main" ]
 jobs:
   sonarcloud:
     name: SonarCloud
