@@ -134,10 +134,10 @@ public class JwtUtils {
             return true;
         } catch (ExpiredJwtException e) {
             jwtExceptionHandler(OK, response, new TokenExpiredException());
-            return false;
+            throw new TokenExpiredException();
         } catch (Exception e) {
             jwtExceptionHandler(OK, response, new InvalidTokenException());
-            return false;
+            throw new InvalidTokenException();
         }
     }
 

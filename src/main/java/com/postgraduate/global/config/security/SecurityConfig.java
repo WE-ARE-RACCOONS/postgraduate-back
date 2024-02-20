@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.encrypt.AesBytesEncryptor;
@@ -46,13 +47,13 @@ public class SecurityConfig {
                 .cors(corsConfigurer ->
                         corsConfigurer.configurationSource(source())
                 )
-                .httpBasic(httpBasic -> httpBasic.disable())
-                .headers((headers) -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable));
+                .httpBasic(AbstractHttpConfigurer::disable)
+                .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable));
         http
-                .formLogin(formLogin -> formLogin.disable())
+                .formLogin(AbstractHttpConfigurer::disable)
                 .logout(logout -> logout.disable());
         http
-                .authorizeHttpRequests((authorize) -> authorize
+                .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(PASS).permitAll()
                         .requestMatchers("/admin/**").hasAuthority(Role.ADMIN.name())
 
@@ -87,8 +88,8 @@ public class SecurityConfig {
 
                         .anyRequest().permitAll()
                 )
-                .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .exceptionHandling((exceptions) -> exceptions
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .exceptionHandling(exceptions -> exceptions
                         .authenticationEntryPoint(customAuthenticationEntryPoint)
                         .accessDeniedHandler(customAccessDeniedHandler)
                 )

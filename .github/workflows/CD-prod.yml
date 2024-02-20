@@ -98,9 +98,11 @@ jobs:
 
       # REMOVE Github IP FROM security group
     - name: Remove IP FROM security group EC2
+      if: ${{ always() }}
       run: |
         aws ec2 revoke-security-group-ingress --group-id ${{ secrets.AWS_EC2_SG_ID }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32
 
     - name: Remove IP FROM security group RDS
+      if: ${{ always() }}
       run: |
         aws ec2 revoke-security-group-ingress --group-id ${{ secrets.AWS_RDS_SG_ID }} --protocol tcp --port 3306 --cidr ${{ steps.ip.outputs.ipv4 }}/32

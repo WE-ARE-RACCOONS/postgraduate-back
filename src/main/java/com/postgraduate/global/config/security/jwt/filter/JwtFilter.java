@@ -33,12 +33,10 @@ public class JwtFilter extends OncePerRequestFilter {
             try {
                 if (request.getRequestURI().contains("/refresh")) {
                     log.info("재발급 진행");
-                    if (!jwtProvider.validateToken(response, token, REFRESH))
-                        return;
+                    jwtProvider.validateToken(response, token, REFRESH);
                 } else {
                     log.info("일반 접근");
-                    if (!jwtProvider.validateToken(response, token, ACCESS))
-                        return;
+                    jwtProvider.validateToken(response, token, ACCESS);
                 }
                 Authentication authentication = jwtProvider.getAuthentication(response, token);
                 SecurityContextHolder.getContext().setAuthentication(authentication);

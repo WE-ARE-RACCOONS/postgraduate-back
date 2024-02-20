@@ -70,5 +70,6 @@ jobs:
           rm -f ~/.gradle/caches/modules-2/gc.properties
 
       - name: Remove IP FROM security group RDS
+        if: ${{ always() }}
         run: |
           aws ec2 revoke-security-group-ingress --group-id ${{ secrets.AWS_RDS_SG_ID }} --protocol tcp --port 3306 --cidr ${{ steps.ip.outputs.ipv4 }}/32
