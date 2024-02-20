@@ -1,5 +1,6 @@
 package com.postgraduate.global.logging.aop;
 
+import com.postgraduate.global.exception.ApplicationException;
 import com.postgraduate.global.logging.dto.LogRequest;
 import com.postgraduate.global.logging.service.LogService;
 import lombok.RequiredArgsConstructor;
@@ -7,16 +8,19 @@ import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-/**
- * 기본적인 로그 설정으로 수정할 수 있음
- */
+import static com.postgraduate.global.logging.aop.LogUtils.clearLogId;
+import static com.postgraduate.global.logging.aop.LogUtils.setLogId;
+
 @Aspect
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class LogAspect {
+    @Value("${log.Type}")
+    private String env;
     private final LogTrace logTrace;
     private final LogService logService;
 
@@ -28,28 +32,32 @@ public class LogAspect {
 
     @Around("com.postgraduate.global.logging.aop.PointCuts.allController()")
     public Object controllerLog(ProceedingJoinPoint joinPoint) throws Throwable {
+        setLogId();
         log.info("controllerLog: {}", joinPoint.getSignature().getName());
-        return getObject(joinPoint);
+        Object object = getObject(joinPoint);
+        clearLogId();
+        return object;
     }
 
     private Object getObject(ProceedingJoinPoint joinPoint) throws Throwable {
         TraceStatus traceStatus = null;
         try {
-            traceStatus = logTrace.start(joinPoint.getSignature().getDeclaringType() + " : " + joinPoint.getSignature().getName());
+            traceStatus = logTrace.start(joinPoint.getSignature().getDeclaringType().getSimpleName() + " : " + joinPoint.getSignature().getName());
             Object result = joinPoint.proceed();
             Integer executionTime = logTrace.end(traceStatus);
-            logService.save(new LogRequest(traceStatus.getThreadId(), executionTime, traceStatus.getMethodName(), null));
+            log.info("ExecutionTime : {}", executionTime);
+            logService.save(new LogRequest(env, traceStatus.threadId(), executionTime, traceStatus.methodName()));
             return result;
-        } catch (ClassCastException e) {
+        }catch (ApplicationException e) {
             if (traceStatus != null) {
-                logTrace.apiException(e, traceStatus);
-                logService.save(new LogRequest(traceStatus.getThreadId(), 0, traceStatus.getMethodName(), e.getMessage()));
+                logTrace.exception(e, traceStatus);
+                logService.save(new LogRequest(env, traceStatus.threadId(), traceStatus.methodName(), e.getMessage()));
             }
             throw e;
         }catch (Exception e) {
             if (traceStatus != null) {
                 logTrace.exception(e, traceStatus);
-                logService.save(new LogRequest(traceStatus.getThreadId(), 0, traceStatus.getMethodName(), e.getMessage()));
+                logService.save(new LogRequest(env, traceStatus.threadId(), traceStatus.methodName(), e.getMessage()));
             }
             throw e;
         }

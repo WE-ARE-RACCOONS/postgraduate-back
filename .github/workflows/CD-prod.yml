@@ -1,0 +1,108 @@
+name: Java CD with Gradle
+
+on:
+  push:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    env :
+      working-directory: ./
+      APPLICATION: ${{ secrets.APPLICATION_PROD }}
+
+    steps:
+    # GET GitHub IP
+    - name: get Github IP
+      id: ip
+      uses: haythem/public-ip@v1.2
+
+    # Configure AWS Credentials
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ap-northeast-2
+
+      # Add github ip to AWS SecurityGruop
+    - name: Add GitHub IP to AWS EC2
+      run: |
+        aws ec2 authorize-security-group-ingress --group-id ${{ secrets.AWS_EC2_SG_ID }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32
+
+    - name: Add GitHub IP to AWS RDS
+      run: |
+        aws ec2 authorize-security-group-ingress --group-id ${{ secrets.AWS_RDS_SG_ID }} --protocol tcp --port 3306 --cidr ${{ steps.ip.outputs.ipv4 }}/32
+
+    - uses: actions/checkout@v2
+    - name: Set up JDK 17
+      uses: actions/setup-java@v2
+      with:
+        java-version: '17'
+        distribution: 'adopt'
+        
+    - name: Cache Gradle packages
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+
+    - name: Create application.yml
+      run: |
+        echo "${{env.APPLICATION}}" > ./src/main/resources/application.yml
+        
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+      working-directory: ${{ env.working-directory }}
+      
+    - name: Build with Gradle
+      run: ./gradlew build
+      working-directory: ${{ env.working-directory }}
+      
+    - name: Cleanup Gradle Cache
+      if: ${{ always() }}
+      run: |
+          rm -f ~/.gradle/caches/modules-2/modules-2.lock
+          rm -f ~/.gradle/caches/modules-2/gc.properties
+
+    - name: Login to DockerHub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        
+    - name: Build and Push Docker image
+      run: |
+        docker build -t ywj9811/kimseonbae:latest .
+        docker push ywj9811/kimseonbae:latest
+
+    - name: Deploy
+      uses: appleboy/ssh-action@master
+      with:
+          host: ${{ secrets.EC2_SERVER_HOST_PROD }}
+          username: ${{ secrets.EC2_SERVER_USERNAME }}
+          key: ${{ secrets.PRIVATE_KEY_PROD }}
+          envs: GITHUB_SHA
+          script: |
+            chmod +x /home/ec2-user/config/deploy.sh
+            /home/ec2-user/config/deploy.sh
+          debug: true
+
+      # REMOVE Github IP FROM security group
+    - name: Remove IP FROM security group EC2
+      if: ${{ always() }}
+      run: |
+        aws ec2 revoke-security-group-ingress --group-id ${{ secrets.AWS_EC2_SG_ID }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32
+
+    - name: Remove IP FROM security group RDS
+      if: ${{ always() }}
+      run: |
+        aws ec2 revoke-security-group-ingress --group-id ${{ secrets.AWS_RDS_SG_ID }} --protocol tcp --port 3306 --cidr ${{ steps.ip.outputs.ipv4 }}/32

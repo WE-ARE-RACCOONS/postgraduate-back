@@ -1,22 +1,15 @@
 package com.postgraduate.global.logging.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+public record LogRequest(String env, String logId, Integer executeTime, String methodName, String exceptionMessage) {
+    public LogRequest(String env, String logId, Integer executeTime, String methodName) {
+        this(env, logId, executeTime, methodName, null);
+    }
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@ToString
-public class LogRequest {
-    private String logId;
-    private Integer executeTime;
-    private String methodName;
-    private String exceptionMessage;
-    public LogRequest(String logId, Integer executeTime, String methodName) {
-        this.logId = logId;
-        this.executeTime = executeTime;
-        this.methodName = methodName;
+    public LogRequest(String env, String logId, String methodName, String exceptionMessage) {
+        this(env, logId, null, methodName, exceptionMessage);
+    }
+
+    public LogRequest(String env, String methodName, String exceptionMessage) {
+        this(env, null, null, methodName, exceptionMessage);
     }
 }
