@@ -38,3 +38,4 @@ out/
 
 ### yml ###
 application.yml
+application-*.yml

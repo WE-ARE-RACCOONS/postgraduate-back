@@ -101,6 +101,8 @@ public class MentoringManageUseCase {
             throw new MentoringNotWaitingException();
         Refuse refuse = RefuseMapper.mapToRefuse(mentoring, request);
         refuseSaveService.save(refuse);
+        Payment payment = mentoring.getPayment();
+        paymentManageUseCase.refundPay(user, payment.getOrderId());
         mentoringUpdateService.updateStatus(mentoring, REFUSE);
     }
 
