@@ -50,13 +50,15 @@ public class LogAspect {
             return result;
         }catch (ApplicationException e) {
             if (traceStatus != null) {
-                logTrace.exception(e, traceStatus);
+                log.error("ErrorCode {} errorMessage {}",e.getErrorCode(), e.getMessage());
+                log.error("{}", e.getStackTrace());
                 logService.save(new LogRequest(env, traceStatus.threadId(), traceStatus.methodName(), e.getMessage()));
             }
             throw e;
         }catch (Exception e) {
             if (traceStatus != null) {
-                logTrace.exception(e, traceStatus);
+                log.error("500 ERROR {}", e.getMessage());
+                log.error("{}", e.getStackTrace());
                 logService.save(new LogRequest(env, traceStatus.threadId(), traceStatus.methodName(), e.getMessage()));
             }
             throw e;
