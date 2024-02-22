@@ -155,6 +155,7 @@ public class JwtUtils {
         response.setStatus(status.value());
         response.setContentType(CONTENT_TYPE);
         response.setCharacterEncoding(CHARACTER_ENCODING);
+        log.error("errorCode {}, errorMessage {}", ex.getErrorCode(), ex.getMessage());
         try {
             logService.save(new LogRequest(env, JwtFilter.class.getSimpleName(), ex.getMessage()));
             String json = new ObjectMapper().writeValueAsString(ResponseDto.create(ex.getErrorCode(), ex.getMessage()));

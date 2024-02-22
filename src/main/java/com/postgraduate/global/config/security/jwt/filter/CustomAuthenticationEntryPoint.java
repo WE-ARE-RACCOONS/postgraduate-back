@@ -8,6 +8,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,6 +23,7 @@ import static com.postgraduate.domain.auth.presentation.constant.AuthResponseMes
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Value("${log.Type}")
     private String env;
@@ -35,6 +37,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding("UTF-8");
         logService.save(new LogRequest(env, CustomAuthenticationEntryPoint.class.getSimpleName(), FAILED_AUTH.getMessage()));
+        log.error("AuthenticationEntryPoint : {}", FAILED_AUTH.getMessage());
         objectMapper.writeValue(
                 response.getOutputStream(),
                 new ErrorResponse(AUTH_FAILED.getCode(), FAILED_AUTH.getMessage())
