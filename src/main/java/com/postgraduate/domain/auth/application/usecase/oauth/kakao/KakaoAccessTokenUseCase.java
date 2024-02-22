@@ -6,6 +6,7 @@ import com.postgraduate.domain.auth.application.dto.res.KakaoUserInfoResponse;
 import com.postgraduate.domain.auth.exception.KakaoCodeException;
 import com.postgraduate.domain.auth.exception.KakaoException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 @RequiredArgsConstructor
 @Service
 @Transactional
+@Slf4j
 public class KakaoAccessTokenUseCase {
 
     @Value("${app-id.kakao}")
@@ -45,6 +47,7 @@ public class KakaoAccessTokenUseCase {
                     .block();
             return getUserInfo(tokenInfoResponse.access_token());
         } catch (WebClientResponseException ex) {
+            log.error("errorMessage : {}", ex.getMessage());
             throw new KakaoCodeException();
         }
     }
@@ -61,6 +64,7 @@ public class KakaoAccessTokenUseCase {
                     .block();
             return getUserInfo(tokenInfoResponse.access_token());
         } catch (WebClientResponseException ex) {
+            log.error("errorMessage : {}", ex.getMessage());
             throw new KakaoCodeException();
         }
     }
@@ -83,6 +87,7 @@ public class KakaoAccessTokenUseCase {
                     .bodyToMono(KakaoUserInfoResponse.class)
                     .block();
         } catch (WebClientResponseException ex) {
+            log.error("errorMessage : {}", ex.getMessage());
             throw new KakaoException();
         }
     }
