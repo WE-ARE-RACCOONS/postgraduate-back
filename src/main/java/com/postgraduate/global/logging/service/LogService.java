@@ -23,8 +23,7 @@ public class LogService {
     @Value("${log.uri}")
     private String logUri;
 
-    public void save(LogRequest logRequest) throws IOException {
-        log.info("log save");
+    public void save(LogRequest logRequest) {
         webClient.post()
                 .uri(logUri)
                 .accept(MediaType.APPLICATION_JSON)
