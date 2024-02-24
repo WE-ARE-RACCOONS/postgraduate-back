@@ -77,8 +77,17 @@ public class PaymentManageUseCase {
         }
     }
 
-    public void refundPay(User user, String orderId) {
+    public void refundPayByUser(User user, String orderId) {
         Payment payment = paymentGetService.byUserAndOrderId(user, orderId);
+        refundPay(payment);
+    }
+
+    public void refundPayBySenior(Senior senior, String orderId) {
+        Payment payment = paymentGetService.bySeniorAndOrderId(senior, orderId);
+        refundPay(payment);
+    }
+
+    private void refundPay(Payment payment) {
         CertificationResponse certificationResponse = getCertificationResponse()
                 .orElseThrow(() -> new CertificationFailException("NPE"));
         refundProcess(certificationResponse, payment);
