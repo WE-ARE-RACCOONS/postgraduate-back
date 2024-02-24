@@ -72,7 +72,7 @@ public class MentoringManageUseCase {
             mentoringSaveService.save(mentoring);
             return true;
         } catch (Exception ex) {
-            paymentManageUseCase.refundPay(user, payment.getOrderId());
+            paymentManageUseCase.refundPayByUser(user, payment.getOrderId());
             return false;
         }
     }
@@ -81,7 +81,7 @@ public class MentoringManageUseCase {
         if (mentoring.getStatus() != WAITING)
             throw new MentoringNotWaitingException();
         Payment payment = mentoring.getPayment();
-        paymentManageUseCase.refundPay(user, payment.getOrderId());
+        paymentManageUseCase.refundPayByUser(user, payment.getOrderId());
         mentoringUpdateService.updateStatus(mentoring, CANCEL);
     }
 
@@ -102,7 +102,7 @@ public class MentoringManageUseCase {
         Refuse refuse = RefuseMapper.mapToRefuse(mentoring, request);
         refuseSaveService.save(refuse);
         Payment payment = mentoring.getPayment();
-        paymentManageUseCase.refundPay(user, payment.getOrderId());
+        paymentManageUseCase.refundPayBySenior(senior, payment.getOrderId());
         mentoringUpdateService.updateStatus(mentoring, REFUSE);
     }
 
@@ -133,7 +133,7 @@ public class MentoringManageUseCase {
                 mentoringUpdateService.updateStatus(mentoring, CANCEL);
                 Refuse refuse = RefuseMapper.mapToRefuse(mentoring);
                 refuseSaveService.save(refuse);
-                paymentManageUseCase.refundPay(mentoring.getUser(), mentoring.getPayment().getOrderId());
+                paymentManageUseCase.refundPayByUser(mentoring.getUser(), mentoring.getPayment().getOrderId());
             } catch (Exception ex) {
                 slackErrorMessage.sendSlackError(mentoring, ex);
             }

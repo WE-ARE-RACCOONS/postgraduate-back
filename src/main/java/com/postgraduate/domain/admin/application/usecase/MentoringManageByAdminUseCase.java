@@ -61,6 +61,6 @@ public class MentoringManageByAdminUseCase {
         mentoringUpdateService.updateStatus(mentoring, Status.CANCEL);
         Payment payment = mentoring.getPayment();
         User user = mentoring.getUser();
-        paymentManageUseCase.refundPay(user, payment.getOrderId());
+        paymentManageUseCase.refundPayByUser(user, payment.getOrderId());
     }
 }
