@@ -18,6 +18,7 @@ import java.util.Optional;
 
 import static com.postgraduate.domain.mentoring.domain.entity.QMentoring.mentoring;
 import static com.postgraduate.domain.payment.domain.entity.QPayment.payment;
+import static com.postgraduate.domain.payment.domain.entity.constant.Status.DONE;
 import static com.postgraduate.domain.salary.domain.entity.QSalary.salary;
 import static com.postgraduate.domain.senior.domain.entity.QSenior.senior;
 import static com.postgraduate.domain.user.domain.entity.QUser.user;
@@ -108,7 +109,8 @@ public class MentoringDslRepositoryImpl implements MentoringDslRepository {
         return queryFactory.selectFrom(mentoring)
                 .where(
                         mentoring.senior.eq(senior),
-                        mentoring.payment.status.eq(com.postgraduate.domain.payment.domain.entity.constant.Status.DONE),
+                        mentoring.status.eq(Status.DONE),
+                        mentoring.payment.status.eq(DONE),
                         mentoring.payment.salary.status.eq(status)
                 )
                 .join(mentoring.payment, payment)
