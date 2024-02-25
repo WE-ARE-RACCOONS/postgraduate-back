@@ -31,6 +31,8 @@ import static java.util.Optional.ofNullable;
 @Repository
 public class SeniorDslRepositoryImpl implements SeniorDslRepository{
     private final JPAQueryFactory queryFactory;
+    private static final String ALL = "all";
+    private static final String ETC = "others";
 
     @Override
     public Page<Senior> findAllBySearchSenior(String search, String sort, Pageable pageable) {
@@ -107,10 +109,9 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
 
     private BooleanExpression fieldSpecifier(String fields) {
         String[] field = fields.split(",");
-        if (fields.contains("others"))
+        if (fields.contains(ETC))
             return Arrays.stream(field)
-                    .map(fieldName -> senior.info.etcField.isTrue()
-                            .or(senior.info.field.like("%"+fieldName+"%")))
+                    .map(fieldName -> senior.info.etcField.isTrue())
                     .reduce(BooleanExpression::or)
                     .orElse(FALSE);
         return Arrays.stream(field)
@@ -120,15 +121,14 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
     }
 
     private BooleanExpression postgraduSpecifier(String postgradu) {
-        if (postgradu.contains("all"))
+        if (postgradu.contains(ALL))
             return TRUE;
 
         String[] postgradus = postgradu.split(",");
 
-        if (postgradu.contains("others")) {
+        if (postgradu.contains(ETC)) {
             return Arrays.stream(postgradus)
-                    .map(postgraduName -> senior.info.etcPostgradu.isTrue()
-                            .or(senior.info.postgradu.like("%"+postgraduName+"%")))
+                    .map(postgraduName -> senior.info.etcPostgradu.isTrue())
                     .reduce(BooleanExpression::or)
                     .orElse(FALSE);
         }
