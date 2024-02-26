@@ -4,7 +4,7 @@
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <layout class="ch.qos.logback.classic.PatternLayout">
-            <Pattern>[%d{yyyy-MM-dd HH:mm:ss}:%-3relative][%thread] %-5level %logger{36} - %msg%n</Pattern>
+            <Pattern>[%d{yyyy-MM-dd HH:mm:ss}:%-3relative] %magenta([%thread]) %highlight([%-3level]) %logger{36} - %msg%n</Pattern>
         </layout>
     </appender>
 
@@ -17,7 +17,7 @@
             <onMismatch>DENY</onMismatch> <!-- 이외의 레벨은 저장하지 않음 -->
         </filter>
         <encoder>
-            <pattern>[%d{yyyy-MM-dd HH:mm:ss}:%-3relative][%thread] %-5level %logger{35} - %msg%n</pattern>
+            <pattern>[%d{yyyy-MM-dd HH:mm:ss}:%-3relative] %magenta([%thread]) %highlight([%-3level]) %logger{36} - %msg%n</pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>./was-logs/info.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern> <!-- 지나간 로그파일은 이렇게 저장 -->
@@ -37,7 +37,7 @@
             <onMismatch>DENY</onMismatch>
         </filter>
         <encoder>
-            <pattern>[%d{yyyy-MM-dd HH:mm:ss}:%-3relative][%thread] %-5level %logger{35} - %msg%n</pattern>
+            <pattern>[%d{yyyy-MM-dd HH:mm:ss}:%-3relative] %magenta([%thread]) %highlight([%-3level]) %logger{36} - %msg%n</pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>./was-logs/warn.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
@@ -57,7 +57,7 @@
             <onMismatch>DENY</onMismatch>
         </filter>
         <encoder>
-            <pattern>[%d{yyyy-MM-dd HH:mm:ss}:%-3relative][%thread] %-5level %logger{35} - %msg%n</pattern>
+            <pattern>[%d{yyyy-MM-dd HH:mm:ss}:%-3relative] %magenta([%thread]) %highlight([%-3level]) %logger{36} - %msg%n</pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>./was-logs/error.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
@@ -75,15 +75,8 @@
         <appender-ref ref="ERROR_LOG" />
     </root>
 
-    <logger name="LogController" additivity="false">
-        <level value = "DEBUG" />
-        <appender-ref ref="INFO_LOG" />
-        <appender-ref ref="WARN_LOG" />
-        <appender-ref ref="ERROR_LOG" />
-    </logger>
-
     <logger name="org.hibernate.SQL" additivity="false">
-        <level value = "DEBUG" />
+        <level value = "INFO" />
         <appender-ref ref="INFO_LOG" />
     </logger>
 
