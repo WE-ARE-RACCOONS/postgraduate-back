@@ -5,15 +5,10 @@ import com.postgraduate.domain.auth.application.dto.req.SignUpRequest;
 import com.postgraduate.domain.user.application.dto.res.UserInfoResponse;
 import com.postgraduate.domain.user.application.dto.res.UserMyPageResponse;
 import com.postgraduate.domain.user.domain.entity.User;
-import org.springframework.beans.factory.annotation.Value;
 
 import static com.postgraduate.domain.user.domain.entity.constant.Role.SENIOR;
 
 public class UserMapper {
-    @Value("${profile.user}")
-    private static String userProfile;
-    @Value("${profile.senior}")
-    private static String seniorProfile;
 
     private UserMapper() {
         throw new IllegalArgumentException();
@@ -34,7 +29,7 @@ public class UserMapper {
         );
     }
 
-    public static User mapToUser(SignUpRequest request) {
+    public static User mapToUser(SignUpRequest request, String userProfile) {
         return User.builder()
                 .socialId(request.socialId())
                 .nickName(request.nickName())
@@ -44,7 +39,7 @@ public class UserMapper {
                 .build();
     }
 
-    public static User mapToUser(SeniorSignUpRequest request) {
+    public static User mapToUser(SeniorSignUpRequest request, String seniorProfile) {
         return User.builder()
                 .socialId(request.socialId())
                 .nickName(request.nickName())

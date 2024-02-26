@@ -12,9 +12,9 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class ImageUploadUseCase {
     @Value("${profile.user}")
-    private static String userProfile;
+    private String userProfile;
     @Value("${profile.senior}")
-    private static String seniorProfile;
+    private String seniorProfile;
 
     private final S3UploadService uploadService;
 
