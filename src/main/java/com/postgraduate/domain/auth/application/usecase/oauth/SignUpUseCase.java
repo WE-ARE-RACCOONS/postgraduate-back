@@ -22,6 +22,7 @@ import com.postgraduate.domain.wish.application.mapper.WishMapper;
 import com.postgraduate.domain.wish.domain.entity.Wish;
 import com.postgraduate.domain.wish.domain.service.WishSaveService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +32,11 @@ import static com.postgraduate.domain.salary.util.SalaryUtil.getSalaryDate;
 @Service
 @RequiredArgsConstructor
 public class SignUpUseCase {
+    @Value("${profile.user}")
+    private String userProfile;
+    @Value("${profile.senior}")
+    private String seniorProfile;
+
     private final SalarySaveService salarySaveService;
     private final UserSaveService userSaveService;
     private final UserUpdateService userUpdateService;
@@ -42,7 +48,7 @@ public class SignUpUseCase {
 
     public User userSignUp(SignUpRequest request) {
         userUtils.checkPhoneNumber(request.phoneNumber());
-        User user = UserMapper.mapToUser(request);
+        User user = UserMapper.mapToUser(request, userProfile);
         Wish wish = WishMapper.mapToWish(user, request);
         wishSaveService.save(wish);
         userSaveService.save(user);
@@ -52,7 +58,7 @@ public class SignUpUseCase {
     public User seniorSignUp(SeniorSignUpRequest request) {
         seniorUtils.checkKeyword(request.keyword());
         userUtils.checkPhoneNumber(request.phoneNumber());
-        User user = UserMapper.mapToUser(request);
+        User user = UserMapper.mapToUser(request, seniorProfile);
         userSaveService.save(user);
         Senior senior = SeniorMapper.mapToSenior(user, request);
         seniorSaveService.saveSenior(senior);
