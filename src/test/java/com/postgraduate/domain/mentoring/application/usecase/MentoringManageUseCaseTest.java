@@ -121,8 +121,6 @@ class MentoringManageUseCaseTest {
 
         given(paymentGetService.byUserAndOrderId(any(), any()))
                 .willReturn(payment);
-        given(mentoringGetService.byPayment(payment))
-                .willReturn(Optional.ofNullable(null));
         given(payment.getSalary())
                 .willReturn(salary);
         given(salary.getSenior())
