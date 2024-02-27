@@ -29,23 +29,23 @@ public class UserMapper {
         );
     }
 
-    public static User mapToUser(SignUpRequest request, String userProfile) {
+    public static User mapToUser(SignUpRequest request, String profile) {
         return User.builder()
                 .socialId(request.socialId())
                 .nickName(request.nickName())
                 .phoneNumber(request.phoneNumber())
                 .marketingReceive(request.marketingReceive())
-                .profile(userProfile)
+                .profile(profile)
                 .build();
     }
 
-    public static User mapToUser(SeniorSignUpRequest request, String seniorProfile) {
+    public static User mapToUser(SeniorSignUpRequest request, String profile) {
         return User.builder()
                 .socialId(request.socialId())
                 .nickName(request.nickName())
                 .phoneNumber(request.phoneNumber())
                 .marketingReceive(request.marketingReceive())
-                .profile(seniorProfile)
+                .profile(profile)
                 .role(SENIOR)
                 .build();
     }

@@ -13,7 +13,6 @@ import com.postgraduate.domain.mentoring.domain.service.MentoringUpdateService;
 import com.postgraduate.domain.mentoring.exception.MentoringDateException;
 import com.postgraduate.domain.mentoring.exception.MentoringNotExpectedException;
 import com.postgraduate.domain.mentoring.exception.MentoringNotWaitingException;
-import com.postgraduate.domain.mentoring.exception.MentoringPresentException;
 import com.postgraduate.domain.payment.application.usecase.PaymentManageUseCase;
 import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.payment.domain.service.PaymentGetService;
@@ -61,8 +60,7 @@ public class MentoringManageUseCase {
 
     public boolean applyMentoringWithPayment(User user, MentoringApplyRequest request) {
         Payment payment = paymentGetService.byUserAndOrderId(user, request.orderId());
-        if (mentoringGetService.byPayment(payment).isPresent())
-            throw new MentoringPresentException();
+        mentoringGetService.byPayment(payment);
         try {
             String[] dates = request.date().split(",");
             if (dates.length != 3)
@@ -134,7 +132,9 @@ public class MentoringManageUseCase {
                 Refuse refuse = RefuseMapper.mapToRefuse(mentoring);
                 refuseSaveService.save(refuse);
                 paymentManageUseCase.refundPayByUser(mentoring.getUser(), mentoring.getPayment().getOrderId());
+                log.info("mentoringId : {} 자동 취소", mentoring.getMentoringId());
             } catch (Exception ex) {
+                log.error("mentoringId : {} 자동 취소 실패", mentoring.getMentoringId());
                 slackErrorMessage.sendSlackError(mentoring, ex);
             }
         });
@@ -159,8 +159,10 @@ public class MentoringManageUseCase {
                         Senior senior = mentoring.getSenior();
                         Salary salary = salaryGetService.bySenior(senior);
                         salaryUpdateService.updateTotalAmount(salary);
+                        log.info("mentoringId : {} 자동 완료", mentoring.getMentoringId());
                     } catch (Exception ex) {
                         slackErrorMessage.sendSlackError(mentoring, ex);
+                        log.error("mentoringId : {} 자동 완료 실패", mentoring.getMentoringId());
                     }
                 });
         //TODO : 알림 보내거나 나머지 작업

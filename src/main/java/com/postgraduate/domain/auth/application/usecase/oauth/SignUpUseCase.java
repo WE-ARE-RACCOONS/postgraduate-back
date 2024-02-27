@@ -33,9 +33,7 @@ import static com.postgraduate.domain.salary.util.SalaryUtil.getSalaryDate;
 @RequiredArgsConstructor
 public class SignUpUseCase {
     @Value("${profile.user}")
-    private String userProfile;
-    @Value("${profile.senior}")
-    private String seniorProfile;
+    private String profile;
 
     private final SalarySaveService salarySaveService;
     private final UserSaveService userSaveService;
@@ -48,7 +46,7 @@ public class SignUpUseCase {
 
     public User userSignUp(SignUpRequest request) {
         userUtils.checkPhoneNumber(request.phoneNumber());
-        User user = UserMapper.mapToUser(request, userProfile);
+        User user = UserMapper.mapToUser(request, profile);
         Wish wish = WishMapper.mapToWish(user, request);
         wishSaveService.save(wish);
         userSaveService.save(user);
@@ -58,7 +56,7 @@ public class SignUpUseCase {
     public User seniorSignUp(SeniorSignUpRequest request) {
         seniorUtils.checkKeyword(request.keyword());
         userUtils.checkPhoneNumber(request.phoneNumber());
-        User user = UserMapper.mapToUser(request, seniorProfile);
+        User user = UserMapper.mapToUser(request, profile);
         userSaveService.save(user);
         Senior senior = SeniorMapper.mapToSenior(user, request);
         seniorSaveService.saveSenior(senior);
@@ -69,7 +67,7 @@ public class SignUpUseCase {
 
     public User changeSenior(User user, SeniorChangeRequest changeRequest) {
         seniorUtils.checkKeyword(changeRequest.keyword());
-        Senior senior = SeniorMapper.mapToSenior(user, changeRequest); //todo : 예외 처리
+        Senior senior = SeniorMapper.mapToSenior(user, changeRequest);
         seniorSaveService.saveSenior(senior);
         user = userGetService.byUserId(user.getUserId());
         userUpdateService.updateRole(user, Role.SENIOR);
