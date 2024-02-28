@@ -120,25 +120,28 @@ public class MentoringManageUseCase {
         mentoringDeleteService.deleteMentoring(mentoring);
     }
 
-    @Scheduled(cron = "0 59 23 * * *", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 36 04 * * *", zone = "Asia/Seoul")
     public void updateAutoCancel() {
         LocalDateTime now = LocalDateTime.now()
                 .toLocalDate()
                 .atStartOfDay();
         List<Mentoring> waitingMentorings = mentoringGetService.byStatusAndCreatedAt(WAITING, now);
-        waitingMentorings.forEach(mentoring -> {
-            try {
-                mentoringUpdateService.updateStatus(mentoring, CANCEL);
-                Refuse refuse = RefuseMapper.mapToRefuse(mentoring);
-                refuseSaveService.save(refuse);
-                paymentManageUseCase.refundPayByUser(mentoring.getUser(), mentoring.getPayment().getOrderId());
-                log.info("mentoringId : {} 자동 취소", mentoring.getMentoringId());
-            } catch (Exception ex) {
-                log.error("mentoringId : {} 자동 취소 실패", mentoring.getMentoringId());
-                slackErrorMessage.sendSlackError(mentoring, ex);
-            }
-        });
+        waitingMentorings.forEach(this::updateCancelAndRefund);
         //TODO : 알림 보내거나 나머지 작업
+    }
+
+    @Transactional
+    public void updateCancelAndRefund(Mentoring mentoring) {
+        try {
+            mentoringUpdateService.updateStatus(mentoring, CANCEL);
+            Refuse refuse = RefuseMapper.mapToRefuse(mentoring);
+            refuseSaveService.save(refuse);
+            paymentManageUseCase.refundPayByUser(mentoring.getUser(), mentoring.getPayment().getOrderId());
+            log.info("mentoringId : {} 자동 취소", mentoring.getMentoringId());
+        } catch (Exception ex) {
+            log.error("mentoringId : {} 자동 취소 실패", mentoring.getMentoringId());
+            slackErrorMessage.sendSlackError(mentoring, ex);
+        }
     }
 
     @Scheduled(cron = "0 59 23 * * *", zone = "Asia/Seoul")
@@ -153,18 +156,21 @@ public class MentoringManageUseCase {
                         return false;
                     }
                 })
-                .forEach(mentoring -> {
-                    try {
-                        mentoringUpdateService.updateStatus(mentoring, DONE);
-                        Senior senior = mentoring.getSenior();
-                        Salary salary = salaryGetService.bySenior(senior);
-                        salaryUpdateService.updateTotalAmount(salary);
-                        log.info("mentoringId : {} 자동 완료", mentoring.getMentoringId());
-                    } catch (Exception ex) {
-                        slackErrorMessage.sendSlackError(mentoring, ex);
-                        log.error("mentoringId : {} 자동 완료 실패", mentoring.getMentoringId());
-                    }
-                });
+                .forEach(this::updateDone);
         //TODO : 알림 보내거나 나머지 작업
+    }
+
+    @Transactional
+    public void updateDone(Mentoring mentoring) {
+        try {
+            mentoringUpdateService.updateStatus(mentoring, DONE);
+            Senior senior = mentoring.getSenior();
+            Salary salary = salaryGetService.bySenior(senior);
+            salaryUpdateService.updateTotalAmount(salary);
+            log.info("mentoringId : {} 자동 완료", mentoring.getMentoringId());
+        } catch (Exception ex) {
+            slackErrorMessage.sendSlackError(mentoring, ex);
+            log.error("mentoringId : {} 자동 완료 실패", mentoring.getMentoringId());
+        }
     }
 }
