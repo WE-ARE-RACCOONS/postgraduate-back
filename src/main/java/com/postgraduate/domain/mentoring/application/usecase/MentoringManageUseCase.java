@@ -41,7 +41,6 @@ import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.*;
 
 @Service
 @Slf4j
-@Transactional
 @RequiredArgsConstructor
 public class MentoringManageUseCase {
     private final CheckIsMyMentoringUseCase checkIsMyMentoringUseCase;
@@ -58,6 +57,7 @@ public class MentoringManageUseCase {
     private final PaymentGetService paymentGetService;
     private final SlackErrorMessage slackErrorMessage;
 
+    @Transactional
     public boolean applyMentoringWithPayment(User user, MentoringApplyRequest request) {
         Payment payment = paymentGetService.byUserAndOrderId(user, request.orderId());
         mentoringGetService.byPayment(payment);
@@ -74,6 +74,8 @@ public class MentoringManageUseCase {
             return false;
         }
     }
+
+    @Transactional
     public void updateCancel(User user, Long mentoringId) {
         Mentoring mentoring = checkIsMyMentoringUseCase.byUser(user, mentoringId);
         if (mentoring.getStatus() != WAITING)
@@ -83,6 +85,8 @@ public class MentoringManageUseCase {
         mentoringUpdateService.updateStatus(mentoring, CANCEL);
     }
 
+
+    @Transactional
     public void updateDone(User user, Long mentoringId) {
         Mentoring mentoring = checkIsMyMentoringUseCase.byUser(user, mentoringId);
         if (mentoring.getStatus() != EXPECTED)
@@ -92,6 +96,8 @@ public class MentoringManageUseCase {
         mentoringUpdateService.updateStatus(mentoring, DONE);
     }
 
+
+    @Transactional
     public void updateRefuse(User user, Long mentoringId, MentoringRefuseRequest request) {
         Senior senior = seniorGetService.byUser(user);
         Mentoring mentoring = checkIsMyMentoringUseCase.bySenior(senior, mentoringId);
@@ -104,6 +110,8 @@ public class MentoringManageUseCase {
         mentoringUpdateService.updateStatus(mentoring, REFUSE);
     }
 
+
+    @Transactional
     public Boolean updateExpected(User user, Long mentoringId, MentoringDateRequest dateRequest) {
         Senior senior = seniorGetService.byUser(user);
         Mentoring mentoring = checkIsMyMentoringUseCase.bySenior(senior, mentoringId);
@@ -115,23 +123,25 @@ public class MentoringManageUseCase {
         return account.isPresent();
     }
 
+
+    @Transactional
     public void delete(User user, Long mentoringId) {
         Mentoring mentoring = checkIsMyMentoringUseCase.byUser(user, mentoringId);
         mentoringDeleteService.deleteMentoring(mentoring);
     }
 
-    @Scheduled(cron = "0 36 04 * * *", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 17 05 * * *", zone = "Asia/Seoul")
     public void updateAutoCancel() {
         LocalDateTime now = LocalDateTime.now()
                 .toLocalDate()
                 .atStartOfDay();
         List<Mentoring> waitingMentorings = mentoringGetService.byStatusAndCreatedAt(WAITING, now);
-        waitingMentorings.forEach(this::updateCancelAndRefund);
+        waitingMentorings.forEach(this::updateCancelWithAuto);
         //TODO : 알림 보내거나 나머지 작업
     }
 
     @Transactional
-    public void updateCancelAndRefund(Mentoring mentoring) {
+    public void updateCancelWithAuto(Mentoring mentoring) {
         try {
             mentoringUpdateService.updateStatus(mentoring, CANCEL);
             Refuse refuse = RefuseMapper.mapToRefuse(mentoring);
@@ -156,12 +166,12 @@ public class MentoringManageUseCase {
                         return false;
                     }
                 })
-                .forEach(this::updateDone);
+                .forEach(this::updateDoneWithAuto);
         //TODO : 알림 보내거나 나머지 작업
     }
 
     @Transactional
-    public void updateDone(Mentoring mentoring) {
+    public void updateDoneWithAuto(Mentoring mentoring) {
         try {
             mentoringUpdateService.updateStatus(mentoring, DONE);
             Senior senior = mentoring.getSenior();
