@@ -13,7 +13,6 @@ import com.postgraduate.domain.mentoring.domain.service.MentoringUpdateService;
 import com.postgraduate.domain.mentoring.exception.MentoringDateException;
 import com.postgraduate.domain.mentoring.exception.MentoringNotExpectedException;
 import com.postgraduate.domain.mentoring.exception.MentoringNotWaitingException;
-import com.postgraduate.domain.mentoring.exception.MentoringPresentException;
 import com.postgraduate.domain.payment.application.usecase.PaymentManageUseCase;
 import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.payment.domain.service.PaymentGetService;
@@ -42,7 +41,6 @@ import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.*;
 
 @Service
 @Slf4j
-@Transactional
 @RequiredArgsConstructor
 public class MentoringManageUseCase {
     private final CheckIsMyMentoringUseCase checkIsMyMentoringUseCase;
@@ -59,10 +57,10 @@ public class MentoringManageUseCase {
     private final PaymentGetService paymentGetService;
     private final SlackErrorMessage slackErrorMessage;
 
+    @Transactional
     public boolean applyMentoringWithPayment(User user, MentoringApplyRequest request) {
         Payment payment = paymentGetService.byUserAndOrderId(user, request.orderId());
-        if (mentoringGetService.byPayment(payment).isPresent())
-            throw new MentoringPresentException();
+        mentoringGetService.byPayment(payment);
         try {
             String[] dates = request.date().split(",");
             if (dates.length != 3)
@@ -76,6 +74,8 @@ public class MentoringManageUseCase {
             return false;
         }
     }
+
+    @Transactional
     public void updateCancel(User user, Long mentoringId) {
         Mentoring mentoring = checkIsMyMentoringUseCase.byUser(user, mentoringId);
         if (mentoring.getStatus() != WAITING)
@@ -85,6 +85,8 @@ public class MentoringManageUseCase {
         mentoringUpdateService.updateStatus(mentoring, CANCEL);
     }
 
+
+    @Transactional
     public void updateDone(User user, Long mentoringId) {
         Mentoring mentoring = checkIsMyMentoringUseCase.byUser(user, mentoringId);
         if (mentoring.getStatus() != EXPECTED)
@@ -94,6 +96,8 @@ public class MentoringManageUseCase {
         mentoringUpdateService.updateStatus(mentoring, DONE);
     }
 
+
+    @Transactional
     public void updateRefuse(User user, Long mentoringId, MentoringRefuseRequest request) {
         Senior senior = seniorGetService.byUser(user);
         Mentoring mentoring = checkIsMyMentoringUseCase.bySenior(senior, mentoringId);
@@ -106,6 +110,8 @@ public class MentoringManageUseCase {
         mentoringUpdateService.updateStatus(mentoring, REFUSE);
     }
 
+
+    @Transactional
     public Boolean updateExpected(User user, Long mentoringId, MentoringDateRequest dateRequest) {
         Senior senior = seniorGetService.byUser(user);
         Mentoring mentoring = checkIsMyMentoringUseCase.bySenior(senior, mentoringId);
@@ -117,28 +123,35 @@ public class MentoringManageUseCase {
         return account.isPresent();
     }
 
+
+    @Transactional
     public void delete(User user, Long mentoringId) {
         Mentoring mentoring = checkIsMyMentoringUseCase.byUser(user, mentoringId);
         mentoringDeleteService.deleteMentoring(mentoring);
     }
 
-    @Scheduled(cron = "0 59 23 * * *", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 17 05 * * *", zone = "Asia/Seoul")
     public void updateAutoCancel() {
         LocalDateTime now = LocalDateTime.now()
                 .toLocalDate()
                 .atStartOfDay();
         List<Mentoring> waitingMentorings = mentoringGetService.byStatusAndCreatedAt(WAITING, now);
-        waitingMentorings.forEach(mentoring -> {
-            try {
-                mentoringUpdateService.updateStatus(mentoring, CANCEL);
-                Refuse refuse = RefuseMapper.mapToRefuse(mentoring);
-                refuseSaveService.save(refuse);
-                paymentManageUseCase.refundPayByUser(mentoring.getUser(), mentoring.getPayment().getOrderId());
-            } catch (Exception ex) {
-                slackErrorMessage.sendSlackError(mentoring, ex);
-            }
-        });
+        waitingMentorings.forEach(this::updateCancelWithAuto);
         //TODO : 알림 보내거나 나머지 작업
+    }
+
+    @Transactional
+    public void updateCancelWithAuto(Mentoring mentoring) {
+        try {
+            mentoringUpdateService.updateStatus(mentoring, CANCEL);
+            Refuse refuse = RefuseMapper.mapToRefuse(mentoring);
+            refuseSaveService.save(refuse);
+            paymentManageUseCase.refundPayByUser(mentoring.getUser(), mentoring.getPayment().getOrderId());
+            log.info("mentoringId : {} 자동 취소", mentoring.getMentoringId());
+        } catch (Exception ex) {
+            log.error("mentoringId : {} 자동 취소 실패", mentoring.getMentoringId());
+            slackErrorMessage.sendSlackError(mentoring, ex);
+        }
     }
 
     @Scheduled(cron = "0 59 23 * * *", zone = "Asia/Seoul")
@@ -153,16 +166,21 @@ public class MentoringManageUseCase {
                         return false;
                     }
                 })
-                .forEach(mentoring -> {
-                    try {
-                        mentoringUpdateService.updateStatus(mentoring, DONE);
-                        Senior senior = mentoring.getSenior();
-                        Salary salary = salaryGetService.bySenior(senior);
-                        salaryUpdateService.updateTotalAmount(salary);
-                    } catch (Exception ex) {
-                        slackErrorMessage.sendSlackError(mentoring, ex);
-                    }
-                });
+                .forEach(this::updateDoneWithAuto);
         //TODO : 알림 보내거나 나머지 작업
+    }
+
+    @Transactional
+    public void updateDoneWithAuto(Mentoring mentoring) {
+        try {
+            mentoringUpdateService.updateStatus(mentoring, DONE);
+            Senior senior = mentoring.getSenior();
+            Salary salary = salaryGetService.bySenior(senior);
+            salaryUpdateService.updateTotalAmount(salary);
+            log.info("mentoringId : {} 자동 완료", mentoring.getMentoringId());
+        } catch (Exception ex) {
+            slackErrorMessage.sendSlackError(mentoring, ex);
+            log.error("mentoringId : {} 자동 완료 실패", mentoring.getMentoringId());
+        }
     }
 }
