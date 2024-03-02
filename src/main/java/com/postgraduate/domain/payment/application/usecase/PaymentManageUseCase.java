@@ -69,7 +69,7 @@ public class PaymentManageUseCase {
             long userId = Long.parseLong(request.PCD_PAYER_NO());
             User user = userGetService.byUserId(userId);
             Senior senior = seniorGetService.bySeniorNickName(seniorNickName);
-            Salary salary = salaryGetService.bySeniorWithNull(senior);
+            Salary salary = salaryGetService.bySenior(senior);
             Payment payment = PaymentMapper.resultToPayment(salary, user, request);
             paymentSaveService.save(payment);
         } catch (Exception ex) {
