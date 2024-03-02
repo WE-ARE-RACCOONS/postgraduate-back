@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public enum Postgradu {
-    SEOUL("서울대"), YONSEI("연세대");
+    SEOUL("서울대학교"), YONSEI("연세대학교");
 
     private final String name;
 

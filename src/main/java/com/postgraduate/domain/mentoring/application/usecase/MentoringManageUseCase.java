@@ -150,6 +150,7 @@ public class MentoringManageUseCase {
             log.info("mentoringId : {} 자동 취소", mentoring.getMentoringId());
         } catch (Exception ex) {
             log.error("mentoringId : {} 자동 취소 실패", mentoring.getMentoringId());
+            log.error(ex.getMessage());
             slackErrorMessage.sendSlackError(mentoring, ex);
         }
     }
@@ -181,6 +182,7 @@ public class MentoringManageUseCase {
         } catch (Exception ex) {
             slackErrorMessage.sendSlackError(mentoring, ex);
             log.error("mentoringId : {} 자동 완료 실패", mentoring.getMentoringId());
+            log.error(ex.getMessage());
         }
     }
 }
