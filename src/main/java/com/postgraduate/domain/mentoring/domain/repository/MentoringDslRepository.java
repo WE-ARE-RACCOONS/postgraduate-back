@@ -23,4 +23,6 @@ public interface MentoringDslRepository {
     Page<Mentoring> findAllBySearchPayment(String search, Pageable pageable);
 
     List<Mentoring> findAllByStatusAndCreatedAtIsBefore(Status status, LocalDateTime now);
+
+    List<Mentoring> findAllByStatus(Status status);
 }
