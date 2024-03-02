@@ -62,18 +62,21 @@ public class PaymentManageUseCase {
     private final WebClient webClient;
 
     public void savePay(PaymentResultRequest request) {
+        if (!request.PCD_PAY_RST().equals(SUCCESS.getName()))
+            throw new PaymentFailException();
         try {
-            if (!request.PCD_PAY_RST().equals(SUCCESS.getName()))
-                throw new PaymentFailException();
             String seniorNickName = request.PCD_PAY_GOODS();
             long userId = Long.parseLong(request.PCD_PAYER_NO());
             User user = userGetService.byUserId(userId);
             Senior senior = seniorGetService.bySeniorNickName(seniorNickName);
-            Salary salary = salaryGetService.bySeniorWithNull(senior);
+            Salary salary = salaryGetService.bySenior(senior);
             Payment payment = PaymentMapper.resultToPayment(salary, user, request);
             paymentSaveService.save(payment);
         } catch (Exception ex) {
-            log.error("paymentError 발생 {}", ex.getMessage());
+            log.error("paymentError 발생 환불 진행 | errorMessage : {}", ex.getMessage());
+            Payment payment = PaymentMapper.resultToPayment(request);
+            paymentSaveService.save(payment);
+            refundPay(payment);
         }
     }
 
@@ -124,16 +127,16 @@ public class PaymentManageUseCase {
         }
         Map<String, String> requestBody = getRefundRequestBody(response, payment);
         RefundResponse refundResponse = Optional.ofNullable(webClient.post()
-                .uri(refundUri + response.PCD_PAY_URL())
-                .headers(h -> {
-                    h.setContentType(MediaType.APPLICATION_JSON);
-                    h.setCacheControl(noCache());
-                    h.set(REFERER.getName(), refererUri);
-                })
-                .bodyValue(requestBody)
-                .retrieve()
-                .bodyToMono(RefundResponse.class)
-                .block())
+                        .uri(refundUri + response.PCD_PAY_URL())
+                        .headers(h -> {
+                            h.setContentType(MediaType.APPLICATION_JSON);
+                            h.setCacheControl(noCache());
+                            h.set(REFERER.getName(), refererUri);
+                        })
+                        .bodyValue(requestBody)
+                        .retrieve()
+                        .bodyToMono(RefundResponse.class)
+                        .block())
                 .orElseThrow(() -> new RefundFailException("NPE"));
         if (!refundResponse.PCD_PAY_RST().equals(SUCCESS.getName()))
             throw new RefundFailException(refundResponse.PCD_PAY_CODE());
