@@ -30,7 +30,7 @@ public class LogTrace {
 
     public void exception(ApplicationException e, TraceStatus traceStatus) {
         log.error("class : {}, trace : {}", traceStatus.methodName(), e.getStackTrace());
-        log.error(LOG_FORMAT, traceStatus.threadId(), e.getErrorCode(), e.getMessage());
+        log.error(LOG_FORMAT, traceStatus.threadId(), e.getCode(), e.getMessage());
         removeMdcContext();
     }
 
