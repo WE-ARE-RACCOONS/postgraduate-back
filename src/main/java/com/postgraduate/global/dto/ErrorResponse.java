@@ -7,11 +7,11 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public class ErrorResponse {
-    private String errorCode;
+    private String code;
     private String message;
 
-    public ErrorResponse(String errorCode, String message) {
-        this.errorCode = errorCode;
+    public ErrorResponse(String code, String message) {
+        this.code = code;
         this.message = message;
     }
 }
