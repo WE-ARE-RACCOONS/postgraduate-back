@@ -172,4 +172,16 @@ public class MentoringDslRepositoryImpl implements MentoringDslRepository {
                 .where(mentoring.status.eq(status), mentoring.createdAt.before(now))
                 .fetch();
     }
+
+    @Override
+    public List<Mentoring> findAllByStatus(Status status) {
+        return queryFactory.selectFrom(mentoring)
+                .distinct()
+                .join(mentoring.senior, senior)
+                .fetchJoin()
+                .join(mentoring.payment.salary, salary)
+                .fetchJoin()
+                .where(mentoring.status.eq(status))
+                .fetch();
+    }
 }
