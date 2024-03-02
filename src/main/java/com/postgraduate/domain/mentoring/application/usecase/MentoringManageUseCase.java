@@ -143,7 +143,8 @@ public class MentoringManageUseCase {
     @Transactional
     public void updateCancelWithAuto(Mentoring mentoring) {
         try {
-            mentoringUpdateService.updateStatus(mentoring, CANCEL);
+            Mentoring cancelMentoring = mentoringGetService.byMentoringId(mentoring.getMentoringId());
+            mentoringUpdateService.updateStatus(cancelMentoring, CANCEL);
             Refuse refuse = RefuseMapper.mapToRefuse(mentoring);
             refuseSaveService.save(refuse);
             paymentManageUseCase.refundPayByUser(mentoring.getUser(), mentoring.getPayment().getOrderId());
