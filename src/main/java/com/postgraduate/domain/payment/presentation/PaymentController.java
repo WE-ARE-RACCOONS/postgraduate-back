@@ -14,7 +14,7 @@ import java.io.IOException;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-// @RequestMapping("/payment")
+@RequestMapping("/payment")
 @Tag(name = "PAYMENT Controller", description = "")
 public class PaymentController {
     private final PaymentManageUseCase paymentManageUseCase;
