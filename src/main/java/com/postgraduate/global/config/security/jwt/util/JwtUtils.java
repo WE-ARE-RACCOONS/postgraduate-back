@@ -155,10 +155,10 @@ public class JwtUtils {
         response.setStatus(status.value());
         response.setContentType(CONTENT_TYPE);
         response.setCharacterEncoding(CHARACTER_ENCODING);
-        log.error("errorCode {}, errorMessage {}", ex.getErrorCode(), ex.getMessage());
+        log.error("errorCode {}, errorMessage {}", ex.getCode(), ex.getMessage());
         try {
             logService.save(new LogRequest(env, JwtFilter.class.getSimpleName(), ex.getMessage()));
-            String json = new ObjectMapper().writeValueAsString(ResponseDto.create(ex.getErrorCode(), ex.getMessage()));
+            String json = new ObjectMapper().writeValueAsString(ResponseDto.create(ex.getCode(), ex.getMessage()));
             response.getWriter().write(json);
         } catch (Exception e) {
             log.error(e.getMessage());
