@@ -175,7 +175,8 @@ public class MentoringManageUseCase {
     @Transactional
     public void updateDoneWithAuto(Mentoring mentoring) {
         try {
-            mentoringUpdateService.updateStatus(mentoring, DONE);
+            Mentoring doneMentoring = mentoringGetService.byMentoringId(mentoring.getMentoringId());
+            mentoringUpdateService.updateStatus(doneMentoring, DONE);
             Senior senior = mentoring.getSenior();
             Salary salary = salaryGetService.bySenior(senior);
             salaryUpdateService.updateTotalAmount(salary);
