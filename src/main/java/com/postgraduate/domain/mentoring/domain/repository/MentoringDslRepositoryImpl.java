@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -158,5 +159,17 @@ public class MentoringDslRepositoryImpl implements MentoringDslRepository {
                     .or(mentoring.user.phoneNumber.contains(search));
         }
         return null;
+    }
+
+    @Override
+    public List<Mentoring> findAllByStatusAndCreatedAtIsBefore(Status status, LocalDateTime now) {
+        return queryFactory.selectFrom(mentoring)
+                .distinct()
+                .join(mentoring.user, user)
+                .fetchJoin()
+                .join(mentoring.payment, payment)
+                .fetchJoin()
+                .where(mentoring.status.eq(status), mentoring.createdAt.before(now))
+                .fetch();
     }
 }
