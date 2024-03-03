@@ -43,6 +43,7 @@ import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.*;
 @Slf4j
 @RequiredArgsConstructor
 public class MentoringManageUseCase {
+    private final MentoringRenewalUseCase mentoringRenewalUseCase;
     private final CheckIsMyMentoringUseCase checkIsMyMentoringUseCase;
     private final MentoringUpdateService mentoringUpdateService;
     private final MentoringGetService mentoringGetService;
@@ -136,24 +137,8 @@ public class MentoringManageUseCase {
                 .toLocalDate()
                 .atStartOfDay();
         List<Mentoring> waitingMentorings = mentoringGetService.byStatusAndCreatedAt(WAITING, now);
-        waitingMentorings.forEach(this::updateCancelWithAuto);
+        waitingMentorings.forEach(mentoringRenewalUseCase::updateCancelWithAuto);
         //TODO : 알림 보내거나 나머지 작업
-    }
-
-    @Transactional
-    public void updateCancelWithAuto(Mentoring mentoring) {
-        try {
-            paymentManageUseCase.refundPayByUser(mentoring.getUser(), mentoring.getPayment().getOrderId());
-            Mentoring cancelMentoring = mentoringGetService.byMentoringIdWithLazy(mentoring.getMentoringId());
-            mentoringUpdateService.updateStatus(cancelMentoring, CANCEL);
-            Refuse refuse = RefuseMapper.mapToRefuse(mentoring);
-            refuseSaveService.save(refuse);
-            log.info("mentoringId : {} 자동 취소", mentoring.getMentoringId());
-        } catch (Exception ex) {
-            log.error("mentoringId : {} 자동 취소 실패", mentoring.getMentoringId());
-            log.error(ex.getMessage());
-            slackErrorMessage.sendSlackError(mentoring, ex);
-        }
     }
 
     @Scheduled(cron = "0 59 23 * * *", zone = "Asia/Seoul")
@@ -168,23 +153,7 @@ public class MentoringManageUseCase {
                         return false;
                     }
                 })
-                .forEach(this::updateDoneWithAuto);
+                .forEach(mentoringRenewalUseCase::updateDoneWithAuto);
         //TODO : 알림 보내거나 나머지 작업
-    }
-
-    @Transactional
-    public void updateDoneWithAuto(Mentoring mentoring) {
-        try {
-            Mentoring doneMentoring = mentoringGetService.byMentoringIdWithLazy(mentoring.getMentoringId());
-            mentoringUpdateService.updateStatus(doneMentoring, DONE);
-            Senior senior = mentoring.getSenior();
-            Salary salary = salaryGetService.bySenior(senior);
-            salaryUpdateService.updateTotalAmount(salary);
-            log.info("mentoringId : {} 자동 완료", mentoring.getMentoringId());
-        } catch (Exception ex) {
-            slackErrorMessage.sendSlackError(mentoring, ex);
-            log.error("mentoringId : {} 자동 완료 실패", mentoring.getMentoringId());
-            log.error(ex.getMessage());
-        }
     }
 }
