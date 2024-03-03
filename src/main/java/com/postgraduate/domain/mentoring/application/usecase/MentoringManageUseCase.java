@@ -143,11 +143,11 @@ public class MentoringManageUseCase {
     @Transactional
     public void updateCancelWithAuto(Mentoring mentoring) {
         try {
-            Mentoring cancelMentoring = mentoringGetService.byMentoringId(mentoring.getMentoringId());
+            paymentManageUseCase.refundPayByUser(mentoring.getUser(), mentoring.getPayment().getOrderId());
+            Mentoring cancelMentoring = mentoringGetService.byMentoringIdWithLazy(mentoring.getMentoringId());
             mentoringUpdateService.updateStatus(cancelMentoring, CANCEL);
             Refuse refuse = RefuseMapper.mapToRefuse(mentoring);
             refuseSaveService.save(refuse);
-            paymentManageUseCase.refundPayByUser(mentoring.getUser(), mentoring.getPayment().getOrderId());
             log.info("mentoringId : {} 자동 취소", mentoring.getMentoringId());
         } catch (Exception ex) {
             log.error("mentoringId : {} 자동 취소 실패", mentoring.getMentoringId());
@@ -175,7 +175,7 @@ public class MentoringManageUseCase {
     @Transactional
     public void updateDoneWithAuto(Mentoring mentoring) {
         try {
-            Mentoring doneMentoring = mentoringGetService.byMentoringId(mentoring.getMentoringId());
+            Mentoring doneMentoring = mentoringGetService.byMentoringIdWithLazy(mentoring.getMentoringId());
             mentoringUpdateService.updateStatus(doneMentoring, DONE);
             Senior senior = mentoring.getSenior();
             Salary salary = salaryGetService.bySenior(senior);
