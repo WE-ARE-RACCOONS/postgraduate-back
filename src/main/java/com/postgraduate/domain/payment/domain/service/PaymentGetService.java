@@ -8,16 +8,18 @@ import com.postgraduate.domain.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import static com.postgraduate.domain.payment.domain.entity.constant.Status.DONE;
+
 @Service
 @RequiredArgsConstructor
 public class PaymentGetService {
     private final PaymentRepository paymentRepository;
 
     public Payment byUserAndOrderId(User user, String orderId) {
-        return paymentRepository.findByUserAndOrderId(user, orderId).orElseThrow(PaymentNotFoundException::new);
+        return paymentRepository.findByUserAndOrderIdAndStatus(user, orderId, DONE).orElseThrow(PaymentNotFoundException::new);
     }
 
     public Payment bySeniorAndOrderId(Senior senior, String orderId) {
-        return paymentRepository.findBySalary_SeniorAndOrderId(senior, orderId).orElseThrow(PaymentNotFoundException::new);
+        return paymentRepository.findBySalary_SeniorAndOrderIdAndStatus(senior, orderId, DONE).orElseThrow(PaymentNotFoundException::new);
     }
 }
