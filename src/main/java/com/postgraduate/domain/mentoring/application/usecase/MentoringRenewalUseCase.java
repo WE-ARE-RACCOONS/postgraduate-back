@@ -4,6 +4,7 @@ import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
 import com.postgraduate.domain.mentoring.domain.service.MentoringUpdateService;
 import com.postgraduate.domain.payment.application.usecase.PaymentManageUseCase;
+import com.postgraduate.domain.payment.exception.RefundFailException;
 import com.postgraduate.domain.refuse.application.mapper.RefuseMapper;
 import com.postgraduate.domain.refuse.domain.entity.Refuse;
 import com.postgraduate.domain.refuse.domain.service.RefuseSaveService;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.CANCEL;
 import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.DONE;
+import static org.springframework.transaction.interceptor.TransactionAspectSupport.currentTransactionStatus;
 
 @RequiredArgsConstructor
 @Service
@@ -45,6 +47,7 @@ public class MentoringRenewalUseCase {
             log.error("mentoringId : {} 자동 취소 실패", mentoring.getMentoringId());
             log.error(ex.getMessage());
             slackErrorMessage.sendSlackError(mentoring, ex);
+            currentTransactionStatus().setRollbackOnly();
         }
     }
 
@@ -60,6 +63,7 @@ public class MentoringRenewalUseCase {
             slackErrorMessage.sendSlackError(mentoring, ex);
             log.error("mentoringId : {} 자동 완료 실패", mentoring.getMentoringId());
             log.error(ex.getMessage());
+            currentTransactionStatus().setRollbackOnly();
         }
     }
 }
