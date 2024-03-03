@@ -48,6 +48,11 @@ public class MentoringGetService {
                 .orElseThrow(MentoringNotFoundException::new);
     }
 
+    public Mentoring byMentoringIdWithLazy(Long mentoringId) {
+        return mentoringRepository.findById(mentoringId)
+                .orElseThrow(MentoringNotFoundException::new);
+    }
+
     public List<Mentoring> byStatusAndCreatedAt(Status status, LocalDateTime now) {
         return mentoringRepository.findAllByStatusAndCreatedAtIsBefore(status, now);
     }
