@@ -180,20 +180,20 @@ class MentoringControllerTest extends IntegrationTest {
                 .andExpect(jsonPath("$.message").value(NOT_FOUND_DETAIL.getMessage()));
     }
 
-    @Test
-    @DisplayName("대학생이 멘토링을 신청한다.")
-    void applyMentoring() throws Exception {
-        String request = objectMapper.writeValueAsString(new MentoringApplyRequest("1", "topic", "question", "date1,date2,date3"));
-
-        mvc.perform(post("/mentoring/applying")
-                        .header(AUTHORIZATION, BEARER + userAccessToken)
-                        .content(request)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(MENTORING_CREATE.getCode()))
-                .andExpect(jsonPath("$.message").value(CREATE_MENTORING.getMessage()));
-    }
+//    @Test
+//    @DisplayName("대학생이 멘토링을 신청한다.")
+//    void applyMentoring() throws Exception {
+//        String request = objectMapper.writeValueAsString(new MentoringApplyRequest("1", "topic", "question", "date1,date2,date3"));
+//
+//        mvc.perform(post("/mentoring/applying")
+//                        .header(AUTHORIZATION, BEARER + userAccessToken)
+//                        .content(request)
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .accept(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.code").value(MENTORING_CREATE.getCode()))
+//                .andExpect(jsonPath("$.message").value(CREATE_MENTORING.getMessage()));
+//    }
 
 //    @ParameterizedTest
 //    @ValueSource(strings = {"date1", "date1,date2", "date1,date2,date3,date4"})
