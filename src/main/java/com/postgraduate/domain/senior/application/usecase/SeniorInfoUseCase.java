@@ -30,13 +30,20 @@ public class SeniorInfoUseCase {
     private final AvailableGetService availableGetService;
 
     public SeniorDetailResponse getSeniorDetail(User user, Long seniorId) {
+        Senior mySenior = seniorGetService.byUser(user);
+        if (mySenior.getSeniorId().equals(seniorId))
+            return getResponse(mySenior, true);
         Senior senior = seniorGetService.bySeniorIdWithCertification(seniorId);
+        return getResponse(senior, false);
+    }
+
+    private SeniorDetailResponse getResponse(Senior senior, boolean isMine) {
         seniorUpdateService.updateHit(senior);
         List<Available> availables = availableGetService.bySenior(senior);
         List<AvailableTimeResponse> times = availables.stream()
                 .map(AvailableMapper::mapToAvailableTimes)
                 .toList();
-        return mapToSeniorDetail(senior, times, user);
+        return mapToSeniorDetail(senior, times, isMine);
     }
 
     public AllSeniorSearchResponse getSearchSenior(String search, Integer page, String sort) {
