@@ -71,7 +71,7 @@ class SeniorInfoUseCaseTest {
         Available available3 = new Available(3L, "수", "12:00", "18:00", senior);
         List<Available> availables = List.of(available1, available2, available3);
 
-        given(seniorGetService.bySeniorIdWithCertification(senior.getSeniorId()))
+        given(seniorGetService.byUser(user))
                 .willReturn(senior);
         given(availableGetService.bySenior(senior))
                 .willReturn(availables);
