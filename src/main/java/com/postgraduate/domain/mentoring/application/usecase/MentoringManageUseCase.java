@@ -131,7 +131,7 @@ public class MentoringManageUseCase {
         mentoringDeleteService.deleteMentoring(mentoring);
     }
 
-    @Scheduled(fixedDelay = 120000, zone = "Asia/Seoul")
+    @Scheduled(cron = "0 59 23 * * *", zone = "Asia/Seoul")
     public void updateAutoCancel() {
         LocalDateTime now = LocalDateTime.now()
                 .toLocalDate()
