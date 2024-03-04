@@ -72,6 +72,7 @@ class SeniorControllerTest extends IntegrationTest {
     @MockBean
     private SlackLogErrorMessage slackLogErrorMessage;
     private Senior senior;
+    private Senior otherSenior;
     private String token;
     private String otherToken;
     private User user;
@@ -80,13 +81,17 @@ class SeniorControllerTest extends IntegrationTest {
     @BeforeEach
     void setUp() throws IOException {
         user = new User(0L, 1L, "mail", "후배1", "011", "profile", 0, Role.SENIOR, true, now(), now(), false);
-        otherUser = new User(1L, 1234L, "mail", "후배2", "011", "profile", 0, Role.SENIOR, true, now(), now(), false);
+        otherUser = new User(-1L, 1234L, "mail", "후배2", "011", "profile", 0, Role.SENIOR, true, now(), now(), false);
         userRepository.save(user);
         userRepository.save(otherUser);
 
-        Info info = new Info("major", "postgradu", "교수님", "keyword1,keyword2", "랩실", "field", false, false, "field,keyword1,keyword2");
-        senior = new Senior(0L, user, "certification", Status.APPROVE, 0, info, null, now(), now());
+        Info info1 = new Info("major", "postgradu", "교수님", "keyword1,keyword2", "랩실", "field", false, false, "field,keyword1,keyword2");
+        senior = new Senior(0L, user, "certification", Status.APPROVE, 0, info1, null, now(), now());
         seniorRepository.save(senior);
+
+        Info info2 = new Info("major", "postgradu", "교수님", "keyword1,keyword2", "랩실", "field", false, false, "field,keyword1,keyword2");
+        otherSenior = new Senior(-1L, otherUser, "certification", Status.APPROVE, 0, info2, null, now(), now());
+        seniorRepository.save(otherSenior);
 
         token = jwtUtil.generateAccessToken(user.getUserId(), Role.SENIOR);
         otherToken = jwtUtil.generateAccessToken(otherUser.getUserId(), Role.USER);
