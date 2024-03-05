@@ -86,11 +86,13 @@ class SeniorControllerTest extends IntegrationTest {
         userRepository.save(otherUser);
 
         Info info1 = new Info("major", "postgradu", "교수님", "keyword1,keyword2", "랩실", "field", false, false, "field,keyword1,keyword2");
-        senior = new Senior(0L, user, "certification", Status.APPROVE, 0, info1, null, now(), now());
+        Profile profile1 = new Profile("info", "one", "u", "chat", 30);
+        senior = new Senior(0L, user, "certification", Status.APPROVE, 0, info1, profile1, now(), now());
         seniorRepository.save(senior);
 
         Info info2 = new Info("major", "postgradu", "교수님", "keyword1,keyword2", "랩실", "field", false, false, "field,keyword1,keyword2");
-        otherSenior = new Senior(-1L, otherUser, "certification", Status.APPROVE, 0, info2, null, now(), now());
+        Profile profile2 = new Profile("info", "one", "u", "chat", 30);
+        otherSenior = new Senior(-1L, otherUser, "certification", Status.APPROVE, 0, info2, profile2, now(), now());
         seniorRepository.save(otherSenior);
 
         token = jwtUtil.generateAccessToken(user.getUserId(), Role.SENIOR);
