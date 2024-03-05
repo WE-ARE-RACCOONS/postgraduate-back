@@ -43,7 +43,8 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
                 .where(
                         senior.info.totalInfo.like("%" + search + "%"),
                         senior.status.eq(APPROVE),
-                        senior.user.isDelete.eq(FALSE)
+                        senior.user.isDelete.eq(FALSE),
+                        senior.profile.isNotNull()
                 )
                 .orderBy(orderSpecifier(sort))
                 .orderBy(senior.user.nickName.asc()).
@@ -84,7 +85,8 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
                         fieldSpecifier(field),
                         postgraduSpecifier(postgradu),
                         senior.status.eq(APPROVE),
-                        senior.user.isDelete.eq(FALSE)
+                        senior.user.isDelete.eq(FALSE),
+                        senior.profile.isNotNull()
                 )
                 .orderBy(senior.hit.desc())
                 .orderBy(senior.user.nickName.asc())
@@ -170,7 +172,8 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
     private BooleanExpression searchLike(String search) {
         if (StringUtils.hasText(search)) {
             return senior.user.phoneNumber.contains(search)
-                    .or(senior.user.nickName.contains(search));
+                    .or(senior.user.nickName.contains(search))
+                    .and(senior.profile.isNotNull());
         }
         return null;
     }
@@ -184,8 +187,8 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
                 .where(
                         senior.seniorId.eq(seniorId),
                         senior.profile.isNotNull(),
-                        senior.status.eq(APPROVE)
-                        ,senior.user.isDelete.isFalse()
+                        senior.status.eq(APPROVE),
+                        senior.user.isDelete.isFalse()
                 )
                 .fetchOne());
     }
