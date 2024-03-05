@@ -74,7 +74,8 @@ class SeniorControllerTest extends IntegrationTest {
     private Senior senior;
     private Senior otherSenior;
     private String token;
-    private String otherToken;
+    private String seniorToken;
+    private String userToken;
     private User user;
     private User otherUser;
 
@@ -91,12 +92,12 @@ class SeniorControllerTest extends IntegrationTest {
         seniorRepository.save(senior);
 
         Info info2 = new Info("major", "postgradu", "교수님", "keyword1,keyword2", "랩실", "field", false, false, "field,keyword1,keyword2");
-        Profile profile2 = new Profile("info", "one", "u", "chat", 30);
-        otherSenior = new Senior(-1L, otherUser, "certification", Status.APPROVE, 0, info2, profile2, now(), now());
+        otherSenior = new Senior(-1L, otherUser, "certification", Status.APPROVE, 0, info2, null, now(), now());
         seniorRepository.save(otherSenior);
 
         token = jwtUtil.generateAccessToken(user.getUserId(), Role.SENIOR);
-        otherToken = jwtUtil.generateAccessToken(otherUser.getUserId(), Role.USER);
+        seniorToken = jwtUtil.generateAccessToken(otherUser.getUserId(), Role.SENIOR);
+        userToken = jwtUtil.generateAccessToken(otherUser.getUserId(), Role.USER);
 
         doNothing().when(slackLogErrorMessage).sendSlackLog(any());
     }
@@ -294,7 +295,7 @@ class SeniorControllerTest extends IntegrationTest {
     @DisplayName("등록된 프로필이 없다면 [내 프로필 수정] 기본 정보를 조회할 수 없다")
     void getEmptySeniorProfile() throws Exception {
         mvc.perform(get("/senior/me/profile")
-                        .header(AUTHORIZATION, BEARER + token))
+                        .header(AUTHORIZATION, BEARER + seniorToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(PROFILE_NOT_FOUND.getCode()))
                 .andExpect(jsonPath("$.message").value(NOT_FOUND_PROFILE.getMessage()));
@@ -525,7 +526,7 @@ class SeniorControllerTest extends IntegrationTest {
         updateAvailable();
 
         mvc.perform(get("/senior/{seniorId}", senior.getSeniorId())
-                        .header(AUTHORIZATION, BEARER + otherToken))
+                        .header(AUTHORIZATION, BEARER + userToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(SENIOR_FIND.getCode()))
                 .andExpect(jsonPath("$.message").value(GET_SENIOR_INFO.getMessage()))
@@ -566,7 +567,7 @@ class SeniorControllerTest extends IntegrationTest {
         updateAvailable();
 
         mvc.perform(get("/senior/{seniorId}/profile", senior.getSeniorId())
-                        .header(AUTHORIZATION, BEARER + otherToken))
+                        .header(AUTHORIZATION, BEARER + userToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(SENIOR_FIND.getCode()))
                 .andExpect(jsonPath("$.message").value(GET_SENIOR_INFO.getMessage()))
