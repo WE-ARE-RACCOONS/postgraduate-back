@@ -31,6 +31,8 @@ import java.util.Map;
 import java.util.Optional;
 
 import static com.postgraduate.domain.payment.application.usecase.PaymentParameter.*;
+import static com.postgraduate.domain.payment.presentation.constant.PaymentResponseCode.PAYMENT_FAIL;
+import static com.postgraduate.domain.payment.presentation.constant.PaymentResponseMessage.FAIL_PAYMENT;
 import static org.springframework.http.CacheControl.noCache;
 
 @Service
@@ -61,9 +63,12 @@ public class PaymentManageUseCase {
     private final SalaryGetService salaryGetService;
     private final WebClient webClient;
 
-    public void savePay(PaymentResultRequest request) {
-        if (!request.PCD_PAY_RST().equals(SUCCESS.getName()))
-            throw new PaymentFailException();
+    public boolean savePay(PaymentResultRequest request) {
+        if (!request.PCD_PAY_RST().equals(SUCCESS.getName())) {
+            log.error("PayPle 결제 진행 취소 및 오류");
+            log.error("message : {} code : {}", FAIL_PAYMENT.getMessage(), request.PCD_PAY_CODE());
+            return false;
+        }
         try {
             String seniorNickName = request.PCD_PAY_GOODS();
             long userId = Long.parseLong(request.PCD_PAYER_NO());
@@ -78,6 +83,7 @@ public class PaymentManageUseCase {
             paymentSaveService.save(payment);
             refundPay(payment);
         }
+        return true;
     }
 
     public void refundPayByUser(User user, String orderId) {

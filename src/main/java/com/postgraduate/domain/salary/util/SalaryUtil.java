@@ -3,13 +3,14 @@ package com.postgraduate.domain.salary.util;
 import com.postgraduate.domain.admin.presentation.constant.SalaryStatus;
 import com.postgraduate.domain.salary.domain.entity.Salary;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 import static com.postgraduate.domain.admin.presentation.constant.SalaryStatus.*;
 
 public class SalaryUtil {
-    private static final int SALARY_DATE = 10;
+    private static final int SALARY_DATE = 4; // 목요일
+    private static final int SALARY_END_DATE = 7; // 일요일
 
     private SalaryUtil() {
         throw new IllegalArgumentException();
@@ -17,13 +18,10 @@ public class SalaryUtil {
 
     public static LocalDate getSalaryDate() {
         LocalDate now = LocalDate.now();
-        return now.getDayOfMonth() < SALARY_DATE
-                ? now.withDayOfMonth(SALARY_DATE)
-                : now.plusMonths(1).withDayOfMonth(SALARY_DATE);
-    }
-
-    public static DateTimeFormatter getMonthFormat() {
-        return DateTimeFormatter.ofPattern("yyyy-MM");
+        DayOfWeek dayOfWeek = now.getDayOfWeek();
+        return dayOfWeek.getValue() < SALARY_END_DATE
+                ? now.plusDays(7 + (dayOfWeek.getValue() - SALARY_DATE))
+                : now.plusDays(dayOfWeek.getValue() - SALARY_DATE);
     }
 
     public static SalaryStatus getStatus(Salary salary) {
