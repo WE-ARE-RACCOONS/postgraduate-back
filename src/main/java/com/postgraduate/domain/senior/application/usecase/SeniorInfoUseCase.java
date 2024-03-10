@@ -99,4 +99,9 @@ public class SeniorInfoUseCase {
                 .toList();
         return new AllSeniorIdResponse(seniorIds);
     }
+
+    public Long getSeniorId(String nickName) {
+        Senior senior = seniorGetService.bySeniorNickName(nickName);
+        return senior.getSeniorId();
+    }
 }
