@@ -5,7 +5,6 @@ import com.postgraduate.domain.salary.application.mapper.SalaryMapper;
 import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.salary.domain.service.SalaryGetService;
 import com.postgraduate.domain.salary.domain.service.SalarySaveService;
-import com.postgraduate.domain.salary.util.SalaryUtil;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.global.slack.SlackSalaryMessage;
 import lombok.RequiredArgsConstructor;
@@ -25,13 +24,13 @@ public class SalaryManageUseCase {
     private final SeniorGetService seniorGetService;
     private final SlackSalaryMessage slackSalaryMessage;
 
-    @Scheduled(cron = "0 0 0 10 * *", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 0 0 * * 4", zone = "Asia/Seoul")
     public void createSalary() {
-        List<Salary> salaries = salaryGetService.findAllLastMonth();
+        List<Salary> salaries = salaryGetService.findAllLast();
         slackSalaryMessage.sendSlackSalary(salaries);
 
         List<SeniorAndAccount> seniorAndAccounts = seniorGetService.findAllSeniorAndAccount();
-        LocalDate salaryDate = SalaryUtil.getSalaryDate();
+        LocalDate salaryDate = LocalDate.now().plusDays(7);
         seniorAndAccounts.forEach(seniorAndAccount -> {
             Salary salary = SalaryMapper.mapToSalary(seniorAndAccount.senior(), salaryDate, seniorAndAccount.account());
             salarySaveService.save(salary);
