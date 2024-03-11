@@ -16,6 +16,7 @@ import com.postgraduate.domain.mentoring.exception.MentoringNotWaitingException;
 import com.postgraduate.domain.payment.application.usecase.PaymentManageUseCase;
 import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.payment.domain.service.PaymentGetService;
+import com.postgraduate.domain.payment.exception.PaymentNotFoundException;
 import com.postgraduate.domain.refuse.application.dto.req.MentoringRefuseRequest;
 import com.postgraduate.domain.refuse.application.mapper.RefuseMapper;
 import com.postgraduate.domain.refuse.domain.entity.Refuse;
@@ -60,16 +61,20 @@ public class MentoringManageUseCase {
 
     @Transactional
     public boolean applyMentoringWithPayment(User user, MentoringApplyRequest request) {
-        Payment payment = paymentGetService.byUserAndOrderId(user, request.orderId());
-        mentoringGetService.byPayment(payment);
+        Payment payment = null;
         try {
+            payment = paymentGetService.byUserAndOrderId(user, request.orderId());
+            mentoringGetService.byPayment(payment);
             String[] dates = request.date().split(",");
             if (dates.length != 3)
                 throw new MentoringDateException();
-            Senior senior = payment.getSalary().getSenior();
+            Senior senior = payment.getSenior();
             Mentoring mentoring = MentoringMapper.mapToMentoring(user, senior, payment, request);
             mentoringSaveService.save(mentoring);
             return true;
+        } catch (PaymentNotFoundException ex) {
+            log.error("결제건을 찾을 수 없습니다.");
+            return false;
         } catch (Exception ex) {
             paymentManageUseCase.refundPayByUser(user, payment.getOrderId());
             return false;
@@ -94,7 +99,7 @@ public class MentoringManageUseCase {
             throw new MentoringNotExpectedException();
         Salary salary = salaryGetService.bySenior(mentoring.getSenior());
         salaryUpdateService.updateTotalAmount(salary);
-        mentoringUpdateService.updateStatus(mentoring, DONE);
+        mentoringUpdateService.updateDone(mentoring, salary);
     }
 
 
@@ -141,9 +146,10 @@ public class MentoringManageUseCase {
         //TODO : 알림 보내거나 나머지 작업
     }
 
-    @Scheduled(cron = "0 59 23 * * *", zone = "Asia/Seoul")
+    @Scheduled(fixedRate = 6000, zone = "Asia/Seoul")
     public void updateAutoDone() {
         List<Mentoring> expectedMentorings = mentoringGetService.byStatus(EXPECTED);
+        log.info("크기 : {}", expectedMentorings.size());
         expectedMentorings.stream()
                 .filter(mentoring -> {
                     try {
