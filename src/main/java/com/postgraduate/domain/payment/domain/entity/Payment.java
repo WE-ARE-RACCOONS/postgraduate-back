@@ -1,7 +1,7 @@
 package com.postgraduate.domain.payment.domain.entity;
 
 import com.postgraduate.domain.payment.domain.entity.constant.Status;
-import com.postgraduate.domain.salary.domain.entity.Salary;
+import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.user.domain.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -24,10 +24,10 @@ public class Payment {
     private Long paymentId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Salary salary;
+    private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
+    private Senior senior;
 
     @Column(nullable = false)
     private int pay;

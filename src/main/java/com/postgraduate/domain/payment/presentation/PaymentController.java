@@ -24,29 +24,17 @@ public class PaymentController {
     private String redirectUri;
     @Value("${payple.redirect-uri-dev}")
     private String redirectUriDev;
-    @Value("${payple.cancel-redirect-uri}")
-    private String cancelRedirectUri;
-    @Value("${payple.cancel-redirect-uri-dev}")
-    private String cancelRedirectUriDev;
 
     @PostMapping("/payple/result")
     public void resultGet(HttpServletResponse response, @ModelAttribute PaymentResultRequest request) throws IOException {
-        if (paymentManageUseCase.savePay(request)) {
-            response.sendRedirect(redirectUri + request.PCD_PAY_OID());
-            return;
-        }
-        Long seniorId = seniorInfoUseCase.getSeniorId(request.PCD_PAY_GOODS());
-        response.sendRedirect(cancelRedirectUri + seniorId);
+        paymentManageUseCase.savePay(request);
+        response.sendRedirect(redirectUri + request.PCD_PAY_OID());
     }
 
     @PostMapping("/payple/dev/result")
     public void resultGetWithDev(HttpServletResponse response, @ModelAttribute PaymentResultRequest request) throws IOException {
-        if (paymentManageUseCase.savePay(request)) {
-            response.sendRedirect(redirectUriDev + request.PCD_PAY_OID());
-            return;
-        }
-        Long seniorId = seniorInfoUseCase.getSeniorId(request.PCD_PAY_GOODS());
-        response.sendRedirect(cancelRedirectUriDev + seniorId);
+        paymentManageUseCase.savePay(request);
+        response.sendRedirect(redirectUriDev + request.PCD_PAY_OID());
     }
 
     @PostMapping("/webhook")

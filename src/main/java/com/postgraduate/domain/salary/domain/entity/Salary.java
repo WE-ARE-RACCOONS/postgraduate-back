@@ -1,6 +1,5 @@
 package com.postgraduate.domain.salary.domain.entity;
 
-import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -10,7 +9,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Builder
@@ -28,9 +26,6 @@ public class Salary {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Senior senior;
-
-    @OneToMany(mappedBy = "salary", cascade = CascadeType.ALL)
-    private List<Payment> payments;
 
     @Builder.Default
     @Column(nullable = false)

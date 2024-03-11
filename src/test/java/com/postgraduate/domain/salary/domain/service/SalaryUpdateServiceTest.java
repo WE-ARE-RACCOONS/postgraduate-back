@@ -1,6 +1,5 @@
 package com.postgraduate.domain.salary.domain.service;
 
-import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import org.junit.jupiter.api.DisplayName;
@@ -26,7 +25,7 @@ class SalaryUpdateServiceTest {
     @DisplayName("정산 완료 테스트")
     void updateStatusTRUE() {
         Senior senior = mock(Senior.class);
-        Salary salary = new Salary(1L, FALSE, senior, null, 100, LocalDate.now(), LocalDateTime.now(), "a", "b", "c");
+        Salary salary = new Salary(1L, FALSE, senior, 100, LocalDate.now(), LocalDateTime.now(), "a", "b", "c");
 
         salaryUpdateService.updateStatus(salary, TRUE);
 
@@ -38,7 +37,7 @@ class SalaryUpdateServiceTest {
     @DisplayName("정산 금액 증가 테스트")
     void updateStatusFALSE() {
         Senior senior = mock(Senior.class);
-        Salary salary = new Salary(1L, TRUE, senior, null, 0, LocalDate.now(), LocalDateTime.now(), "a", "b", "c");
+        Salary salary = new Salary(1L, TRUE, senior, 0, LocalDate.now(), LocalDateTime.now(), "a", "b", "c");
 
         salaryUpdateService.updateTotalAmount(salary);
 

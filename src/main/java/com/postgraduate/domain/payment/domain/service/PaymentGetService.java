@@ -20,6 +20,6 @@ public class PaymentGetService {
     }
 
     public Payment bySeniorAndOrderId(Senior senior, String orderId) {
-        return paymentRepository.findBySalary_SeniorAndOrderIdAndStatus(senior, orderId, DONE).orElseThrow(PaymentNotFoundException::new);
+        return paymentRepository.findBySeniorAndOrderIdAndStatus(senior, orderId, DONE).orElseThrow(PaymentNotFoundException::new);
     }
 }

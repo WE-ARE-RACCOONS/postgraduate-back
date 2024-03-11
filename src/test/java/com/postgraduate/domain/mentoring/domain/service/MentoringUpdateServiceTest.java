@@ -2,6 +2,7 @@ package com.postgraduate.domain.mentoring.domain.service;
 
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.payment.domain.entity.Payment;
+import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.user.domain.entity.User;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,21 +24,23 @@ class MentoringUpdateServiceTest {
     private MentoringUpdateService mentoringUpdateService;
 
     private Mentoring mentoring;
+    private Salary salary;
     private
     @BeforeEach
     void setting() {
         User user = mock(User.class);
         Senior senior = mock(Senior.class);
         Payment payment = mock(Payment.class);
+        salary = mock(Salary.class);
 
-        mentoring = new Mentoring(1L, user, senior, payment, "a", "a", "a", 1
+        mentoring = new Mentoring(1L, user, senior, payment, null, "a", "a", "a", 1
         , WAITING, LocalDateTime.now(), LocalDateTime.now());
     }
 
     @Test
     @DisplayName("DONE으로 변경")
     void updateStatusDone() {
-        mentoringUpdateService.updateStatus(mentoring, DONE);
+        mentoringUpdateService.updateDone(mentoring, salary);
         assertThat(mentoring.getStatus())
                 .isEqualTo(DONE);
     }

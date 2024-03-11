@@ -109,8 +109,8 @@ public class MentoringMapper {
                 dDay);
     }
 
-    public static DoneSeniorMentoringInfo mapToSeniorDoneInfo(Mentoring mentoring, Payment payment) {
-        Salary salary = payment.getSalary();
+    public static DoneSeniorMentoringInfo mapToSeniorDoneInfo(Mentoring mentoring) {
+        Salary salary = mentoring.getSalary();
         User user = mentoring.getUser();
         return new DoneSeniorMentoringInfo(mentoring.getMentoringId(),
                 user.getProfile(), user.getNickName(),

@@ -64,7 +64,7 @@ class MentoringUserInfoUseCaseTest {
     void getMentoringDetail() {
         Payment payment = mock(Payment.class);
 
-        mentoring = new Mentoring(mentoringId, user, senior, payment
+        mentoring = new Mentoring(mentoringId, user, senior, payment, null
                 , "a", "b", "c"
                 , 40, EXPECTED
                 , LocalDateTime.now(), LocalDateTime.now());
@@ -81,7 +81,7 @@ class MentoringUserInfoUseCaseTest {
     void getMentoringDetailFailWithDone() {
         Payment payment = mock(Payment.class);
 
-        mentoring = new Mentoring(mentoringId, user, senior, payment
+        mentoring = new Mentoring(mentoringId, user, senior, payment, null
                 , "a", "b", "c"
                 , 40, DONE
                 , LocalDateTime.now(), LocalDateTime.now());
@@ -98,7 +98,7 @@ class MentoringUserInfoUseCaseTest {
     void getMentoringDetailFailWithRefuse() {
         Payment payment = mock(Payment.class);
 
-        mentoring = new Mentoring(mentoringId, user, senior, payment
+        mentoring = new Mentoring(mentoringId, user, senior, payment, null
                 , "a", "b", "c"
                 , 40, REFUSE
                 , LocalDateTime.now(), LocalDateTime.now());
@@ -115,7 +115,7 @@ class MentoringUserInfoUseCaseTest {
     void getMentoringDetailFailWithCancel() {
         Payment payment = mock(Payment.class);
 
-        mentoring = new Mentoring(mentoringId, user, senior, payment
+        mentoring = new Mentoring(mentoringId, user, senior, payment, null
                 , "a", "b", "c"
                 , 40, CANCEL
                 , LocalDateTime.now(), LocalDateTime.now());
@@ -132,17 +132,17 @@ class MentoringUserInfoUseCaseTest {
     void getWaiting() {
         Payment payment = mock(Payment.class);
 
-        Mentoring mentoring1 = new Mentoring(1L, user, senior, payment
+        Mentoring mentoring1 = new Mentoring(1L, user, senior, payment, null
                 , "a", "b", "c"
                 , 40, WAITING
                 , LocalDateTime.now(), LocalDateTime.now());
 
-        Mentoring mentoring2 = new Mentoring(2L, user, senior, payment
+        Mentoring mentoring2 = new Mentoring(2L, user, senior, payment, null
                 , "a", "b", "c"
                 , 40, WAITING
                 , LocalDateTime.now(), LocalDateTime.now());
 
-        Mentoring mentoring3 = new Mentoring(3L, user, senior, payment
+        Mentoring mentoring3 = new Mentoring(3L, user, senior, payment, null
                 , "a", "b", "c"
                 , 40, WAITING
                 , LocalDateTime.now(), LocalDateTime.now());
@@ -162,17 +162,17 @@ class MentoringUserInfoUseCaseTest {
     void getExpected() {
         Payment payment = mock(Payment.class);
 
-        Mentoring mentoring1 = new Mentoring(1L, user, senior, payment
+        Mentoring mentoring1 = new Mentoring(1L, user, senior, payment, null
                 , "a", "b", "c"
                 , 40, EXPECTED
                 , LocalDateTime.now(), LocalDateTime.now());
 
-        Mentoring mentoring2 = new Mentoring(2L, user, senior, payment
+        Mentoring mentoring2 = new Mentoring(2L, user, senior, payment, null
                 , "a", "b", "c"
                 , 40, EXPECTED
                 , LocalDateTime.now(), LocalDateTime.now());
 
-        Mentoring mentoring3 = new Mentoring(3L, user, senior, payment
+        Mentoring mentoring3 = new Mentoring(3L, user, senior, payment, null
                 , "a", "b", "c"
                 , 40, EXPECTED
                 , LocalDateTime.now(), LocalDateTime.now());
@@ -192,17 +192,17 @@ class MentoringUserInfoUseCaseTest {
     void getDone() {
         Payment payment = mock(Payment.class);
 
-        Mentoring mentoring1 = new Mentoring(1L, user, senior, payment
+        Mentoring mentoring1 = new Mentoring(1L, user, senior, payment, null
                 , "a", "b", "c"
                 , 40, DONE
                 , LocalDateTime.now(), LocalDateTime.now());
 
-        Mentoring mentoring2 = new Mentoring(2L, user, senior, payment
+        Mentoring mentoring2 = new Mentoring(2L, user, senior, payment, null
                 , "a", "b", "c"
                 , 40, DONE
                 , LocalDateTime.now(), LocalDateTime.now());
 
-        Mentoring mentoring3 = new Mentoring(3L, user, senior, payment
+        Mentoring mentoring3 = new Mentoring(3L, user, senior, payment, null
                 , "a", "b", "c"
                 , 40, DONE
                 , LocalDateTime.now(), LocalDateTime.now());

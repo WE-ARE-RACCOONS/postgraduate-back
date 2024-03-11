@@ -35,7 +35,8 @@ public class SalaryMapper {
                 .build();
     }
 
-    public static SalaryDetails mapToSalaryDetail(Salary salary, Mentoring mentoring) {
+    public static SalaryDetails mapToSalaryDetail(Mentoring mentoring) {
+        Salary salary = mentoring.getSalary();
         User user = mentoring.getUser();
         return new SalaryDetails(
                 user.getProfile(),

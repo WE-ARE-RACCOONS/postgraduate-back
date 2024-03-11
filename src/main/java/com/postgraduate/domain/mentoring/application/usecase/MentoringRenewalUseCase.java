@@ -54,10 +54,10 @@ public class MentoringRenewalUseCase {
     public void updateDoneWithAuto(Mentoring mentoring) {
         try {
             Mentoring doneMentoring = mentoringGetService.byMentoringIdWithLazy(mentoring.getMentoringId());
-            mentoringUpdateService.updateStatus(doneMentoring, DONE);
             Senior senior = mentoring.getSenior();
             Salary salary = salaryGetService.bySenior(senior);
             salaryUpdateService.updateTotalAmount(salary);
+            mentoringUpdateService.updateDone(doneMentoring, salary);
             log.info("mentoringId : {} 자동 완료", mentoring.getMentoringId());
         } catch (Exception ex) {
             slackErrorMessage.sendSlackError(mentoring, ex);

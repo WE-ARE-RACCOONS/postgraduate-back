@@ -4,10 +4,12 @@ import com.postgraduate.domain.account.domain.entity.Account;
 import com.postgraduate.domain.account.domain.service.AccountGetService;
 import com.postgraduate.domain.mentoring.application.dto.req.MentoringApplyRequest;
 import com.postgraduate.domain.mentoring.application.dto.req.MentoringDateRequest;
+import com.postgraduate.domain.mentoring.application.mapper.MentoringMapper;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
 import com.postgraduate.domain.mentoring.domain.service.MentoringSaveService;
 import com.postgraduate.domain.mentoring.domain.service.MentoringUpdateService;
+import com.postgraduate.domain.mentoring.exception.MentoringDateException;
 import com.postgraduate.domain.mentoring.exception.MentoringNotExpectedException;
 import com.postgraduate.domain.mentoring.exception.MentoringNotWaitingException;
 import com.postgraduate.domain.payment.application.usecase.PaymentManageUseCase;
@@ -115,16 +117,10 @@ class MentoringManageUseCaseTest {
     void applyMentoring() {
         Payment payment = mock(Payment.class);
         User user = mock(User.class);
-        Senior senior = mock(Senior.class);
-        Salary salary = mock(Salary.class);
         MentoringApplyRequest request = new MentoringApplyRequest("1", "topic", "ques", "1201,1202,1203");
 
         given(paymentGetService.byUserAndOrderId(any(), any()))
                 .willReturn(payment);
-        given(payment.getSalary())
-                .willReturn(salary);
-        given(salary.getSenior())
-                .willReturn(senior);
 
         mentoringManageUseCase.applyMentoringWithPayment(user, request);
         verify(mentoringSaveService).save(any());
@@ -163,10 +159,10 @@ class MentoringManageUseCaseTest {
     @Test
     @DisplayName("CANCEL 상태 변경 성공 테스트")
     void updateCancel() {
-        Payment payment = new Payment(0L, null, user, 24000, null
+        Payment payment = new Payment(0L, user, senior, 24000, null
                 , null, null, null, null, Status.DONE);
 
-        Mentoring mentoring = new Mentoring(mentoringId, user, senior, payment
+        Mentoring mentoring = new Mentoring(mentoringId, user, senior, payment, null
                 , "a", "b", "c"
                 , 40, WAITING
                 , LocalDateTime.now(), LocalDateTime.now());
@@ -184,7 +180,7 @@ class MentoringManageUseCaseTest {
     @DisplayName("CANCEL 상태 변경 실패 테스트 - EXPECTED")
     void updateCancelFailWithExpected() {
         Payment payment = mock(Payment.class);
-        Mentoring mentoring = new Mentoring(mentoringId, user, senior, payment
+        Mentoring mentoring = new Mentoring(mentoringId, user, senior, payment, null
                 , "a", "b", "c"
                 , 40, EXPECTED
                 , LocalDateTime.now(), LocalDateTime.now());
@@ -200,7 +196,7 @@ class MentoringManageUseCaseTest {
     @DisplayName("CANCEL 상태 변경 실패 테스트 - DONE")
     void updateCancelFailWithDone() {
         Payment payment = mock(Payment.class);
-        Mentoring mentoring = new Mentoring(mentoringId, user, senior, payment
+        Mentoring mentoring = new Mentoring(mentoringId, user, senior, payment, null
                 , "a", "b", "c"
                 , 40, DONE
                 , LocalDateTime.now(), LocalDateTime.now());
@@ -216,7 +212,7 @@ class MentoringManageUseCaseTest {
     @DisplayName("DONE 상태 변경 실패 테스트 - DONE")
     void updateDoneFailWithDone() {
         Payment payment = mock(Payment.class);
-        Mentoring mentoring = new Mentoring(mentoringId, user, senior, payment
+        Mentoring mentoring = new Mentoring(mentoringId, user, senior, payment, null
                 , "a", "b", "c",
                 40, DONE
                 , LocalDateTime.now(), LocalDateTime.now());
@@ -232,7 +228,7 @@ class MentoringManageUseCaseTest {
     @DisplayName("DONE 상태 변경 실패 테스트 - WAITING")
     void updateDoneFailWithWaiting() {
         Payment payment = mock(Payment.class);
-        Mentoring mentoring = new Mentoring(mentoringId, user, senior, payment
+        Mentoring mentoring = new Mentoring(mentoringId, user, senior, payment, null
                 , "a", "b", "c"
                 , 40, WAITING
                 , LocalDateTime.now(), LocalDateTime.now());
@@ -248,7 +244,7 @@ class MentoringManageUseCaseTest {
     @DisplayName("DONE 상태 변경 성공 테스트")
     void updateDone() {
         Payment payment = mock(Payment.class);
-        Mentoring mentoring = new Mentoring(mentoringId, user, senior, payment
+        Mentoring mentoring = new Mentoring(mentoringId, user, senior, payment, null
                 , "a", "b", "c"
                 , 40, EXPECTED
                 , LocalDateTime.now(), LocalDateTime.now());
@@ -260,7 +256,7 @@ class MentoringManageUseCaseTest {
         mentoringManageUseCase.updateDone(user, mentoringId);
 
         verify(salaryUpdateService).updateTotalAmount(salary);
-        verify(mentoringUpdateService).updateStatus(mentoring, DONE);
+        verify(mentoringUpdateService).updateDone(mentoring, salary);
     }
 
     @Test
@@ -268,7 +264,7 @@ class MentoringManageUseCaseTest {
     void updateRefuse() {
         MentoringRefuseRequest request = new MentoringRefuseRequest("abc");
         Payment payment = mock(Payment.class);
-        Mentoring mentoring = new Mentoring(mentoringId, user, senior, payment
+        Mentoring mentoring = new Mentoring(mentoringId, user, senior, payment, null
                 , "a", "b", "c"
                 , 40, WAITING
                 , LocalDateTime.now(), LocalDateTime.now());
@@ -289,7 +285,8 @@ class MentoringManageUseCaseTest {
     void updateRefuseWithExpected() {
         MentoringRefuseRequest request = new MentoringRefuseRequest("abc");
         Payment payment = mock(Payment.class);
-        Mentoring mentoring = new Mentoring(mentoringId, user, senior, payment                , "a", "b", "c"
+        Mentoring mentoring = new Mentoring(mentoringId, user, senior, payment, null
+                , "a", "b", "c"
                 , 40, EXPECTED
                 , LocalDateTime.now(), LocalDateTime.now());
 
@@ -307,7 +304,8 @@ class MentoringManageUseCaseTest {
     void updateRefuseWithDone() {
         MentoringRefuseRequest request = new MentoringRefuseRequest("abc");
         Payment payment = mock(Payment.class);
-        Mentoring mentoring = new Mentoring(mentoringId, user, senior, payment                , "a", "b", "c"
+        Mentoring mentoring = new Mentoring(mentoringId, user, senior, payment, null
+                , "a", "b", "c"
                 , 40, DONE
                 , LocalDateTime.now(), LocalDateTime.now());
 
@@ -325,7 +323,8 @@ class MentoringManageUseCaseTest {
     void updateExpectedTrue() {
         MentoringDateRequest dateRequest = new MentoringDateRequest("2023-12-12");
         Payment payment = mock(Payment.class);
-        Mentoring mentoring = new Mentoring(mentoringId, user, senior, payment                , "a", "b", "c"
+        Mentoring mentoring = new Mentoring(mentoringId, user, senior, payment, null
+                , "a", "b", "c"
                 , 40, WAITING
                 , LocalDateTime.now(), LocalDateTime.now());
 
@@ -346,7 +345,8 @@ class MentoringManageUseCaseTest {
     void updateExpectedFa() {
         MentoringDateRequest dateRequest = new MentoringDateRequest("2023-12-12");
         Payment payment = mock(Payment.class);
-        Mentoring mentoring = new Mentoring(mentoringId, user, senior, payment                , "a", "b", "c"
+        Mentoring mentoring = new Mentoring(mentoringId, user, senior, payment, null
+                , "a", "b", "c"
                 , 40, WAITING
                 , LocalDateTime.now(), LocalDateTime.now());
 
@@ -369,7 +369,8 @@ class MentoringManageUseCaseTest {
     void updateExpectedFailWithExpected() {
         MentoringDateRequest dateRequest = new MentoringDateRequest("2023-12-12");
         Payment payment = mock(Payment.class);
-        Mentoring mentoring = new Mentoring(mentoringId, user, senior, payment                , "a", "b", "c"
+        Mentoring mentoring = new Mentoring(mentoringId, user, senior, payment, null
+                , "a", "b", "c"
                 , 40, EXPECTED
                 , LocalDateTime.now(), LocalDateTime.now());
 
@@ -387,7 +388,8 @@ class MentoringManageUseCaseTest {
     void updateExpectedFailwithDone() {
         MentoringDateRequest dateRequest = new MentoringDateRequest("2023-12-12");
         Payment payment = mock(Payment.class);
-        Mentoring mentoring = new Mentoring(mentoringId, user, senior, payment                , "a", "b", "c"
+        Mentoring mentoring = new Mentoring(mentoringId, user, senior, payment, null
+                , "a", "b", "c"
                 , 40, DONE
                 , LocalDateTime.now(), LocalDateTime.now());
 

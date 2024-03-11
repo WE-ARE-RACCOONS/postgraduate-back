@@ -9,10 +9,7 @@ import com.postgraduate.domain.payment.domain.service.PaymentGetService;
 import com.postgraduate.domain.payment.domain.service.PaymentSaveService;
 import com.postgraduate.domain.payment.domain.service.PaymentUpdateService;
 import com.postgraduate.domain.payment.exception.CertificationFailException;
-import com.postgraduate.domain.payment.exception.PaymentFailException;
 import com.postgraduate.domain.payment.exception.RefundFailException;
-import com.postgraduate.domain.salary.domain.entity.Salary;
-import com.postgraduate.domain.salary.domain.service.SalaryGetService;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.domain.user.domain.entity.User;
@@ -31,7 +28,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import static com.postgraduate.domain.payment.application.usecase.PaymentParameter.*;
-import static com.postgraduate.domain.payment.presentation.constant.PaymentResponseCode.PAYMENT_FAIL;
 import static com.postgraduate.domain.payment.presentation.constant.PaymentResponseMessage.FAIL_PAYMENT;
 import static org.springframework.http.CacheControl.noCache;
 
@@ -60,22 +56,20 @@ public class PaymentManageUseCase {
     private final PaymentUpdateService paymentUpdateService;
     private final SeniorGetService seniorGetService;
     private final UserGetService userGetService;
-    private final SalaryGetService salaryGetService;
     private final WebClient webClient;
 
-    public boolean savePay(PaymentResultRequest request) {
+    public void savePay(PaymentResultRequest request) {
         if (!request.PCD_PAY_RST().equals(SUCCESS.getName())) {
             log.error("PayPle 결제 진행 취소 및 오류");
             log.error("message : {} code : {}", FAIL_PAYMENT.getMessage(), request.PCD_PAY_CODE());
-            return false;
+            return;
         }
         try {
             String seniorNickName = request.PCD_PAY_GOODS();
             long userId = Long.parseLong(request.PCD_PAYER_NO());
             User user = userGetService.byUserId(userId);
             Senior senior = seniorGetService.bySeniorNickName(seniorNickName);
-            Salary salary = salaryGetService.bySenior(senior);
-            Payment payment = PaymentMapper.resultToPayment(salary, user, request);
+            Payment payment = PaymentMapper.resultToPayment(senior, user, request);
             paymentSaveService.save(payment);
         } catch (Exception ex) {
             log.error("paymentError 발생 환불 진행 | errorMessage : {}", ex.getMessage());
@@ -83,7 +77,6 @@ public class PaymentManageUseCase {
             paymentSaveService.save(payment);
             refundPay(payment);
         }
-        return true;
     }
 
     public void refundPayByUser(User user, String orderId) {

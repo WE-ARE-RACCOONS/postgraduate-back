@@ -2,7 +2,7 @@ package com.postgraduate.domain.payment.application.mapper;
 
 import com.postgraduate.domain.payment.application.dto.req.PaymentResultRequest;
 import com.postgraduate.domain.payment.domain.entity.Payment;
-import com.postgraduate.domain.salary.domain.entity.Salary;
+import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.user.domain.entity.User;
 
 import java.time.LocalDateTime;
@@ -13,11 +13,11 @@ public class PaymentMapper {
         throw new IllegalArgumentException();
     }
 
-    public static Payment resultToPayment(Salary salary, User user, PaymentResultRequest request) {
+    public static Payment resultToPayment(Senior senior, User user, PaymentResultRequest request) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
         return Payment.builder()
-                .salary(salary)
                 .user(user)
+                .senior(senior)
                 .pay(Integer.parseInt(request.PCD_PAY_TOTAL()))
                 .orderId(request.PCD_PAY_OID())
                 .cardAuthNumber(request.PCD_PAY_CARDAUTHNO())
@@ -29,8 +29,6 @@ public class PaymentMapper {
     public static Payment resultToPayment(PaymentResultRequest request) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
         return Payment.builder()
-                .salary(null)
-                .user(null)
                 .pay(Integer.parseInt(request.PCD_PAY_TOTAL()))
                 .orderId(request.PCD_PAY_OID())
                 .cardAuthNumber(request.PCD_PAY_CARDAUTHNO())

@@ -2,6 +2,7 @@ package com.postgraduate.domain.mentoring.domain.entity;
 
 import com.postgraduate.domain.mentoring.domain.entity.constant.Status;
 import com.postgraduate.domain.payment.domain.entity.Payment;
+import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.user.domain.entity.User;
 import jakarta.persistence.*;
@@ -15,6 +16,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.DONE;
 import static java.time.LocalDateTime.now;
 import static java.time.LocalDateTime.parse;
 import static java.time.format.DateTimeFormatter.ofPattern;
@@ -37,6 +39,9 @@ public class Mentoring {
 
     @OneToOne(fetch = FetchType.LAZY)
     private Payment payment;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Salary salary;
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String topic;
@@ -63,6 +68,11 @@ public class Mentoring {
 
     public void updateStatus(Status status) {
         this.status = status;
+    }
+
+    public void updateDone(Salary salary) {
+        this.status = DONE;
+        this.salary = salary;
     }
 
     public void updateDate(String date) {
