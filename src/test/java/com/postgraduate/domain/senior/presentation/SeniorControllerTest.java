@@ -216,7 +216,7 @@ class SeniorControllerTest extends IntegrationTest {
     @Test
     @DisplayName("대학원생 정산 계좌를 생성한다")
     void updateAccount() throws Exception {
-        Salary salary = new Salary(0L, false, senior, null, 10000, getSalaryDate(), now(), null, null, null);
+        Salary salary = new Salary(0L, false, senior, 10000, getSalaryDate(), now(), null, null, null);
         salaryRepository.save(salary);
 
         String request = objectMapper.writeValueAsString(
@@ -238,7 +238,7 @@ class SeniorControllerTest extends IntegrationTest {
     @WithMockUser(authorities = {"SENIOR"})
     @DisplayName("빈 정산 계좌를 입력으면 예외가 발생한다")
     void updateInvalidAccount(String empty) throws Exception {
-        Salary salary = new Salary(0L, false, senior, null, 10000, getSalaryDate(), now(), null, null, null);
+        Salary salary = new Salary(0L, false, senior, 10000, getSalaryDate(), now(), null, null, null);
         salaryRepository.save(salary);
 
         String request = objectMapper.writeValueAsString(
@@ -430,7 +430,7 @@ class SeniorControllerTest extends IntegrationTest {
     @Test
     @DisplayName("대학원생 마이페이지 계정을 설정한다")
     void updateSeniorUserAccount() throws Exception {
-        Salary salary = new Salary(0L, false, senior, null, 10000, getSalaryDate(), now(), null, null, null);
+        Salary salary = new Salary(0L, false, senior, 10000, getSalaryDate(), now(), null, null, null);
         salaryRepository.save(salary);
 
         String request = objectMapper.writeValueAsString(
@@ -452,7 +452,7 @@ class SeniorControllerTest extends IntegrationTest {
     @WithMockUser(authorities = {"SENIOR"})
     @DisplayName("대학원생 마이페이지 계정을 수정 요청에 닉네임, 전화번호, 프로필사진이 없다면 예외가 발생한다")
     void updateEmptySeniorUserAccount(String empty) throws Exception {
-        Salary salary = new Salary(0L, false, senior, null, 10000, getSalaryDate(), now(), null, null, null);
+        Salary salary = new Salary(0L, false, senior, 10000, getSalaryDate(), now(), null, null, null);
         salaryRepository.save(salary);
 
         String request = objectMapper.writeValueAsString(
@@ -475,7 +475,7 @@ class SeniorControllerTest extends IntegrationTest {
         Account account = new Account(0L, "accountNumber", "bank", "accountHolder", senior);
         accountRepository.save(account);
 
-        Salary salary = new Salary(0L, false, senior, null, 10000, getSalaryDate(), now(), null, null, null);
+        Salary salary = new Salary(0L, false, senior, 10000, getSalaryDate(), now(), null, null, null);
         salaryRepository.save(salary);
 
         String request = objectMapper.writeValueAsString(

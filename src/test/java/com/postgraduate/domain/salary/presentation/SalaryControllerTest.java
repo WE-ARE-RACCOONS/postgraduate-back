@@ -60,7 +60,7 @@ class SalaryControllerTest extends IntegrationTest {
         Senior senior = new Senior(0L, user, "certification", Status.APPROVE, 0, info, profile, now(), now());
         seniorRepository.save(senior);
 
-        salary = new Salary(0L, false, senior, null, 0, SalaryUtil.getSalaryDate(), null, "bank", "account", "holder");
+        salary = new Salary(0L, false, senior, 0, SalaryUtil.getSalaryDate(), null, "bank", "account", "holder");
         salaryRepository.save(salary);
 
         token = jwtUtil.generateAccessToken(user.getUserId(), Role.SENIOR);
