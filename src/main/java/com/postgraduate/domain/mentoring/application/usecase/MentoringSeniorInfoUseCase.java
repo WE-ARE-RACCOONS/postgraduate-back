@@ -5,6 +5,7 @@ import com.postgraduate.domain.mentoring.application.dto.ExpectedSeniorMentoring
 import com.postgraduate.domain.mentoring.application.dto.WaitingSeniorMentoringInfo;
 import com.postgraduate.domain.mentoring.application.dto.res.SeniorMentoringDetailResponse;
 import com.postgraduate.domain.mentoring.application.dto.res.SeniorMentoringResponse;
+import com.postgraduate.domain.mentoring.application.mapper.MentoringMapper;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.entity.constant.Status;
 import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
@@ -74,7 +75,7 @@ public class MentoringSeniorInfoUseCase {
     public SeniorMentoringResponse getSeniorDone(User user) {
         List<Mentoring> mentorings = getDoneMentorings(user);
         List<DoneSeniorMentoringInfo> doneSeniorMentoringInfos = mentorings.stream()
-                .map(mentoirng -> mapToSeniorDoneInfo(mentoirng, mentoirng.getPayment()))
+                .map(MentoringMapper::mapToSeniorDoneInfo)
                 .toList();
         return new SeniorMentoringResponse(doneSeniorMentoringInfos);
     }
