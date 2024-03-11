@@ -19,7 +19,6 @@ import java.util.Optional;
 
 import static com.postgraduate.domain.mentoring.domain.entity.QMentoring.mentoring;
 import static com.postgraduate.domain.payment.domain.entity.QPayment.payment;
-import static com.postgraduate.domain.payment.domain.entity.constant.Status.DONE;
 import static com.postgraduate.domain.salary.domain.entity.QSalary.salary;
 import static com.postgraduate.domain.senior.domain.entity.QSenior.senior;
 import static com.postgraduate.domain.user.domain.entity.QUser.user;
@@ -111,16 +110,13 @@ public class MentoringDslRepositoryImpl implements MentoringDslRepository {
                 .where(
                         mentoring.senior.eq(senior),
                         mentoring.status.eq(Status.DONE),
-                        mentoring.payment.status.eq(DONE),
-                        mentoring.payment.salary.status.eq(status)
+                        mentoring.salary.status.eq(status)
                 )
-                .join(mentoring.payment, payment)
-                .fetchJoin()
-                .join(mentoring.payment.salary, salary)
+                .join(mentoring.salary, salary)
                 .fetchJoin()
                 .join(mentoring.user, user)
                 .fetchJoin()
-                .orderBy(mentoring.payment.salary.salaryDate.desc(), mentoring.updatedAt.desc())
+                .orderBy(mentoring.salary.salaryDate.desc(), mentoring.updatedAt.desc())
                 .fetch();
     }
 
@@ -179,7 +175,7 @@ public class MentoringDslRepositoryImpl implements MentoringDslRepository {
                 .distinct()
                 .join(mentoring.senior, senior)
                 .fetchJoin()
-                .join(mentoring.payment.salary, salary)
+                .join(mentoring.salary, salary)
                 .fetchJoin()
                 .where(mentoring.status.eq(status))
                 .fetch();
