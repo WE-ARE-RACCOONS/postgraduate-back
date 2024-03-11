@@ -54,7 +54,7 @@ class SalaryInfoUseCaseTest {
     @DisplayName("정산 예정 금액 및 날짜 확인")
     void getSalary() {
         LocalDate salaryDate = getSalaryDate();
-        Salary salary = new Salary(1L, FALSE, senior, null, 10000, salaryDate, null, "bank", "1234", "holder");
+        Salary salary = new Salary(1L, FALSE, senior, 10000, salaryDate, null, "bank", "1234", "holder");
 
         given(seniorGetService.byUser(user))
                 .willReturn(senior);
@@ -73,7 +73,7 @@ class SalaryInfoUseCaseTest {
     @DisplayName("정산 예정 금액 및 날짜 확인 - 0원")
     void getSalaryWithZero() {
         LocalDate salaryDate = getSalaryDate();
-        Salary salary = new Salary(1L, FALSE, senior, null, 0, salaryDate, null, "bank", "1234", "holder");
+        Salary salary = new Salary(1L, FALSE, senior, 0, salaryDate, null, "bank", "1234", "holder");
 
         given(seniorGetService.byUser(user))
                 .willReturn(senior);
@@ -93,19 +93,19 @@ class SalaryInfoUseCaseTest {
     void getSalaryDetail() {
         Salary salary = mock(Salary.class);
 
-        Payment payment1 = new Payment(1L, salary, user, 1000, "a", "a", "a", LocalDateTime.now(), LocalDateTime.now(), Status.DONE);
-        Payment payment2 = new Payment(2L, salary, user, 1000, "a", "a", "a", LocalDateTime.now(), LocalDateTime.now(), Status.DONE);
-        Payment payment3 = new Payment(3L, salary, user, 1000, "a", "a", "a", LocalDateTime.now(), LocalDateTime.now(), Status.DONE);
+        Payment payment1 = new Payment(1L, user, senior, 1000, "a", "a", "a", LocalDateTime.now(), LocalDateTime.now(), Status.DONE);
+        Payment payment2 = new Payment(2L, user, senior, 1000, "a", "a", "a", LocalDateTime.now(), LocalDateTime.now(), Status.DONE);
+        Payment payment3 = new Payment(3L, user, senior, 1000, "a", "a", "a", LocalDateTime.now(), LocalDateTime.now(), Status.DONE);
 
-        Mentoring mentoring1 = new Mentoring(1L, user, senior, payment1
+        Mentoring mentoring1 = new Mentoring(1L, user, senior, payment1, salary
                 , "a", "b", "c"
                 , 40,  DONE
                 , LocalDateTime.now(), LocalDateTime.now());
-        Mentoring mentoring2 = new Mentoring(2L, user, senior, payment2
+        Mentoring mentoring2 = new Mentoring(2L, user, senior, payment2, salary
                 , "a", "b", "c"
                 , 40,  DONE
                 , LocalDateTime.now(), LocalDateTime.now());
-        Mentoring mentoring3 = new Mentoring(3L, user, senior, payment3
+        Mentoring mentoring3 = new Mentoring(3L, user, senior, payment3, salary
                 , "a", "b", "c"
                 , 40,  DONE
                 , LocalDateTime.now(), LocalDateTime.now());
