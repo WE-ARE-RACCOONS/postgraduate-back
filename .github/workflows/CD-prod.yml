@@ -85,7 +85,7 @@ jobs:
         docker push ywj9811/kimseonbae:latest
     
     - name: Wait for Docker image to be pushed
-      run: sleep 30s
+      run: sleep 60s
 
     - name: Deploy
       uses: appleboy/ssh-action@master
