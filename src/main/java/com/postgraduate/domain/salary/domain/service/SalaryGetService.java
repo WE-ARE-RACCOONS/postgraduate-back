@@ -7,6 +7,7 @@ import com.postgraduate.domain.salary.exception.SalaryNotFoundException;
 import com.postgraduate.domain.salary.util.SalaryUtil;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +18,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class SalaryGetService {
     private static final int ADMIN_PAGE_SIZE = 15;
 
@@ -24,6 +26,7 @@ public class SalaryGetService {
 
     public Salary bySenior(Senior senior) {
         LocalDate salaryDate = SalaryUtil.getSalaryDate();
+        log.info("salaryDate : {}", salaryDate);
         return salaryRepository.findBySeniorAndSalaryDate(senior, salaryDate).orElseThrow(SalaryNotFoundException::new);
     }
 
@@ -37,6 +40,7 @@ public class SalaryGetService {
         LocalDate salaryDate =
                 SalaryUtil.getSalaryDate()
                 .minusDays(7);
+        log.info("salaryDate : {}", salaryDate);
         return salaryRepository.findAllLastSalary(salaryDate);
     }
 }
