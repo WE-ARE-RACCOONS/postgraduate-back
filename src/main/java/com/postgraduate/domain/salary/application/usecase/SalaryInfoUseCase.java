@@ -15,10 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.util.List;
-
-import static com.postgraduate.domain.salary.util.SalaryUtil.getSalaryDate;
 
 @Service
 @Transactional
@@ -30,10 +27,9 @@ public class SalaryInfoUseCase {
 
     public SalaryInfoResponse getSalary(User user) {
         Senior senior = seniorGetService.byUser(user);
-        LocalDate salaryDate = getSalaryDate();
         Salary salary = salaryGetService.bySenior(senior);
         int amount = salary.getTotalAmount();
-        return new SalaryInfoResponse(salaryDate, amount);
+        return new SalaryInfoResponse(salary.getSalaryDate(), amount);
     }
 
     public SalaryDetailsResponse getSalaryDetail(User user, Boolean status) {

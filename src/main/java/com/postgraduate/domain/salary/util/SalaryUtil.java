@@ -19,9 +19,9 @@ public class SalaryUtil {
     public static LocalDate getSalaryDate() {
         LocalDate now = LocalDate.now();
         DayOfWeek dayOfWeek = now.getDayOfWeek();
-        return dayOfWeek.getValue() < SALARY_END_DATE
-                ? now.plusDays(6 + (dayOfWeek.getValue() - SALARY_DATE))
-                : now.plusDays(SALARY_DATE);
+        return dayOfWeek.getValue() == SALARY_END_DATE
+                ? now.plusDays(7 + (SALARY_DATE - dayOfWeek.getValue()))
+                : now.plusDays(7 + SALARY_DATE);
     }
 
     public static SalaryStatus getStatus(Salary salary) {

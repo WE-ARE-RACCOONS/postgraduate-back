@@ -30,7 +30,7 @@ public class SalaryManageUseCase {
         slackSalaryMessage.sendSlackSalary(salaries);
 
         List<SeniorAndAccount> seniorAndAccounts = seniorGetService.findAllSeniorAndAccount();
-        LocalDate salaryDate = LocalDate.now().plusDays(7);
+        LocalDate salaryDate = LocalDate.now().plusDays(14);
         seniorAndAccounts.forEach(seniorAndAccount -> {
             Salary salary = SalaryMapper.mapToSalary(seniorAndAccount.senior(), salaryDate, seniorAndAccount.account());
             salarySaveService.save(salary);
