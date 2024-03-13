@@ -11,10 +11,8 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 @RequiredArgsConstructor
 public class ImageUploadUseCase {
-    @Value("${profile.user}")
-    private String userProfile;
-    @Value("${profile.senior}")
-    private String seniorProfile;
+    @Value("${profile.default}")
+    private String defaultProfile;
 
     private final S3UploadService uploadService;
 
@@ -24,7 +22,7 @@ public class ImageUploadUseCase {
     }
 
     public ImageUrlResponse uploadProfile(User user, MultipartFile profile) {
-        if (!(user.getProfile().equals(userProfile) || user.getProfile().equals(seniorProfile)))
+        if (!(user.getProfile().equals(defaultProfile)))
             uploadService.deleteProfileImage(user.getProfile());
         String url = uploadService.saveProfileFile(profile);
         return new ImageUrlResponse(url);
