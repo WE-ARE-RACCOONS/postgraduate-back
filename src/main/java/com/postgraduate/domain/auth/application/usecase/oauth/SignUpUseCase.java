@@ -32,7 +32,7 @@ import static com.postgraduate.domain.salary.util.SalaryUtil.getSalaryDate;
 @Service
 @RequiredArgsConstructor
 public class SignUpUseCase {
-    @Value("${profile.user}")
+    @Value("${profile.default}")
     private String profile;
 
     private final SalarySaveService salarySaveService;
