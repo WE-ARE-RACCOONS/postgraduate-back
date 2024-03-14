@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link th:href="@{/css/bootstrap.min.css}"
+          href="css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        table {
+            width: 930px;
+            margin-left:auto;
+            margin-right:auto;
+        }
+
+        table, td, th {
+            border-collapse : collapse;
+            border : 1px solid black;
+        }
+    </style>
+</head>
+<body>
+<table id="seniorInfos">
+    <thead>
+    <tr>
+        <th>닉네임</th>
+        <th>전화번호</th>
+        <th>총 정산금액</th>
+        <th>예금주</th>
+        <th>은행</th>
+        <th>계좌번호</th>
+    </tr>
+    </thead>
+    <tbody>
+    <td th:text="${salaryInfo.nickName()}">certification</td>
+    <td th:text="${salaryInfo.phoneNumber()}">marketing</td>
+    <td th:text="${salaryInfo.totalAmount()}">isUser</td>
+    <td th:text="${salaryInfo.accountHolder()}">isUser</td>
+    <td th:text="${salaryInfo.bank()}">isUser</td>
+    <td th:text="${salaryInfo.accountNumber()}">isUser</td>
+    </tbody>
+
+</table>
+<div class="row">
+    <div class="col">
+        <button class="w-100 btn btn-primary btn-lg"
+                th:salaryId="${salaryInfo.salaryId()}" th:onclick="salaryDone(this.getAttribute('salaryId'))">정산 완료로 변경</button>
+    </div>
+</div>
+</body>
+</html>

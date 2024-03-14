@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link th:href="@{/css/bootstrap.min.css}"
+          href="css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        table {
+            width: 930px;
+            margin-left:auto;
+            margin-right:auto;
+        }
+
+        table, td, th {
+            border-collapse : collapse;
+            border : 1px solid black;
+        }
+    </style>
+</head>
+<body>
+<table id="seniorInfos">
+    <thead>
+    <tr>
+        <th>선배ID</th>
+        <th>닉네임</th>
+        <th>휴대번호</th>
+        <th>인증신청정보</th>
+        <th>멘토링신청정보</th>
+        <th>정산여부</th>
+        <th>인증여부</th>
+        <th>정산정보</th>
+        <th>마케팅동의</th>
+        <th>후배회원가입</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="seniorInfo : ${seniorInfos}">
+        <td th:text="${seniorInfo.seniorId()}">id</td>
+        <td th:text="${seniorInfo.nickName()}">nickName</td>
+        <td th:text="${seniorInfo.phoneNumber()}">phoneNumber</td>
+        <td><button th:seniorId="${seniorInfo.seniorId()}" th:onclick="getCertification(this.getAttribute('seniorId'))">인증신청정보</button></td>
+        <td><button th:seniorId="${seniorInfo.seniorId()}" th:onclick="getMentoring(this.getAttribute('seniorId'))">멘토링정보</button></td>
+        <td th:text="${seniorInfo.salaryStatus()}">salary</td>
+        <td th:text="${seniorInfo.certificationStatus()}">certification</td>
+        <td><button th:seniorId="${seniorInfo.seniorId()}" th:onclick="getSalary(this.getAttribute('seniorId'))">정산정보</button></td>
+        <td th:text="${seniorInfo.marketingReceive()}">marketing</td>
+        <td th:text="${seniorInfo.isUser()}">isUser</td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
