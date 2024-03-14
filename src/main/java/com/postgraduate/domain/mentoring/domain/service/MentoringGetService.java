@@ -24,11 +24,16 @@ public class MentoringGetService {
 
     private final MentoringRepository mentoringRepository;
 
-    public void byPayment(Payment payment) {
+    public void checkByPayment(Payment payment) {
         mentoringRepository.findByPayment(payment)
                 .ifPresent(mentoring -> {
                     throw new MentoringPresentException();
                 });
+    }
+
+    public Mentoring byPayment(Payment payment) {
+        return mentoringRepository.findByPayment(payment)
+                .orElseThrow(MentoringNotFoundException::new);
     }
 
     public List<Mentoring> byUser(User user, Status status) {

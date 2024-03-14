@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link th:href="@{/css/bootstrap.min.css}"
+          href="css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        table {
+            width: 930px;
+            margin-left:auto;
+            margin-right:auto;
+        }
+
+        .container {
+            max-width: 560px;
+        }
+
+        table, td, th {
+            border-collapse : collapse;
+            border : 1px solid black;
+        }
+    </style>
+</head>
+<body>
+<table id="seniorInfos">
+    <thead>
+    <tr>
+        <th>닉네임</th>
+        <th>전화번호</th>
+        <th>가입일</th>
+        <th>마케팅수신동의</th>
+        <th>매칭지원동의</th>
+    </tr>
+    </thead>
+    <tbody>
+    <td th:text="${wishInfo.nickName()}">certification</td>
+    <td th:text="${wishInfo.phoneNumber()}">marketing</td>
+    <td th:text="${wishInfo.createAt()}">isUser</td>
+    <td th:text="${wishInfo.marketingReceive()}">isUser</td>
+    <td th:text="${wishInfo.matchingReceive()}">isUser</td>
+    </tbody>
+</table>
+<table>
+    <thead>
+    <tr>
+        <th>희망 대학원/학과</th>
+        <th>희망 분야</th>
+    </tr>
+    </thead>
+    <tbody>
+    <td th:text="${wishInfo.major()}">certification</td>
+    <td th:text="${wishInfo.field()}">certification</td>
+    </tbody>
+</table>
+<div class="container">
+    <div class="col">
+        <button class="w-100 btn btn-primary btn-lg"
+                th:wishId="${wishInfo.wishId()}" th:onclick="wishDone(this.getAttribute('wishId'))">매칭 완료로 변경</button>
+    </div>
+</div>
+</body>
+</html>

@@ -43,4 +43,8 @@ public class SalaryGetService {
         log.info("salaryDate : {}", salaryDate);
         return salaryRepository.findAllLastSalary(salaryDate);
     }
+
+    public List<Salary> findAll() {
+        return salaryRepository.findAll();
+    }
 }

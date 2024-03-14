@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link th:href="@{/css/bootstrap.min.css}"
+          href="css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        table {
+            width: 930px;
+            margin-left:auto;
+            margin-right:auto;
+        }
+
+        table, td, th {
+            border-collapse : collapse;
+            border : 1px solid black;
+        }
+    </style>
+</head>
+<body>
+<table id="seniorInfos">
+    <image th:src="${certificationInfo.certification()}"></image>
+    <thead>
+    <tr>
+        <th>닉네임</th>
+        <th>휴대번호</th>
+        <th>신청일시</th>
+        <th>대학원</th>
+        <th>학과</th>
+        <th>연구분야</th>
+        <th>키워드</th>
+        <th>연구실</th>
+        <th>지도교수</th>
+    </tr>
+    </thead>
+    <tbody>
+    <td th:text="${certificationInfo.nickName()}">id</td>
+    <td th:text="${certificationInfo.phoneNumber()}">nickName</td>
+    <td th:text="${certificationInfo.createdAt()}">phoneNumber</td>
+    <td th:text="${certificationInfo.postgradu()}">salary</td>
+    <td th:text="${certificationInfo.major()}">certification</td>
+    <td th:text="${certificationInfo.field()}">marketing</td>
+    <td th:text="${certificationInfo.lab()}">isUser</td>
+    <td th:text="${certificationInfo.professor()}">isUser</td>
+    <td th:text="${certificationInfo.keyword()}">isUser</td>
+    </tbody>
+</table>
+<table>
+    <tr>
+        <td><button th:seniorId="${certificationInfo.seniorId()}" th:onclick="approveCertification(this.getAttribute('seniorId'))">승인</button></td>
+        <td><button th:seniorId="${certificationInfo.seniorId()}" th:onclick="refuseCertification(this.getAttribute('seniorId'))">반려</button></td>
+    </tr>
+</table>
+</body>
+</html>

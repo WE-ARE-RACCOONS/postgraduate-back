@@ -10,6 +10,7 @@ import com.postgraduate.domain.wish.domain.service.WishGetService;
 import com.postgraduate.global.config.security.jwt.util.JwtUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,7 @@ import static com.postgraduate.domain.user.domain.entity.constant.Role.*;
 
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class JwtUseCase {
     private final JwtUtils jwtUtils;
     private final WishGetService wishGetService;

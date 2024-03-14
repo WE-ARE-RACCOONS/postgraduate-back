@@ -1,8 +1,9 @@
-package com.postgraduate.domain.wish.application.dto.res;
+package com.postgraduate.domain.admin.application.dto.res;
 
 import java.time.LocalDateTime;
 
 public record WishResponse(
+        Long wishId,
         String nickName,
         String phoneNumber,
         LocalDateTime createAt,

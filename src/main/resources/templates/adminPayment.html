@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link th:href="@{/css/bootstrap.min.css}"
+          href="css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        table {
+            width: 930px;
+            margin-left:auto;
+            margin-right:auto;
+        }
+
+        table, td, th {
+            border-collapse : collapse;
+            border : 1px solid black;
+        }
+    </style>
+</head>
+<body>
+<table id="seniorInfos">
+    <thead>
+    <tr>
+        <th>닉네임</th>
+        <th>결제금액</th>
+        <th>전화번호</th>
+        <th>결제일시</th>
+        <th>멘토링정보</th>
+        <th>결제상태</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="paymentInfo : ${paymentInfos}">
+        <td th:text="${paymentInfo.userNickName()}">nickName</td>
+        <td th:text="${paymentInfo.pay()}">amount</td>
+        <td th:text="${paymentInfo.phoneNumber()}">phoneNumber</td>
+        <td th:text="${paymentInfo.createdAt()}">createdAt</td>
+        <td><button th:paymentId="${paymentInfo.paymentId()}" th:onclick="getPaymentMentoring(this.getAttribute('paymentId'))">멘토링정보보기</button></td>
+        <td th:text="${paymentInfo.status()}">status</td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
