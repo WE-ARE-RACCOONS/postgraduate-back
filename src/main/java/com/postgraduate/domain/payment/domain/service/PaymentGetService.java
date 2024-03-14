@@ -8,6 +8,8 @@ import com.postgraduate.domain.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 import static com.postgraduate.domain.payment.domain.entity.constant.Status.DONE;
 
 @Service
@@ -21,5 +23,9 @@ public class PaymentGetService {
 
     public Payment bySeniorAndOrderId(Senior senior, String orderId) {
         return paymentRepository.findBySeniorAndOrderIdAndStatus(senior, orderId, DONE).orElseThrow(PaymentNotFoundException::new);
+    }
+
+    public List<Payment> all() {
+        return paymentRepository.findAll();
     }
 }
