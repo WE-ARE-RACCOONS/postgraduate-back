@@ -28,6 +28,11 @@ public class WishGetService {
         return wishRepository.findByUser(user);
     }
 
+    public Wish byUserId(Long userId) {
+        return wishRepository.findByUser_UserId(userId)
+                .orElseThrow(WishNotFoundException::new);
+    }
+
     public Page<Wish> all(Integer page, String search) {
         page = page == null ? 1 : page;
         Pageable pageable = PageRequest.of(page - 1, ADMIN_PAGE_SIZE);

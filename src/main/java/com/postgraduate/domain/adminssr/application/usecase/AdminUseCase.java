@@ -2,6 +2,8 @@ package com.postgraduate.domain.adminssr.application.usecase;
 
 import com.postgraduate.domain.admin.application.dto.*;
 import com.postgraduate.domain.admin.application.dto.res.CertificationDetailsResponse;
+import com.postgraduate.domain.admin.application.dto.res.MentoringManageResponse;
+import com.postgraduate.domain.admin.application.dto.res.MentoringWithPaymentResponse;
 import com.postgraduate.domain.admin.application.mapper.AdminMapper;
 import com.postgraduate.domain.admin.presentation.constant.SalaryStatus;
 import com.postgraduate.domain.adminssr.application.dto.req.Login;
@@ -18,6 +20,8 @@ import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.domain.senior.domain.service.SeniorUpdateService;
 import com.postgraduate.domain.senior.exception.SeniorCertificationException;
 import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.admin.application.dto.res.WishResponse;
+import com.postgraduate.domain.user.domain.service.UserGetService;
 import com.postgraduate.domain.wish.domain.entity.Wish;
 import com.postgraduate.domain.wish.domain.service.WishGetService;
 import com.postgraduate.global.config.security.util.EncryptorUtils;
@@ -34,6 +38,7 @@ import static com.postgraduate.domain.salary.util.SalaryUtil.getStatus;
 @Transactional
 @RequiredArgsConstructor
 public class AdminUseCase {
+    private final UserGetService userGetService;
     private final AuthGetService authGetService;
     private final SeniorGetService seniorGetService;
     private final SalaryGetService salaryGetService;
@@ -104,11 +109,14 @@ public class AdminUseCase {
         seniorUpdateService.updateCertificationStatus(senior, Status.APPROVE);
     }
 
-    public List<MentoringInfo> seniorMentorings(Long seniorId) {
+    public MentoringManageResponse seniorMentorings(Long seniorId) {
+        Senior senior = seniorGetService.bySeniorId(seniorId);
         List<Mentoring> mentorings = mentoringGetService.bySeniorId(seniorId);
-        return mentorings.stream()
+        List<MentoringInfo> mentoringInfos = mentorings.stream()
                 .map(AdminMapper::mapToMentoringInfo)
                 .toList();
+        UserMentoringInfo seniorInfo = AdminMapper.mapToUserMentoringInfo(senior);
+        return new MentoringManageResponse(mentoringInfos, seniorInfo);
     }
 
     public SalaryInfo seniorSalary(Long seniorId) {
@@ -118,5 +126,26 @@ public class AdminUseCase {
             return AdminMapper.mapToSalaryResponse(senior, salary);
         String accountNumber = encryptorUtils.decryptData(salary.getAccountNumber());
         return AdminMapper.mapToSalaryResponse(senior, accountNumber, salary);
+    }
+
+    public WishResponse wishInfo(Long userId) {
+        Wish wish = wishGetService.byUserId(userId);
+        return AdminMapper.mapToWishResponse(wish);
+    }
+
+    public MentoringManageResponse userMentoringInfos(Long userId) {
+        User user = userGetService.byUserId(userId);
+        List<Mentoring> mentorings = mentoringGetService.byUserId(userId);
+        List<MentoringInfo> mentoringInfos = mentorings.stream()
+                .map(AdminMapper::mapToMentoringInfo)
+                .toList();
+        UserMentoringInfo userInfo = AdminMapper.mapToUserMentoringInfo(user);
+        return new MentoringManageResponse(mentoringInfos, userInfo);
+    }
+
+    public MentoringWithPaymentResponse paymentMentoringInfo(Long paymentId) {
+        Payment payment = paymentGetService.byId(paymentId);
+        Mentoring mentoring = mentoringGetService.byPayment(payment);
+        return AdminMapper.mapToMentoringWithPaymentResponse(mentoring);
     }
 }

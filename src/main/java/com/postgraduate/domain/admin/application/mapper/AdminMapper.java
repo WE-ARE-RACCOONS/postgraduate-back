@@ -13,7 +13,7 @@ import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.entity.constant.Role;
-import com.postgraduate.domain.wish.application.dto.res.WishResponse;
+import com.postgraduate.domain.admin.application.dto.res.WishResponse;
 import com.postgraduate.domain.wish.domain.entity.Wish;
 
 public class AdminMapper {
@@ -92,6 +92,7 @@ public class AdminMapper {
 
     public static UserMentoringInfo mapToUserMentoringInfo(User user) {
         return new UserMentoringInfo(
+                user.getNickName(),
                 user.getPhoneNumber()
         );
     }
@@ -187,6 +188,7 @@ public class AdminMapper {
         Senior senior = mentoring.getSenior();
         Payment payment = mentoring.getPayment();
         return new MentoringWithPaymentResponse(
+                mentoring.getMentoringId(),
                 payment.getPaymentId(),
                 user.getNickName(),
                 user.getPhoneNumber(),
@@ -202,6 +204,7 @@ public class AdminMapper {
     public static WishResponse mapToWishResponse(Wish wish) {
         User user = wish.getUser();
         return new WishResponse(
+                wish.getWishId(),
                 user.getNickName(),
                 user.getPhoneNumber(),
                 user.getCreatedAt(),

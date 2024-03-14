@@ -2,6 +2,9 @@ package com.postgraduate.domain.adminssr.presentation;
 
 import com.postgraduate.domain.admin.application.dto.*;
 import com.postgraduate.domain.admin.application.dto.res.CertificationDetailsResponse;
+import com.postgraduate.domain.admin.application.dto.res.MentoringManageResponse;
+import com.postgraduate.domain.admin.application.dto.res.MentoringWithPaymentResponse;
+import com.postgraduate.domain.admin.application.dto.res.WishResponse;
 import com.postgraduate.domain.adminssr.application.dto.req.Login;
 import com.postgraduate.domain.adminssr.application.usecase.AdminUseCase;
 import com.postgraduate.domain.auth.application.dto.res.JwtTokenResponse;
@@ -42,11 +45,11 @@ public class AdminWithThymeLeafController {
         return "adminSenior";
     }
 
-    @GetMapping("/juniorInfo")
-    public String juniorInfo(Model model) {
+    @GetMapping("/userInfo")
+    public String userInfo(Model model) {
         List<UserInfo> userInfos = adminUseCase.userInfos();
         model.addAttribute("userInfos", userInfos);
-        return "adminJunior";
+        return "adminUser";
     }
 
     @GetMapping("/paymentInfo")
@@ -84,7 +87,7 @@ public class AdminWithThymeLeafController {
 
     @GetMapping("/mentoring/{seniorId}")
     public String seniorMentoringInfo(@PathVariable Long seniorId, Model model) {
-        List<MentoringInfo> mentoringInfos = adminUseCase.seniorMentorings(seniorId);
+        MentoringManageResponse mentoringInfos = adminUseCase.seniorMentorings(seniorId);
         model.addAttribute("mentoringInfos", mentoringInfos);
         return "seniorMentoring";
     }
@@ -104,5 +107,31 @@ public class AdminWithThymeLeafController {
     @PostMapping("/salary/done/{salaryId}")
     public String salaryDone(@PathVariable Long salaryId) {
         return "adminEmpty";
+    }
+
+    @GetMapping("/user/matching/{userId}")
+    public String userMatching(@PathVariable Long userId, Model model) {
+        WishResponse wishResponse = adminUseCase.wishInfo(userId);
+        model.addAttribute("wishInfo", wishResponse);
+        return "userWish";
+    }
+
+    @PostMapping("/wish/done/{wishId}")
+    public String wishDone(@PathVariable Long wishId) {
+        return "adminEmpty";
+    }
+
+    @GetMapping("/user/mentoring/{userId}")
+    public String userMentoring(@PathVariable Long userId, Model model) {
+        MentoringManageResponse mentoringInfos = adminUseCase.userMentoringInfos(userId);
+        model.addAttribute("mentoringInfos", mentoringInfos);
+        return "userMentoring";
+    }
+
+    @GetMapping("/payment/mentoring/{paymentId}")
+    public String paymentMentoring(@PathVariable Long paymentId, Model model) {
+        MentoringWithPaymentResponse mentoringInfo = adminUseCase.paymentMentoringInfo(paymentId);
+        model.addAttribute("mentoringInfo", mentoringInfo);
+        return "paymentMentoring";
     }
 }

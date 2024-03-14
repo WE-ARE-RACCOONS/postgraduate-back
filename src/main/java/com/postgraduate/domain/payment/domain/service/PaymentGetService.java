@@ -17,6 +17,11 @@ import static com.postgraduate.domain.payment.domain.entity.constant.Status.DONE
 public class PaymentGetService {
     private final PaymentRepository paymentRepository;
 
+    public Payment byId(Long paymentId) {
+        return paymentRepository.findById(paymentId)
+                .orElseThrow(PaymentNotFoundException::new);
+    }
+
     public Payment byUserAndOrderId(User user, String orderId) {
         return paymentRepository.findByUserAndOrderIdAndStatus(user, orderId, DONE).orElseThrow(PaymentNotFoundException::new);
     }
