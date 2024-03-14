@@ -20,6 +20,7 @@ import java.util.List;
 
 import static com.postgraduate.domain.senior.application.mapper.SeniorMapper.mapToSeniorDetail;
 import static com.postgraduate.domain.senior.application.mapper.SeniorMapper.mapToSeniorProfile;
+import static com.postgraduate.domain.user.domain.entity.constant.Role.SENIOR;
 
 @Service
 @Transactional
@@ -30,7 +31,7 @@ public class SeniorInfoUseCase {
     private final AvailableGetService availableGetService;
 
     public SeniorDetailResponse getSeniorDetail(User user, Long seniorId) {
-        if (user != null)
+        if (user != null && user.getRole() == SENIOR)
             return checkIsMine(user, seniorId);
         return getResponse(seniorId, false);
     }
@@ -98,10 +99,5 @@ public class SeniorInfoUseCase {
                 .map(Senior::getSeniorId)
                 .toList();
         return new AllSeniorIdResponse(seniorIds);
-    }
-
-    public Long getSeniorId(String nickName) {
-        Senior senior = seniorGetService.bySeniorNickName(nickName);
-        return senior.getSeniorId();
     }
 }
