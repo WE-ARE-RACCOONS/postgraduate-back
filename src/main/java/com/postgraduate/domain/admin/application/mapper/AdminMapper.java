@@ -25,6 +25,7 @@ public class AdminMapper {
         User user = senior.getUser();
         Info info = senior.getInfo();
         return new CertificationDetailsResponse(
+                senior.getSeniorId(),
                 senior.getCertification(),
                 user.getNickName(),
                 user.getPhoneNumber(),
@@ -117,9 +118,23 @@ public class AdminMapper {
         );
     }
 
+    public static PaymentInfo mapToPaymentInfo(Payment payment, Mentoring mentoring) {
+        User user = payment.getUser();
+        return new PaymentInfo(
+                payment.getPaymentId(),
+                mentoring.getMentoringId(),
+                user.getNickName(),
+                user.getPhoneNumber(),
+                payment.getPaidAt(),
+                payment.getPay(),
+                payment.getStatus()
+        );
+    }
+
     public static SalaryInfo mapToSalaryResponse(Senior senior, String accountNumber, Salary salary) {
         User user = senior.getUser();
         return new SalaryInfo(
+                salary.getSalaryId(),
                 user.getNickName(),
                 user.getPhoneNumber(),
                 salary.getTotalAmount(),
@@ -133,6 +148,7 @@ public class AdminMapper {
     public static SalaryInfo mapToSalaryResponse(Senior senior, Salary salary) {
         User user = senior.getUser();
         return new SalaryInfo(
+                salary.getSalaryId(),
                 user.getNickName(),
                 user.getPhoneNumber(),
                 salary.getTotalAmount(),
