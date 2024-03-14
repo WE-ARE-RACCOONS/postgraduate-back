@@ -56,6 +56,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(PASS).permitAll()
                         .requestMatchers("/admin/**").hasAuthority(Role.ADMIN.name())
+                        .requestMatchers("/adminServer/seniorInfo").hasAuthority(Role.ADMIN.name())
 
                         .requestMatchers(HttpMethod.PATCH, "/senior/**").hasAuthority(Role.SENIOR.name())
                         .requestMatchers(HttpMethod.POST, "/senior/**").hasAuthority(Role.SENIOR.name())
