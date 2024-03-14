@@ -35,7 +35,7 @@
         <td th:text="${paymentInfo.pay()}">amount</td>
         <td th:text="${paymentInfo.phoneNumber()}">phoneNumber</td>
         <td th:text="${paymentInfo.createdAt()}">createdAt</td>
-        <td><button>멘토링정보</button></td>
+        <td><button th:paymentId="${paymentInfo.paymentId()}" th:onclick="getPaymentMentoring(this.getAttribute('paymentId'))">멘토링정보보기</button></td>
         <td th:text="${paymentInfo.status()}">status</td>
     </tr>
     </tbody>

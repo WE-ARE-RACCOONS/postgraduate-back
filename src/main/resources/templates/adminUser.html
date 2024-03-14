@@ -41,8 +41,8 @@
         <td th:text="${userInfo.createdAt()}">createdAt</td>
         <td th:text="${userInfo.marketingReceive()}">marketingReceive</td>
         <td th:text="${userInfo.matchingReceive()}">matchingReceive</td>
-        <td><button>매칭지원정보</button></td>
-        <td><button>신청멘토링정보</button></td>
+        <td><button th:userId="${userInfo.userId()}" th:onclick="getMatching(this.getAttribute('userId'))">매칭지원정보</button></td>
+        <td><button th:userId="${userInfo.userId()}" th:onclick="getUserMentoring(this.getAttribute('userId'))">신청멘토링정보</button></td>
         <td th:text="${userInfo.matchingStatus()}">matchingFinish</td>
         <td th:text="${userInfo.isSenior()}">isSenior</td>
     </tr>

@@ -11,6 +11,10 @@
             margin-right:auto;
         }
 
+        .container {
+            max-width: 560px;
+        }
+
         table, td, th {
             border-collapse : collapse;
             border : 1px solid black;
@@ -29,7 +33,7 @@
     <td th:text="${mentoringInfos.userMentoringInfo().nickName()}"></td>
     <td th:text="${mentoringInfos.userMentoringInfo().phoneNumber()}"></td>
     </tbody>
-</table>>
+</table>
 <table id="seniorInfos">
     <thead>
     <tr>

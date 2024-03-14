@@ -35,9 +35,9 @@
         xhr.send();
     }
 
-    function goToJunior() {
+    function goToUser() {
         var xhr = new XMLHttpRequest();
-        xhr.open("GET", "/adminServer/juniorInfo", true);
+        xhr.open("GET", "/adminServer/userInfo", true);
         xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
         xhr.onreadystatechange = function() {
             if (xhr.readyState === XMLHttpRequest.DONE) {
@@ -101,37 +101,45 @@
     }
 
     function refuseCertification(seniorId) {
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", "/adminServer/certification/" + seniorId + "/refuse", true);
-        xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === XMLHttpRequest.DONE) {
-                if (xhr.status === 200) {
-                    document.getElementById("output").innerHTML = xhr.responseText;
-                } else {
-                    localStorage.removeItem("accessToken");
-                    localStorage.removeItem("refreshToken");
+        if (confirm("정말 반려하겠습니까??") == true){    //확인
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/adminServer/certification/" + seniorId + "/refuse", true);
+            xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        document.getElementById("output").innerHTML = xhr.responseText;
+                    } else {
+                        localStorage.removeItem("accessToken");
+                        localStorage.removeItem("refreshToken");
+                    }
                 }
-            }
-        };
-        xhr.send();
+            };
+            xhr.send();
+        }else{   //취소
+            return false;
+        }
     }
 
     function approveCertification(seniorId) {
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", "/adminServer/certification/" + seniorId + "/approve", true);
-        xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === XMLHttpRequest.DONE) {
-                if (xhr.status === 200) {
-                    document.getElementById("output").innerHTML = xhr.responseText;
-                } else {
-                    localStorage.removeItem("accessToken");
-                    localStorage.removeItem("refreshToken");
+        if (confirm("정말 수락하겠습니까??") == true){    //확인
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/adminServer/certification/" + seniorId + "/approve", true);
+            xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        document.getElementById("output").innerHTML = xhr.responseText;
+                    } else {
+                        localStorage.removeItem("accessToken");
+                        localStorage.removeItem("refreshToken");
+                    }
                 }
-            }
-        };
-        xhr.send();
+            };
+            xhr.send();
+        }else{   //취소
+            return false;
+        }
     }
 
     function getMentoring(seniorId) {
@@ -152,20 +160,24 @@
     }
 
     function refundMentoring(mentoringId) {
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", "/adminServer/mentoring/refund/" + mentoringId, true);
-        xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === XMLHttpRequest.DONE) {
-                if (xhr.status === 200) {
-                    document.getElementById("output").innerHTML = xhr.responseText;
-                } else {
-                    localStorage.removeItem("accessToken");
-                    localStorage.removeItem("refreshToken");
+        if (confirm("정말 환불하겠습니까??") == true){    //확인
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/adminServer/mentoring/refund/" + mentoringId, true);
+            xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        document.getElementById("output").innerHTML = xhr.responseText;
+                    } else {
+                        localStorage.removeItem("accessToken");
+                        localStorage.removeItem("refreshToken");
+                    }
                 }
-            }
-        };
-        xhr.send();
+            };
+            xhr.send();
+        }else{   //취소
+            return false;
+        }
     }
 
     function getSalary(seniorId) {
@@ -186,8 +198,84 @@
     }
 
     function salaryDone(salaryId) {
+        if (confirm("정말 완료하겠습니까??") == true){    //확인
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/adminServer/salary/done/" + salaryId, true);
+            xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        document.getElementById("output").innerHTML = xhr.responseText;
+                    } else {
+                        localStorage.removeItem("accessToken");
+                        localStorage.removeItem("refreshToken");
+                    }
+                }
+            };
+            xhr.send();
+        }else{   //취소
+            return false;
+        }
+    }
+
+    function getMatching(userId) {
         var xhr = new XMLHttpRequest();
-        xhr.open("POST", "/adminServer/salary/done/" + salaryId, true);
+        xhr.open("GET", "/adminServer/user/matching/" + userId, true);
+        xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    document.getElementById("output").innerHTML = xhr.responseText;
+                } else {
+                    localStorage.removeItem("accessToken");
+                    localStorage.removeItem("refreshToken");
+                }
+            }
+        };
+        xhr.send();
+    }
+
+    function wishDone(wishId) {
+        if (confirm("정말 완료하겠습니까??") == true){    //확인
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/adminServer/wish/done/" + wishId, true);
+            xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        document.getElementById("output").innerHTML = xhr.responseText;
+                    } else {
+                        localStorage.removeItem("accessToken");
+                        localStorage.removeItem("refreshToken");
+                    }
+                }
+            };
+            xhr.send();
+        }else{   //취소
+            return false;
+        }
+    }
+
+    function getUserMentoring(userId) {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "/adminServer/user/mentoring/" + userId, true);
+        xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    document.getElementById("output").innerHTML = xhr.responseText;
+                } else {
+                    localStorage.removeItem("accessToken");
+                    localStorage.removeItem("refreshToken");
+                }
+            }
+        };
+        xhr.send();
+    }
+
+    function getPaymentMentoring(paymentId) {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "/adminServer/payment/mentoring/" + paymentId, true);
         xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
         xhr.onreadystatechange = function() {
             if (xhr.readyState === XMLHttpRequest.DONE) {
@@ -216,7 +304,7 @@
     <div class="row">
         <div class="col">
             <button class="w-100 btn btn-primary btn-lg"
-                    onclick="goToJunior()"
+                    onclick="goToUser()"
                     type="button">후배 관리</button>
         </div>
     </div>
