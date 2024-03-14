@@ -30,6 +30,7 @@ import static com.postgraduate.domain.user.domain.entity.constant.Role.USER;
 import static java.lang.Boolean.TRUE;
 import static java.time.LocalDate.now;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
@@ -64,14 +65,14 @@ class SeniorInfoUseCaseTest {
                 LocalDateTime.now(), LocalDateTime.now());
     }
     @Test
-    @DisplayName("선배 상세보기 테스트")
+    @DisplayName("선배 상세보기 테스트 USER")
     void getSeniorDetail() {
         Available available1 = new Available(1L, "월", "12:00", "18:00", senior);
         Available available2 = new Available(2L, "화", "12:00", "18:00", senior);
         Available available3 = new Available(3L, "수", "12:00", "18:00", senior);
         List<Available> availables = List.of(available1, available2, available3);
 
-        given(seniorGetService.byUser(user))
+        given(seniorGetService.bySeniorIdWithCertification(any()))
                 .willReturn(senior);
         given(availableGetService.bySenior(senior))
                 .willReturn(availables);
