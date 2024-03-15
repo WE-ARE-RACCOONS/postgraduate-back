@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link th:href="@{/css/bootstrap.min.css}"
+          href="css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        table {
+            width: 930px;
+            margin-left:auto;
+            margin-right:auto;
+        }
+
+        table, td, th {
+            border-collapse : collapse;
+            border : 1px solid black;
+        }
+    </style>
+</head>
+<body>
+<table id="seniorInfos">
+    <thead>
+    <tr>
+        <th>후배ID</th>
+        <th>닉네임</th>
+        <th>휴대번호</th>
+        <th>가입일시</th>
+        <th>마케팅동의</th>
+        <th>매칭지원동의</th>
+        <th>매칭지원정보</th>
+        <th>신청멘토링정보</th>
+        <th>매칭지원완료여부</th>
+        <th>선배회원가입</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="userInfo : ${userInfos}">
+        <td th:text="${userInfo.userId()}">id</td>
+        <td th:text="${userInfo.nickName()}">nickName</td>
+        <td th:text="${userInfo.phoneNumber()}">phoneNumber</td>
+        <td th:text="${userInfo.createdAt()}">createdAt</td>
+        <td th:text="${userInfo.marketingReceive()}">marketingReceive</td>
+        <td th:text="${userInfo.matchingReceive()}">matchingReceive</td>
+        <td><button th:userId="${userInfo.userId()}" th:onclick="getMatching(this.getAttribute('userId'))">매칭지원정보</button></td>
+        <td><button th:userId="${userInfo.userId()}" th:onclick="getUserMentoring(this.getAttribute('userId'))">신청멘토링정보</button></td>
+        <td th:text="${userInfo.matchingStatus()}">matchingFinish</td>
+        <td th:text="${userInfo.isSenior()}">isSenior</td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

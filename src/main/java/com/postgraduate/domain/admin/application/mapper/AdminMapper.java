@@ -13,7 +13,7 @@ import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.entity.constant.Role;
-import com.postgraduate.domain.wish.application.dto.res.WishResponse;
+import com.postgraduate.domain.admin.application.dto.res.WishResponse;
 import com.postgraduate.domain.wish.domain.entity.Wish;
 
 public class AdminMapper {
@@ -25,6 +25,7 @@ public class AdminMapper {
         User user = senior.getUser();
         Info info = senior.getInfo();
         return new CertificationDetailsResponse(
+                senior.getSeniorId(),
                 senior.getCertification(),
                 user.getNickName(),
                 user.getPhoneNumber(),
@@ -91,6 +92,7 @@ public class AdminMapper {
 
     public static UserMentoringInfo mapToUserMentoringInfo(User user) {
         return new UserMentoringInfo(
+                user.getNickName(),
                 user.getPhoneNumber()
         );
     }
@@ -117,9 +119,23 @@ public class AdminMapper {
         );
     }
 
+    public static PaymentInfo mapToPaymentInfo(Payment payment, Mentoring mentoring) {
+        User user = payment.getUser();
+        return new PaymentInfo(
+                payment.getPaymentId(),
+                mentoring.getMentoringId(),
+                user.getNickName(),
+                user.getPhoneNumber(),
+                payment.getPaidAt(),
+                payment.getPay(),
+                payment.getStatus()
+        );
+    }
+
     public static SalaryInfo mapToSalaryResponse(Senior senior, String accountNumber, Salary salary) {
         User user = senior.getUser();
         return new SalaryInfo(
+                salary.getSalaryId(),
                 user.getNickName(),
                 user.getPhoneNumber(),
                 salary.getTotalAmount(),
@@ -133,6 +149,7 @@ public class AdminMapper {
     public static SalaryInfo mapToSalaryResponse(Senior senior, Salary salary) {
         User user = senior.getUser();
         return new SalaryInfo(
+                salary.getSalaryId(),
                 user.getNickName(),
                 user.getPhoneNumber(),
                 salary.getTotalAmount(),
@@ -171,6 +188,7 @@ public class AdminMapper {
         Senior senior = mentoring.getSenior();
         Payment payment = mentoring.getPayment();
         return new MentoringWithPaymentResponse(
+                mentoring.getMentoringId(),
                 payment.getPaymentId(),
                 user.getNickName(),
                 user.getPhoneNumber(),
@@ -186,6 +204,7 @@ public class AdminMapper {
     public static WishResponse mapToWishResponse(Wish wish) {
         User user = wish.getUser();
         return new WishResponse(
+                wish.getWishId(),
                 user.getNickName(),
                 user.getPhoneNumber(),
                 user.getCreatedAt(),

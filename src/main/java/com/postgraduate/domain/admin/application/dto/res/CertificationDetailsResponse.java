@@ -3,6 +3,7 @@ package com.postgraduate.domain.admin.application.dto.res;
 import java.time.LocalDateTime;
 
 public record CertificationDetailsResponse(
+        Long seniorId,
         String certification,
         String nickName,
         String phoneNumber,

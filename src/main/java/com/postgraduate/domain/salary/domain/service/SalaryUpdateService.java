@@ -17,6 +17,10 @@ public class SalaryUpdateService {
         salary.plusAmount(AMOUNT);
     }
 
+    public void minusTotalAmount(Salary salary) {
+        salary.minusAmount(AMOUNT);
+    }
+
     public void updateAccount(Salary salary, String bank, String accountNumber, String accountHolder) {
         salary.updateAccount(bank, accountNumber, accountHolder);
     }

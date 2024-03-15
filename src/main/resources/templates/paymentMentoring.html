@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link th:href="@{/css/bootstrap.min.css}"
+          href="css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        table {
+            width: 930px;
+            margin-left:auto;
+            margin-right:auto;
+        }
+
+        .container {
+            max-width: 560px;
+        }
+
+        table, td, th {
+            border-collapse : collapse;
+            border : 1px solid black;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h3>후배 멘티 정보</h3>
+</div>
+<table>
+    <thead>
+    <tr>
+        <th>닉네임</th>
+        <th>핸드폰번호</th>
+    </tr>
+    </thead>
+    <tbody>
+    <td th:text="${mentoringInfo.userNickname()}"></td>
+    <td th:text="${mentoringInfo.userPhoneNumber()}"></td>
+    </tbody>
+</table>
+<div class="container">
+<h3>선배 멘티 정보</h3>
+</div>
+<table>
+    <thead>
+    <tr>
+        <th>닉네임</th>
+        <th>핸드폰번호</th>
+    </tr>
+    </thead>
+    <tbody>
+    <td th:text="${mentoringInfo.seniorNickname()}"></td>
+    <td th:text="${mentoringInfo.seniorPhoneNumber()}"></td>
+    </tbody>
+</table>
+<table id="seniorInfos">
+    <thead>
+    <tr>
+        <th>매칭일시</th>
+        <th>멘토링시간</th>
+        <th>결제금액</th>
+        <th>수수료</th>
+    </tr>
+    </thead>
+    <tbody>
+    <td th:text="${mentoringInfo.date()}">certification</td>
+    <td th:text="${mentoringInfo.term()}">marketing</td>
+    <td th:text="${mentoringInfo.pay()}">isUser</td>
+    <td th:text="${mentoringInfo.charge()}">isUser</td>
+    </tbody>
+</table>
+<div class="container">
+    <div class="col">
+        <button class="w-100 btn btn-primary btn-lg"
+                th:mentoringId="${mentoringInfo.mentoringId()}" th:onclick="refundMentoring(this.getAttribute('mentoringId'))">환불 및 취소</button>
+    </div>
+</div>
+</body>
+</html>

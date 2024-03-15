@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -27,9 +28,18 @@ public class WishGetService {
         return wishRepository.findByUser(user);
     }
 
+    public Wish byUserId(Long userId) {
+        return wishRepository.findByUser_UserId(userId)
+                .orElseThrow(WishNotFoundException::new);
+    }
+
     public Page<Wish> all(Integer page, String search) {
         page = page == null ? 1 : page;
         Pageable pageable = PageRequest.of(page - 1, ADMIN_PAGE_SIZE);
         return wishRepository.findAllBySearchWish(search, pageable);
+    }
+
+    public List<Wish> all() {
+        return wishRepository.findAll();
     }
 }

@@ -64,7 +64,7 @@ public class MentoringManageUseCase {
         Payment payment = null;
         try {
             payment = paymentGetService.byUserAndOrderId(user, request.orderId());
-            mentoringGetService.byPayment(payment);
+            mentoringGetService.checkByPayment(payment);
             String[] dates = request.date().split(",");
             if (dates.length != 3)
                 throw new MentoringDateException();

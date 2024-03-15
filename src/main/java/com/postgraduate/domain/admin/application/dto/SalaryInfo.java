@@ -3,6 +3,7 @@ package com.postgraduate.domain.admin.application.dto;
 import java.time.LocalDateTime;
 
 public record SalaryInfo(
+        Long salaryId,
         String nickName,
         String phoneNumber,
         Integer totalAmount,
@@ -11,7 +12,7 @@ public record SalaryInfo(
         String accountNumber,
         LocalDateTime salaryDoneDate
 ) {
-    public SalaryInfo(String nickName, String phoneNumber, int totalAmount, LocalDateTime salaryDoneDate) {
-        this(nickName, phoneNumber, totalAmount, null, null, null, salaryDoneDate);
+    public SalaryInfo(Long salaryId, String nickName, String phoneNumber, int totalAmount, LocalDateTime salaryDoneDate) {
+        this(salaryId, nickName, phoneNumber, totalAmount, null, null, null, salaryDoneDate);
     }
 }
