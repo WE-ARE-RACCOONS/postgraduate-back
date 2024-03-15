@@ -11,6 +11,7 @@ import com.postgraduate.domain.auth.application.dto.res.JwtTokenResponse;
 import com.postgraduate.domain.auth.application.usecase.jwt.JwtUseCase;
 import com.postgraduate.domain.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -93,7 +94,8 @@ public class AdminWithThymeLeafController {
     }
 
     @PostMapping("/mentoring/refund/{mentoringId}")
-    public String refundMentoring(@PathVariable Long mentoringId) {
+    public String refundMentoring(@AuthenticationPrincipal User user, @PathVariable Long mentoringId) {
+        adminUseCase.refundMentoring(user, mentoringId);
         return "adminEmpty";
     }
 
@@ -106,6 +108,7 @@ public class AdminWithThymeLeafController {
 
     @PostMapping("/salary/done/{salaryId}")
     public String salaryDone(@PathVariable Long salaryId) {
+        adminUseCase.salaryDone(salaryId);
         return "adminEmpty";
     }
 
@@ -118,6 +121,7 @@ public class AdminWithThymeLeafController {
 
     @PostMapping("/wish/done/{wishId}")
     public String wishDone(@PathVariable Long wishId) {
+        adminUseCase.wishDone(wishId);
         return "adminEmpty";
     }
 

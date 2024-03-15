@@ -13,6 +13,7 @@ import com.postgraduate.domain.payment.exception.RefundFailException;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.user.domain.entity.constant.Role;
 import com.postgraduate.domain.user.domain.service.UserGetService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +30,7 @@ import java.util.Optional;
 
 import static com.postgraduate.domain.payment.application.usecase.PaymentParameter.*;
 import static com.postgraduate.domain.payment.presentation.constant.PaymentResponseMessage.FAIL_PAYMENT;
+import static com.postgraduate.domain.user.domain.entity.constant.Role.ADMIN;
 import static org.springframework.http.CacheControl.noCache;
 
 @Service
@@ -87,6 +89,13 @@ public class PaymentManageUseCase {
 
     public void refundPayBySenior(Senior senior, String orderId) {
         Payment payment = paymentGetService.bySeniorAndOrderId(senior, orderId);
+        refundPay(payment);
+    }
+
+    public void refundPayByAdmin(User user, Long paymentId) {
+        if (user.getRole() != ADMIN)
+            throw new RefundFailException("NOT ADMIN");
+        Payment payment = paymentGetService.byId(paymentId);
         refundPay(payment);
     }
 
