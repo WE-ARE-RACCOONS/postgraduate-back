@@ -59,4 +59,8 @@ public class Salary {
     public void plusAmount(int amount) {
         this.totalAmount += amount;
     }
+
+    public void minusAmount(int amount) {
+        this.totalAmount -= amount;
+    }
 }
