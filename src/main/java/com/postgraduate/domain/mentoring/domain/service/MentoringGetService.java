@@ -31,6 +31,11 @@ public class MentoringGetService {
                 });
     }
 
+    public Mentoring byPaymentWithNull(Payment payment) {
+        return mentoringRepository.findByPayment(payment)
+                .orElse(null);
+    }
+
     public Mentoring byPayment(Payment payment) {
         return mentoringRepository.findByPayment(payment)
                 .orElseThrow(MentoringNotFoundException::new);
