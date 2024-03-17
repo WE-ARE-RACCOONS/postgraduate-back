@@ -132,6 +132,19 @@ public class AdminMapper {
         );
     }
 
+    public static PaymentInfo mapToPaymentInfo(Payment payment) {
+        User user = payment.getUser();
+        return new PaymentInfo(
+                payment.getPaymentId(),
+                null,
+                user.getNickName(),
+                user.getPhoneNumber(),
+                payment.getPaidAt(),
+                payment.getPay(),
+                payment.getStatus()
+        );
+    }
+
     public static SalaryInfo mapToSalaryResponse(Senior senior, String accountNumber, Salary salary) {
         User user = senior.getUser();
         return new SalaryInfo(
