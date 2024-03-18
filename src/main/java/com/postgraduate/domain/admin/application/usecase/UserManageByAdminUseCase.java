@@ -42,6 +42,6 @@ public class UserManageByAdminUseCase {
         if (wish.getMajor() == null && wish.getField() == null) {
             throw new WishEmptyException();
         }
-        wishUpdateService.updateWishStatus(wish);
+        wishUpdateService.updateWishDone(wish);
     }
 }

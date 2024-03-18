@@ -43,7 +43,7 @@ class UserUpdateServiceTest {
     @Test
     @DisplayName("SENIOR 변경 테스트")
     void updateRoleWithSenior() {
-        userUpdateService.updateRole(user, SENIOR);
+        userUpdateService.userToSeniorRole(user);
 
         assertThat(user.getRole())
                 .isEqualTo(SENIOR);

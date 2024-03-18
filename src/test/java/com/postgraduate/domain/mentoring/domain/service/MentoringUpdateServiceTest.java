@@ -48,7 +48,7 @@ class MentoringUpdateServiceTest {
     @Test
     @DisplayName("CANCEL 변경")
     void updateStatusCancel() {
-        mentoringUpdateService.updateStatus(mentoring, CANCEL);
+        mentoringUpdateService.updateCancel(mentoring);
         assertThat(mentoring.getStatus())
                 .isEqualTo(CANCEL);
     }
@@ -56,7 +56,7 @@ class MentoringUpdateServiceTest {
     @Test
     @DisplayName("EXPECTED 변경")
     void updateStatusExpected() {
-        mentoringUpdateService.updateStatus(mentoring, EXPECTED);
+        mentoringUpdateService.updateExpected(mentoring);
         assertThat(mentoring.getStatus())
                 .isEqualTo(EXPECTED);
     }
@@ -64,7 +64,7 @@ class MentoringUpdateServiceTest {
     @Test
     @DisplayName("REFUSE 변경")
     void updateStatusRefuse() {
-        mentoringUpdateService.updateStatus(mentoring, REFUSE);
+        mentoringUpdateService.updateRefuse(mentoring);
         assertThat(mentoring.getStatus())
                 .isEqualTo(REFUSE);
     }

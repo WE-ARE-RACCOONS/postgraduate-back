@@ -16,7 +16,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.DONE;
 import static java.time.LocalDateTime.now;
 import static java.time.LocalDateTime.parse;
 import static java.time.format.DateTimeFormatter.ofPattern;
@@ -70,8 +69,7 @@ public class Mentoring {
         this.status = status;
     }
 
-    public void updateDone(Salary salary) {
-        this.status = DONE;
+    public void updateSalary(Salary salary) {
         this.salary = salary;
     }
 

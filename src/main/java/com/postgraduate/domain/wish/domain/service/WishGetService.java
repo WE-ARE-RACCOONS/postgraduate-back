@@ -29,7 +29,7 @@ public class WishGetService {
     }
 
     public Wish byUserId(Long userId) {
-        return wishRepository.findByUser_UserId(userId)
+        return wishRepository.findByMatchingReceiveIsTrueAndUser_UserId(userId)
                 .orElseThrow(WishNotFoundException::new);
     }
 

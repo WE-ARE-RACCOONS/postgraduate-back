@@ -173,7 +173,7 @@ class MentoringManageUseCaseTest {
 
         mentoringManageUseCase.updateCancel(user, mentoringId);
 
-        verify(mentoringUpdateService).updateStatus(mentoring, CANCEL);
+        verify(mentoringUpdateService).updateCancel(mentoring);
     }
 
     @Test
@@ -255,7 +255,7 @@ class MentoringManageUseCaseTest {
                 .willReturn(salary);
         mentoringManageUseCase.updateDone(user, mentoringId);
 
-        verify(salaryUpdateService).updateTotalAmount(salary);
+        verify(salaryUpdateService).plusTotalAmount(salary);
         verify(mentoringUpdateService).updateDone(mentoring, salary);
     }
 
@@ -277,7 +277,7 @@ class MentoringManageUseCaseTest {
         mentoringManageUseCase.updateRefuse(user, mentoringId, request);
 
         verify(refuseSaveService).save(any(Refuse.class));
-        verify(mentoringUpdateService).updateStatus(mentoring, REFUSE);
+        verify(mentoringUpdateService).updateRefuse(mentoring);
     }
 
     @Test
@@ -337,7 +337,7 @@ class MentoringManageUseCaseTest {
                 .isEqualTo(TRUE);
 
         verify(mentoringUpdateService).updateDate(mentoring, dateRequest.date());
-        verify(mentoringUpdateService).updateStatus(mentoring, EXPECTED);
+        verify(mentoringUpdateService).updateExpected(mentoring);
     }
 
     @Test
@@ -361,7 +361,7 @@ class MentoringManageUseCaseTest {
                 .isEqualTo(FALSE);
 
         verify(mentoringUpdateService).updateDate(mentoring, dateRequest.date());
-        verify(mentoringUpdateService).updateStatus(mentoring, EXPECTED);
+        verify(mentoringUpdateService).updateExpected(mentoring);
     }
 
     @Test

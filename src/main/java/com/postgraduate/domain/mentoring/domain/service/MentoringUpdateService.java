@@ -6,6 +6,8 @@ import com.postgraduate.domain.salary.domain.entity.Salary;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.*;
+
 @Service
 @RequiredArgsConstructor
 public class MentoringUpdateService {
@@ -14,8 +16,21 @@ public class MentoringUpdateService {
         mentoring.updateStatus(status);
     }
 
+    public void updateRefuse(Mentoring mentoring) {
+        mentoring.updateStatus(REFUSE);
+    }
+
+    public void updateCancel(Mentoring mentoring) {
+        mentoring.updateStatus(CANCEL);
+    }
+
+    public void updateExpected(Mentoring mentoring) {
+        mentoring.updateStatus(EXPECTED);
+    }
+
     public void updateDone(Mentoring mentoring, Salary salary) {
-        mentoring.updateDone(salary);
+        mentoring.updateStatus(DONE);
+        mentoring.updateSalary(salary);
     }
 
     public void updateDate(Mentoring mentoring, String date) {

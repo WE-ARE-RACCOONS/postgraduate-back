@@ -21,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+import static java.lang.Boolean.TRUE;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -69,6 +71,10 @@ public class SalaryManageByAdminUseCase {
     public void updateSalaryStatus(Long seniorId, Boolean status) {
         Senior senior = seniorGetService.bySeniorId(seniorId);
         Salary salary = salaryGetService.bySenior(senior);
-        salaryUpdateService.updateStatus(salary, status);
+        if (TRUE.equals(status)) {
+            salaryUpdateService.updateDone(salary);
+            return;
+        }
+        salaryUpdateService.updateNot(salary);
     }
 }

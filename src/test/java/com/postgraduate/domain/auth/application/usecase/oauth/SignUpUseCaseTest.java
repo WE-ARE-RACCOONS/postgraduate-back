@@ -157,7 +157,7 @@ class SignUpUseCaseTest {
         verify(seniorSaveService, times(1))
                 .saveSenior(any(Senior.class));
         verify(userUpdateService, times(1))
-                .updateRole(any(), eq(SENIOR));
+                .userToSeniorRole(any());
 
     }
 }

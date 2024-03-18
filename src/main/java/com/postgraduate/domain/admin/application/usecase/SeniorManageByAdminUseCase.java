@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.postgraduate.domain.salary.util.SalaryUtil.getStatus;
+import static com.postgraduate.domain.senior.domain.entity.constant.Status.APPROVE;
 
 @Service
 @Transactional
@@ -44,7 +45,11 @@ public class SeniorManageByAdminUseCase {
 
     public void updateSeniorStatus(Long seniorId, SeniorStatusRequest request) {
         Senior senior = seniorGetService.bySeniorId(seniorId);
-        seniorUpdateService.updateCertificationStatus(senior, request.certificationStatus());
+        if (request.certificationStatus() == APPROVE) {
+            seniorUpdateService.certificationUpdateApprove(senior);
+            return;
+        }
+        seniorUpdateService.certificationUpdateNotApprove(senior);
     }
 
     public SeniorManageResponse getSeniors(Integer page, String search) {

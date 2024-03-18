@@ -64,7 +64,6 @@ public class Senior {
 
     public void updateCertification(String certification) {
         this.certification = certification;
-        this.status = WAITING;
     }
 
     public void updateStatus(Status status) {

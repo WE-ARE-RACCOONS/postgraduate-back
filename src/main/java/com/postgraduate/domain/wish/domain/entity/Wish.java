@@ -32,7 +32,7 @@ public class Wish {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    public void updateStatus() {
-        this.status = Status.MATCHED;
+    public void updateStatus(Status status) {
+        this.status = status;
     }
 }
