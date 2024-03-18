@@ -30,7 +30,7 @@ public class SalaryGetService {
     }
 
     public Salary bySenior(Senior senior) {
-        LocalDate salaryDate = SalaryUtil.getSalaryDate();
+        LocalDate salaryDate = SalaryUtil.getSalaryDate().minusDays(7);
         return salaryRepository.findBySeniorAndSalaryDate(senior, salaryDate)
                 .orElseThrow(SalaryNotFoundException::new);
     }

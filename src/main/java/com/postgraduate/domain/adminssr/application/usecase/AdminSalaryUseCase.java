@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static com.postgraduate.domain.admin.application.mapper.AdminMapper.mapToSalaryResponse;
+import static com.postgraduate.domain.admin.presentation.constant.SalaryStatus.DONE;
 import static com.postgraduate.domain.admin.presentation.constant.SalaryStatus.YET;
 import static com.postgraduate.domain.salary.util.SalaryUtil.getStatus;
 
@@ -31,6 +32,7 @@ public class AdminSalaryUseCase {
     public List<SalaryInfo> salaryInfos() {
         List<Salary> all = salaryGetService.findAll();
         return all.stream()
+                .filter(salary -> getStatus(salary) == DONE)
                 .map(salary -> {
                     if (salary.getAccountNumber() == null)
                         return mapToSalaryResponse(salary.getSenior(), salary);
