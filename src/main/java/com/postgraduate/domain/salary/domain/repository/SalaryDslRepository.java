@@ -11,4 +11,6 @@ import java.util.List;
 public interface SalaryDslRepository {
     Page<SeniorSalary> findDistinctBySearchSenior(String search, Pageable pageable);
     List<Salary> findAllLastSalary(LocalDate salaryDate);
+    List<Salary> findAllByNotDoneFromLast(LocalDate salaryDate);
+    List<Salary> findAllByDone();
 }
