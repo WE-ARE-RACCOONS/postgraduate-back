@@ -3,6 +3,7 @@ package com.postgraduate.domain.adminssr.presentation;
 import com.postgraduate.domain.admin.application.dto.*;
 import com.postgraduate.domain.admin.application.dto.res.CertificationDetailsResponse;
 import com.postgraduate.domain.admin.application.dto.res.MentoringManageResponse;
+import com.postgraduate.domain.admin.application.dto.res.MentoringWithPaymentResponse;
 import com.postgraduate.domain.admin.application.dto.res.WishResponse;
 import com.postgraduate.domain.adminssr.application.dto.req.Login;
 import com.postgraduate.domain.adminssr.application.usecase.*;
@@ -134,6 +135,13 @@ public class AdminWithThymeLeafController {
         List<PaymentInfo> paymentInfos = adminPaymentUseCase.paymentInfos();
         model.addAttribute("paymentInfos", paymentInfos);
         return "adminPayment";
+    }
+
+    @GetMapping("/payment/mentoring")
+    public String paymentWithMentoring(Long paymentId, Model model) {
+        MentoringWithPaymentResponse mentoringWithPaymentResponse = adminPaymentUseCase.paymentMentoringInfo(paymentId);
+        model.addAttribute("mentoringInfo", mentoringWithPaymentResponse);
+        return "paymentMentoring";
     }
 
     @PostMapping("/payment/refund/{paymentId}")
