@@ -26,7 +26,6 @@ import java.util.List;
 
 import static com.postgraduate.domain.admin.application.mapper.AdminMapper.mapToMentoringWithPaymentResponse;
 import static com.postgraduate.domain.admin.application.mapper.AdminMapper.mapToUserMentoringInfo;
-import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.CANCEL;
 import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.DONE;
 
 @Service

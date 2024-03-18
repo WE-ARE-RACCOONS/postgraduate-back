@@ -31,8 +31,8 @@ public class SalaryGetService {
 
     public Salary bySenior(Senior senior) {
         LocalDate salaryDate = SalaryUtil.getSalaryDate();
-        log.info("salaryDate : {}", salaryDate);
-        return salaryRepository.findBySeniorAndSalaryDate(senior, salaryDate).orElseThrow(SalaryNotFoundException::new);
+        return salaryRepository.findBySeniorAndSalaryDate(senior, salaryDate)
+                .orElseThrow(SalaryNotFoundException::new);
     }
 
     public Page<SeniorSalary> findDistinctSeniors(String search, Integer page) {

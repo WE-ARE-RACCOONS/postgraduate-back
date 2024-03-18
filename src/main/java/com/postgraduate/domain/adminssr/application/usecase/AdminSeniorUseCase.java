@@ -6,7 +6,6 @@ import com.postgraduate.domain.admin.presentation.constant.SalaryStatus;
 import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.salary.domain.service.SalaryGetService;
 import com.postgraduate.domain.senior.domain.entity.Senior;
-import com.postgraduate.domain.senior.domain.entity.constant.Status;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.domain.senior.domain.service.SeniorUpdateService;
 import com.postgraduate.domain.senior.exception.SeniorCertificationException;
@@ -22,6 +21,7 @@ import java.util.Optional;
 import static com.postgraduate.domain.admin.application.mapper.AdminMapper.mapToCertificationInfo;
 import static com.postgraduate.domain.admin.application.mapper.AdminMapper.mapToSeniorInfo;
 import static com.postgraduate.domain.salary.util.SalaryUtil.getStatus;
+import static com.postgraduate.domain.senior.domain.entity.constant.Status.APPROVE;
 
 @Service
 @Transactional
@@ -46,7 +46,7 @@ public class AdminSeniorUseCase {
 
     public CertificationDetailsResponse getCertification(Long seniorId) {
         Senior senior = seniorGetService.bySeniorId(seniorId);
-        if (senior.getStatus() == Status.APPROVE)
+        if (senior.getStatus() == APPROVE)
             throw new SeniorCertificationException();
         return mapToCertificationInfo(senior);
     }
