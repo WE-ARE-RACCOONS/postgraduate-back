@@ -91,5 +91,35 @@ public class SalaryDslRepositoryImpl implements SalaryDslRepository {
                 .fetchJoin()
                 .fetch();
     }
+
+    @Override
+    public List<Salary> findAllByNotDoneFromLast(LocalDate salaryDate) {
+        return queryFactory.selectFrom(salary)
+                .distinct()
+                .where(
+                        salary.status.isFalse(),
+                        salary.salaryDate.lt(salaryDate),
+                        salary.totalAmount.gt(0)
+                )
+                .join(salary.senior, senior)
+                .fetchJoin()
+                .join(senior.user, user)
+                .fetchJoin()
+                .orderBy(salary.salaryDate.asc())
+                .fetch();
+    }
+
+    @Override
+    public List<Salary> findAllByDone() {
+        return queryFactory.selectFrom(salary)
+                .distinct()
+                .where(salary.status.isTrue())
+                .join(salary.senior, senior)
+                .fetchJoin()
+                .join(senior.user, user)
+                .fetchJoin()
+                .orderBy(salary.salaryDoneDate.desc())
+                .fetch();
+    }
 }
 

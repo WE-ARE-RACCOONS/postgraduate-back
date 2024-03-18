@@ -1,11 +1,10 @@
 package com.postgraduate.domain.adminssr.presentation;
 
-import com.postgraduate.domain.admin.application.dto.*;
-import com.postgraduate.domain.admin.application.dto.res.CertificationDetailsResponse;
-import com.postgraduate.domain.admin.application.dto.res.MentoringManageResponse;
-import com.postgraduate.domain.admin.application.dto.res.MentoringWithPaymentResponse;
-import com.postgraduate.domain.admin.application.dto.res.WishResponse;
+import com.postgraduate.domain.adminssr.application.dto.res.*;
 import com.postgraduate.domain.adminssr.application.dto.req.Login;
+import com.postgraduate.domain.adminssr.application.dto.res.MentoringManageResponse;
+import com.postgraduate.domain.adminssr.application.dto.res.SeniorInfo;
+import com.postgraduate.domain.adminssr.application.dto.res.UnSettledSalaryInfo;
 import com.postgraduate.domain.adminssr.application.usecase.*;
 import com.postgraduate.domain.auth.application.dto.res.JwtTokenResponse;
 import com.postgraduate.domain.auth.application.usecase.jwt.JwtUseCase;
@@ -72,7 +71,7 @@ public class AdminWithThymeLeafController {
 
     @GetMapping("/mentoring/{seniorId}")
     public String seniorMentoringInfo(@PathVariable Long seniorId, Model model) {
-        MentoringManageResponse mentoringInfos = adminMentoringUseCase.seniorMentorings(seniorId);
+        com.postgraduate.domain.adminssr.application.dto.res.MentoringManageResponse mentoringInfos = adminMentoringUseCase.seniorMentorings(seniorId);
         model.addAttribute("mentoringInfos", mentoringInfos);
         return "seniorMentoring";
     }
@@ -85,14 +84,14 @@ public class AdminWithThymeLeafController {
 
     @GetMapping("/salaryInfo")
     public String salaryInfo(Model model) {
-        List<SalaryInfo> salaryInfos = adminSalaryUseCase.salaryInfos();
+        List<SalaryInfoWithOutId> salaryInfos = adminSalaryUseCase.salaryInfos();
         model.addAttribute("salaryInfo", salaryInfos);
         return "adminSalary";
     }
 
     @GetMapping("/salary/{seniorId}")
     public String seniorSalaryInfo(@PathVariable Long seniorId, Model model) {
-        SalaryInfo salaryInfo = adminSalaryUseCase.seniorSalary(seniorId);
+        var salaryInfo = adminSalaryUseCase.seniorSalary(seniorId);
         model.addAttribute("salaryInfo", salaryInfo);
         return "seniorSalary";
     }
@@ -101,6 +100,13 @@ public class AdminWithThymeLeafController {
     public String salaryDone(@PathVariable Long salaryId) {
         adminSalaryUseCase.salaryDone(salaryId);
         return "adminEmpty";
+    }
+
+    @GetMapping("/salary/unsettled")
+    public String unsettledSalaryInfo(Model model) {
+        List<UnSettledSalaryInfo> unSettledSalaryInfos = adminSalaryUseCase.unSettledSalaryInfo();
+        model.addAttribute("salaryInfos", unSettledSalaryInfos);
+        return "unSettledSalary";
     }
 
     @PostMapping("/wish/done/{wishId}")
@@ -137,8 +143,8 @@ public class AdminWithThymeLeafController {
         return "adminPayment";
     }
 
-    @GetMapping("/payment/mentoring")
-    public String paymentWithMentoring(Long paymentId, Model model) {
+    @GetMapping("/payment/mentoring/{paymentId}")
+    public String paymentWithMentoring(@PathVariable Long paymentId, Model model) {
         MentoringWithPaymentResponse mentoringWithPaymentResponse = adminPaymentUseCase.paymentMentoringInfo(paymentId);
         model.addAttribute("mentoringInfo", mentoringWithPaymentResponse);
         return "paymentMentoring";

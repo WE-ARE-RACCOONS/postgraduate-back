@@ -32,7 +32,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.mock;
 
 @ExtendWith(MockitoExtension.class)
-class SalaryInfoUseCaseTest {
+class SalaryInfoWithOutIdUseCaseTest {
     @Mock
     private SeniorGetService seniorGetService;
     @Mock

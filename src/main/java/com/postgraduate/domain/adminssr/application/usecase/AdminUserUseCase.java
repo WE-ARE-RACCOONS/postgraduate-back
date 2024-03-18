@@ -1,8 +1,7 @@
 package com.postgraduate.domain.adminssr.application.usecase;
 
-import com.postgraduate.domain.admin.application.dto.UserInfo;
-import com.postgraduate.domain.admin.application.dto.res.WishResponse;
-import com.postgraduate.domain.admin.application.mapper.AdminMapper;
+import com.postgraduate.domain.adminssr.application.dto.res.*;
+import com.postgraduate.domain.adminssr.application.mapper.AdminSsrMapper;
 import com.postgraduate.domain.wish.domain.entity.Wish;
 import com.postgraduate.domain.wish.domain.service.WishGetService;
 import com.postgraduate.domain.wish.domain.service.WishUpdateService;
@@ -12,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.postgraduate.domain.admin.application.mapper.AdminMapper.mapToWishResponse;
+import static com.postgraduate.domain.adminssr.application.mapper.AdminSsrMapper.mapToWishResponse;
 
 @Service
 @Transactional
@@ -24,7 +23,7 @@ public class AdminUserUseCase {
     public List<UserInfo> userInfos() {
         List<Wish> all = wishGetService.all();
         return all.stream()
-                .map(AdminMapper::mapToUserInfo)
+                .map(AdminSsrMapper::mapToUserInfo)
                 .toList();
     }
 

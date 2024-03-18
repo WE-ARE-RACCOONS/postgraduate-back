@@ -26,9 +26,9 @@
         <th>휴대번호</th>
         <th>인증신청정보</th>
         <th>멘토링신청정보</th>
-        <th>정산여부</th>
+        <th>이번주누적금액</th>
         <th>인증여부</th>
-        <th>정산정보</th>
+        <th>통장정보</th>
         <th>마케팅동의</th>
         <th>후배회원가입</th>
     </tr>
@@ -40,9 +40,9 @@
         <td th:text="${seniorInfo.phoneNumber()}">phoneNumber</td>
         <td><button th:seniorId="${seniorInfo.seniorId()}" th:onclick="getCertification(this.getAttribute('seniorId'))">인증신청정보</button></td>
         <td><button th:seniorId="${seniorInfo.seniorId()}" th:onclick="getMentoring(this.getAttribute('seniorId'))">멘토링정보</button></td>
-        <td th:text="${seniorInfo.salaryStatus()}">salary</td>
+        <td th:text="${seniorInfo.totalAmount()}">salary</td>
         <td th:text="${seniorInfo.certificationStatus()}">certification</td>
-        <td><button th:seniorId="${seniorInfo.seniorId()}" th:onclick="getSalary(this.getAttribute('seniorId'))">정산정보</button></td>
+        <td><button th:seniorId="${seniorInfo.seniorId()}" th:onclick="getSalary(this.getAttribute('seniorId'))">통장정보</button></td>
         <td th:text="${seniorInfo.marketingReceive()}">marketing</td>
         <td th:text="${seniorInfo.isUser()}">isUser</td>
     </tr>

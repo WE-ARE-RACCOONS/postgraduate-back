@@ -1,8 +1,7 @@
 package com.postgraduate.domain.adminssr.application.usecase;
 
-import com.postgraduate.domain.admin.application.dto.SeniorInfo;
-import com.postgraduate.domain.admin.application.dto.res.CertificationDetailsResponse;
-import com.postgraduate.domain.admin.presentation.constant.SalaryStatus;
+import com.postgraduate.domain.adminssr.application.dto.res.CertificationDetailsResponse;
+import com.postgraduate.domain.adminssr.application.dto.res.SeniorInfo;
 import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.salary.domain.service.SalaryGetService;
 import com.postgraduate.domain.senior.domain.entity.Senior;
@@ -18,9 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-import static com.postgraduate.domain.admin.application.mapper.AdminMapper.mapToCertificationInfo;
-import static com.postgraduate.domain.admin.application.mapper.AdminMapper.mapToSeniorInfo;
-import static com.postgraduate.domain.salary.util.SalaryUtil.getStatus;
+import static com.postgraduate.domain.adminssr.application.mapper.AdminSsrMapper.mapToCertificationInfo;
+import static com.postgraduate.domain.adminssr.application.mapper.AdminSsrMapper.mapToSeniorInfo;
 import static com.postgraduate.domain.senior.domain.entity.constant.Status.APPROVE;
 
 @Service
@@ -36,10 +34,9 @@ public class AdminSeniorUseCase {
         List<Senior> seniors = seniorGetService.allSeniorId();
         return seniors.stream()
                 .map(senior -> {
-                    Salary salary = salaryGetService.bySeniorLastWeek(senior);
-                    SalaryStatus salaryStatus = getStatus(salary);
+                    Salary salary = salaryGetService.bySenior(senior);
                     Optional<Wish> wish = wishGetService.byUser(senior.getUser());
-                    return mapToSeniorInfo(senior, salaryStatus, wish.isPresent());
+                    return mapToSeniorInfo(senior, salary.getTotalAmount(), wish.isPresent());
                 })
                 .toList();
     }
