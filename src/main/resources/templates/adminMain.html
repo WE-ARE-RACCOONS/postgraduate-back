@@ -26,7 +26,6 @@
                     document.getElementById("output").innerHTML = xhr.responseText;
                 } else {
                     localStorage.removeItem("accessToken");
-                    localStorage.removeItem("refreshToken");
                 }
             }
         };
@@ -81,6 +80,22 @@
         xhr.send();
     }
 
+    function goToUnSettledSalary() {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "/adminServer/salary/unsettled", true);
+        xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    document.getElementById("output").innerHTML = xhr.responseText;
+                } else {
+                    localStorage.removeItem("accessToken");
+                }
+            }
+        };
+        xhr.send();
+    }
+
     function getCertification(seniorId) {
         var xhr = new XMLHttpRequest();
         xhr.open("GET", "/adminServer/certification/" + seniorId, true);
@@ -91,7 +106,6 @@
                     document.getElementById("output").innerHTML = xhr.responseText;
                 } else {
                     localStorage.removeItem("accessToken");
-                    localStorage.removeItem("refreshToken");
                 }
             }
         };
@@ -109,7 +123,6 @@
                         document.getElementById("output").innerHTML = xhr.responseText;
                     } else {
                         localStorage.removeItem("accessToken");
-                        localStorage.removeItem("refreshToken");
                     }
                 }
             };
@@ -130,7 +143,6 @@
                         document.getElementById("output").innerHTML = xhr.responseText;
                     } else {
                         localStorage.removeItem("accessToken");
-                        localStorage.removeItem("refreshToken");
                     }
                 }
             };
@@ -150,7 +162,6 @@
                     document.getElementById("output").innerHTML = xhr.responseText;
                 } else {
                     localStorage.removeItem("accessToken");
-                    localStorage.removeItem("refreshToken");
                 }
             }
         };
@@ -168,7 +179,6 @@
                         document.getElementById("output").innerHTML = xhr.responseText;
                     } else {
                         localStorage.removeItem("accessToken");
-                        localStorage.removeItem("refreshToken");
                     }
                 }
             };
@@ -188,7 +198,6 @@
                     document.getElementById("output").innerHTML = xhr.responseText;
                 } else {
                     localStorage.removeItem("accessToken");
-                    localStorage.removeItem("refreshToken");
                 }
             }
         };
@@ -206,7 +215,6 @@
                         document.getElementById("output").innerHTML = xhr.responseText;
                     } else {
                         localStorage.removeItem("accessToken");
-                        localStorage.removeItem("refreshToken");
                     }
                 }
             };
@@ -226,7 +234,6 @@
                     document.getElementById("output").innerHTML = xhr.responseText;
                 } else {
                     localStorage.removeItem("accessToken");
-                    localStorage.removeItem("refreshToken");
                 }
             }
         };
@@ -244,7 +251,6 @@
                         document.getElementById("output").innerHTML = xhr.responseText;
                     } else {
                         localStorage.removeItem("accessToken");
-                        localStorage.removeItem("refreshToken");
                     }
                 }
             };
@@ -264,7 +270,6 @@
                     document.getElementById("output").innerHTML = xhr.responseText;
                 } else {
                     localStorage.removeItem("accessToken");
-                    localStorage.removeItem("refreshToken");
                 }
             }
         };
@@ -298,7 +303,6 @@
                         document.getElementById("output").innerHTML = xhr.responseText;
                     } else {
                         localStorage.removeItem("accessToken");
-                        localStorage.removeItem("refreshToken");
                     }
                 }
             };
@@ -338,6 +342,14 @@
             <button class="w-100 btn btn-primary btn-lg"
                     onclick="goToSalary()"
                     type="button">정산 관리</button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <button class="w-100 btn btn-primary btn-lg"
+                    onclick="goToUnSettledSalary()"
+                    type="button">미정산건 관리</button>
         </div>
     </div>
 </div>
