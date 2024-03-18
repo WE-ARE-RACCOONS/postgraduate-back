@@ -35,6 +35,12 @@ public class SalaryGetService {
                 .orElseThrow(SalaryNotFoundException::new);
     }
 
+    public Salary bySeniorLastWeek(Senior senior) {
+        LocalDate salaryDate = SalaryUtil.getSalaryDate().minusDays(7);
+        return salaryRepository.findBySeniorAndSalaryDate(senior, salaryDate)
+                .orElseThrow(SalaryNotFoundException::new);
+    }
+
     public Page<SeniorSalary> findDistinctSeniors(String search, Integer page) {
         page = page == null ? 1 : page;
         Pageable pageable = PageRequest.of(page - 1, ADMIN_PAGE_SIZE);

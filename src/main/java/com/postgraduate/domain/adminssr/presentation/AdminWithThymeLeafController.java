@@ -3,7 +3,6 @@ package com.postgraduate.domain.adminssr.presentation;
 import com.postgraduate.domain.admin.application.dto.*;
 import com.postgraduate.domain.admin.application.dto.res.CertificationDetailsResponse;
 import com.postgraduate.domain.admin.application.dto.res.MentoringManageResponse;
-import com.postgraduate.domain.admin.application.dto.res.MentoringWithPaymentResponse;
 import com.postgraduate.domain.admin.application.dto.res.WishResponse;
 import com.postgraduate.domain.adminssr.application.dto.req.Login;
 import com.postgraduate.domain.adminssr.application.usecase.*;
@@ -51,27 +50,6 @@ public class AdminWithThymeLeafController {
         return "adminSenior";
     }
 
-    @GetMapping("/userInfo")
-    public String userInfo(Model model) {
-        List<UserInfo> userInfos = adminUserUseCase.userInfos();
-        model.addAttribute("userInfos", userInfos);
-        return "adminUser";
-    }
-
-    @GetMapping("/paymentInfo")
-    public String paymentInfo(Model model) {
-        List<PaymentInfo> paymentInfos = adminPaymentUseCase.paymentInfos();
-        model.addAttribute("paymentInfos", paymentInfos);
-        return "adminPayment";
-    }
-
-    @GetMapping("/salaryInfo")
-    public String salaryInfo(Model model) {
-        List<SalaryInfo> salaryInfos = adminSalaryUseCase.salaryInfos();
-        model.addAttribute("salaryInfo", salaryInfos);
-        return "adminSalary";
-    }
-
     @GetMapping("/certification/{seniorId}")
     public String certification(@PathVariable Long seniorId, Model model) {
         CertificationDetailsResponse certification = adminSeniorUseCase.getCertification(seniorId);
@@ -104,6 +82,13 @@ public class AdminWithThymeLeafController {
         return "adminEmpty";
     }
 
+    @GetMapping("/salaryInfo")
+    public String salaryInfo(Model model) {
+        List<SalaryInfo> salaryInfos = adminSalaryUseCase.salaryInfos();
+        model.addAttribute("salaryInfo", salaryInfos);
+        return "adminSalary";
+    }
+
     @GetMapping("/salary/{seniorId}")
     public String seniorSalaryInfo(@PathVariable Long seniorId, Model model) {
         SalaryInfo salaryInfo = adminSalaryUseCase.seniorSalary(seniorId);
@@ -117,17 +102,17 @@ public class AdminWithThymeLeafController {
         return "adminEmpty";
     }
 
+    @PostMapping("/wish/done/{wishId}")
+    public String wishDone(@PathVariable Long wishId) {
+        adminUserUseCase.wishDone(wishId);
+        return "adminEmpty";
+    }
+
     @GetMapping("/user/matching/{userId}")
     public String userMatching(@PathVariable Long userId, Model model) {
         WishResponse wishResponse = adminUserUseCase.wishInfo(userId);
         model.addAttribute("wishInfo", wishResponse);
         return "userWish";
-    }
-
-    @PostMapping("/wish/done/{wishId}")
-    public String wishDone(@PathVariable Long wishId) {
-        adminUserUseCase.wishDone(wishId);
-        return "adminEmpty";
     }
 
     @GetMapping("/user/mentoring/{userId}")
@@ -137,10 +122,23 @@ public class AdminWithThymeLeafController {
         return "userMentoring";
     }
 
-    @GetMapping("/payment/mentoring/{paymentId}")
-    public String paymentMentoring(@PathVariable Long paymentId, Model model) {
-        MentoringWithPaymentResponse mentoringInfo = adminMentoringUseCase.paymentMentoringInfo(paymentId);
-        model.addAttribute("mentoringInfo", mentoringInfo);
-        return "paymentMentoring";
+    @GetMapping("/userInfo")
+    public String userInfo(Model model) {
+        List<UserInfo> userInfos = adminUserUseCase.userInfos();
+        model.addAttribute("userInfos", userInfos);
+        return "adminUser";
+    }
+
+    @GetMapping("/paymentInfo")
+    public String paymentInfo(Model model) {
+        List<PaymentInfo> paymentInfos = adminPaymentUseCase.paymentInfos();
+        model.addAttribute("paymentInfos", paymentInfos);
+        return "adminPayment";
+    }
+
+    @PostMapping("/payment/refund/{paymentId}")
+    public String refundPayment(@AuthenticationPrincipal User user, @PathVariable Long paymentId) {
+        adminPaymentUseCase.refundPayment(user, paymentId);
+        return "adminEmpty";
     }
 }
