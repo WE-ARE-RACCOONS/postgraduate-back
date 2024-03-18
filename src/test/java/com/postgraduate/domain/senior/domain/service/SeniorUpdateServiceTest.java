@@ -112,7 +112,7 @@ class SeniorUpdateServiceTest {
     @Test
     @DisplayName("상태 변경")
     void updateStatus() {
-        seniorUpdateService.updateCertificationStatus(senior, APPROVE);
+        seniorUpdateService.certificationUpdateApprove(senior);
 
         assertThat(senior.getStatus())
                 .isEqualTo(APPROVE);

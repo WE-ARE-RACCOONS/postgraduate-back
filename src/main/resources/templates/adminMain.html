@@ -15,9 +15,7 @@
 <script th:inline="javascript">
     /*<![CDATA[*/
     var accessToken = /*[[${#strings.escapeJavaScript(tokenResponse.accessToken)}]]*/ '';
-    var refreshToken = /*[[${#strings.escapeJavaScript(tokenResponse.refreshToken)}]]*/ '';
     window.localStorage.setItem("accessToken", accessToken);
-    window.localStorage.setItem("refreshToken", refreshToken);
     function goToSenior() {
         var xhr = new XMLHttpRequest();
         xhr.open("GET", "/adminServer/seniorInfo", true);
@@ -283,11 +281,31 @@
                     document.getElementById("output").innerHTML = xhr.responseText;
                 } else {
                     localStorage.removeItem("accessToken");
-                    localStorage.removeItem("refreshToken");
                 }
             }
         };
         xhr.send();
+    }
+
+    function refundPayment(paymentId) {
+        if (confirm("정말 환불하겠습니까??") == true){    //확인
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/adminServer/payment/refund/" + paymentId, true);
+            xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        document.getElementById("output").innerHTML = xhr.responseText;
+                    } else {
+                        localStorage.removeItem("accessToken");
+                        localStorage.removeItem("refreshToken");
+                    }
+                }
+            };
+            xhr.send();
+        }else{   //취소
+            return false;
+        }
     }
 </script>
 

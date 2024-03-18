@@ -88,7 +88,7 @@ public class MentoringManageUseCase {
             throw new MentoringNotWaitingException();
         Payment payment = mentoring.getPayment();
         paymentManageUseCase.refundPayByUser(user, payment.getOrderId());
-        mentoringUpdateService.updateStatus(mentoring, CANCEL);
+        mentoringUpdateService.updateCancel(mentoring);
     }
 
 
@@ -98,7 +98,7 @@ public class MentoringManageUseCase {
         if (mentoring.getStatus() != EXPECTED)
             throw new MentoringNotExpectedException();
         Salary salary = salaryGetService.bySenior(mentoring.getSenior());
-        salaryUpdateService.updateTotalAmount(salary);
+        salaryUpdateService.plusTotalAmount(salary);
         mentoringUpdateService.updateDone(mentoring, salary);
     }
 
@@ -113,7 +113,7 @@ public class MentoringManageUseCase {
         refuseSaveService.save(refuse);
         Payment payment = mentoring.getPayment();
         paymentManageUseCase.refundPayBySenior(senior, payment.getOrderId());
-        mentoringUpdateService.updateStatus(mentoring, REFUSE);
+        mentoringUpdateService.updateRefuse(mentoring);
     }
 
 
@@ -124,7 +124,7 @@ public class MentoringManageUseCase {
         if (mentoring.getStatus() != WAITING)
             throw new MentoringNotWaitingException();
         mentoringUpdateService.updateDate(mentoring, dateRequest.date());
-        mentoringUpdateService.updateStatus(mentoring, EXPECTED);
+        mentoringUpdateService.updateExpected(mentoring);
         Optional<Account> account = accountGetService.bySenior(senior);
         return account.isPresent();
     }

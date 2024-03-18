@@ -27,7 +27,7 @@ class SalaryUpdateServiceTest {
         Senior senior = mock(Senior.class);
         Salary salary = new Salary(1L, FALSE, senior, 100, LocalDate.now(), LocalDateTime.now(), "a", "b", "c");
 
-        salaryUpdateService.updateStatus(salary, TRUE);
+        salaryUpdateService.updateDone(salary);
 
         assertThat(salary.status())
                 .isTrue();
@@ -39,7 +39,7 @@ class SalaryUpdateServiceTest {
         Senior senior = mock(Senior.class);
         Salary salary = new Salary(1L, TRUE, senior, 0, LocalDate.now(), LocalDateTime.now(), "a", "b", "c");
 
-        salaryUpdateService.updateTotalAmount(salary);
+        salaryUpdateService.plusTotalAmount(salary);
 
         assertThat(salary.getTotalAmount())
                 .isEqualTo(20000);

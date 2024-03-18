@@ -58,7 +58,7 @@ public class MentoringManageByAdminUseCase {
 
     public void cancelMentoring(Long mentoringId) {
         Mentoring mentoring = mentoringGetService.byMentoringId(mentoringId);
-        mentoringUpdateService.updateStatus(mentoring, Status.CANCEL);
+        mentoringUpdateService.updateCancel(mentoring);
         Payment payment = mentoring.getPayment();
         User user = mentoring.getUser();
         paymentManageUseCase.refundPayByUser(user, payment.getOrderId());
