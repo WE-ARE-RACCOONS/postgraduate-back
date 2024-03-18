@@ -30,6 +30,12 @@ public class SalaryGetService {
     }
 
     public Salary bySenior(Senior senior) {
+        LocalDate salaryDate = SalaryUtil.getSalaryDate();
+        return salaryRepository.findBySeniorAndSalaryDate(senior, salaryDate)
+                .orElseThrow(SalaryNotFoundException::new);
+    }
+
+    public Salary bySeniorLastWeek(Senior senior) {
         LocalDate salaryDate = SalaryUtil.getSalaryDate().minusDays(7);
         return salaryRepository.findBySeniorAndSalaryDate(senior, salaryDate)
                 .orElseThrow(SalaryNotFoundException::new);

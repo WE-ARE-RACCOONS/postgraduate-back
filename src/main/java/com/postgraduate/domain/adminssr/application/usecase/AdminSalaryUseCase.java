@@ -44,7 +44,7 @@ public class AdminSalaryUseCase {
 
     public SalaryInfo seniorSalary(Long seniorId) {
         Senior senior = seniorGetService.bySeniorId(seniorId);
-        Salary salary = salaryGetService.bySenior(senior);
+        Salary salary = salaryGetService.bySeniorLastWeek(senior);
         SalaryStatus status = getStatus(salary);
         if (status != YET)
             throw new SalaryNotYetException();

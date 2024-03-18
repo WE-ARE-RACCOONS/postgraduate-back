@@ -36,7 +36,7 @@ public class AdminSeniorUseCase {
         List<Senior> seniors = seniorGetService.allSeniorId();
         return seniors.stream()
                 .map(senior -> {
-                    Salary salary = salaryGetService.bySenior(senior);
+                    Salary salary = salaryGetService.bySeniorLastWeek(senior);
                     SalaryStatus salaryStatus = getStatus(salary);
                     Optional<Wish> wish = wishGetService.byUser(senior.getUser());
                     return mapToSeniorInfo(senior, salaryStatus, wish.isPresent());
