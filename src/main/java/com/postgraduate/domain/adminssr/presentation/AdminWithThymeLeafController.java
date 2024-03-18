@@ -6,7 +6,7 @@ import com.postgraduate.domain.admin.application.dto.res.MentoringManageResponse
 import com.postgraduate.domain.admin.application.dto.res.MentoringWithPaymentResponse;
 import com.postgraduate.domain.admin.application.dto.res.WishResponse;
 import com.postgraduate.domain.adminssr.application.dto.req.Login;
-import com.postgraduate.domain.adminssr.application.usecase.AdminUseCase;
+import com.postgraduate.domain.adminssr.application.usecase.*;
 import com.postgraduate.domain.auth.application.dto.res.JwtTokenResponse;
 import com.postgraduate.domain.auth.application.usecase.jwt.JwtUseCase;
 import com.postgraduate.domain.user.domain.entity.User;
@@ -22,7 +22,12 @@ import java.util.List;
 @Controller
 @RequestMapping("/adminServer")
 public class AdminWithThymeLeafController {
-    private final AdminUseCase adminUseCase;
+    private final AdminAuthUseCase adminAuthUseCase;
+    private final AdminSeniorUseCase adminSeniorUseCase;
+    private final AdminUserUseCase adminUserUseCase;
+    private final AdminMentoringUseCase adminMentoringUseCase;
+    private final AdminSalaryUseCase adminSalaryUseCase;
+    private final AdminPaymentUseCase adminPaymentUseCase;
     private final JwtUseCase jwtUseCase;
 
     @GetMapping("/loginForm")
@@ -33,7 +38,7 @@ public class AdminWithThymeLeafController {
 
     @PostMapping("/login")
     public String login(@ModelAttribute Login loginForm, Model model) {
-        User user = adminUseCase.login(loginForm);
+        User user = adminAuthUseCase.login(loginForm);
         JwtTokenResponse jwtTokenResponse = jwtUseCase.signIn(user);
         model.addAttribute("tokenResponse", jwtTokenResponse);
         return "adminMain";
@@ -41,100 +46,100 @@ public class AdminWithThymeLeafController {
 
     @GetMapping("/seniorInfo")
     public String seniorInfo(Model model) {
-        List<SeniorInfo> seniorInfos = adminUseCase.allSenior();
+        List<SeniorInfo> seniorInfos = adminSeniorUseCase.allSenior();
         model.addAttribute("seniorInfos", seniorInfos);
         return "adminSenior";
     }
 
     @GetMapping("/userInfo")
     public String userInfo(Model model) {
-        List<UserInfo> userInfos = adminUseCase.userInfos();
+        List<UserInfo> userInfos = adminUserUseCase.userInfos();
         model.addAttribute("userInfos", userInfos);
         return "adminUser";
     }
 
     @GetMapping("/paymentInfo")
     public String paymentInfo(Model model) {
-        List<PaymentInfo> paymentInfos = adminUseCase.paymentInfos();
+        List<PaymentInfo> paymentInfos = adminPaymentUseCase.paymentInfos();
         model.addAttribute("paymentInfos", paymentInfos);
         return "adminPayment";
     }
 
     @GetMapping("/salaryInfo")
     public String salaryInfo(Model model) {
-        List<SalaryInfo> salaryInfos = adminUseCase.salaryInfos();
+        List<SalaryInfo> salaryInfos = adminSalaryUseCase.salaryInfos();
         model.addAttribute("salaryInfo", salaryInfos);
         return "adminSalary";
     }
 
     @GetMapping("/certification/{seniorId}")
     public String certification(@PathVariable Long seniorId, Model model) {
-        CertificationDetailsResponse certification = adminUseCase.getCertification(seniorId);
+        CertificationDetailsResponse certification = adminSeniorUseCase.getCertification(seniorId);
         model.addAttribute("certificationInfo", certification);
         return "seniorCertification";
     }
 
     @PostMapping("/certification/{seniorId}/refuse")
     public String certificationRefuse(@PathVariable Long seniorId) {
-        adminUseCase.updateNotApprove(seniorId);
+        adminSeniorUseCase.updateNotApprove(seniorId);
         return "adminEmpty";
     }
 
     @PostMapping("/certification/{seniorId}/approve")
     public String certificationApprove(@PathVariable Long seniorId) {
-        adminUseCase.updateApprove(seniorId);
+        adminSeniorUseCase.updateApprove(seniorId);
         return "adminEmpty";
     }
 
     @GetMapping("/mentoring/{seniorId}")
     public String seniorMentoringInfo(@PathVariable Long seniorId, Model model) {
-        MentoringManageResponse mentoringInfos = adminUseCase.seniorMentorings(seniorId);
+        MentoringManageResponse mentoringInfos = adminMentoringUseCase.seniorMentorings(seniorId);
         model.addAttribute("mentoringInfos", mentoringInfos);
         return "seniorMentoring";
     }
 
     @PostMapping("/mentoring/refund/{mentoringId}")
     public String refundMentoring(@AuthenticationPrincipal User user, @PathVariable Long mentoringId) {
-        adminUseCase.refundMentoring(user, mentoringId);
+        adminMentoringUseCase.refundMentoring(user, mentoringId);
         return "adminEmpty";
     }
 
     @GetMapping("/salary/{seniorId}")
     public String seniorSalaryInfo(@PathVariable Long seniorId, Model model) {
-        SalaryInfo salaryInfo = adminUseCase.seniorSalary(seniorId);
+        SalaryInfo salaryInfo = adminSalaryUseCase.seniorSalary(seniorId);
         model.addAttribute("salaryInfo", salaryInfo);
         return "seniorSalary";
     }
 
     @PostMapping("/salary/done/{salaryId}")
     public String salaryDone(@PathVariable Long salaryId) {
-        adminUseCase.salaryDone(salaryId);
+        adminSalaryUseCase.salaryDone(salaryId);
         return "adminEmpty";
     }
 
     @GetMapping("/user/matching/{userId}")
     public String userMatching(@PathVariable Long userId, Model model) {
-        WishResponse wishResponse = adminUseCase.wishInfo(userId);
+        WishResponse wishResponse = adminUserUseCase.wishInfo(userId);
         model.addAttribute("wishInfo", wishResponse);
         return "userWish";
     }
 
     @PostMapping("/wish/done/{wishId}")
     public String wishDone(@PathVariable Long wishId) {
-        adminUseCase.wishDone(wishId);
+        adminUserUseCase.wishDone(wishId);
         return "adminEmpty";
     }
 
     @GetMapping("/user/mentoring/{userId}")
     public String userMentoring(@PathVariable Long userId, Model model) {
-        MentoringManageResponse mentoringInfos = adminUseCase.userMentoringInfos(userId);
+        MentoringManageResponse mentoringInfos = adminMentoringUseCase.userMentoringInfos(userId);
         model.addAttribute("mentoringInfos", mentoringInfos);
         return "userMentoring";
     }
 
     @GetMapping("/payment/mentoring/{paymentId}")
     public String paymentMentoring(@PathVariable Long paymentId, Model model) {
-        MentoringWithPaymentResponse mentoringInfo = adminUseCase.paymentMentoringInfo(paymentId);
+        MentoringWithPaymentResponse mentoringInfo = adminMentoringUseCase.paymentMentoringInfo(paymentId);
         model.addAttribute("mentoringInfo", mentoringInfo);
         return "paymentMentoring";
     }

@@ -1,4 +1,4 @@
-package com.postgraduate.domain.adminssr.domain;
+package com.postgraduate.domain.adminssr.domain.service;
 
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.repository.UserRepository;
