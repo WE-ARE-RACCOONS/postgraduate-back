@@ -26,6 +26,7 @@
         <th>전화번호</th>
         <th>결제일시</th>
         <th>멘토링정보</th>
+        <th>환불/취소</th>
         <th>결제상태</th>
     </tr>
     </thead>
@@ -36,6 +37,7 @@
         <td th:text="${paymentInfo.phoneNumber()}">phoneNumber</td>
         <td th:text="${paymentInfo.createdAt()}">createdAt</td>
         <td><button th:paymentId="${paymentInfo.paymentId()}" th:onclick="getPaymentMentoring(this.getAttribute('paymentId'))">멘토링정보보기</button></td>
+        <td><button th:paymentId="${paymentInfo.paymentId()}" th:onclick="refundPayment(this.getAttribute('paymentId'))">환불/취소</button></td>
         <td th:text="${paymentInfo.status()}">status</td>
     </tr>
     </tbody>
