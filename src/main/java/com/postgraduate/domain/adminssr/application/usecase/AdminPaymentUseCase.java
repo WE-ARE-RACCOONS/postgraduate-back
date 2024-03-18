@@ -1,7 +1,6 @@
 package com.postgraduate.domain.adminssr.application.usecase;
 
-import com.postgraduate.domain.admin.application.dto.PaymentInfo;
-import com.postgraduate.domain.admin.application.dto.res.MentoringWithPaymentResponse;
+import com.postgraduate.domain.adminssr.application.dto.res.*;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
 import com.postgraduate.domain.payment.application.usecase.PaymentManageUseCase;
@@ -14,8 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.postgraduate.domain.admin.application.mapper.AdminMapper.mapToMentoringWithPaymentResponse;
-import static com.postgraduate.domain.admin.application.mapper.AdminMapper.mapToPaymentInfo;
+import static com.postgraduate.domain.adminssr.application.mapper.AdminSsrMapper.mapToMentoringWithPaymentResponse;
+import static com.postgraduate.domain.adminssr.application.mapper.AdminSsrMapper.mapToPaymentInfo;
 
 @Service
 @Transactional

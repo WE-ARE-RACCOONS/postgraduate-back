@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <link th:href="@{/css/bootstrap.min.css}"
+        href="css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    table {
+      width: 930px;
+      margin-left:auto;
+      margin-right:auto;
+    }
+
+    table, td, th {
+      border-collapse : collapse;
+      border : 1px solid black;
+    }
+  </style>
+</head>
+<body>
+<table id="seniorInfos">
+  <thead>
+  <tr>
+    <th>닉네임</th>
+    <th>정산금액</th>
+    <th>전화번호</th>
+    <th>정산예정일</th>
+    <th>예금주</th>
+    <th>은행</th>
+    <th>계좌번호</th>
+    <th>정산완료</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="salaryInfo : ${salaryInfos}">
+    <td th:text="${salaryInfo.nickName()}">nickName</td>
+    <td th:text="${salaryInfo.totalAmount()}">amount</td>
+    <td th:text="${salaryInfo.phoneNumber()}">phoneNumber</td>
+    <td th:text="${salaryInfo.salaryDate()}">salaryAt</td>
+    <td th:text="${salaryInfo.accountHolder()}">accountHolder</td>
+    <td th:text="${salaryInfo.bank()}">bank</td>
+    <td th:text="${salaryInfo.accountNumber()}">accountNumber</td>
+    <td><button th:salaryId="${salaryInfo.salaryId()}" th:onclick="salaryDone(this.getAttribute('salaryId'))">정산완료</button></td>
+  </tr>
+  </tbody>
+</table>
+</body>
+</html>
