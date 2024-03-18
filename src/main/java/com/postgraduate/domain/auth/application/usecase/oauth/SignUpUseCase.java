@@ -70,7 +70,7 @@ public class SignUpUseCase {
         Senior senior = SeniorMapper.mapToSenior(user, changeRequest);
         seniorSaveService.saveSenior(senior);
         user = userGetService.byUserId(user.getUserId());
-        userUpdateService.updateRole(user, Role.SENIOR);
+        userUpdateService.userToSeniorRole(user);
         Salary salary = SalaryMapper.mapToSalary(senior, getSalaryDate());
         salarySaveService.save(salary);
         return user;

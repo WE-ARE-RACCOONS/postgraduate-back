@@ -39,7 +39,7 @@ public class MentoringRenewalUseCase {
         try {
             paymentManageUseCase.refundPayByUser(mentoring.getUser(), mentoring.getPayment().getOrderId());
             Mentoring cancelMentoring = mentoringGetService.byMentoringIdWithLazy(mentoring.getMentoringId());
-            mentoringUpdateService.updateStatus(cancelMentoring, CANCEL);
+            mentoringUpdateService.updateCancel(cancelMentoring);
             Refuse refuse = RefuseMapper.mapToRefuse(mentoring);
             refuseSaveService.save(refuse);
             log.info("mentoringId : {} 자동 취소", mentoring.getMentoringId());
@@ -56,7 +56,7 @@ public class MentoringRenewalUseCase {
             Mentoring doneMentoring = mentoringGetService.byMentoringIdWithLazy(mentoring.getMentoringId());
             Senior senior = mentoring.getSenior();
             Salary salary = salaryGetService.bySenior(senior);
-            salaryUpdateService.updateTotalAmount(salary);
+            salaryUpdateService.plusTotalAmount(salary);
             mentoringUpdateService.updateDone(doneMentoring, salary);
             log.info("mentoringId : {} 자동 완료", mentoring.getMentoringId());
         } catch (Exception ex) {
