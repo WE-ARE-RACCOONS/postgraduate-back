@@ -31,6 +31,6 @@ public class PaymentGetService {
     }
 
     public List<Payment> all() {
-        return paymentRepository.findAll();
+        return paymentRepository.findAllPayment();
     }
 }

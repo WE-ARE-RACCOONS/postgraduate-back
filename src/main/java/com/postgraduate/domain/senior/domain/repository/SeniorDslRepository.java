@@ -14,4 +14,5 @@ public interface SeniorDslRepository {
     Page<Senior> findAllBySearchSeniorWithAdmin(String search, Pageable pageable);
     Optional<Senior> findBySeniorId(Long seniorId);
     List<SeniorAndAccount> findAllSeniorAndAccount();
+    List<Senior> findAllSenior();
 }

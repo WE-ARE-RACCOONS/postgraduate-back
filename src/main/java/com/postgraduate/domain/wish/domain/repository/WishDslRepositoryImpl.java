@@ -53,4 +53,14 @@ public class WishDslRepositoryImpl implements WishDslRepository {
         }
         return null;
     }
+
+    @Override
+    public List<Wish> findAllWish() {
+        return queryFactory.selectFrom(wish)
+                .distinct()
+                .join(wish.user, user)
+                .fetchJoin()
+                .where(wish.user.isDelete.isFalse())
+                .fetch();
+    }
 }

@@ -40,6 +40,6 @@ public class WishGetService {
     }
 
     public List<Wish> all() {
-        return wishRepository.findAll();
+        return wishRepository.findAllWish();
     }
 }
