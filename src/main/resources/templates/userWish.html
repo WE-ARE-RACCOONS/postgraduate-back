@@ -55,7 +55,9 @@
 <div class="container">
     <div class="col">
         <button class="w-100 btn btn-primary btn-lg"
-                th:wishId="${wishInfo.wishId()}" th:onclick="wishDone(this.getAttribute('wishId'))">매칭 완료로 변경</button>
+                th:wishId="${wishInfo.wishId()}"
+                th:onclick="goToPost('정말 완료하겠습니까??', '/adminServer/wish/done/' + this.getAttribute('wishId'))">
+            매칭 완료로 변경</button>
     </div>
 </div>
 </body>

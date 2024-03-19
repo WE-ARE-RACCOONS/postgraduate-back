@@ -14,147 +14,24 @@
 </head>
 <script th:inline="javascript">
     /*<![CDATA[*/
-    var accessToken = /*[[${#strings.escapeJavaScript(tokenResponse.accessToken)}]]*/ '';
+    const accessToken = /*[[${#strings.escapeJavaScript(tokenResponse.accessToken)}]]*/ '';
     window.localStorage.setItem("accessToken", accessToken);
-    function goToSenior() {
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", "/adminServer/seniorInfo", true);
-        xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === XMLHttpRequest.DONE) {
-                if (xhr.status === 200) {
-                    document.getElementById("output").innerHTML = xhr.responseText;
-                } else {
-                    localStorage.removeItem("accessToken");
-                }
-            }
-        };
-        xhr.send();
+
+    function goToGet(url) {
+        sendApi("GET", url);
     }
 
-    function goToUser() {
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", "/adminServer/userInfo", true);
-        xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === XMLHttpRequest.DONE) {
-                if (xhr.status === 200) {
-                    document.getElementById("output").innerHTML = xhr.responseText;
-                } else {
-                    localStorage.removeItem("accessToken");
-                }
-            }
-        };
-        xhr.send();
-    }
-
-    function goToPayment() {
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", "/adminServer/paymentInfo", true);
-        xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === XMLHttpRequest.DONE) {
-                if (xhr.status === 200) {
-                    document.getElementById("output").innerHTML = xhr.responseText;
-                } else {
-                    localStorage.removeItem("accessToken");
-                }
-            }
-        };
-        xhr.send();
-    }
-
-    function goToSalary() {
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", "/adminServer/salaryInfo", true);
-        xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === XMLHttpRequest.DONE) {
-                if (xhr.status === 200) {
-                    document.getElementById("output").innerHTML = xhr.responseText;
-                } else {
-                    localStorage.removeItem("accessToken");
-                }
-            }
-        };
-        xhr.send();
-    }
-
-    function goToUnSettledSalary() {
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", "/adminServer/salary/unsettled", true);
-        xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === XMLHttpRequest.DONE) {
-                if (xhr.status === 200) {
-                    document.getElementById("output").innerHTML = xhr.responseText;
-                } else {
-                    localStorage.removeItem("accessToken");
-                }
-            }
-        };
-        xhr.send();
-    }
-
-    function getCertification(seniorId) {
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", "/adminServer/certification/" + seniorId, true);
-        xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === XMLHttpRequest.DONE) {
-                if (xhr.status === 200) {
-                    document.getElementById("output").innerHTML = xhr.responseText;
-                } else {
-                    localStorage.removeItem("accessToken");
-                }
-            }
-        };
-        xhr.send();
-    }
-
-    function refuseCertification(seniorId) {
-        if (confirm("정말 반려하겠습니까??") == true){    //확인
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "/adminServer/certification/" + seniorId + "/refuse", true);
-            xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    if (xhr.status === 200) {
-                        document.getElementById("output").innerHTML = xhr.responseText;
-                    } else {
-                        localStorage.removeItem("accessToken");
-                    }
-                }
-            };
-            xhr.send();
-        }else{   //취소
+    function goToPost(alert, url) {
+        if (confirm(alert) == true) {
+            sendApi("POST", url);
+        } else {
             return false;
         }
     }
 
-    function approveCertification(seniorId) {
-        if (confirm("정말 수락하겠습니까??") == true){    //확인
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "/adminServer/certification/" + seniorId + "/approve", true);
-            xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    if (xhr.status === 200) {
-                        document.getElementById("output").innerHTML = xhr.responseText;
-                    } else {
-                        localStorage.removeItem("accessToken");
-                    }
-                }
-            };
-            xhr.send();
-        }else{   //취소
-            return false;
-        }
-    }
-
-    function getMentoring(seniorId) {
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", "/adminServer/mentoring/" + seniorId, true);
+    function sendApi(method, url) {
+        const xhr = new XMLHttpRequest();
+        xhr.open(method, url, true);
         xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
         xhr.onreadystatechange = function() {
             if (xhr.readyState === XMLHttpRequest.DONE) {
@@ -166,150 +43,6 @@
             }
         };
         xhr.send();
-    }
-
-    function refundMentoring(mentoringId) {
-        if (confirm("정말 환불하겠습니까??") == true){    //확인
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "/adminServer/mentoring/refund/" + mentoringId, true);
-            xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    if (xhr.status === 200) {
-                        document.getElementById("output").innerHTML = xhr.responseText;
-                    } else {
-                        localStorage.removeItem("accessToken");
-                    }
-                }
-            };
-            xhr.send();
-        }else{   //취소
-            return false;
-        }
-    }
-
-    function getSalary(seniorId) {
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", "/adminServer/salary/" + seniorId, true);
-        xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === XMLHttpRequest.DONE) {
-                if (xhr.status === 200) {
-                    document.getElementById("output").innerHTML = xhr.responseText;
-                } else {
-                    localStorage.removeItem("accessToken");
-                }
-            }
-        };
-        xhr.send();
-    }
-
-    function salaryDone(salaryId) {
-        if (confirm("정말 완료하겠습니까??") == true){    //확인
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "/adminServer/salary/done/" + salaryId, true);
-            xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    if (xhr.status === 200) {
-                        document.getElementById("output").innerHTML = xhr.responseText;
-                    } else {
-                        localStorage.removeItem("accessToken");
-                    }
-                }
-            };
-            xhr.send();
-        }else{   //취소
-            return false;
-        }
-    }
-
-    function getMatching(userId) {
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", "/adminServer/user/matching/" + userId, true);
-        xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === XMLHttpRequest.DONE) {
-                if (xhr.status === 200) {
-                    document.getElementById("output").innerHTML = xhr.responseText;
-                } else {
-                    localStorage.removeItem("accessToken");
-                }
-            }
-        };
-        xhr.send();
-    }
-
-    function wishDone(wishId) {
-        if (confirm("정말 완료하겠습니까??") == true){    //확인
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "/adminServer/wish/done/" + wishId, true);
-            xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    if (xhr.status === 200) {
-                        document.getElementById("output").innerHTML = xhr.responseText;
-                    } else {
-                        localStorage.removeItem("accessToken");
-                    }
-                }
-            };
-            xhr.send();
-        }else{   //취소
-            return false;
-        }
-    }
-
-    function getUserMentoring(userId) {
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", "/adminServer/user/mentoring/" + userId, true);
-        xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === XMLHttpRequest.DONE) {
-                if (xhr.status === 200) {
-                    document.getElementById("output").innerHTML = xhr.responseText;
-                } else {
-                    localStorage.removeItem("accessToken");
-                }
-            }
-        };
-        xhr.send();
-    }
-
-    function getPaymentMentoring(paymentId) {
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", "/adminServer/payment/mentoring/" + paymentId, true);
-        xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === XMLHttpRequest.DONE) {
-                if (xhr.status === 200) {
-                    document.getElementById("output").innerHTML = xhr.responseText;
-                } else {
-                    localStorage.removeItem("accessToken");
-                }
-            }
-        };
-        xhr.send();
-    }
-
-    function refundPayment(paymentId) {
-        if (confirm("정말 환불하겠습니까??") == true){    //확인
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "/adminServer/payment/refund/" + paymentId, true);
-            xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    if (xhr.status === 200) {
-                        document.getElementById("output").innerHTML = xhr.responseText;
-                    } else {
-                        localStorage.removeItem("accessToken");
-                    }
-                }
-            };
-            xhr.send();
-        }else{   //취소
-            return false;
-        }
     }
 </script>
 
@@ -319,28 +52,28 @@
     <div class="row">
         <div class="col">
             <button class="w-100 btn btn-primary btn-lg"
-                    onclick="goToSenior()"
+                    onclick="goToGet('/adminServer/seniorInfo')"
                     type="button">선배 관리</button>
         </div>
     </div>
     <div class="row">
         <div class="col">
             <button class="w-100 btn btn-primary btn-lg"
-                    onclick="goToUser()"
+                    onclick="goToGet('/adminServer/userInfo')"
                     type="button">후배 관리</button>
         </div>
     </div>
     <div class="row">
         <div class="col">
             <button class="w-100 btn btn-primary btn-lg"
-                    onclick="goToPayment()"
+                    onclick="goToGet('/adminServer/paymentInfo')"
                     type="button">결제 관리</button>
         </div>
     </div>
     <div class="row">
         <div class="col">
             <button class="w-100 btn btn-primary btn-lg"
-                    onclick="goToSalary()"
+                    onclick="goToGet('/adminServer/salaryInfo')"
                     type="button">정산 관리</button>
         </div>
     </div>
@@ -348,7 +81,7 @@
     <div class="row">
         <div class="col">
             <button class="w-100 btn btn-primary btn-lg"
-                    onclick="goToUnSettledSalary()"
+                    onclick="goToGet('/adminServer/salary/unsettled')"
                     type="button">미정산건 관리</button>
         </div>
     </div>
