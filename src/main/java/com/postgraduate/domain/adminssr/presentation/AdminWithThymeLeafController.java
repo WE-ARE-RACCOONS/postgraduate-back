@@ -1,10 +1,7 @@
 package com.postgraduate.domain.adminssr.presentation;
 
+import com.postgraduate.domain.adminssr.application.dto.req.*;
 import com.postgraduate.domain.adminssr.application.dto.res.*;
-import com.postgraduate.domain.adminssr.application.dto.req.Login;
-import com.postgraduate.domain.adminssr.application.dto.res.MentoringManageResponse;
-import com.postgraduate.domain.adminssr.application.dto.res.SeniorInfo;
-import com.postgraduate.domain.adminssr.application.dto.res.UnSettledSalaryInfo;
 import com.postgraduate.domain.adminssr.application.usecase.*;
 import com.postgraduate.domain.auth.application.dto.res.JwtTokenResponse;
 import com.postgraduate.domain.auth.application.usecase.jwt.JwtUseCase;
@@ -71,7 +68,7 @@ public class AdminWithThymeLeafController {
 
     @GetMapping("/mentoring/{seniorId}")
     public String seniorMentoringInfo(@PathVariable Long seniorId, Model model) {
-        com.postgraduate.domain.adminssr.application.dto.res.MentoringManageResponse mentoringInfos = adminMentoringUseCase.seniorMentorings(seniorId);
+        MentoringManageResponse mentoringInfos = adminMentoringUseCase.seniorMentorings(seniorId);
         model.addAttribute("mentoringInfos", mentoringInfos);
         return "seniorMentoring";
     }

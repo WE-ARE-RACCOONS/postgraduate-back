@@ -212,4 +212,15 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
                 })
                 .toList();
     }
+
+    @Override
+    public List<Senior> findAllSenior() {
+        return queryFactory.selectFrom(senior)
+                .distinct()
+                .join(senior.user, user)
+                .fetchJoin()
+                .where(senior.user.isDelete.eq(FALSE))
+                .orderBy(senior.user.nickName.asc())
+                .fetch();
+    }
 }

@@ -68,4 +68,8 @@ public class SeniorGetService {
     public List<Senior> allSeniorId() {
         return seniorRepository.findAllByUser_IsDelete(FALSE);
     }
+
+    public List<Senior> allSenior() {
+        return seniorRepository.findAllSenior();
+    }
 }
