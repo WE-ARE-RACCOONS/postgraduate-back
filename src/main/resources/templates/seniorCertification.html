@@ -5,6 +5,12 @@
     <link th:href="@{/css/bootstrap.min.css}"
           href="css/bootstrap.min.css" rel="stylesheet">
     <style>
+        .image {
+            width: 400px;
+            margin-left:auto;
+            margin-right:auto;
+        }
+
         table {
             width: 930px;
             margin-left:auto;
@@ -19,7 +25,9 @@
 </head>
 <body>
 <table id="seniorInfos">
-    <image th:src="${certificationInfo.certification()}"></image>
+    <div class="image">
+        <image th:src="${certificationInfo.certification()}"></image>
+    </div>
     <thead>
     <tr>
         <th>닉네임</th>
@@ -47,8 +55,12 @@
 </table>
 <table>
     <tr>
-        <td><button th:seniorId="${certificationInfo.seniorId()}" th:onclick="approveCertification(this.getAttribute('seniorId'))">승인</button></td>
-        <td><button th:seniorId="${certificationInfo.seniorId()}" th:onclick="refuseCertification(this.getAttribute('seniorId'))">반려</button></td>
+        <td><button th:seniorId="${certificationInfo.seniorId()}"
+                    th:onclick="goToPost('정말 승인하시겠습니까??', '/adminServer/certification/' + this.getAttribute('seniorId') + '/approve')">
+            승인</button></td>
+        <td><button th:seniorId="${certificationInfo.seniorId()}"
+                    th:onclick="goToPost('정말 반려하시겠습니까??', '/adminServer/certification/' + this.getAttribute('seniorId') + '/refuse')">
+            반려</button></td>
     </tr>
 </table>
 </body>
