@@ -331,7 +331,7 @@ class MentoringControllerTest extends IntegrationTest {
         Mentoring mentoring = new Mentoring(0L, otherUser, otherSenior, payment, null, "topic", "question", "date", 40, Status.EXPECTED, now(), now());
         mentoringRepository.save(mentoring);
 
-        mvc.perform(get("/mentoring/me/{mentoringId}", mentoring.getMentoringId())
+        mvc.perform(get("/mentoring/senior/me/{mentoringId}", mentoring.getMentoringId())
                         .header(AUTHORIZATION, BEARER + userAccessToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(AUTH_DENIED.getCode()))

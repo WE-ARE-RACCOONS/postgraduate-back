@@ -24,16 +24,13 @@ public class MentoringUpdateService {
         mentoring.updateStatus(CANCEL);
     }
 
-    public void updateExpected(Mentoring mentoring) {
+    public void updateExpected(Mentoring mentoring, String date) {
+        mentoring.updateDate(date);
         mentoring.updateStatus(EXPECTED);
     }
 
     public void updateDone(Mentoring mentoring, Salary salary) {
         mentoring.updateStatus(DONE);
         mentoring.updateSalary(salary);
-    }
-
-    public void updateDate(Mentoring mentoring, String date) {
-        mentoring.updateDate(date);
     }
 }

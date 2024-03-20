@@ -11,14 +11,12 @@ import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
 import com.postgraduate.domain.mentoring.domain.service.MentoringSaveService;
 import com.postgraduate.domain.mentoring.domain.service.MentoringUpdateService;
 import com.postgraduate.domain.mentoring.exception.MentoringDateException;
-import com.postgraduate.domain.mentoring.exception.MentoringNotExpectedException;
-import com.postgraduate.domain.mentoring.exception.MentoringNotWaitingException;
+import com.postgraduate.domain.mentoring.exception.MentoringPresentException;
 import com.postgraduate.domain.payment.application.usecase.PaymentManageUseCase;
 import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.payment.domain.service.PaymentGetService;
 import com.postgraduate.domain.payment.exception.PaymentNotFoundException;
 import com.postgraduate.domain.refuse.application.dto.req.MentoringRefuseRequest;
-import com.postgraduate.domain.refuse.application.mapper.RefuseMapper;
 import com.postgraduate.domain.refuse.domain.entity.Refuse;
 import com.postgraduate.domain.refuse.domain.service.RefuseSaveService;
 import com.postgraduate.domain.salary.domain.entity.Salary;
@@ -38,14 +36,15 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.*;
+import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.EXPECTED;
+import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.WAITING;
+import static com.postgraduate.domain.refuse.application.mapper.RefuseMapper.mapToRefuse;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class MentoringManageUseCase {
     private final MentoringRenewalUseCase mentoringRenewalUseCase;
-    private final CheckIsMyMentoringUseCase checkIsMyMentoringUseCase;
     private final MentoringUpdateService mentoringUpdateService;
     private final MentoringGetService mentoringGetService;
     private final MentoringDeleteService mentoringDeleteService;
@@ -75,6 +74,9 @@ public class MentoringManageUseCase {
         } catch (PaymentNotFoundException ex) {
             log.error("결제건을 찾을 수 없습니다.");
             return false;
+        } catch (MentoringPresentException ex) {
+            log.error("이미 신청된 결제건 입니다.");
+            return false;
         } catch (Exception ex) {
             paymentManageUseCase.refundPayByUser(user, payment.getOrderId());
             return false;
@@ -83,9 +85,9 @@ public class MentoringManageUseCase {
 
     @Transactional
     public void updateCancel(User user, Long mentoringId) {
-        Mentoring mentoring = checkIsMyMentoringUseCase.byUser(user, mentoringId);
-        if (mentoring.getStatus() != WAITING)
-            throw new MentoringNotWaitingException();
+        Mentoring mentoring = mentoringGetService.byMentoringId(mentoringId);
+        mentoring.checkIsMineWithUser(user);
+        mentoring.checkIsWaiting();
         Payment payment = mentoring.getPayment();
         paymentManageUseCase.refundPayByUser(user, payment.getOrderId());
         mentoringUpdateService.updateCancel(mentoring);
@@ -94,9 +96,9 @@ public class MentoringManageUseCase {
 
     @Transactional
     public void updateDone(User user, Long mentoringId) {
-        Mentoring mentoring = checkIsMyMentoringUseCase.byUser(user, mentoringId);
-        if (mentoring.getStatus() != EXPECTED)
-            throw new MentoringNotExpectedException();
+        Mentoring mentoring = mentoringGetService.byMentoringId(mentoringId);
+        mentoring.checkIsMineWithUser(user);
+        mentoring.checkIsExpected();
         Salary salary = salaryGetService.bySenior(mentoring.getSenior());
         salaryUpdateService.plusTotalAmount(salary);
         mentoringUpdateService.updateDone(mentoring, salary);
@@ -106,10 +108,10 @@ public class MentoringManageUseCase {
     @Transactional
     public void updateRefuse(User user, Long mentoringId, MentoringRefuseRequest request) {
         Senior senior = seniorGetService.byUser(user);
-        Mentoring mentoring = checkIsMyMentoringUseCase.bySenior(senior, mentoringId);
-        if (mentoring.getStatus() != WAITING)
-            throw new MentoringNotWaitingException();
-        Refuse refuse = RefuseMapper.mapToRefuse(mentoring, request);
+        Mentoring mentoring = mentoringGetService.byMentoringId(mentoringId);
+        mentoring.checkIsMineWithSenior(senior);
+        mentoring.checkIsWaiting();
+        Refuse refuse = mapToRefuse(mentoring, request);
         refuseSaveService.save(refuse);
         Payment payment = mentoring.getPayment();
         paymentManageUseCase.refundPayBySenior(senior, payment.getOrderId());
@@ -120,11 +122,10 @@ public class MentoringManageUseCase {
     @Transactional
     public Boolean updateExpected(User user, Long mentoringId, MentoringDateRequest dateRequest) {
         Senior senior = seniorGetService.byUser(user);
-        Mentoring mentoring = checkIsMyMentoringUseCase.bySenior(senior, mentoringId);
-        if (mentoring.getStatus() != WAITING)
-            throw new MentoringNotWaitingException();
-        mentoringUpdateService.updateDate(mentoring, dateRequest.date());
-        mentoringUpdateService.updateExpected(mentoring);
+        Mentoring mentoring = mentoringGetService.byMentoringId(mentoringId);
+        mentoring.checkIsMineWithSenior(senior);
+        mentoring.checkIsWaiting();
+        mentoringUpdateService.updateExpected(mentoring, dateRequest.date());
         Optional<Account> account = accountGetService.bySenior(senior);
         return account.isPresent();
     }
@@ -132,7 +133,8 @@ public class MentoringManageUseCase {
 
     @Transactional
     public void delete(User user, Long mentoringId) {
-        Mentoring mentoring = checkIsMyMentoringUseCase.byUser(user, mentoringId);
+        Mentoring mentoring = mentoringGetService.byMentoringId(mentoringId);
+        mentoring.checkIsMineWithUser(user);
         mentoringDeleteService.deleteMentoring(mentoring);
     }
 

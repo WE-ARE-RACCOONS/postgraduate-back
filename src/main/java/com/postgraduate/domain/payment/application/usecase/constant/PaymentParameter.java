@@ -1,4 +1,4 @@
-package com.postgraduate.domain.payment.application.usecase;
+package com.postgraduate.domain.payment.application.usecase.constant;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

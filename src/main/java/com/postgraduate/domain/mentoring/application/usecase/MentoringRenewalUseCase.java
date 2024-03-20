@@ -4,8 +4,6 @@ import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
 import com.postgraduate.domain.mentoring.domain.service.MentoringUpdateService;
 import com.postgraduate.domain.payment.application.usecase.PaymentManageUseCase;
-import com.postgraduate.domain.payment.exception.RefundFailException;
-import com.postgraduate.domain.refuse.application.mapper.RefuseMapper;
 import com.postgraduate.domain.refuse.domain.entity.Refuse;
 import com.postgraduate.domain.refuse.domain.service.RefuseSaveService;
 import com.postgraduate.domain.salary.domain.entity.Salary;
@@ -18,8 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.CANCEL;
-import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.DONE;
+import static com.postgraduate.domain.refuse.application.mapper.RefuseMapper.mapToRefuse;
 import static org.springframework.transaction.interceptor.TransactionAspectSupport.currentTransactionStatus;
 
 @RequiredArgsConstructor
@@ -40,7 +37,7 @@ public class MentoringRenewalUseCase {
             paymentManageUseCase.refundPayByUser(mentoring.getUser(), mentoring.getPayment().getOrderId());
             Mentoring cancelMentoring = mentoringGetService.byMentoringIdWithLazy(mentoring.getMentoringId());
             mentoringUpdateService.updateCancel(cancelMentoring);
-            Refuse refuse = RefuseMapper.mapToRefuse(mentoring);
+            Refuse refuse = mapToRefuse(mentoring);
             refuseSaveService.save(refuse);
             log.info("mentoringId : {} 자동 취소", mentoring.getMentoringId());
         } catch (Exception ex) {

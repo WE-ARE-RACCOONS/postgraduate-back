@@ -23,7 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-import static com.postgraduate.domain.salary.util.SalaryUtil.getStatus;
 import static com.postgraduate.domain.senior.domain.entity.constant.Status.APPROVE;
 
 @Service
@@ -57,7 +56,7 @@ public class SeniorManageByAdminUseCase {
         List<SeniorInfo> seniorInfos = seniors.stream()
                 .map(senior -> {
                     Salary salary = salaryGetService.bySenior(senior);
-                    SalaryStatus salaryStatus = getStatus(salary);
+                    SalaryStatus salaryStatus = salary.getSalaryStatus();
                     Optional<Wish> wish = wishGetService.byUser(senior.getUser());
                     return AdminMapper.mapToSeniorInfo(senior, salaryStatus, wish.isPresent());
                 })

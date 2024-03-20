@@ -8,7 +8,6 @@ import com.postgraduate.domain.mentoring.application.dto.res.AppliedMentoringRes
 import com.postgraduate.domain.mentoring.application.mapper.MentoringMapper;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
-import com.postgraduate.domain.mentoring.exception.MentoringDetailNotFoundException;
 import com.postgraduate.domain.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,13 +23,11 @@ import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.*;
 @RequiredArgsConstructor
 public class MentoringUserInfoUseCase {
     private final MentoringGetService mentoringGetService;
-    private final CheckIsMyMentoringUseCase checkIsMyMentoringUseCase;
 
     public AppliedMentoringDetailResponse getMentoringDetail(User user, Long mentoringId) {
-        Mentoring mentoring = checkIsMyMentoringUseCase.byUser(user, mentoringId);
-        if (!(mentoring.getStatus() == WAITING || mentoring.getStatus() == EXPECTED)) {
-            throw new MentoringDetailNotFoundException();
-        }
+        Mentoring mentoring = mentoringGetService.byMentoringId(mentoringId);
+        mentoring.checkIsMineWithUser(user);
+        mentoring.checkDetailCondition();
         return mapToAppliedDetailInfo(mentoring);
     }
 

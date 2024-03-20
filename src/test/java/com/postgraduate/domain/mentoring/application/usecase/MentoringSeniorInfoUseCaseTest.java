@@ -24,6 +24,7 @@ import java.util.List;
 import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.mock;
 
@@ -31,9 +32,6 @@ import static org.mockito.BDDMockito.mock;
 class MentoringSeniorInfoUseCaseTest {
     @Mock
     private MentoringGetService mentoringGetService;
-
-    @Mock
-    private CheckIsMyMentoringUseCase checkIsMyMentoringUseCase;
 
     @Mock
     private SeniorGetService seniorGetService;
@@ -59,7 +57,7 @@ class MentoringSeniorInfoUseCaseTest {
 
         given(seniorGetService.byUser(user))
                 .willReturn(senior);
-        given(checkIsMyMentoringUseCase.bySenior(senior, mentoringId))
+        given(mentoringGetService.byMentoringId(any()))
                 .willReturn(mentoring);
 
         assertThat(mentoringSeniorInfoUseCase.getSeniorMentoringDetail(user, mentoringId))
@@ -81,7 +79,7 @@ class MentoringSeniorInfoUseCaseTest {
 
         given(seniorGetService.byUser(user))
                 .willReturn(senior);
-        given(checkIsMyMentoringUseCase.bySenior(senior, mentoringId))
+        given(mentoringGetService.byMentoringId(any()))
                 .willReturn(mentoring);
 
         assertThatThrownBy(() -> mentoringSeniorInfoUseCase.getSeniorMentoringDetail(user, mentoringId))
@@ -103,7 +101,7 @@ class MentoringSeniorInfoUseCaseTest {
 
         given(seniorGetService.byUser(user))
                 .willReturn(senior);
-        given(checkIsMyMentoringUseCase.bySenior(senior, mentoringId))
+        given(mentoringGetService.byMentoringId(any()))
                 .willReturn(mentoring);
 
         assertThatThrownBy(() -> mentoringSeniorInfoUseCase.getSeniorMentoringDetail(user, mentoringId))
@@ -125,7 +123,7 @@ class MentoringSeniorInfoUseCaseTest {
 
         given(seniorGetService.byUser(user))
                 .willReturn(senior);
-        given(checkIsMyMentoringUseCase.bySenior(senior, mentoringId))
+        given(mentoringGetService.byMentoringId(any()))
                 .willReturn(mentoring);
 
         assertThatThrownBy(() -> mentoringSeniorInfoUseCase.getSeniorMentoringDetail(user, mentoringId))
