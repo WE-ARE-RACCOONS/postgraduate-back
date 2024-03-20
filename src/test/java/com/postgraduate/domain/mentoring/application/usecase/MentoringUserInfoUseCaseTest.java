@@ -26,6 +26,7 @@ import static com.postgraduate.domain.user.domain.entity.constant.Role.USER;
 import static java.lang.Boolean.TRUE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
@@ -33,9 +34,6 @@ import static org.mockito.Mockito.mock;
 class MentoringUserInfoUseCaseTest {
     @Mock
     private MentoringGetService mentoringGetService;
-
-    @Mock
-    private CheckIsMyMentoringUseCase checkIsMyMentoringUseCase;
 
     @InjectMocks
     private MentoringUserInfoUseCase mentoringUserInfoUseCase;
@@ -69,7 +67,7 @@ class MentoringUserInfoUseCaseTest {
                 , 40, EXPECTED
                 , LocalDateTime.now(), LocalDateTime.now());
 
-        given(checkIsMyMentoringUseCase.byUser(user, mentoringId))
+        given(mentoringGetService.byMentoringId(any()))
                 .willReturn(mentoring);
 
         assertThat(mentoringUserInfoUseCase.getMentoringDetail(user, mentoringId))
@@ -86,7 +84,7 @@ class MentoringUserInfoUseCaseTest {
                 , 40, DONE
                 , LocalDateTime.now(), LocalDateTime.now());
 
-        given(checkIsMyMentoringUseCase.byUser(user, mentoringId))
+        given(mentoringGetService.byMentoringId(any()))
                 .willReturn(mentoring);
 
         assertThatThrownBy(() -> mentoringUserInfoUseCase.getMentoringDetail(user, mentoringId))
@@ -103,7 +101,7 @@ class MentoringUserInfoUseCaseTest {
                 , 40, REFUSE
                 , LocalDateTime.now(), LocalDateTime.now());
 
-        given(checkIsMyMentoringUseCase.byUser(user, mentoringId))
+        given(mentoringGetService.byMentoringId(any()))
                 .willReturn(mentoring);
 
         assertThatThrownBy(() -> mentoringUserInfoUseCase.getMentoringDetail(user, mentoringId))
@@ -120,7 +118,7 @@ class MentoringUserInfoUseCaseTest {
                 , 40, CANCEL
                 , LocalDateTime.now(), LocalDateTime.now());
 
-        given(checkIsMyMentoringUseCase.byUser(user, mentoringId))
+        given(mentoringGetService.byMentoringId(any()))
                 .willReturn(mentoring);
 
         assertThatThrownBy(() -> mentoringUserInfoUseCase.getMentoringDetail(user, mentoringId))

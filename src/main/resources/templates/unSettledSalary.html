@@ -40,7 +40,9 @@
     <td th:text="${salaryInfo.accountHolder()}">accountHolder</td>
     <td th:text="${salaryInfo.bank()}">bank</td>
     <td th:text="${salaryInfo.accountNumber()}">accountNumber</td>
-    <td><button th:salaryId="${salaryInfo.salaryId()}" th:onclick="salaryDone(this.getAttribute('salaryId'))">정산완료</button></td>
+    <td><button th:salaryId="${salaryInfo.salaryId()}"
+                th:onclick="goToPost('정말 완료하겠습니까??', '/adminServer/salary/done/' + this.getAttribute('salaryId'))">
+      정산완료</button></td>
   </tr>
   </tbody>
 </table>

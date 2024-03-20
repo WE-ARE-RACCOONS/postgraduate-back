@@ -80,4 +80,8 @@ public class User {
     public boolean isDelete() {
         return this.isDelete;
     }
+
+    public boolean isDefaultProfile(String defaultProfile) {
+        return this.profile.equals(defaultProfile);
+    }
 }

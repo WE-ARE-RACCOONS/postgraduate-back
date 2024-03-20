@@ -9,7 +9,6 @@ import com.postgraduate.domain.mentoring.application.mapper.MentoringMapper;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.entity.constant.Status;
 import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
-import com.postgraduate.domain.mentoring.exception.MentoringDetailNotFoundException;
 import com.postgraduate.domain.mentoring.util.DateUtils;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
@@ -31,15 +30,13 @@ import static java.time.Duration.between;
 @RequiredArgsConstructor
 public class MentoringSeniorInfoUseCase {
     private final MentoringGetService mentoringGetService;
-    private final CheckIsMyMentoringUseCase checkIsMyMentoringUseCase;
     private final SeniorGetService seniorGetService;
 
     public SeniorMentoringDetailResponse getSeniorMentoringDetail(User user, Long mentoringId) {
         Senior senior = seniorGetService.byUser(user);
-        Mentoring mentoring = checkIsMyMentoringUseCase.bySenior(senior, mentoringId);
-        if (!(mentoring.getStatus() == WAITING || mentoring.getStatus() == EXPECTED)) {
-            throw new MentoringDetailNotFoundException();
-        }
+        Mentoring mentoring = mentoringGetService.byMentoringId(mentoringId);
+        mentoring.checkIsMineWithSenior(senior);
+        mentoring.checkDetailCondition();
         return mapToSeniorMentoringDetail(mentoring);
     }
 

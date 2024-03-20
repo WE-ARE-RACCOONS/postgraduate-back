@@ -4,12 +4,10 @@ import com.postgraduate.domain.account.domain.entity.Account;
 import com.postgraduate.domain.account.domain.service.AccountGetService;
 import com.postgraduate.domain.mentoring.application.dto.req.MentoringApplyRequest;
 import com.postgraduate.domain.mentoring.application.dto.req.MentoringDateRequest;
-import com.postgraduate.domain.mentoring.application.mapper.MentoringMapper;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
 import com.postgraduate.domain.mentoring.domain.service.MentoringSaveService;
 import com.postgraduate.domain.mentoring.domain.service.MentoringUpdateService;
-import com.postgraduate.domain.mentoring.exception.MentoringDateException;
 import com.postgraduate.domain.mentoring.exception.MentoringNotExpectedException;
 import com.postgraduate.domain.mentoring.exception.MentoringNotWaitingException;
 import com.postgraduate.domain.payment.application.usecase.PaymentManageUseCase;
@@ -53,9 +51,6 @@ import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class MentoringManageUseCaseTest {
-
-    @Mock
-    private CheckIsMyMentoringUseCase checkIsMyMentoringUseCase;
 
     @Mock
     private MentoringUpdateService mentoringUpdateService;
@@ -161,19 +156,17 @@ class MentoringManageUseCaseTest {
     void updateCancel() {
         Payment payment = new Payment(0L, user, senior, 24000, null
                 , null, null, null, null, Status.DONE);
-
         Mentoring mentoring = new Mentoring(mentoringId, user, senior, payment, null
                 , "a", "b", "c"
                 , 40, WAITING
                 , LocalDateTime.now(), LocalDateTime.now());
 
-
-        given(checkIsMyMentoringUseCase.byUser(user, mentoringId))
+        given(mentoringGetService.byMentoringId(any()))
                 .willReturn(mentoring);
-
         mentoringManageUseCase.updateCancel(user, mentoringId);
 
-        verify(mentoringUpdateService).updateCancel(mentoring);
+        verify(mentoringUpdateService)
+                .updateCancel(mentoring);
     }
 
     @Test
@@ -185,7 +178,7 @@ class MentoringManageUseCaseTest {
                 , 40, EXPECTED
                 , LocalDateTime.now(), LocalDateTime.now());
 
-        given(checkIsMyMentoringUseCase.byUser(user, mentoringId))
+        given(mentoringGetService.byMentoringId(any()))
                 .willReturn(mentoring);
 
         assertThatThrownBy(() -> mentoringManageUseCase.updateCancel(user, mentoringId))
@@ -201,7 +194,7 @@ class MentoringManageUseCaseTest {
                 , 40, DONE
                 , LocalDateTime.now(), LocalDateTime.now());
 
-        given(checkIsMyMentoringUseCase.byUser(user, mentoringId))
+        given(mentoringGetService.byMentoringId(any()))
                 .willReturn(mentoring);
 
         assertThatThrownBy(() -> mentoringManageUseCase.updateCancel(user, mentoringId))
@@ -217,7 +210,7 @@ class MentoringManageUseCaseTest {
                 40, DONE
                 , LocalDateTime.now(), LocalDateTime.now());
 
-        given(checkIsMyMentoringUseCase.byUser(user, mentoringId))
+        given(mentoringGetService.byMentoringId(any()))
                 .willReturn(mentoring);
 
         assertThatThrownBy(() -> mentoringManageUseCase.updateDone(user, mentoringId))
@@ -233,7 +226,7 @@ class MentoringManageUseCaseTest {
                 , 40, WAITING
                 , LocalDateTime.now(), LocalDateTime.now());
 
-        given(checkIsMyMentoringUseCase.byUser(user, mentoringId))
+        given(mentoringGetService.byMentoringId(any()))
                 .willReturn(mentoring);
 
         assertThatThrownBy(() -> mentoringManageUseCase.updateDone(user, mentoringId))
@@ -249,10 +242,12 @@ class MentoringManageUseCaseTest {
                 , 40, EXPECTED
                 , LocalDateTime.now(), LocalDateTime.now());
         Salary salary = mock(Salary.class);
-        given(checkIsMyMentoringUseCase.byUser(user, mentoringId))
+
+        given(mentoringGetService.byMentoringId(any()))
                 .willReturn(mentoring);
-        given(salaryGetService.bySenior(mentoring.getSenior()))
+        given(salaryGetService.bySenior(any()))
                 .willReturn(salary);
+
         mentoringManageUseCase.updateDone(user, mentoringId);
 
         verify(salaryUpdateService).plusTotalAmount(salary);
@@ -269,10 +264,10 @@ class MentoringManageUseCaseTest {
                 , 40, WAITING
                 , LocalDateTime.now(), LocalDateTime.now());
 
+        given(mentoringGetService.byMentoringId(any()))
+                .willReturn(mentoring);
         given(seniorGetService.byUser(user))
                 .willReturn(senior);
-        given(checkIsMyMentoringUseCase.bySenior(senior, mentoringId))
-                .willReturn(mentoring);
 
         mentoringManageUseCase.updateRefuse(user, mentoringId, request);
 
@@ -290,10 +285,10 @@ class MentoringManageUseCaseTest {
                 , 40, EXPECTED
                 , LocalDateTime.now(), LocalDateTime.now());
 
-        given(seniorGetService.byUser(user))
-                .willReturn(senior);
-        given(checkIsMyMentoringUseCase.bySenior(senior, mentoringId))
+        given(mentoringGetService.byMentoringId(any()))
                 .willReturn(mentoring);
+        given(seniorGetService.byUser(any()))
+                .willReturn(senior);
 
         assertThatThrownBy(() -> mentoringManageUseCase.updateRefuse(user, mentoringId, request))
                 .isInstanceOf(MentoringNotWaitingException.class);
@@ -309,10 +304,10 @@ class MentoringManageUseCaseTest {
                 , 40, DONE
                 , LocalDateTime.now(), LocalDateTime.now());
 
-        given(seniorGetService.byUser(user))
-                .willReturn(senior);
-        given(checkIsMyMentoringUseCase.bySenior(senior, mentoringId))
+        given(mentoringGetService.byMentoringId(any()))
                 .willReturn(mentoring);
+        given(seniorGetService.byUser(any()))
+                .willReturn(senior);
 
         assertThatThrownBy(() -> mentoringManageUseCase.updateRefuse(user, mentoringId, request))
                 .isInstanceOf(MentoringNotWaitingException.class);
@@ -328,16 +323,17 @@ class MentoringManageUseCaseTest {
                 , 40, WAITING
                 , LocalDateTime.now(), LocalDateTime.now());
 
-        given(seniorGetService.byUser(user)).willReturn(senior);
-        given(checkIsMyMentoringUseCase.bySenior(senior, mentoringId)).willReturn(mentoring);
+        given(mentoringGetService.byMentoringId(any()))
+                .willReturn(mentoring);
+        given(seniorGetService.byUser(user))
+                .willReturn(senior);
         given(accountGetService.bySenior(senior))
                 .willReturn(Optional.of(new Account()));
 
         assertThat(mentoringManageUseCase.updateExpected(user, mentoringId, dateRequest))
                 .isEqualTo(TRUE);
 
-        verify(mentoringUpdateService).updateDate(mentoring, dateRequest.date());
-        verify(mentoringUpdateService).updateExpected(mentoring);
+        verify(mentoringUpdateService).updateExpected(mentoring, dateRequest.date());
     }
 
     @Test
@@ -350,18 +346,17 @@ class MentoringManageUseCaseTest {
                 , 40, WAITING
                 , LocalDateTime.now(), LocalDateTime.now());
 
-        given(seniorGetService.byUser(user))
-                .willReturn(senior);
-        given(checkIsMyMentoringUseCase.bySenior(senior, mentoringId))
+        given(mentoringGetService.byMentoringId(any()))
                 .willReturn(mentoring);
-        given(accountGetService.bySenior(senior))
+        given(seniorGetService.byUser(any()))
+                .willReturn(senior);
+        given(accountGetService.bySenior(any()))
                 .willReturn(Optional.ofNullable(null));
 
         assertThat(mentoringManageUseCase.updateExpected(user, mentoringId, dateRequest))
                 .isEqualTo(FALSE);
 
-        verify(mentoringUpdateService).updateDate(mentoring, dateRequest.date());
-        verify(mentoringUpdateService).updateExpected(mentoring);
+        verify(mentoringUpdateService).updateExpected(mentoring, dateRequest.date());
     }
 
     @Test
@@ -374,10 +369,10 @@ class MentoringManageUseCaseTest {
                 , 40, EXPECTED
                 , LocalDateTime.now(), LocalDateTime.now());
 
+        given(mentoringGetService.byMentoringId(any()))
+                .willReturn(mentoring);
         given(seniorGetService.byUser(user))
                 .willReturn(senior);
-        given(checkIsMyMentoringUseCase.bySenior(senior, mentoringId))
-                .willReturn(mentoring);
 
         assertThatThrownBy(() -> mentoringManageUseCase.updateExpected(user, mentoringId, dateRequest))
                 .isInstanceOf(MentoringNotWaitingException.class);
@@ -392,11 +387,11 @@ class MentoringManageUseCaseTest {
                 , "a", "b", "c"
                 , 40, DONE
                 , LocalDateTime.now(), LocalDateTime.now());
-
+        
+        given(mentoringGetService.byMentoringId(any()))
+                .willReturn(mentoring);
         given(seniorGetService.byUser(user))
                 .willReturn(senior);
-        given(checkIsMyMentoringUseCase.bySenior(senior, mentoringId))
-                .willReturn(mentoring);
 
         assertThatThrownBy(() -> mentoringManageUseCase.updateExpected(user, mentoringId, dateRequest))
                 .isInstanceOf(MentoringNotWaitingException.class);

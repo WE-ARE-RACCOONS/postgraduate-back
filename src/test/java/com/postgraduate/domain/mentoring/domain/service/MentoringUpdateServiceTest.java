@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 
 import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
@@ -56,9 +57,11 @@ class MentoringUpdateServiceTest {
     @Test
     @DisplayName("EXPECTED 변경")
     void updateStatusExpected() {
-        mentoringUpdateService.updateExpected(mentoring);
+        mentoringUpdateService.updateExpected(mentoring, "update");
         assertThat(mentoring.getStatus())
                 .isEqualTo(EXPECTED);
+        assertThat(mentoring.getDate())
+                .isEqualTo("update");
     }
 
     @Test
@@ -67,13 +70,5 @@ class MentoringUpdateServiceTest {
         mentoringUpdateService.updateRefuse(mentoring);
         assertThat(mentoring.getStatus())
                 .isEqualTo(REFUSE);
-    }
-
-    @Test
-    @DisplayName("date 업데이트 확인")
-    void updateDate() {
-        mentoringUpdateService.updateDate(mentoring, "update");
-        assertThat(mentoring.getDate())
-                .isEqualTo("update");
     }
 }

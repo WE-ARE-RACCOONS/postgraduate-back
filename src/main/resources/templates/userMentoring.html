@@ -52,7 +52,9 @@
         <td th:text="${mentoringInfo.phoneNumber()}">isUser</td>
         <td th:text="${mentoringInfo.createdAt()}">isUser</td>
         <td th:text="${mentoringInfo.date()}">date</td>
-        <td><button th:mentoringId="${mentoringInfo.mentoringId()}" th:onclick="refundMentoring(this.getAttribute('mentoringId'))">환불 및 취소</button></td>
+        <td><button th:mentoringId="${mentoringInfo.mentoringId()}"
+                    th:onclick="goToPost('정말 환불하시겠습니까??', '/adminServer/payment/refund/' + this.getAttribute('mentoringId'))">
+            환불 및 취소</button></td>
     </tr>
     </tbody>
 </table>

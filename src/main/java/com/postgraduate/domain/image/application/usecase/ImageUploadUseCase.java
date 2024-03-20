@@ -22,7 +22,7 @@ public class ImageUploadUseCase {
     }
 
     public ImageUrlResponse uploadProfile(User user, MultipartFile profile) {
-        if (!(user.getProfile().equals(defaultProfile)))
+        if (!(user.isDefaultProfile(defaultProfile)))
             uploadService.deleteProfileImage(user.getProfile());
         String url = uploadService.saveProfileFile(profile);
         return new ImageUrlResponse(url);
