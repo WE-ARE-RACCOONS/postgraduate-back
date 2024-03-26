@@ -49,8 +49,8 @@
         <td><button th:seniorId="${seniorInfo.seniorId()}"
                     th:onclick="goToGet('/adminServer/salary/' + this.getAttribute('seniorId'))">
             통장정보</button></td>
-        <td th:text="${seniorInfo.marketingReceive()}">marketing</td>
-        <td th:text="${seniorInfo.isUser()}">isUser</td>
+        <td th:text="${seniorInfo.marketingReceive()} ? 'O' : 'X'">marketing</td>
+        <td th:text="${seniorInfo.isUser()} ? 'O' : 'X'">isUser</td>
     </tr>
     </tbody>
 </table>
