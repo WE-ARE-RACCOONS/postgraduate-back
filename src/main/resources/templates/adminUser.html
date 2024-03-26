@@ -39,8 +39,8 @@
         <td th:text="${userInfo.nickName()}">nickName</td>
         <td th:text="${userInfo.phoneNumber()}">phoneNumber</td>
         <td th:text="${userInfo.createdAt()}">createdAt</td>
-        <td th:text="${userInfo.marketingReceive()}">marketingReceive</td>
-        <td th:text="${userInfo.matchingReceive()}">matchingReceive</td>
+        <td th:text="${userInfo.marketingReceive()} ? 'O' : 'X'">marketingReceive</td>
+        <td th:text="${userInfo.matchingReceive()} ? 'O' : 'X'">matchingReceive</td>
         <td><button th:userId="${userInfo.userId()}"
                     th:onclick="goToGet('/adminServer/user/matching/' + this.getAttribute('userId'))">
             매칭지원정보</button></td>
@@ -48,7 +48,7 @@
                     th:onclick="goToGet('/adminServer/user/mentoring/' + this.getAttribute('userId'))">
             신청멘토링정보</button></td>
         <td th:text="${userInfo.matchingStatus()}">matchingFinish</td>
-        <td th:text="${userInfo.isSenior()}">isSenior</td>
+        <td th:text="${userInfo.isSenior()} ? 'O' : 'X'">isSenior</td>
     </tr>
     </tbody>
 </table>
