@@ -3,6 +3,7 @@ package com.postgraduate.domain.adminssr.application.usecase;
 import com.postgraduate.domain.adminssr.application.dto.res.SalaryInfoWithOutId;
 import com.postgraduate.domain.adminssr.application.dto.res.UnSettledSalaryInfo;
 import com.postgraduate.domain.salary.domain.entity.Salary;
+import com.postgraduate.domain.salary.domain.entity.SalaryAccount;
 import com.postgraduate.domain.salary.domain.service.SalaryGetService;
 import com.postgraduate.domain.salary.domain.service.SalaryUpdateService;
 import com.postgraduate.domain.senior.domain.entity.Senior;
@@ -30,9 +31,10 @@ public class AdminSalaryUseCase {
         List<Salary> all = salaryGetService.findAll();
         return all.stream()
                 .map(salary -> {
-                    if (salary.getAccountNumber() == null)
+                    SalaryAccount account = salary.getAccount();
+                    if (account == null)
                         return mapToSalaryResponse(salary.getSenior(), salary);
-                    String accountNumber = encryptorUtils.decryptData(salary.getAccountNumber());
+                    String accountNumber = encryptorUtils.decryptData(account.getAccountNumber());
                     return mapToSalaryResponse(salary.getSenior(), accountNumber, salary);
                 })
                 .toList();
@@ -41,9 +43,10 @@ public class AdminSalaryUseCase {
     public SalaryInfoWithOutId seniorSalary(Long seniorId) {
         Senior senior = seniorGetService.bySeniorId(seniorId);
         Salary salary = salaryGetService.bySenior(senior);
-        if (salary.getAccountNumber() == null)
+        SalaryAccount account = salary.getAccount();
+        if (account == null)
             return mapToSalaryResponse(senior, salary);
-        String accountNumber = encryptorUtils.decryptData(salary.getAccountNumber());
+        String accountNumber = encryptorUtils.decryptData(account.getAccountNumber());
         return mapToSalaryResponse(senior, accountNumber, salary);
     }
 
@@ -56,9 +59,10 @@ public class AdminSalaryUseCase {
         List<Salary> salaries = salaryGetService.allByNotDone();
         return salaries.stream()
                 .map(salary -> {
-                    if (salary.getAccountNumber() == null)
+                    SalaryAccount account = salary.getAccount();
+                    if (account == null)
                         return mapToUnSettledSalaryResponse(salary);
-                    String accountNumber = encryptorUtils.decryptData(salary.getAccountNumber());
+                    String accountNumber = encryptorUtils.decryptData(account.getAccountNumber());
                     return mapToUnSettledSalaryResponse(salary, accountNumber);
                 })
                 .toList();

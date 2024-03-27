@@ -41,6 +41,10 @@ public class SalaryGetService {
                 .orElseThrow(SalaryNotFoundException::new);
     }
 
+    public List<Salary> allBySeniorAndAccountIsNull(Senior senior) {
+        return salaryRepository.findAllBySalaryNoneAccount(senior);
+    }
+
     public Page<SeniorSalary> findDistinctSeniors(String search, Integer page) {
         page = page == null ? 1 : page;
         Pageable pageable = PageRequest.of(page - 1, ADMIN_PAGE_SIZE);

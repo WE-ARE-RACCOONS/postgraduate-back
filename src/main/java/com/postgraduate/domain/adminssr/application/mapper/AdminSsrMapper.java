@@ -6,6 +6,7 @@ import com.postgraduate.domain.adminssr.application.dto.res.UnSettledSalaryInfo;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.salary.domain.entity.Salary;
+import com.postgraduate.domain.salary.domain.entity.SalaryAccount;
 import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.user.domain.entity.User;
@@ -146,12 +147,13 @@ public class AdminSsrMapper {
 
     public static SalaryInfoWithOutId mapToSalaryResponse(Senior senior, String accountNumber, Salary salary) {
         User user = senior.getUser();
+        SalaryAccount account = salary.getAccount();
         return new SalaryInfoWithOutId(
                 user.getNickName(),
                 user.getPhoneNumber(),
                 salary.getTotalAmount(),
-                salary.getAccountHolder(),
-                salary.getBank(),
+                account.getAccountHolder(),
+                account.getBank(),
                 accountNumber,
                 salary.getSalaryDoneDate()
         );
@@ -182,13 +184,14 @@ public class AdminSsrMapper {
     public static UnSettledSalaryInfo mapToUnSettledSalaryResponse(Salary salary, String accountNumber) {
         Senior senior = salary.getSenior();
         User user = senior.getUser();
+        SalaryAccount account = salary.getAccount();
         return new UnSettledSalaryInfo(
                 salary.getSalaryId(),
                 user.getNickName(),
                 user.getPhoneNumber(),
                 salary.getTotalAmount(),
-                salary.getAccountHolder(),
-                salary.getBank(),
+                account.getAccountHolder(),
+                account.getBank(),
                 accountNumber,
                 salary.getSalaryDate()
         );

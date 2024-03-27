@@ -40,9 +40,8 @@ public class Salary {
     @Column
     private LocalDateTime salaryDoneDate;
 
-    private String bank;
-    private String accountNumber;
-    private String accountHolder;
+    @Embedded
+    private SalaryAccount account;
 
     public boolean status() {
         return this.status;
@@ -53,10 +52,8 @@ public class Salary {
         this.salaryDoneDate = LocalDateTime.now();
     }
 
-    public void updateAccount(String bank, String accountNumber, String accountHolder) {
-        this.bank = bank;
-        this.accountNumber = accountNumber;
-        this.accountHolder = accountHolder;
+    public void updateAccount(SalaryAccount account) {
+        this.account = account;
     }
 
     public void plusAmount(int amount) {

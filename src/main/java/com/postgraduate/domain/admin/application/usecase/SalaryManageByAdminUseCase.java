@@ -8,6 +8,7 @@ import com.postgraduate.domain.admin.application.dto.res.SalaryManageResponse;
 import com.postgraduate.domain.admin.application.mapper.AdminMapper;
 import com.postgraduate.domain.salary.application.dto.SeniorSalary;
 import com.postgraduate.domain.salary.domain.entity.Salary;
+import com.postgraduate.domain.salary.domain.entity.SalaryAccount;
 import com.postgraduate.domain.salary.domain.service.SalaryGetService;
 import com.postgraduate.domain.salary.domain.service.SalaryUpdateService;
 import com.postgraduate.domain.senior.domain.entity.Senior;
@@ -21,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+import static com.postgraduate.domain.admin.application.mapper.AdminMapper.mapToSalaryResponse;
 import static java.lang.Boolean.TRUE;
 
 @Service
@@ -60,12 +62,12 @@ public class SalaryManageByAdminUseCase {
     }
 
     private SalaryInfo getSalaryInfo(Senior senior, Salary salary) {
-        Optional<Account> optionalAccount = accountGetService.bySenior(senior);
-        if (optionalAccount.isPresent()) {
-            String accountNumber = encryptorUtils.decryptData(salary.getAccountNumber());
-            return AdminMapper.mapToSalaryResponse(senior, accountNumber, salary);
+        SalaryAccount account = salary.getAccount();
+        if (account != null) {
+            String accountNumber = encryptorUtils.decryptData(account.getAccountNumber());
+            return mapToSalaryResponse(senior, accountNumber, salary);
         }
-        return AdminMapper.mapToSalaryResponse(senior, salary);
+        return mapToSalaryResponse(senior, salary);
     }
 
     public void updateSalaryStatus(Long seniorId, Boolean status) {
