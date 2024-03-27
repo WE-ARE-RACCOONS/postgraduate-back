@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.*;
+
 @Service
 @RequiredArgsConstructor
 public class MentoringGetService {
@@ -41,20 +43,77 @@ public class MentoringGetService {
                 .orElseThrow(MentoringNotFoundException::new);
     }
 
-    public List<Mentoring> byUser(User user, Status status) {
-        return mentoringRepository.findAllByUserAndStatus(user, status);
+    public List<Mentoring> byUserWaiting(User user) {
+        return mentoringRepository.findAllByUserAndStatus(user, WAITING);
     }
 
-    public List<Mentoring> bySenior(Senior senior, Status status) {
-        return mentoringRepository.findAllBySeniorAndStatus(senior, status);
+    public List<Mentoring> byUserExpected(User user) {
+        return mentoringRepository.findAllByUserAndStatus(user, EXPECTED);
     }
 
-    public List<Mentoring> bySenior(Senior senior) {
-        return mentoringRepository.findAllBySeniorAndDone(senior);
+    public List<Mentoring> byUserDone(User user) {
+        return mentoringRepository.findAllByUserAndStatus(user, DONE);
+    }
+
+    public List<Mentoring> bySeniorWaiting(Senior senior) {
+        return mentoringRepository.findAllBySeniorAndStatus(senior, WAITING);
+    }
+
+    public List<Mentoring> bySeniorExpected(Senior senior) {
+        return mentoringRepository.findAllBySeniorAndStatus(senior, EXPECTED);
+    }
+
+    public List<Mentoring> bySeniorDone(Senior senior) {
+        return mentoringRepository.findAllBySeniorAndStatus(senior, DONE);
     }
 
     public Mentoring byMentoringId(Long mentoringId) {
         return mentoringRepository.findByMentoringId(mentoringId)
+                .orElseThrow(MentoringNotFoundException::new);
+    }
+
+    public Mentoring byIdAndUserForDetails(Long mentoringId, User user) {
+        return mentoringRepository.findByMentoringIdAndUserForDetails(mentoringId, user)
+                .orElseThrow(MentoringNotFoundException::new);
+    }
+
+    public Mentoring byIdAndStatusForDetails(Long mentoringId, Senior senior) {
+        return mentoringRepository.findByMentoringIdAndSeniorForDetails(mentoringId, senior)
+                .orElseThrow(MentoringNotFoundException::new);
+    }
+
+    public Mentoring byIdAndUserAndWaiting(Long mentoringId, User user) {
+        return mentoringRepository.findByMentoringIdAndUserAndStatus(mentoringId, user, WAITING)
+                .orElseThrow(MentoringNotFoundException::new);
+    }
+
+    public Mentoring byIdAndUserAndExpected(Long mentoringId, User user) {
+        return mentoringRepository.findByMentoringIdAndUserAndStatus(mentoringId, user, EXPECTED)
+                .orElseThrow(MentoringNotFoundException::new);
+    }
+
+    public Mentoring byIdAndUserAndDone(Long mentoringId, User user) {
+        return mentoringRepository.findByMentoringIdAndUserAndStatus(mentoringId, user, DONE)
+                .orElseThrow(MentoringNotFoundException::new);
+    }
+
+    public Mentoring byIdAndSeniorAndStatus(Long mentoringId, Senior senior, Status status) {
+        return mentoringRepository.findByMentoringIdAndSeniorAndStatus(mentoringId, senior, status)
+                .orElseThrow(MentoringNotFoundException::new);
+    }
+
+    public Mentoring byIdAndSeniorAndWaiting(Long mentoringId, Senior senior) {
+        return mentoringRepository.findByMentoringIdAndSeniorAndStatus(mentoringId, senior, WAITING)
+                .orElseThrow(MentoringNotFoundException::new);
+    }
+
+    public Mentoring byIdAndSeniorAndExpected(Long mentoringId, Senior senior) {
+        return mentoringRepository.findByMentoringIdAndSeniorAndStatus(mentoringId, senior, EXPECTED)
+                .orElseThrow(MentoringNotFoundException::new);
+    }
+
+    public Mentoring byIdAndSeniorAndDone(Long mentoringId, Senior senior) {
+        return mentoringRepository.findByMentoringIdAndSeniorAndStatus(mentoringId, senior, DONE)
                 .orElseThrow(MentoringNotFoundException::new);
     }
 
@@ -63,12 +122,12 @@ public class MentoringGetService {
                 .orElseThrow(MentoringNotFoundException::new);
     }
 
-    public List<Mentoring> byStatusAndCreatedAt(Status status, LocalDateTime now) {
-        return mentoringRepository.findAllByStatusAndCreatedAtIsBefore(status, now);
+    public List<Mentoring> byWaitingAndCreatedAt(LocalDateTime now) {
+        return mentoringRepository.findAllByStatusAndCreatedAtIsBefore(WAITING, now);
     }
 
-    public List<Mentoring> byStatus(Status status) {
-        return mentoringRepository.findAllByStatus(status);
+    public List<Mentoring> byExpected() {
+        return mentoringRepository.findAllByStatus(EXPECTED);
     }
 
     public List<Mentoring> byUserId(Long userId) {

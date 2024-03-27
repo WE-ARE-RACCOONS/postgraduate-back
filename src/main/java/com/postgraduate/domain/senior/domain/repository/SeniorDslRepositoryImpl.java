@@ -3,6 +3,7 @@ package com.postgraduate.domain.senior.domain.repository;
 import com.postgraduate.domain.account.domain.entity.Account;
 import com.postgraduate.domain.salary.application.dto.SeniorAndAccount;
 import com.postgraduate.domain.senior.domain.entity.Senior;
+import com.postgraduate.domain.user.domain.entity.User;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -191,6 +192,17 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
                         senior.user.isDelete.isFalse()
                 )
                 .fetchOne());
+    }
+
+    @Override
+    public Optional<Senior> findByUserWithAll(User seniorUser) {
+        return ofNullable(queryFactory.selectFrom(senior)
+                .distinct()
+                .join(senior.user, user)
+                .fetchJoin()
+                .where(senior.user.eq(seniorUser))
+                .fetchOne()
+        );
     }
 
     @Override

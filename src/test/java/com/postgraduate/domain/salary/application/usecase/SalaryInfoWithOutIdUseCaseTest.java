@@ -8,6 +8,7 @@ import com.postgraduate.domain.payment.domain.service.PaymentGetService;
 import com.postgraduate.domain.salary.application.dto.res.SalaryDetailsResponse;
 import com.postgraduate.domain.salary.application.dto.res.SalaryInfoResponse;
 import com.postgraduate.domain.salary.domain.entity.Salary;
+import com.postgraduate.domain.salary.domain.entity.SalaryAccount;
 import com.postgraduate.domain.salary.domain.service.SalaryGetService;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
@@ -44,17 +45,19 @@ class SalaryInfoWithOutIdUseCaseTest {
 
     private User user;
     private Senior senior;
+    private SalaryAccount salaryAccount;
 
     @BeforeEach
     void setting() {
         user = mock(User.class);
         senior = mock(Senior.class);
+        salaryAccount = new SalaryAccount("bank", "1234", "holder");
     }
     @Test
     @DisplayName("정산 예정 금액 및 날짜 확인")
     void getSalary() {
         LocalDate salaryDate = getSalaryDate();
-        Salary salary = new Salary(1L, FALSE, senior, 10000, salaryDate, null, "bank", "1234", "holder");
+        Salary salary = new Salary(1L, FALSE, senior, 10000, salaryDate, null, salaryAccount);
 
         given(seniorGetService.byUser(user))
                 .willReturn(senior);
@@ -73,7 +76,7 @@ class SalaryInfoWithOutIdUseCaseTest {
     @DisplayName("정산 예정 금액 및 날짜 확인 - 0원")
     void getSalaryWithZero() {
         LocalDate salaryDate = getSalaryDate();
-        Salary salary = new Salary(1L, FALSE, senior, 0, salaryDate, null, "bank", "1234", "holder");
+        Salary salary = new Salary(1L, FALSE, senior, 0, salaryDate, null, salaryAccount);
 
         given(seniorGetService.byUser(user))
                 .willReturn(senior);

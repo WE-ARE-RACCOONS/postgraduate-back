@@ -7,7 +7,6 @@ import com.postgraduate.domain.mentoring.application.dto.res.SeniorMentoringDeta
 import com.postgraduate.domain.mentoring.application.dto.res.SeniorMentoringResponse;
 import com.postgraduate.domain.mentoring.application.mapper.MentoringMapper;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
-import com.postgraduate.domain.mentoring.domain.entity.constant.Status;
 import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
 import com.postgraduate.domain.mentoring.util.DateUtils;
 import com.postgraduate.domain.senior.domain.entity.Senior;
@@ -21,8 +20,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.postgraduate.domain.mentoring.application.mapper.MentoringMapper.*;
-import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.EXPECTED;
-import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.WAITING;
 import static java.time.Duration.between;
 
 @Service
@@ -34,14 +31,13 @@ public class MentoringSeniorInfoUseCase {
 
     public SeniorMentoringDetailResponse getSeniorMentoringDetail(User user, Long mentoringId) {
         Senior senior = seniorGetService.byUser(user);
-        Mentoring mentoring = mentoringGetService.byMentoringId(mentoringId);
-        mentoring.checkIsMineWithSenior(senior);
-        mentoring.checkDetailCondition();
+        Mentoring mentoring = mentoringGetService.byIdAndStatusForDetails(mentoringId, senior);
         return mapToSeniorMentoringDetail(mentoring);
     }
 
     public SeniorMentoringResponse getSeniorWaiting(User user) {
-        List<Mentoring> mentorings = getMentorings(user, WAITING);
+        Senior senior = seniorGetService.byUser(user);
+        List<Mentoring> mentorings = mentoringGetService.bySeniorWaiting(senior);
         List<WaitingSeniorMentoringInfo> waitingMentoringInfos = mentorings.stream()
                 .map(mentoring -> {
                     LocalDateTime expiredAt = mentoring.getCreatedAt()
@@ -57,7 +53,8 @@ public class MentoringSeniorInfoUseCase {
     }
 
     public SeniorMentoringResponse getSeniorExpected(User user) {
-        List<Mentoring> mentorings = getMentorings(user, EXPECTED);
+        Senior senior = seniorGetService.byUser(user);
+        List<Mentoring> mentorings = mentoringGetService.bySeniorExpected(senior);
         List<ExpectedSeniorMentoringInfo> expectedMentoringInfos = mentorings.stream()
                 .map(mentoring -> {
                     LocalDateTime date = DateUtils.stringToLocalDateTime(mentoring.getDate());
@@ -70,20 +67,11 @@ public class MentoringSeniorInfoUseCase {
     }
 
     public SeniorMentoringResponse getSeniorDone(User user) {
-        List<Mentoring> mentorings = getDoneMentorings(user);
+        Senior senior = seniorGetService.byUser(user);
+        List<Mentoring> mentorings = mentoringGetService.bySeniorDone(senior);
         List<DoneSeniorMentoringInfo> doneSeniorMentoringInfos = mentorings.stream()
                 .map(MentoringMapper::mapToSeniorDoneInfo)
                 .toList();
         return new SeniorMentoringResponse(doneSeniorMentoringInfos);
-    }
-
-    private List<Mentoring> getMentorings(User user, Status status) {
-        Senior senior = seniorGetService.byUser(user);
-        return mentoringGetService.bySenior(senior, status);
-    }
-
-    private List<Mentoring> getDoneMentorings(User user) {
-        Senior senior = seniorGetService.byUser(user);
-        return mentoringGetService.bySenior(senior);
     }
 }

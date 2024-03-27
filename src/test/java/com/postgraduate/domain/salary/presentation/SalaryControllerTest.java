@@ -2,6 +2,7 @@ package com.postgraduate.domain.salary.presentation;
 
 import com.postgraduate.IntegrationTest;
 import com.postgraduate.domain.salary.domain.entity.Salary;
+import com.postgraduate.domain.salary.domain.entity.SalaryAccount;
 import com.postgraduate.domain.salary.domain.repository.SalaryRepository;
 import com.postgraduate.domain.salary.util.SalaryUtil;
 import com.postgraduate.domain.senior.domain.entity.Info;
@@ -60,7 +61,8 @@ class SalaryControllerTest extends IntegrationTest {
         Senior senior = new Senior(0L, user, "certification", Status.APPROVE, 0, info, profile, now(), now());
         seniorRepository.save(senior);
 
-        salary = new Salary(0L, false, senior, 0, SalaryUtil.getSalaryDate(), null, "bank", "account", "holder");
+        SalaryAccount salaryAccount = new SalaryAccount("bank", "1234", "holder");
+        salary = new Salary(0L, false, senior, 0, SalaryUtil.getSalaryDate(), null, salaryAccount);
         salaryRepository.save(salary);
 
         token = jwtUtil.generateAccessToken(user.getUserId(), Role.SENIOR);
