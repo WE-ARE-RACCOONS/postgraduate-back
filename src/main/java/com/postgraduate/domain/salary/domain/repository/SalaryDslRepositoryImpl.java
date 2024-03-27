@@ -124,16 +124,25 @@ public class SalaryDslRepositoryImpl implements SalaryDslRepository {
     }
 
     @Override
-    public List<Salary> findAllBySalaryNoneAccount(Senior searchSenior) {
-        return queryFactory.selectFrom(salary)
-                .distinct()
+    public List<Salary> findAllBySalaryNoneAccount(LocalDate salaryDate, Senior searchSenior) {
+        Salary nowSalary = queryFactory.selectFrom(salary)
                 .where(
-                        salary.senior.eq(searchSenior)
-                                .or(salary.account.isNull())
+                        salary.senior.eq(searchSenior),
+                        salary.salaryDate.eq(salaryDate)
                 )
-                .join(salary.senior, senior)
-                .fetchJoin()
-                .fetch();
+                .fetchOne();
+        if (nowSalary.getAccount() == null) {
+            return queryFactory.selectFrom(salary)
+                    .distinct()
+                    .where(
+                            salary.senior.eq(searchSenior)
+                                    .and(salary.account.isNull())
+                    )
+                    .join(salary.senior, senior)
+                    .fetchJoin()
+                    .fetch();
+        }
+        return List.of(nowSalary);
     }
 }
 

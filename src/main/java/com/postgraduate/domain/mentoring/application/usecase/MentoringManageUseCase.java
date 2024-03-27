@@ -150,7 +150,7 @@ public class MentoringManageUseCase {
         //TODO : 알림 보내거나 나머지 작업
     }
 
-    @Scheduled(cron = "0 59 23 * * *", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")
     public void updateAutoDone() {
         List<Mentoring> expectedMentorings = mentoringGetService.byStatus(EXPECTED);
         expectedMentorings.stream()

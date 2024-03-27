@@ -42,7 +42,8 @@ public class SalaryGetService {
     }
 
     public List<Salary> allBySeniorAndAccountIsNull(Senior senior) {
-        return salaryRepository.findAllBySalaryNoneAccount(senior);
+        LocalDate salaryDate = SalaryUtil.getSalaryDate();
+        return salaryRepository.findAllBySalaryNoneAccount(salaryDate, senior);
     }
 
     public Page<SeniorSalary> findDistinctSeniors(String search, Integer page) {

@@ -200,7 +200,7 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
                 .distinct()
                 .join(senior.user, user)
                 .fetchJoin()
-                .where(senior.user.eq(user))
+                .where(senior.user.eq(seniorUser))
                 .fetchOne()
         );
     }

@@ -8,6 +8,7 @@ import com.postgraduate.domain.available.application.dto.req.AvailableCreateRequ
 import com.postgraduate.domain.available.domain.entity.Available;
 import com.postgraduate.domain.available.domain.repository.AvailableRepository;
 import com.postgraduate.domain.salary.domain.entity.Salary;
+import com.postgraduate.domain.salary.domain.entity.SalaryAccount;
 import com.postgraduate.domain.salary.domain.repository.SalaryRepository;
 import com.postgraduate.domain.salary.util.SalaryUtil;
 import com.postgraduate.domain.senior.application.dto.req.*;
@@ -82,17 +83,18 @@ class SeniorControllerTest extends IntegrationTest {
     private String userToken;
     private User user;
     private User otherUser;
+    private SalaryAccount salaryAccount;
 
     @BeforeEach
     void setUp() throws IOException {
-        user = new User(0L, 1L, "mail", "후배1", "011", "profile", 0, Role.SENIOR, true, now(), now(), false);
+        user = new User(-2L, 1L, "mail", "후배1", "011", "profile", 0, Role.SENIOR, true, now(), now(), false);
         otherUser = new User(-1L, 1234L, "mail", "후배2", "011", "profile", 0, Role.SENIOR, true, now(), now(), false);
         userRepository.save(user);
         userRepository.save(otherUser);
 
         Info info1 = new Info("major", "postgradu", "교수님", "keyword1,keyword2", "랩실", "field", false, false, "field,keyword1,keyword2");
         Profile profile1 = new Profile("info", "one", "u", "chat", 30);
-        senior = new Senior(0L, user, "certification", Status.APPROVE, 0, info1, profile1, now(), now());
+        senior = new Senior(-2L, user, "certification", Status.APPROVE, 0, info1, profile1, now(), now());
         seniorRepository.save(senior);
 
         Info info2 = new Info("major", "postgradu", "교수님", "keyword1,keyword2", "랩실", "field", false, false, "field,keyword1,keyword2");
@@ -103,6 +105,7 @@ class SeniorControllerTest extends IntegrationTest {
         seniorToken = jwtUtil.generateAccessToken(otherUser.getUserId(), Role.SENIOR);
         userToken = jwtUtil.generateAccessToken(otherUser.getUserId(), Role.USER);
 
+        salaryAccount = new SalaryAccount("신한은행", "1234", "김모씨");
         doNothing().when(slackLogErrorMessage).sendSlackLog(any());
     }
 
@@ -220,7 +223,7 @@ class SeniorControllerTest extends IntegrationTest {
     @Test
     @DisplayName("대학원생 정산 계좌를 생성한다")
     void updateAccount() throws Exception {
-        Salary salary = new Salary(0L, false, senior, 10000, getSalaryDate(), now(), null, null, null);
+        Salary salary = new Salary(0L, false, senior, 10000, getSalaryDate(), now(), null);
         salaryRepository.save(salary);
 
         String request = objectMapper.writeValueAsString(
@@ -242,7 +245,7 @@ class SeniorControllerTest extends IntegrationTest {
     @WithMockUser(authorities = {"SENIOR"})
     @DisplayName("빈 정산 계좌를 입력으면 예외가 발생한다")
     void updateInvalidAccount(String empty) throws Exception {
-        Salary salary = new Salary(0L, false, senior, 10000, getSalaryDate(), now(), null, null, null);
+        Salary salary = new Salary(0L, false, senior, 10000, getSalaryDate(), now(), null);
         salaryRepository.save(salary);
 
         String request = objectMapper.writeValueAsString(
@@ -434,7 +437,7 @@ class SeniorControllerTest extends IntegrationTest {
     @Test
     @DisplayName("대학원생 마이페이지 계정을 설정한다")
     void updateSeniorUserAccount() throws Exception {
-        Salary salary = new Salary(0L, false, senior, 10000, getSalaryDate(), now(), null, null, null);
+        Salary salary = new Salary(0L, false, senior, 10000, getSalaryDate(), now(), null);
         salaryRepository.save(salary);
 
         String request = objectMapper.writeValueAsString(
@@ -456,7 +459,7 @@ class SeniorControllerTest extends IntegrationTest {
     @WithMockUser(authorities = {"SENIOR"})
     @DisplayName("대학원생 마이페이지 계정을 수정 요청에 닉네임, 전화번호, 프로필사진이 없다면 예외가 발생한다")
     void updateEmptySeniorUserAccount(String empty) throws Exception {
-        Salary salary = new Salary(0L, false, senior, 10000, getSalaryDate(), now(), null, null, null);
+        Salary salary = new Salary(0L, false, senior, 10000, getSalaryDate(), now(), null);
         salaryRepository.save(salary);
 
         String request = objectMapper.writeValueAsString(
@@ -479,7 +482,7 @@ class SeniorControllerTest extends IntegrationTest {
         Account account = new Account(0L, "accountNumber", "bank", "accountHolder", senior);
         accountRepository.save(account);
 
-        Salary salary = new Salary(0L, false, senior, 10000, getSalaryDate(), now(), null, null, null);
+        Salary salary = new Salary(0L, false, senior, 10000, getSalaryDate(), now(), null);
         salaryRepository.save(salary);
 
         String request = objectMapper.writeValueAsString(

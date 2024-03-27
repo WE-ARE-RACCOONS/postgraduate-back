@@ -21,7 +21,6 @@ import com.postgraduate.domain.senior.domain.service.SeniorUpdateService;
 import com.postgraduate.domain.senior.exception.NoneAccountException;
 import com.postgraduate.domain.user.application.utils.UserUtils;
 import com.postgraduate.domain.user.domain.entity.User;
-import com.postgraduate.domain.user.domain.service.UserGetService;
 import com.postgraduate.domain.user.domain.service.UserUpdateService;
 import com.postgraduate.global.config.security.util.EncryptorUtils;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +40,6 @@ import static com.postgraduate.domain.senior.application.mapper.SeniorMapper.map
 @RequiredArgsConstructor
 public class SeniorManageUseCase {
     private final UserUpdateService userUpdateService;
-    private final UserGetService userGetService;
     private final SeniorUpdateService seniorUpdateService;
     private final SeniorGetService seniorGetService;
     private final AvailableSaveService availableSaveService;
