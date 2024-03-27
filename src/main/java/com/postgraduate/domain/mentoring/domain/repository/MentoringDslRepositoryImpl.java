@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.postgraduate.domain.mentoring.domain.entity.QMentoring.mentoring;
+import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.EXPECTED;
+import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.WAITING;
 import static com.postgraduate.domain.payment.domain.entity.QPayment.payment;
 import static com.postgraduate.domain.salary.domain.entity.QSalary.salary;
 import static com.postgraduate.domain.senior.domain.entity.QSenior.senior;
@@ -49,19 +51,6 @@ public class MentoringDslRepositoryImpl implements MentoringDslRepository {
                 .join(mentoring.user, user)
                 .fetchJoin()
                 .where(mentoring.senior.eq(inputSenior), mentoring.status.eq(status))
-                .orderBy(mentoring.createdAt.desc())
-                .fetch();
-    }
-
-    @Override
-    public List<Mentoring> findAllBySeniorAndDone(Senior inputSenior) {
-        return queryFactory.selectFrom(mentoring)
-                .distinct()
-                .join(mentoring.user, user)
-                .fetchJoin()
-                .join(mentoring.payment, payment)
-                .fetchJoin()
-                .where(mentoring.senior.eq(inputSenior), mentoring.status.eq(Status.DONE))
                 .orderBy(mentoring.createdAt.desc())
                 .fetch();
     }
@@ -100,7 +89,7 @@ public class MentoringDslRepositoryImpl implements MentoringDslRepository {
                 .fetchJoin()
                 .leftJoin(mentoring.user, user)
                 .fetchJoin()
-                .where(mentoring.mentoringId.eq(mentoringId), mentoring.user.isDelete.isFalse(), mentoring.senior.user.isDelete.isFalse())
+                .where(mentoring.mentoringId.eq(mentoringId))
                 .fetchOne());
     }
 
@@ -179,5 +168,35 @@ public class MentoringDslRepositoryImpl implements MentoringDslRepository {
                 .fetchJoin()
                 .where(mentoring.status.eq(status))
                 .fetch();
+    }
+
+    @Override
+    public Optional<Mentoring> findByMentoringIdAndUserForDetails(Long mentoringId, User user) {
+        return Optional.ofNullable(queryFactory.selectFrom(mentoring)
+                .where(
+                        mentoring.user.eq(user)
+                                .and(mentoring.mentoringId.eq(mentoringId))
+                                .and(
+                                        mentoring.status.eq(WAITING)
+                                                .or(mentoring.status.eq(EXPECTED))
+                                )
+                )
+                .fetchOne()
+        );
+    }
+
+    @Override
+    public Optional<Mentoring> findByMentoringIdAndSeniorForDetails(Long mentoringId, Senior senior) {
+        return Optional.ofNullable(queryFactory.selectFrom(mentoring)
+                .where(
+                        mentoring.senior.eq(senior)
+                                .and(mentoring.mentoringId.eq(mentoringId))
+                                .and(
+                                        mentoring.status.eq(WAITING)
+                                                .or(mentoring.status.eq(EXPECTED))
+                                )
+                )
+                .fetchOne()
+        );
     }
 }
