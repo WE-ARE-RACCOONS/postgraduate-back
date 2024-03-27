@@ -123,16 +123,16 @@ class SeniorManageUseCaseTest {
     void updateSeniorMyPageUserAccountWithNonAccount() {
         SeniorMyPageUserAccountRequest request =
                 new SeniorMyPageUserAccountRequest("a", "b", "a", "b", "a", "b");
-        Salary salary = mock(Salary.class);
 
-        given(salaryGetService.bySenior(senior))
-                .willReturn(salary);
-        given(userGetService.byUserId(user.getUserId()))
-                .willReturn(user);
-        given(seniorGetService.byUser(user))
+        given(seniorGetService.byUserWithAll(user))
                 .willReturn(senior);
         given(accountGetService.bySenior(senior))
                 .willReturn(Optional.ofNullable(null));
+        given(encryptorUtils.encryptData(request.accountNumber()))
+                .willReturn("encrypt");
+        given(salaryGetService.allBySeniorAndAccountIsNull(senior))
+                .willReturn(List.of(mock(Salary.class)));
+
         seniorManageUseCase.updateSeniorMyPageUserAccount(user, request);
 
         verify(userUpdateService)
@@ -146,18 +146,15 @@ class SeniorManageUseCaseTest {
     void updateSeniorMyPageUserAccountWithAccount() {
         SeniorMyPageUserAccountRequest request =
                 new SeniorMyPageUserAccountRequest("a", "b", "a", "b", "a", "b");
-        Salary salary = mock(Salary.class);
 
-        given(salaryGetService.bySenior(senior))
-                .willReturn(salary);
-        given(userGetService.byUserId(user.getUserId()))
-                .willReturn(user);
-        given(seniorGetService.byUser(user))
+        given(seniorGetService.byUserWithAll(user))
                 .willReturn(senior);
         given(accountGetService.bySenior(senior))
                 .willReturn(Optional.of(mock(Account.class)));
         given(encryptorUtils.encryptData(request.accountNumber()))
                 .willReturn("encrypt");
+        given(salaryGetService.allBySeniorAndAccountIsNull(senior))
+                .willReturn(List.of(mock(Salary.class)));
 
         seniorManageUseCase.updateSeniorMyPageUserAccount(user, request);
 

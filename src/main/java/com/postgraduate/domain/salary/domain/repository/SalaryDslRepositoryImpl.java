@@ -2,6 +2,7 @@ package com.postgraduate.domain.salary.domain.repository;
 
 import com.postgraduate.domain.salary.application.dto.SeniorSalary;
 import com.postgraduate.domain.salary.domain.entity.Salary;
+import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -120,6 +121,28 @@ public class SalaryDslRepositoryImpl implements SalaryDslRepository {
                 .fetchJoin()
                 .orderBy(salary.salaryDoneDate.desc())
                 .fetch();
+    }
+
+    @Override
+    public List<Salary> findAllBySalaryNoneAccount(LocalDate salaryDate, Senior searchSenior) {
+        Salary nowSalary = queryFactory.selectFrom(salary)
+                .where(
+                        salary.senior.eq(searchSenior),
+                        salary.salaryDate.eq(salaryDate)
+                )
+                .fetchOne();
+        if (nowSalary.getAccount() == null) {
+            return queryFactory.selectFrom(salary)
+                    .distinct()
+                    .where(
+                            salary.senior.eq(searchSenior)
+                                    .and(salary.account.isNull())
+                    )
+                    .join(salary.senior, senior)
+                    .fetchJoin()
+                    .fetch();
+        }
+        return List.of(nowSalary);
     }
 }
 

@@ -88,7 +88,7 @@ public class AdminWithThymeLeafController {
 
     @GetMapping("/salary/{seniorId}")
     public String seniorSalaryInfo(@PathVariable Long seniorId, Model model) {
-        var salaryInfo = adminSalaryUseCase.seniorSalary(seniorId);
+        SalaryInfoWithOutId salaryInfo = adminSalaryUseCase.seniorSalary(seniorId);
         model.addAttribute("salaryInfo", salaryInfo);
         return "seniorSalary";
     }

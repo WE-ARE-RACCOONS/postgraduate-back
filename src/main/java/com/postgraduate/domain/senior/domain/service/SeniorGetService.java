@@ -30,6 +30,11 @@ public class SeniorGetService {
         return seniorRepository.findByUser(user).orElseThrow(NoneSeniorException::new);
     }
 
+    public Senior byUserWithAll(User user) {
+        return seniorRepository.findByUserWithAll(user)
+                .orElseThrow(NoneSeniorException::new);
+    }
+
     public Senior bySeniorId(Long seniorId) {
         return seniorRepository.findBySeniorIdAndUser_IsDelete(seniorId, FALSE)
                 .orElseThrow(NoneSeniorException::new);

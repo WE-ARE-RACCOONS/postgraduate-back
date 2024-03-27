@@ -1,6 +1,7 @@
 package com.postgraduate.domain.salary.domain.service;
 
 import com.postgraduate.domain.salary.domain.entity.Salary;
+import com.postgraduate.domain.salary.domain.entity.SalaryAccount;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +26,7 @@ public class SalaryUpdateService {
         salary.minusAmount(AMOUNT);
     }
 
-    public void updateAccount(Salary salary, String bank, String accountNumber, String accountHolder) {
-        salary.updateAccount(bank, accountNumber, accountHolder);
+    public void updateAccount(Salary salary, SalaryAccount account) {
+        salary.updateAccount(account);
     }
 }

@@ -2,7 +2,6 @@ package com.postgraduate.domain.mentoring.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.postgraduate.IntegrationTest;
-import com.postgraduate.domain.mentoring.application.dto.req.MentoringApplyRequest;
 import com.postgraduate.domain.mentoring.application.dto.req.MentoringDateRequest;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.entity.constant.Status;
@@ -11,8 +10,8 @@ import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.payment.domain.repository.PaymentRepository;
 import com.postgraduate.domain.refuse.application.dto.req.MentoringRefuseRequest;
 import com.postgraduate.domain.salary.domain.entity.Salary;
+import com.postgraduate.domain.salary.domain.entity.SalaryAccount;
 import com.postgraduate.domain.salary.domain.repository.SalaryRepository;
-import com.postgraduate.domain.salary.util.SalaryUtil;
 import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
@@ -23,7 +22,6 @@ import com.postgraduate.domain.user.domain.repository.UserRepository;
 import com.postgraduate.global.config.security.jwt.util.JwtUtils;
 import com.postgraduate.global.exception.constant.ErrorCode;
 import com.postgraduate.global.slack.SlackLogErrorMessage;
-import com.postgraduate.global.slack.SlackSalaryMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,10 +33,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.postgraduate.domain.auth.presentation.constant.AuthResponseCode.AUTH_DENIED;
 import static com.postgraduate.domain.auth.presentation.constant.AuthResponseMessage.PERMISSION_DENIED;
@@ -50,7 +45,8 @@ import static com.postgraduate.domain.senior.domain.entity.constant.Status.WAITI
 import static java.time.LocalDateTime.now;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -93,7 +89,8 @@ class MentoringControllerTest extends IntegrationTest {
         senior = new Senior(0L, userOfSenior, "certification", WAITING, 0, info, profile, now(), now());
         seniorRepository.save(senior);
 
-        salary = new Salary(0L, false, senior, 20000, getSalaryDate(), LocalDateTime.now(), null, null, null);
+        SalaryAccount salaryAccount = new SalaryAccount("bank", "1234", "holder");
+        salary = new Salary(0L, false, senior, 20000, getSalaryDate(), LocalDateTime.now(), salaryAccount);
         salaryRepository.save(salary);
 
         payment = new Payment(0L, user, senior, 20000, "1", "123", "123", LocalDateTime.now(), LocalDateTime.now(), DONE);
@@ -249,7 +246,8 @@ class MentoringControllerTest extends IntegrationTest {
         Mentoring mentoring = new Mentoring(0L, user, senior, payment, null, "topic", "question", "date", 40, status, now(), now());
         mentoringRepository.save(mentoring);
 
-        Salary salary = new Salary(0L, false, senior, 10000, getSalaryDate(), now(), null, null, null);
+        SalaryAccount salaryAccount = new SalaryAccount("bank", "1234", "holder");
+        Salary salary = new Salary(0L, false, senior, 10000, getSalaryDate(), now(), salaryAccount);
         salaryRepository.save(salary);
 
         mvc.perform(patch("/mentoring/me/{mentoringId}/done", mentoring.getMentoringId())

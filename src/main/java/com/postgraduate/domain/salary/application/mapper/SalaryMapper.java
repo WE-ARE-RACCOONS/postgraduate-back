@@ -4,6 +4,7 @@ import com.postgraduate.domain.account.domain.entity.Account;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.salary.application.dto.SalaryDetails;
 import com.postgraduate.domain.salary.domain.entity.Salary;
+import com.postgraduate.domain.salary.domain.entity.SalaryAccount;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.user.domain.entity.User;
 
@@ -26,12 +27,11 @@ public class SalaryMapper {
     public static Salary mapToSalary(Senior senior, LocalDate salaryDate, Account account) {
         if (account == null)
             return mapToSalary(senior, salaryDate);
+        SalaryAccount salaryAccount = mapToSalaryAccount(account);
         return Salary.builder()
                 .senior(senior)
                 .salaryDate(salaryDate)
-                .accountHolder(account.getAccountHolder())
-                .accountNumber(account.getAccountNumber())
-                .bank(account.getBank())
+                .account(salaryAccount)
                 .build();
     }
 
@@ -45,6 +45,14 @@ public class SalaryMapper {
                 mentoring.getTerm(),
                 AMOUNT,
                 salary.getSalaryDate()
+        );
+    }
+
+    public static SalaryAccount mapToSalaryAccount(Account account) {
+        return new SalaryAccount(
+                account.getBank(),
+                account.getAccountNumber(),
+                account.getAccountHolder()
         );
     }
 }

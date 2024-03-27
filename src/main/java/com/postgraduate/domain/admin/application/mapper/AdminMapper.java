@@ -9,6 +9,7 @@ import com.postgraduate.domain.admin.presentation.constant.SalaryStatus;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.salary.domain.entity.Salary;
+import com.postgraduate.domain.salary.domain.entity.SalaryAccount;
 import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.user.domain.entity.User;
@@ -147,13 +148,14 @@ public class AdminMapper {
 
     public static SalaryInfo mapToSalaryResponse(Senior senior, String accountNumber, Salary salary) {
         User user = senior.getUser();
+        SalaryAccount account = salary.getAccount();
         return new SalaryInfo(
                 salary.getSalaryId(),
                 user.getNickName(),
                 user.getPhoneNumber(),
                 salary.getTotalAmount(),
-                salary.getAccountHolder(),
-                salary.getBank(),
+                account.getAccountHolder(),
+                account.getBank(),
                 accountNumber,
                 salary.getSalaryDoneDate()
         );

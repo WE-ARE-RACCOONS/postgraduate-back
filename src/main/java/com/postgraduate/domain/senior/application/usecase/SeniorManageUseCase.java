@@ -9,6 +9,7 @@ import com.postgraduate.domain.available.domain.entity.Available;
 import com.postgraduate.domain.available.domain.service.AvailableDeleteService;
 import com.postgraduate.domain.available.domain.service.AvailableSaveService;
 import com.postgraduate.domain.salary.domain.entity.Salary;
+import com.postgraduate.domain.salary.domain.entity.SalaryAccount;
 import com.postgraduate.domain.salary.domain.service.SalaryGetService;
 import com.postgraduate.domain.salary.domain.service.SalaryUpdateService;
 import com.postgraduate.domain.senior.application.dto.req.*;
@@ -20,7 +21,6 @@ import com.postgraduate.domain.senior.domain.service.SeniorUpdateService;
 import com.postgraduate.domain.senior.exception.NoneAccountException;
 import com.postgraduate.domain.user.application.utils.UserUtils;
 import com.postgraduate.domain.user.domain.entity.User;
-import com.postgraduate.domain.user.domain.service.UserGetService;
 import com.postgraduate.domain.user.domain.service.UserUpdateService;
 import com.postgraduate.global.config.security.util.EncryptorUtils;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +32,7 @@ import java.util.Optional;
 
 import static com.postgraduate.domain.account.application.mapper.AccountMapper.mapToAccount;
 import static com.postgraduate.domain.available.application.util.AvailableUtil.sortAvailable;
+import static com.postgraduate.domain.salary.application.mapper.SalaryMapper.mapToSalaryAccount;
 import static com.postgraduate.domain.senior.application.mapper.SeniorMapper.mapToProfile;
 
 @Service
@@ -39,7 +40,6 @@ import static com.postgraduate.domain.senior.application.mapper.SeniorMapper.map
 @RequiredArgsConstructor
 public class SeniorManageUseCase {
     private final UserUpdateService userUpdateService;
-    private final UserGetService userGetService;
     private final SeniorUpdateService seniorUpdateService;
     private final SeniorGetService seniorGetService;
     private final AvailableSaveService availableSaveService;
@@ -71,8 +71,9 @@ public class SeniorManageUseCase {
     public void saveAccount(User user, SeniorAccountRequest accountRequest) {
         Senior senior = seniorGetService.byUser(user);
         String accountNumber = encryptorUtils.encryptData(accountRequest.accountNumber());
-        accountSaveService.save(mapToAccount(senior, accountRequest, accountNumber));
-        updateSalaryAccount(senior, accountRequest.bank(), accountNumber, accountRequest.accountHolder());
+        Account account = mapToAccount(senior, accountRequest, accountNumber);
+        accountSaveService.save(account);
+        updateSalaryAccount(senior, account);
     }
 
     public void updateSeniorMyPageProfile(User user, SeniorMyPageProfileRequest myPageProfileRequest) {
@@ -88,8 +89,8 @@ public class SeniorManageUseCase {
 
     public void updateSeniorMyPageUserAccount(User user, SeniorMyPageUserAccountRequest myPageUserAccountRequest) {
         userUtils.checkPhoneNumber(myPageUserAccountRequest.phoneNumber());
-        Senior senior = seniorGetService.byUser(user);
-        user = userGetService.byUserId(user.getUserId());
+        Senior senior = seniorGetService.byUserWithAll(user);
+        user = senior.getUser();
         userUpdateService.updateSeniorUserAccount(user, myPageUserAccountRequest);
 
         Optional<Account> optionalAccount = accountGetService.bySenior(senior);
@@ -102,7 +103,7 @@ public class SeniorManageUseCase {
         Account account = optionalAccount.get();
         String accountNumber = encryptorUtils.encryptData(myPageUserAccountRequest.accountNumber());
         accountUpdateService.updateAccount(account, myPageUserAccountRequest, accountNumber);
-        updateSalaryAccount(senior, myPageUserAccountRequest.bank(), accountNumber, myPageUserAccountRequest.accountHolder());
+        updateSalaryAccount(senior, account);
     }
 
     private void updateSeniorMyPageUserAccountNoneAccount(Senior senior, SeniorMyPageUserAccountRequest myPageUserAccountRequest) {
@@ -112,11 +113,12 @@ public class SeniorManageUseCase {
         String accountNumber = encryptorUtils.encryptData(myPageUserAccountRequest.accountNumber());
         Account account = mapToAccount(senior, myPageUserAccountRequest, accountNumber);
         accountSaveService.save(account);
-        updateSalaryAccount(senior, myPageUserAccountRequest.bank(), accountNumber, myPageUserAccountRequest.accountHolder());
+        updateSalaryAccount(senior, account);
     }
 
-    private void updateSalaryAccount(Senior senior, String bank, String accountNumber, String accountHolder) {
-        Salary salary = salaryGetService.bySenior(senior);
-        salaryUpdateService.updateAccount(salary, bank, accountNumber, accountHolder);
+    private void updateSalaryAccount(Senior senior, Account account) {
+        List<Salary> salaries = salaryGetService.allBySeniorAndAccountIsNull(senior);
+        SalaryAccount salaryAccount = mapToSalaryAccount(account);
+        salaries.forEach(salary -> salaryUpdateService.updateAccount(salary, salaryAccount));
     }
 }
