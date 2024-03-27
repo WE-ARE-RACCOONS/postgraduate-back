@@ -14,15 +14,13 @@ import java.util.Optional;
 public interface MentoringDslRepository {
     List<Mentoring> findAllBySeniorId(Long seniorId);
     List<Mentoring> findAllBySeniorAndStatus(Senior senior, Status status);
-    List<Mentoring> findAllBySeniorAndDone(Senior inputSenior);
     List<Mentoring> findAllByUserId(Long userId);
     List<Mentoring> findAllByUserAndStatus(User user, Status status);
     Optional<Mentoring> findByMentoringId(Long mentoringId);
     List<Mentoring> findAllBySeniorAndSalaryStatus(Senior senior, Boolean status);
-
     Page<Mentoring> findAllBySearchPayment(String search, Pageable pageable);
-
     List<Mentoring> findAllByStatusAndCreatedAtIsBefore(Status status, LocalDateTime now);
-
     List<Mentoring> findAllByStatus(Status status);
+    Optional<Mentoring> findByMentoringIdAndUserForDetails(Long mentoringId, User user);
+    Optional<Mentoring> findByMentoringIdAndSeniorForDetails(Long mentoringId, Senior senior);
 }

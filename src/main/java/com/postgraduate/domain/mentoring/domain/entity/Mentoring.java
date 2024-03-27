@@ -1,10 +1,6 @@
 package com.postgraduate.domain.mentoring.domain.entity;
 
-import com.postgraduate.domain.auth.exception.PermissionDeniedException;
 import com.postgraduate.domain.mentoring.domain.entity.constant.Status;
-import com.postgraduate.domain.mentoring.exception.MentoringDetailNotFoundException;
-import com.postgraduate.domain.mentoring.exception.MentoringNotExpectedException;
-import com.postgraduate.domain.mentoring.exception.MentoringNotWaitingException;
 import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.senior.domain.entity.Senior;
@@ -21,7 +17,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.*;
+import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.WAITING;
 import static java.time.LocalDateTime.now;
 import static java.time.LocalDateTime.parse;
 import static java.time.format.DateTimeFormatter.ofPattern;
@@ -82,40 +78,6 @@ public class Mentoring {
 
     public void updateDate(String date) {
         this.date = date;
-    }
-
-    public boolean checkIsWaiting() {
-        if (this.status == WAITING)
-            return true;
-        throw new MentoringNotWaitingException();
-    }
-
-    public boolean checkIsExpected() {
-        if (this.status == EXPECTED)
-            return true;
-        throw new MentoringNotExpectedException();
-    }
-
-    public boolean checkDetailCondition() {
-        if (this.status == WAITING || this.status == EXPECTED)
-            return true;
-        throw new MentoringDetailNotFoundException();
-    }
-
-    public boolean checkIsMineWithUser(User user) {
-        if (this.user.equals(user))
-            return true;
-        log.error("userId = {}", user.getUserId());
-        log.error("mentoring.getUserId = {}", this.user.getUserId());
-        throw new PermissionDeniedException();
-    }
-
-    public boolean checkIsMineWithSenior(Senior senior) {
-        if (this.senior.equals(senior))
-            return true;
-        log.error("senior = {}", senior.getSeniorId());
-        log.error("mentoring.getSeniorId = {}", this.senior.getSeniorId());
-        throw new PermissionDeniedException();
     }
 
     public boolean checkAutoDone() {
