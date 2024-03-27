@@ -158,8 +158,8 @@ class MentoringControllerTest extends IntegrationTest {
         mvc.perform(get("/mentoring/me/{mentoringId}", mentoring.getMentoringId())
                         .header(AUTHORIZATION, BEARER + userAccessToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(AUTH_DENIED.getCode()))
-                .andExpect(jsonPath("$.message").value(PERMISSION_DENIED.getMessage()));
+                .andExpect(jsonPath("$.code").value(MENTORING_NOT_FOUND.getCode()))
+                .andExpect(jsonPath("$.message").value(NOT_FOUND_MENTORING.getMessage()));
     }
 
 
@@ -173,8 +173,8 @@ class MentoringControllerTest extends IntegrationTest {
         mvc.perform(get("/mentoring/me/{mentoringId}", mentoring.getMentoringId())
                         .header(AUTHORIZATION, BEARER + userAccessToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(DETAIL_NOT_FOUND.getCode()))
-                .andExpect(jsonPath("$.message").value(NOT_FOUND_DETAIL.getMessage()));
+                .andExpect(jsonPath("$.code").value(MENTORING_NOT_FOUND.getCode()))
+                .andExpect(jsonPath("$.message").value(NOT_FOUND_MENTORING.getMessage()));
     }
 
 //    @Test
@@ -253,8 +253,8 @@ class MentoringControllerTest extends IntegrationTest {
         mvc.perform(patch("/mentoring/me/{mentoringId}/done", mentoring.getMentoringId())
                         .header(AUTHORIZATION, BEARER + userAccessToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(MENTORING_NOT_EXPECTED.getCode()))
-                .andExpect(jsonPath("$.message").value(NOT_EXPECTED_MENTORING.getMessage()));
+                .andExpect(jsonPath("$.code").value(MENTORING_NOT_FOUND.getCode()))
+                .andExpect(jsonPath("$.message").value(NOT_FOUND_MENTORING.getMessage()));
     }
 
 //    @Test
@@ -281,8 +281,8 @@ class MentoringControllerTest extends IntegrationTest {
         mvc.perform(patch("/mentoring/me/{mentoringId}/cancel", mentoring.getMentoringId())
                         .header(AUTHORIZATION, BEARER + userAccessToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(MENTORING_NOT_WAITING.getCode()))
-                .andExpect(jsonPath("$.message").value(NOT_WAITING_MENTORING.getMessage()));
+                .andExpect(jsonPath("$.code").value(MENTORING_NOT_FOUND.getCode()))
+                .andExpect(jsonPath("$.message").value(NOT_FOUND_MENTORING.getMessage()));
     }
 
     @ParameterizedTest
@@ -346,8 +346,8 @@ class MentoringControllerTest extends IntegrationTest {
         mvc.perform(get("/mentoring/senior/me/{mentoringId}", mentoring.getMentoringId())
                         .header(AUTHORIZATION, BEARER + seniorAccessToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(DETAIL_NOT_FOUND.getCode()))
-                .andExpect(jsonPath("$.message").value(NOT_FOUND_DETAIL.getMessage()));
+                .andExpect(jsonPath("$.code").value(MENTORING_NOT_FOUND.getCode()))
+                .andExpect(jsonPath("$.message").value(NOT_FOUND_MENTORING.getMessage()));
     }
 
     @Test
@@ -381,7 +381,8 @@ class MentoringControllerTest extends IntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(MENTORING_NOT_WAITING.getCode()));
+                .andExpect(jsonPath("$.code").value(MENTORING_NOT_FOUND.getCode()))
+                .andExpect(jsonPath("$.message").value(NOT_FOUND_MENTORING.getMessage()));
     }
 
     @ParameterizedTest
@@ -433,7 +434,8 @@ class MentoringControllerTest extends IntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(MENTORING_NOT_WAITING.getCode()));
+                .andExpect(jsonPath("$.code").value(MENTORING_NOT_FOUND.getCode()))
+                .andExpect(jsonPath("$.message").value(NOT_FOUND_MENTORING.getMessage()));
     }
 
     @ParameterizedTest

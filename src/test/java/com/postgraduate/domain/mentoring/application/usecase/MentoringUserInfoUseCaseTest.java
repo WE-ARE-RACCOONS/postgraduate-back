@@ -4,6 +4,7 @@ import com.postgraduate.domain.mentoring.application.dto.res.AppliedMentoringRes
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
 import com.postgraduate.domain.mentoring.exception.MentoringDetailNotFoundException;
+import com.postgraduate.domain.mentoring.exception.MentoringNotFoundException;
 import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Profile;
@@ -67,7 +68,7 @@ class MentoringUserInfoUseCaseTest {
                 , 40, EXPECTED
                 , LocalDateTime.now(), LocalDateTime.now());
 
-        given(mentoringGetService.byMentoringId(any()))
+        given(mentoringGetService.byIdAndUserForDetails(mentoringId, user))
                 .willReturn(mentoring);
 
         assertThat(mentoringUserInfoUseCase.getMentoringDetail(user, mentoringId))
@@ -84,11 +85,11 @@ class MentoringUserInfoUseCaseTest {
                 , 40, DONE
                 , LocalDateTime.now(), LocalDateTime.now());
 
-        given(mentoringGetService.byMentoringId(any()))
-                .willReturn(mentoring);
+        given(mentoringGetService.byIdAndUserForDetails(mentoringId, user))
+                .willThrow(MentoringNotFoundException.class);
 
         assertThatThrownBy(() -> mentoringUserInfoUseCase.getMentoringDetail(user, mentoringId))
-                .isInstanceOf(MentoringDetailNotFoundException.class);
+                .isInstanceOf(MentoringNotFoundException.class);
     }
 
     @Test
@@ -101,11 +102,11 @@ class MentoringUserInfoUseCaseTest {
                 , 40, REFUSE
                 , LocalDateTime.now(), LocalDateTime.now());
 
-        given(mentoringGetService.byMentoringId(any()))
-                .willReturn(mentoring);
+        given(mentoringGetService.byIdAndUserForDetails(mentoringId, user))
+                .willThrow(MentoringNotFoundException.class);
 
         assertThatThrownBy(() -> mentoringUserInfoUseCase.getMentoringDetail(user, mentoringId))
-                .isInstanceOf(MentoringDetailNotFoundException.class);
+                .isInstanceOf(MentoringNotFoundException.class);
     }
 
     @Test
@@ -118,11 +119,11 @@ class MentoringUserInfoUseCaseTest {
                 , 40, CANCEL
                 , LocalDateTime.now(), LocalDateTime.now());
 
-        given(mentoringGetService.byMentoringId(any()))
-                .willReturn(mentoring);
+        given(mentoringGetService.byIdAndUserForDetails(mentoringId, user))
+                .willThrow(MentoringNotFoundException.class);
 
         assertThatThrownBy(() -> mentoringUserInfoUseCase.getMentoringDetail(user, mentoringId))
-                .isInstanceOf(MentoringDetailNotFoundException.class);
+                .isInstanceOf(MentoringNotFoundException.class);
     }
 
     @Test
@@ -146,7 +147,7 @@ class MentoringUserInfoUseCaseTest {
                 , LocalDateTime.now(), LocalDateTime.now());
         List<Mentoring> mentorings = List.of(mentoring1, mentoring2, mentoring3);
 
-        given(mentoringGetService.byUser(user, WAITING))
+        given(mentoringGetService.byUserWaiting(user))
                 .willReturn(mentorings);
 
         AppliedMentoringResponse waiting = mentoringUserInfoUseCase.getWaiting(user);
@@ -176,7 +177,7 @@ class MentoringUserInfoUseCaseTest {
                 , LocalDateTime.now(), LocalDateTime.now());
         List<Mentoring> mentorings = List.of(mentoring1, mentoring2, mentoring3);
 
-        given(mentoringGetService.byUser(user, EXPECTED))
+        given(mentoringGetService.byUserExpected(user))
                 .willReturn(mentorings);
 
         AppliedMentoringResponse expected = mentoringUserInfoUseCase.getExpected(user);
@@ -206,7 +207,7 @@ class MentoringUserInfoUseCaseTest {
                 , LocalDateTime.now(), LocalDateTime.now());
         List<Mentoring> mentorings = List.of(mentoring1, mentoring2, mentoring3);
 
-        given(mentoringGetService.byUser(user, DONE))
+        given(mentoringGetService.byUserDone(user))
                 .willReturn(mentorings);
 
         AppliedMentoringResponse done = mentoringUserInfoUseCase.getDone(user);

@@ -82,13 +82,38 @@ public class MentoringGetService {
                 .orElseThrow(MentoringNotFoundException::new);
     }
 
-    public Mentoring byIdAndUserAndStatus(Long mentoringId, User user, Status status) {
-        return mentoringRepository.findByMentoringIdAndUserAndStatus(mentoringId, user, status)
+    public Mentoring byIdAndUserAndWaiting(Long mentoringId, User user) {
+        return mentoringRepository.findByMentoringIdAndUserAndStatus(mentoringId, user, WAITING)
+                .orElseThrow(MentoringNotFoundException::new);
+    }
+
+    public Mentoring byIdAndUserAndExpected(Long mentoringId, User user) {
+        return mentoringRepository.findByMentoringIdAndUserAndStatus(mentoringId, user, EXPECTED)
+                .orElseThrow(MentoringNotFoundException::new);
+    }
+
+    public Mentoring byIdAndUserAndDone(Long mentoringId, User user) {
+        return mentoringRepository.findByMentoringIdAndUserAndStatus(mentoringId, user, DONE)
                 .orElseThrow(MentoringNotFoundException::new);
     }
 
     public Mentoring byIdAndSeniorAndStatus(Long mentoringId, Senior senior, Status status) {
         return mentoringRepository.findByMentoringIdAndSeniorAndStatus(mentoringId, senior, status)
+                .orElseThrow(MentoringNotFoundException::new);
+    }
+
+    public Mentoring byIdAndSeniorAndWaiting(Long mentoringId, Senior senior) {
+        return mentoringRepository.findByMentoringIdAndSeniorAndStatus(mentoringId, senior, WAITING)
+                .orElseThrow(MentoringNotFoundException::new);
+    }
+
+    public Mentoring byIdAndSeniorAndExpected(Long mentoringId, Senior senior) {
+        return mentoringRepository.findByMentoringIdAndSeniorAndStatus(mentoringId, senior, EXPECTED)
+                .orElseThrow(MentoringNotFoundException::new);
+    }
+
+    public Mentoring byIdAndSeniorAndDone(Long mentoringId, Senior senior) {
+        return mentoringRepository.findByMentoringIdAndSeniorAndStatus(mentoringId, senior, DONE)
                 .orElseThrow(MentoringNotFoundException::new);
     }
 

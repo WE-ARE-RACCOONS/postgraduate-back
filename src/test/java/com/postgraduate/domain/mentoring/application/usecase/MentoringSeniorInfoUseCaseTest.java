@@ -4,6 +4,7 @@ import com.postgraduate.domain.mentoring.application.dto.res.SeniorMentoringResp
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
 import com.postgraduate.domain.mentoring.exception.MentoringDetailNotFoundException;
+import com.postgraduate.domain.mentoring.exception.MentoringNotFoundException;
 import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.payment.domain.entity.constant.Status;
 import com.postgraduate.domain.salary.domain.entity.Salary;
@@ -57,7 +58,7 @@ class MentoringSeniorInfoUseCaseTest {
 
         given(seniorGetService.byUser(user))
                 .willReturn(senior);
-        given(mentoringGetService.byMentoringId(any()))
+        given(mentoringGetService.byIdAndStatusForDetails(mentoringId, senior))
                 .willReturn(mentoring);
 
         assertThat(mentoringSeniorInfoUseCase.getSeniorMentoringDetail(user, mentoringId))
@@ -79,11 +80,11 @@ class MentoringSeniorInfoUseCaseTest {
 
         given(seniorGetService.byUser(user))
                 .willReturn(senior);
-        given(mentoringGetService.byMentoringId(any()))
-                .willReturn(mentoring);
+        given(mentoringGetService.byIdAndStatusForDetails(mentoringId, senior))
+                .willThrow(MentoringNotFoundException.class);
 
         assertThatThrownBy(() -> mentoringSeniorInfoUseCase.getSeniorMentoringDetail(user, mentoringId))
-                .isInstanceOf(MentoringDetailNotFoundException.class);
+                .isInstanceOf(MentoringNotFoundException.class);
     }
 
     @Test
@@ -101,11 +102,11 @@ class MentoringSeniorInfoUseCaseTest {
 
         given(seniorGetService.byUser(user))
                 .willReturn(senior);
-        given(mentoringGetService.byMentoringId(any()))
-                .willReturn(mentoring);
+        given(mentoringGetService.byIdAndStatusForDetails(mentoringId, senior))
+                .willThrow(MentoringNotFoundException.class);
 
         assertThatThrownBy(() -> mentoringSeniorInfoUseCase.getSeniorMentoringDetail(user, mentoringId))
-                .isInstanceOf(MentoringDetailNotFoundException.class);
+                .isInstanceOf(MentoringNotFoundException.class);
     }
 
     @Test
@@ -123,11 +124,11 @@ class MentoringSeniorInfoUseCaseTest {
 
         given(seniorGetService.byUser(user))
                 .willReturn(senior);
-        given(mentoringGetService.byMentoringId(any()))
-                .willReturn(mentoring);
+        given(mentoringGetService.byIdAndStatusForDetails(mentoringId, senior))
+                .willThrow(MentoringNotFoundException.class);
 
         assertThatThrownBy(() -> mentoringSeniorInfoUseCase.getSeniorMentoringDetail(user, mentoringId))
-                .isInstanceOf(MentoringDetailNotFoundException.class);
+                .isInstanceOf(MentoringNotFoundException.class);
     }
 
     @Test
@@ -144,7 +145,7 @@ class MentoringSeniorInfoUseCaseTest {
 
         given(seniorGetService.byUser(user))
                 .willReturn(senior);
-        given(mentoringGetService.bySenior(senior, WAITING))
+        given(mentoringGetService.bySeniorWaiting(senior))
                 .willReturn(mentorings);
 
         SeniorMentoringResponse seniorWaiting = mentoringSeniorInfoUseCase.getSeniorWaiting(user);
@@ -167,7 +168,7 @@ class MentoringSeniorInfoUseCaseTest {
 
         given(seniorGetService.byUser(user))
                 .willReturn(senior);
-        given(mentoringGetService.bySenior(senior, EXPECTED))
+        given(mentoringGetService.bySeniorExpected(senior))
                 .willReturn(mentorings);
 
         SeniorMentoringResponse seniorExpected = mentoringSeniorInfoUseCase.getSeniorExpected(user);
@@ -194,7 +195,7 @@ class MentoringSeniorInfoUseCaseTest {
 
         given(seniorGetService.byUser(user))
                 .willReturn(senior);
-        given(mentoringGetService.bySenior(senior))
+        given(mentoringGetService.bySeniorDone(senior))
                 .willReturn(mentorings);
 
         SeniorMentoringResponse seniorDone = mentoringSeniorInfoUseCase.getSeniorDone(user);
