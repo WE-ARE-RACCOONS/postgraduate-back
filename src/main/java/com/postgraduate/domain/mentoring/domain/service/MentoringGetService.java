@@ -97,12 +97,12 @@ public class MentoringGetService {
                 .orElseThrow(MentoringNotFoundException::new);
     }
 
-    public List<Mentoring> byStatusAndCreatedAt(Status status, LocalDateTime now) {
-        return mentoringRepository.findAllByStatusAndCreatedAtIsBefore(status, now);
+    public List<Mentoring> byWaitingAndCreatedAt(LocalDateTime now) {
+        return mentoringRepository.findAllByStatusAndCreatedAtIsBefore(WAITING, now);
     }
 
-    public List<Mentoring> byStatus(Status status) {
-        return mentoringRepository.findAllByStatus(status);
+    public List<Mentoring> byExpected() {
+        return mentoringRepository.findAllByStatus(EXPECTED);
     }
 
     public List<Mentoring> byUserId(Long userId) {

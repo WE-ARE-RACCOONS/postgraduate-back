@@ -123,20 +123,20 @@ public class MentoringManageUseCase {
         Optional<Account> account = accountGetService.bySenior(senior);
         return account.isPresent();
     }
-    
+
     @Scheduled(cron = "0 59 23 * * *", zone = "Asia/Seoul")
     public void updateAutoCancel() {
         LocalDateTime now = LocalDateTime.now()
                 .toLocalDate()
                 .atStartOfDay();
-        List<Mentoring> waitingMentorings = mentoringGetService.byStatusAndCreatedAt(WAITING, now);
+        List<Mentoring> waitingMentorings = mentoringGetService.byWaitingAndCreatedAt(now);
         waitingMentorings.forEach(mentoringRenewalUseCase::updateCancelWithAuto);
         //TODO : 알림 보내거나 나머지 작업
     }
 
     @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")
     public void updateAutoDone() {
-        List<Mentoring> expectedMentorings = mentoringGetService.byStatus(EXPECTED);
+        List<Mentoring> expectedMentorings = mentoringGetService.byExpected();
         expectedMentorings.stream()
                 .filter(mentoring -> {
                     try {
