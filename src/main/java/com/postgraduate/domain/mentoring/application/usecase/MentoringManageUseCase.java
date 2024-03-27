@@ -87,9 +87,7 @@ public class MentoringManageUseCase {
 
     @Transactional
     public void updateCancel(User user, Long mentoringId) {
-        Mentoring mentoring = mentoringGetService.byMentoringId(mentoringId);
-        mentoring.checkIsMineWithUser(user);
-        mentoring.checkIsWaiting();
+        Mentoring mentoring = mentoringGetService.byIdAndUserAndStatus(mentoringId, user, WAITING);
         Payment payment = mentoring.getPayment();
         paymentManageUseCase.refundPayByUser(user, payment.getOrderId());
         mentoringUpdateService.updateCancel(mentoring);
@@ -98,9 +96,7 @@ public class MentoringManageUseCase {
 
     @Transactional
     public void updateDone(User user, Long mentoringId) {
-        Mentoring mentoring = mentoringGetService.byMentoringId(mentoringId);
-        mentoring.checkIsMineWithUser(user);
-        mentoring.checkIsExpected();
+        Mentoring mentoring = mentoringGetService.byIdAndUserAndStatus(mentoringId, user, EXPECTED);
         Salary salary = salaryGetService.bySenior(mentoring.getSenior());
         salaryUpdateService.plusTotalAmount(salary);
         mentoringUpdateService.updateDone(mentoring, salary);
@@ -110,9 +106,7 @@ public class MentoringManageUseCase {
     @Transactional
     public void updateRefuse(User user, Long mentoringId, MentoringRefuseRequest request) {
         Senior senior = seniorGetService.byUser(user);
-        Mentoring mentoring = mentoringGetService.byMentoringId(mentoringId);
-        mentoring.checkIsMineWithSenior(senior);
-        mentoring.checkIsWaiting();
+        Mentoring mentoring = mentoringGetService.byIdAndSeniorAndStatus(mentoringId, senior, WAITING);
         Refuse refuse = mapToRefuse(mentoring, request);
         refuseSaveService.save(refuse);
         Payment payment = mentoring.getPayment();
@@ -124,22 +118,12 @@ public class MentoringManageUseCase {
     @Transactional
     public Boolean updateExpected(User user, Long mentoringId, MentoringDateRequest dateRequest) {
         Senior senior = seniorGetService.byUser(user);
-        Mentoring mentoring = mentoringGetService.byMentoringId(mentoringId);
-        mentoring.checkIsMineWithSenior(senior);
-        mentoring.checkIsWaiting();
+        Mentoring mentoring = mentoringGetService.byIdAndSeniorAndStatus(mentoringId, senior, WAITING);
         mentoringUpdateService.updateExpected(mentoring, dateRequest.date());
         Optional<Account> account = accountGetService.bySenior(senior);
         return account.isPresent();
     }
-
-
-    @Transactional
-    public void delete(User user, Long mentoringId) {
-        Mentoring mentoring = mentoringGetService.byMentoringId(mentoringId);
-        mentoring.checkIsMineWithUser(user);
-        mentoringDeleteService.deleteMentoring(mentoring);
-    }
-
+    
     @Scheduled(cron = "0 59 23 * * *", zone = "Asia/Seoul")
     public void updateAutoCancel() {
         LocalDateTime now = LocalDateTime.now()
