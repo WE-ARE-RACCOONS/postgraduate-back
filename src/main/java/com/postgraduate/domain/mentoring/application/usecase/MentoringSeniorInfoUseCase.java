@@ -31,7 +31,7 @@ public class MentoringSeniorInfoUseCase {
 
     public SeniorMentoringDetailResponse getSeniorMentoringDetail(User user, Long mentoringId) {
         Senior senior = seniorGetService.byUser(user);
-        Mentoring mentoring = mentoringGetService.byIdAndStatusForDetails(mentoringId, senior);
+        Mentoring mentoring = mentoringGetService.byIdAndSeniorForDetails(mentoringId, senior);
         return mapToSeniorMentoringDetail(mentoring);
     }
 

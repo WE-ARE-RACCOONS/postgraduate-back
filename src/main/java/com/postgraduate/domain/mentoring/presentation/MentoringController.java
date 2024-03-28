@@ -60,7 +60,7 @@ public class MentoringController {
     @PostMapping("/applying")
     @Operation(summary = "[대학생] 멘토링 신청", description = "대학생이 멘토링을 신청합니다.")
     public ResponseDto<ApplyingResponse> applyForMentoringWithPayment(@AuthenticationPrincipal User user, @RequestBody MentoringApplyRequest request) {
-        ApplyingResponse applyingResponse = manageUseCase.applyMentoringWithPayment(user, request);
+        ApplyingResponse applyingResponse = manageUseCase.applyMentoring(user, request);
         return ResponseDto.create(MENTORING_CREATE.getCode(), CREATE_MENTORING.getMessage(), applyingResponse);
     }
     @PatchMapping("/me/{mentoringId}/done")
