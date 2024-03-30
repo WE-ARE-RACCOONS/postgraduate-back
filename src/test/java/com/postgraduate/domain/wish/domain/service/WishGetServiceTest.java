@@ -42,12 +42,36 @@ class WishGetServiceTest {
     @DisplayName("Wish 조회 테스트")
     void byWishId() {
         long wishId = 1L;
-        User user = mock(User.class);
-        Wish wish = new Wish(1L, "major", "field", true, user, Status.WAITING);
+        Wish wish = mock(Wish.class);
         given(wishRepository.findByWishIdAndMatchingReceiveIsTrue(wishId))
                 .willReturn(Optional.of(wish));
 
         assertThat(wishGetService.byWishId(wishId))
                 .isEqualTo(wish);
+    }
+
+    @Test
+    @DisplayName("UserId기반 Wish 조회 테스트")
+    void byUserId() {
+        long userId = -1l;
+        Wish wish = mock(Wish.class);
+
+        given(wishRepository.findByMatchingReceiveIsTrueAndUser_UserId(userId))
+                .willReturn(Optional.of(wish));
+
+        assertThat(wishGetService.byUserId(userId))
+                .isEqualTo(wish);
+    }
+
+    @Test
+    @DisplayName("UserId기반 Wish 조회 예외 테스트")
+    void byUserIdFail() {
+        long userId = -1l;
+
+        given(wishRepository.findByMatchingReceiveIsTrueAndUser_UserId(userId))
+                .willReturn(Optional.ofNullable(null));
+
+        assertThatThrownBy(() -> wishGetService.byUserId(userId))
+                .isInstanceOf(WishNotFoundException.class);
     }
 }
