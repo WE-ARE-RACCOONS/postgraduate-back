@@ -11,7 +11,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static com.postgraduate.domain.senior.domain.entity.constant.Status.APPROVE;
 import static java.lang.Boolean.FALSE;
 import static java.util.Optional.of;
 import static java.util.Optional.ofNullable;
@@ -27,10 +26,14 @@ class SeniorGetServiceTest {
     @InjectMocks
     private SeniorGetService seniorGetService;
 
+    private User user = mock(User.class);
+    private Senior senior = mock(Senior.class);
+    private Long seniorId = -1L;
+    private String nickName = "nick";
+
     @Test
     @DisplayName("User 기반 Senior 조회 예외 테스트")
     void byUserFail() {
-        User user = mock(User.class);
         given(seniorRepository.findByUser(user))
                 .willReturn(ofNullable(null));
 
@@ -41,8 +44,6 @@ class SeniorGetServiceTest {
     @Test
     @DisplayName("User 기반 Senior 조회 테스트")
     void byUser() {
-        User user = mock(User.class);
-        Senior senior = mock(Senior.class);
         given(seniorRepository.findByUser(user))
                 .willReturn(of(senior));
 
@@ -51,9 +52,28 @@ class SeniorGetServiceTest {
     }
 
     @Test
+    @DisplayName("User 기반 Senior 조회 예외 테스트")
+    void byUserWithAllFail() {
+        given(seniorRepository.findByUserWithAll(user))
+                .willReturn(ofNullable(null));
+
+        assertThatThrownBy(() -> seniorGetService.byUserWithAll(user))
+                .isInstanceOf(NoneSeniorException.class);
+    }
+
+    @Test
+    @DisplayName("User 기반 Senior 조회 테스트")
+    void byUserWithAll() {
+        given(seniorRepository.findByUserWithAll(user))
+                .willReturn(of(senior));
+
+        assertThat(seniorGetService.byUserWithAll(user))
+                .isEqualTo(senior);
+    }
+
+    @Test
     @DisplayName("SeniorId 기반 Senior 조회 예외 테스트")
     void bySeniorIdFail() {
-        long seniorId = 1L;
         given(seniorRepository.findBySeniorIdAndUser_IsDelete(seniorId, FALSE))
                 .willReturn(ofNullable(null));
 
@@ -64,8 +84,6 @@ class SeniorGetServiceTest {
     @Test
     @DisplayName("SeniorId 기반 Senior 조회 테스트")
     void bySeniorId() {
-        Senior senior = mock(Senior.class);
-        long seniorId = 1L;
         given(seniorRepository.findBySeniorIdAndUser_IsDelete(seniorId, FALSE))
                 .willReturn(of(senior));
 
@@ -74,9 +92,28 @@ class SeniorGetServiceTest {
     }
 
     @Test
+    @DisplayName("nickName 기반 Senior 조회 예외 테스트")
+    void bySeniorNickNameFail() {
+        given(seniorRepository.findByUser_NickNameAndUser_IsDelete(nickName, FALSE))
+                .willReturn(ofNullable(null));
+
+        assertThatThrownBy(() -> seniorGetService.bySeniorNickName(nickName))
+                .isInstanceOf(NoneSeniorException.class);
+    }
+
+    @Test
+    @DisplayName("nickName 기반 Senior 조회 테스트")
+    void bySeniorNickName() {
+        given(seniorRepository.findByUser_NickNameAndUser_IsDelete(nickName, FALSE))
+                .willReturn(of(senior));
+
+        assertThat(seniorGetService.bySeniorNickName(nickName))
+                .isEqualTo(senior);
+    }
+
+    @Test
     @DisplayName("Certification 기반 Senior 조회 예외 테스트")
     void byCertificationFail() {
-        long seniorId = 1L;
         given(seniorRepository.findBySeniorId(seniorId))
                 .willReturn(ofNullable(null));
 
@@ -87,8 +124,6 @@ class SeniorGetServiceTest {
     @Test
     @DisplayName("Certification 기반 Senior 조회 테스트")
     void byCertification() {
-        Senior senior = mock(Senior.class);
-        long seniorId = 1L;
         given(seniorRepository.findBySeniorId(seniorId))
                 .willReturn(of(senior));
 
