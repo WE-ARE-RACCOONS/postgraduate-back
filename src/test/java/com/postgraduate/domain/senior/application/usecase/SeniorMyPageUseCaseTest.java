@@ -7,11 +7,15 @@ import com.postgraduate.domain.available.domain.service.AvailableGetService;
 import com.postgraduate.domain.senior.application.dto.res.SeniorMyPageProfileResponse;
 import com.postgraduate.domain.senior.application.dto.res.SeniorMyPageResponse;
 import com.postgraduate.domain.senior.application.dto.res.SeniorMyPageUserAccountResponse;
+import com.postgraduate.domain.senior.application.dto.res.SeniorPossibleResponse;
 import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
+import com.postgraduate.domain.senior.exception.NoneProfileException;
 import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.wish.domain.entity.Wish;
+import com.postgraduate.domain.wish.domain.service.WishGetService;
 import com.postgraduate.global.config.security.util.EncryptorUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -28,10 +32,14 @@ import java.util.Optional;
 import static com.postgraduate.domain.senior.domain.entity.constant.Status.APPROVE;
 import static com.postgraduate.domain.senior.domain.entity.constant.Status.WAITING;
 import static com.postgraduate.domain.user.domain.entity.constant.Role.USER;
+import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.time.LocalDate.now;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
 class SeniorMyPageUseCaseTest {
@@ -43,6 +51,8 @@ class SeniorMyPageUseCaseTest {
     private AccountGetService accountGetService;
     @Mock
     private EncryptorUtils encryptorUtils;
+    @Mock
+    private WishGetService wishGetService;
     @InjectMocks
     private SeniorMyPageUseCase seniorMyPageUseCase;
 
@@ -92,9 +102,9 @@ class SeniorMyPageUseCaseTest {
     @Test
     @DisplayName("선배 자신의 마이페이지 조회")
     void getSeniorMyPageProfile() {
-        Available available1 = new Available(1L, "월", "12:00", "18:00", senior);
-        Available available2 = new Available(2L, "화", "12:00", "18:00", senior);
-        Available available3 = new Available(3L, "수", "12:00", "18:00", senior);
+        Available available1 = mock(Available.class);
+        Available available2 = mock(Available.class);
+        Available available3 = mock(Available.class);
         List<Available> availables = List.of(available1, available2, available3);
 
         given(seniorGetService.byUser(user))
@@ -106,6 +116,17 @@ class SeniorMyPageUseCaseTest {
 
         assertThat(myPageProfile.times())
                 .hasSameSizeAs(availables);
+    }
+
+    @Test
+    @DisplayName("선배 자신의 마이페이지 프로필 예외 테스트")
+    void getSeniorMyPageProfileWithNull() {
+        Senior nullSenior = new Senior(-2L, user, "asd", APPROVE, 1, info, null, LocalDateTime.now(), null);
+        given(seniorGetService.byUser(user))
+                .willReturn(nullSenior);
+
+        assertThatThrownBy(() -> seniorMyPageUseCase.getSeniorMyPageProfile(user))
+                .isInstanceOf(NoneProfileException.class);
     }
 
     @Test
@@ -150,5 +171,34 @@ class SeniorMyPageUseCaseTest {
                 .isEqualTo(account.getBank());
         assertThat(seniorMyPageUserAccount.nickName())
                 .isEqualTo(user.getNickName());
+    }
+
+    @Test
+    @DisplayName("후배 가입 확인")
+    void checkUser() {
+        Wish wish = mock(Wish.class);
+        given(wishGetService.byUser(user))
+                .willReturn(Optional.of(wish));
+
+        SeniorPossibleResponse response = seniorMyPageUseCase.checkUser(user);
+
+        assertThat(response.possible())
+                .isEqualTo(TRUE);
+        assertThat(response.socialId())
+                .isEqualTo(user.getSocialId());
+    }
+
+    @Test
+    @DisplayName("후배 미가입 확인")
+    void checkUserWithNull() {
+        given(wishGetService.byUser(user))
+                .willReturn(Optional.ofNullable(null));
+
+        SeniorPossibleResponse response = seniorMyPageUseCase.checkUser(user);
+
+        assertThat(response.possible())
+                .isEqualTo(FALSE);
+        assertThat(response.socialId())
+                .isEqualTo(user.getSocialId());
     }
 }

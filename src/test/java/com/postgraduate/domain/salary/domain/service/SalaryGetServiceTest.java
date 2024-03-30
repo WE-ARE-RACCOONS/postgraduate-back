@@ -13,12 +13,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import static java.util.Optional.of;
 import static java.util.Optional.ofNullable;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
@@ -29,26 +32,60 @@ class SalaryGetServiceTest {
     @InjectMocks
     private SalaryGetService salaryGetService;
 
-    @Test
-    @DisplayName("Senior를 통한 Salary 조회 예외 테스트")
-    void bySeniorFailTest() {
-        Senior senior = mock(Senior.class);
-        given(salaryRepository.findBySeniorAndSalaryDate(senior, SalaryUtil.getSalaryDate()))
-                .willReturn(ofNullable(null));
+    private Salary salary = mock(Salary.class);
+    private Senior senior = mock(Senior.class);
 
-        assertThatThrownBy(() -> salaryGetService.bySenior(senior))
+    @Test
+    @DisplayName("미정산건 조회 테스트")
+    void allByNotDone() {
+        LocalDate salaryDate = SalaryUtil.getSalaryDate();
+        List<Salary> salaries = List.of(mock(Salary.class),mock(Salary.class),mock(Salary.class));
+        given(salaryRepository.findAllByNotDoneFromLast(salaryDate))
+                .willReturn(salaries);
+
+        assertThat(salaryGetService.allByNotDone())
+                .hasSameSizeAs(salaries);
+    }
+
+    @Test
+    @DisplayName("salaryId를 통한 Salary 조회 테스트")
+    void bySalaryId() {
+        given(salaryRepository.findById(any()))
+                .willReturn(Optional.of(salary));
+
+        assertThat(salaryGetService.bySalaryId(any()))
+                .isEqualTo(salary);
+    }
+
+    @Test
+    @DisplayName("salaryId를 통한 Salary 조회 예외 테스트")
+    void bySalaryIdFail() {
+        given(salaryRepository.findById(any()))
+                .willReturn(Optional.ofNullable(null));
+
+        assertThatThrownBy(() -> salaryGetService.bySalaryId(any()))
                 .isInstanceOf(SalaryNotFoundException.class);
     }
 
     @Test
-    @DisplayName("Senior를 통한 Salary 조회 테스트")
-    void byMentoring() {
-        Senior senior = mock(Senior.class);
-        Salary salary = mock(Salary.class);
-        given(salaryRepository.findBySeniorAndSalaryDate(senior, SalaryUtil.getSalaryDate()))
+    @DisplayName("SeniorId 통한 Salary 조회 테스트")
+    void bySeniorId() {
+        LocalDate salaryDate = SalaryUtil.getSalaryDate();
+        given(salaryRepository.findBySeniorAndSalaryDate(senior, salaryDate))
                 .willReturn(Optional.of(salary));
 
         assertThat(salaryGetService.bySenior(senior))
                 .isEqualTo(salary);
+    }
+
+    @Test
+    @DisplayName("SeniorId 통한 Salary 조회 예외 테스트")
+    void bySeniorIdFail() {
+        LocalDate salaryDate = SalaryUtil.getSalaryDate();
+        given(salaryRepository.findBySeniorAndSalaryDate(senior, salaryDate))
+                .willThrow(SalaryNotFoundException.class);
+
+        assertThatThrownBy(() -> salaryGetService.bySenior(senior))
+                .isInstanceOf(SalaryNotFoundException.class);
     }
 }

@@ -66,9 +66,8 @@ class AuthControllerTest extends IntegrationTest {
     private User user;
     private final Long anonymousUserSocialId = 2L;
 
-
     @BeforeEach
-    void setUp() throws IOException {
+    void setUp() {
         user = new User(0L, 1L, "mail", "후배", "011", "profile", 0, USER, true, now(), now(), false);
         userRepository.save(user);
         doNothing().when(slackLogErrorMessage).sendSlackLog(any());
@@ -120,8 +119,6 @@ class AuthControllerTest extends IntegrationTest {
     @Test
     @DisplayName("대학생이 회원가입 한다.")
     void signUpUser() throws Exception {
-        authLoginByAnonymousUser();
-
         String request = objectMapper.writeValueAsString(
                 new SignUpRequest(anonymousUserSocialId, "01012345678", "새로운닉네임",
                         true, "major", "field", true)
@@ -141,8 +138,6 @@ class AuthControllerTest extends IntegrationTest {
     @Test
     @DisplayName("닉네임은 6글자 이하만 허용한다")
     void signUpUserInvalidNickName() throws Exception {
-        authLoginByAnonymousUser();
-
         String request = objectMapper.writeValueAsString(
                 new SignUpRequest(anonymousUserSocialId, "01012345678", "nickname",
                         true, "major", "field", true)
@@ -160,8 +155,6 @@ class AuthControllerTest extends IntegrationTest {
     @NullAndEmptySource
     @DisplayName("희망 대학원/학과와 연구분야를 입력하지 않아도 대학생 회원가입이 가능하다.")
     void signUpUserWithoutWish(String empty) throws Exception {
-        authLoginByAnonymousUser();
-
         String request = objectMapper.writeValueAsString(
                 new SignUpRequest(anonymousUserSocialId, "01012345678", "새로운닉네임",
                         true, empty, empty, false)
@@ -251,8 +244,6 @@ class AuthControllerTest extends IntegrationTest {
     @Test
     @DisplayName("선배가 회원가입한다.")
     void singUpSenior() throws Exception {
-        authLoginByAnonymousUser();
-
         String request = objectMapper.writeValueAsString(
                 new SeniorSignUpRequest(anonymousUserSocialId, "01012345678", "새로운닉네임",
                         true, "전공", "서울대학교", "교수", "연구실",
@@ -274,8 +265,6 @@ class AuthControllerTest extends IntegrationTest {
     @NullAndEmptySource
     @DisplayName("필수 정보를 입력하지 않으면 선배로 회원가입할 수 없다.")
     void singUpSenior(String empty) throws Exception {
-        authLoginByAnonymousUser();
-
         String request = objectMapper.writeValueAsString(
                 new SeniorSignUpRequest(anonymousUserSocialId, "01012345678", "새로운닉네임",
                         true, empty, empty, empty, empty, empty, empty, empty)
