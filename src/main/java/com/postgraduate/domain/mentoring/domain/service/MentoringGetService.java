@@ -1,7 +1,6 @@
 package com.postgraduate.domain.mentoring.domain.service;
 
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
-import com.postgraduate.domain.mentoring.domain.entity.constant.Status;
 import com.postgraduate.domain.mentoring.domain.repository.MentoringRepository;
 import com.postgraduate.domain.mentoring.exception.MentoringNotFoundException;
 import com.postgraduate.domain.mentoring.exception.MentoringPresentException;
@@ -18,6 +17,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.*;
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 
 @Service
 @RequiredArgsConstructor
@@ -77,7 +78,7 @@ public class MentoringGetService {
                 .orElseThrow(MentoringNotFoundException::new);
     }
 
-    public Mentoring byIdAndStatusForDetails(Long mentoringId, Senior senior) {
+    public Mentoring byIdAndSeniorForDetails(Long mentoringId, Senior senior) {
         return mentoringRepository.findByMentoringIdAndSeniorForDetails(mentoringId, senior)
                 .orElseThrow(MentoringNotFoundException::new);
     }
@@ -94,11 +95,6 @@ public class MentoringGetService {
 
     public Mentoring byIdAndUserAndDone(Long mentoringId, User user) {
         return mentoringRepository.findByMentoringIdAndUserAndStatus(mentoringId, user, DONE)
-                .orElseThrow(MentoringNotFoundException::new);
-    }
-
-    public Mentoring byIdAndSeniorAndStatus(Long mentoringId, Senior senior, Status status) {
-        return mentoringRepository.findByMentoringIdAndSeniorAndStatus(mentoringId, senior, status)
                 .orElseThrow(MentoringNotFoundException::new);
     }
 
@@ -138,8 +134,12 @@ public class MentoringGetService {
         return mentoringRepository.findAllBySeniorId(seniorId);
     }
 
-    public List<Mentoring> bySeniorAndSalaryStatus(Senior senior, Boolean status) {
-        return mentoringRepository.findAllBySeniorAndSalaryStatus(senior, status);
+    public List<Mentoring> bySeniorAndSalaryTrue(Senior senior) {
+        return mentoringRepository.findAllBySeniorAndSalaryStatus(senior, TRUE);
+    }
+
+    public List<Mentoring> bySeniorAndSalaryFalse(Senior senior) {
+        return mentoringRepository.findAllBySeniorAndSalaryStatus(senior, FALSE);
     }
 
     public Page<Mentoring> all(Integer page, String search) {

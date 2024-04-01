@@ -11,9 +11,7 @@ import com.postgraduate.domain.available.domain.service.AvailableSaveService;
 import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.salary.domain.service.SalaryGetService;
 import com.postgraduate.domain.salary.domain.service.SalaryUpdateService;
-import com.postgraduate.domain.senior.application.dto.req.SeniorMyPageProfileRequest;
-import com.postgraduate.domain.senior.application.dto.req.SeniorMyPageUserAccountRequest;
-import com.postgraduate.domain.senior.application.dto.req.SeniorProfileRequest;
+import com.postgraduate.domain.senior.application.dto.req.*;
 import com.postgraduate.domain.senior.application.utils.SeniorUtils;
 import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Profile;
@@ -23,7 +21,6 @@ import com.postgraduate.domain.senior.domain.service.SeniorUpdateService;
 import com.postgraduate.domain.senior.exception.KeywordException;
 import com.postgraduate.domain.user.application.utils.UserUtils;
 import com.postgraduate.domain.user.domain.entity.User;
-import com.postgraduate.domain.user.domain.service.UserGetService;
 import com.postgraduate.domain.user.domain.service.UserUpdateService;
 import com.postgraduate.domain.user.exception.PhoneNumberException;
 import com.postgraduate.global.config.security.util.EncryptorUtils;
@@ -40,7 +37,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.postgraduate.domain.senior.domain.entity.constant.Status.APPROVE;
-import static com.postgraduate.domain.user.domain.entity.constant.Role.USER;
+import static com.postgraduate.domain.user.domain.entity.constant.Role.SENIOR;
 import static java.lang.Boolean.TRUE;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.*;
@@ -49,8 +46,6 @@ import static org.mockito.BDDMockito.*;
 class SeniorManageUseCaseTest {
     @Mock
     private UserUpdateService userUpdateService;
-    @Mock
-    private UserGetService userGetService;
     @Mock
     private SeniorUpdateService seniorUpdateService;
     @Mock
@@ -66,9 +61,9 @@ class SeniorManageUseCaseTest {
     @Mock
     private AccountUpdateService accountUpdateService;
     @Mock
-    private SalaryUpdateService salaryUpdateService;
-    @Mock
     private SalaryGetService salaryGetService;
+    @Mock
+    private SalaryUpdateService salaryUpdateService;
     @Mock
     private EncryptorUtils encryptorUtils;
     @Mock
@@ -89,10 +84,22 @@ class SeniorManageUseCaseTest {
         profile = new Profile("a", "a", "a", "a", 40);
         user = new User(1L, 1234L, "a",
                 "a", "123", "a",
-                1, USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE);
+                1, SENIOR, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE);
         senior = new Senior(1L, user, "a",
                 APPROVE, 1, info, profile,
                 LocalDateTime.now(), LocalDateTime.now());
+    }
+
+    @Test
+    @DisplayName("선배 인증 업데이트")
+    void updateCertification() {
+        SeniorCertificationRequest request = new SeniorCertificationRequest("anyThing");
+        given(seniorGetService.byUser(user))
+                .willReturn(senior);
+        seniorManageUseCase.updateCertification(user, request);
+
+        verify(seniorUpdateService, times(1))
+                .updateCertification(senior, request.certification());
     }
 
     @Test
@@ -112,7 +119,7 @@ class SeniorManageUseCaseTest {
 
         seniorManageUseCase.signUpProfile(user, request);
 
-        verify(seniorUpdateService)
+        verify(seniorUpdateService, times(1))
                 .signUpSeniorProfile(eq(senior), any(Profile.class));
         verify(availableSaveService, times(availableCreateRequests.size()))
                 .save(any(Available.class));
@@ -142,6 +149,48 @@ class SeniorManageUseCaseTest {
     }
 
     @Test
+    @DisplayName("계좌 생성 테스트")
+    void saveAccount() {
+        SeniorAccountRequest request = new SeniorAccountRequest("a", "a", "a");
+        given(seniorGetService.byUser(user))
+                .willReturn(senior);
+
+        seniorManageUseCase.saveAccount(user, request);
+
+        verify(accountSaveService, times(1))
+                .save(any(Account.class));
+    }
+
+    @Test
+    @DisplayName("마이페이지 프로필 업데이트 키워드 예외 테스트")
+    void invalidKeyword() {
+        SeniorMyPageProfileRequest request = mock(SeniorMyPageProfileRequest.class);
+
+        doThrow(KeywordException.class)
+                .when(seniorUtils)
+                .checkKeyword(any());
+
+        assertThatThrownBy(() -> seniorManageUseCase.updateSeniorMyPageProfile(user, request))
+                .isInstanceOf(KeywordException.class);
+    }
+
+    @Test
+    @DisplayName("마이페이지 프로필 업데이트 테스트")
+    void updateSeniorMyPage() {
+        SeniorMyPageProfileRequest request =
+                mock(SeniorMyPageProfileRequest.class);
+        given(seniorGetService.byUser(user))
+                .willReturn(senior);
+
+        seniorManageUseCase.updateSeniorMyPageProfile(user, request);
+
+        verify(seniorUpdateService, times(1))
+                .updateMyPageProfile(any(Senior.class), any(SeniorMyPageProfileRequest.class), any(Profile.class));
+        verify(availableDeleteService, times(1))
+                .delete(senior);
+    }
+
+    @Test
     @DisplayName("Account있는 경우 계정 수정 테스트")
     void updateSeniorMyPageUserAccountWithAccount() {
         SeniorMyPageUserAccountRequest request =
@@ -162,19 +211,6 @@ class SeniorManageUseCaseTest {
                 .updateSeniorUserAccount(user, request);
         verify(accountUpdateService)
                 .updateAccount(any(Account.class), eq(request), eq("encrypt"));
-    }
-
-    @Test
-    @DisplayName("키워드 예외 테스트")
-    void invalidKeyword() {
-        SeniorMyPageProfileRequest request = mock(SeniorMyPageProfileRequest.class);
-
-        doThrow(KeywordException.class)
-                .when(seniorUtils)
-                .checkKeyword(any());
-
-        assertThatThrownBy(() -> seniorManageUseCase.updateSeniorMyPageProfile(user, request))
-                .isInstanceOf(KeywordException.class);
     }
 
     @Test

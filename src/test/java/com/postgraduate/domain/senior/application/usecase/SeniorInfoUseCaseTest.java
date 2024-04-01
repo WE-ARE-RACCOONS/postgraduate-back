@@ -28,10 +28,11 @@ import java.util.List;
 import static com.postgraduate.domain.senior.domain.entity.constant.Status.APPROVE;
 import static com.postgraduate.domain.user.domain.entity.constant.Role.USER;
 import static java.lang.Boolean.TRUE;
-import static java.time.LocalDate.now;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class SeniorInfoUseCaseTest {
@@ -64,6 +65,7 @@ class SeniorInfoUseCaseTest {
                 APPROVE, 1, info, profile,
                 LocalDateTime.now(), LocalDateTime.now());
     }
+
     @Test
     @DisplayName("선배 상세보기 테스트 USER")
     void getSeniorDetail() {
@@ -79,6 +81,8 @@ class SeniorInfoUseCaseTest {
 
         SeniorDetailResponse seniorDetail = seniorInfoUseCase.getSeniorDetail(user, senior.getSeniorId());
 
+        verify(seniorUpdateService, times(1))
+                .updateHit(senior);
         assertThat(seniorDetail.times())
                 .hasSameSizeAs(availables);
         assertThat(seniorDetail).isNotNull();
@@ -87,10 +91,10 @@ class SeniorInfoUseCaseTest {
     @Test
     @DisplayName("검색어 기본 페이지 조회")
     void getSearchSeniorWithNull() {
-        Senior senior1 = new Senior(1L, user, "a",
+        Senior otherSenior = new Senior(-2L, user, "a",
                 APPROVE, 1, info, profile,
                 LocalDateTime.now(), LocalDateTime.now());
-        List<Senior> seniors = List.of(senior, senior1);
+        List<Senior> seniors = List.of(senior, otherSenior);
         Page<Senior> seniorPage = new PageImpl<>(seniors);
 
         given(seniorGetService.bySearch("a", null, "low"))
@@ -111,10 +115,10 @@ class SeniorInfoUseCaseTest {
         List<Senior> seniors = List.of(senior, senior1);
         Page<Senior> seniorPage = new PageImpl<>(seniors);
 
-        given(seniorGetService.byField("a", "서울대학교", null))
+        given(seniorGetService.byField("a", info.getPostgradu(), null))
                 .willReturn(seniorPage);
 
-        AllSeniorSearchResponse searchSenior = seniorInfoUseCase.getFieldSenior("a", "서울대학교", null);
+        AllSeniorSearchResponse searchSenior = seniorInfoUseCase.getFieldSenior("a", info.getPostgradu(), null);
 
         assertThat(searchSenior.seniorSearchResponses())
                 .hasSameSizeAs(seniors);
@@ -129,10 +133,10 @@ class SeniorInfoUseCaseTest {
         List<Senior> seniors = List.of(senior, senior1);
         Page<Senior> seniorPage = new PageImpl<>(seniors);
 
-        given(seniorGetService.byField("a", "서울대학교", null))
+        given(seniorGetService.byField("a", info.getPostgradu(), null))
                 .willReturn(seniorPage);
 
-        AllSeniorSearchResponse fieldSenior = seniorInfoUseCase.getFieldSenior("a", "서울대학교", null);
+        AllSeniorSearchResponse fieldSenior = seniorInfoUseCase.getFieldSenior("a", info.getPostgradu(), null);
 
         assertThat(fieldSenior.seniorSearchResponses())
                 .hasSameSizeAs(seniors);

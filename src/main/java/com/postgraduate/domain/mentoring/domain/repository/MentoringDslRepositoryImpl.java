@@ -48,7 +48,7 @@ public class MentoringDslRepositoryImpl implements MentoringDslRepository {
     public List<Mentoring> findAllBySeniorAndStatus(Senior inputSenior, Status status) {
         return queryFactory.selectFrom(mentoring)
                 .distinct()
-                .join(mentoring.user, user)
+                .leftJoin(mentoring.user, user)
                 .fetchJoin()
                 .where(mentoring.senior.eq(inputSenior), mentoring.status.eq(status))
                 .orderBy(mentoring.createdAt.desc())
@@ -101,9 +101,9 @@ public class MentoringDslRepositoryImpl implements MentoringDslRepository {
                         mentoring.status.eq(Status.DONE),
                         mentoring.salary.status.eq(status)
                 )
-                .join(mentoring.salary, salary)
+                .leftJoin(mentoring.salary, salary)
                 .fetchJoin()
-                .join(mentoring.user, user)
+                .leftJoin(mentoring.user, user)
                 .fetchJoin()
                 .orderBy(mentoring.salary.salaryDate.desc(), mentoring.updatedAt.desc())
                 .fetch();
@@ -162,9 +162,9 @@ public class MentoringDslRepositoryImpl implements MentoringDslRepository {
     public List<Mentoring> findAllByStatus(Status status) {
         return queryFactory.selectFrom(mentoring)
                 .distinct()
-                .join(mentoring.senior, senior)
+                .leftJoin(mentoring.senior, senior)
                 .fetchJoin()
-                .join(mentoring.salary, salary)
+                .leftJoin(mentoring.salary, salary)
                 .fetchJoin()
                 .where(mentoring.status.eq(status))
                 .fetch();

@@ -14,8 +14,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserManageUseCaseTest {
@@ -30,9 +31,9 @@ class UserManageUseCaseTest {
 
     @Test
     @DisplayName("phoenumber 예외 테스트")
-    void invalidPhoneNumber() {
+    void updateInfoWithInvalidPhone() {
         User user = mock(User.class);
-        UserInfoRequest request = new UserInfoRequest("a", "b", "c");
+        UserInfoRequest request = new UserInfoRequest("a", "a", "b");
 
         doThrow(PhoneNumberException.class)
                 .when(userUtils)
@@ -40,5 +41,19 @@ class UserManageUseCaseTest {
 
         assertThatThrownBy(() -> userManageUseCase.updateInfo(user, request))
                 .isInstanceOf(PhoneNumberException.class);
+    }
+
+    @Test
+    @DisplayName("유저 업데이트 확인 테스트")
+    void updateInfo() {
+        User user = mock(User.class);
+        UserInfoRequest request = mock(UserInfoRequest.class);
+
+        given(userGetService.byUserId(any(Long.class)))
+                .willReturn(user);
+        userManageUseCase.updateInfo(user, request);
+
+        verify(userUpdateService)
+                .updateInfo(user, request);
     }
 }

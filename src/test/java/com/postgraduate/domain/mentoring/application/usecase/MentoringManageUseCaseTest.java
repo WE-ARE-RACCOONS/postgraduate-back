@@ -4,20 +4,18 @@ import com.postgraduate.domain.account.domain.entity.Account;
 import com.postgraduate.domain.account.domain.service.AccountGetService;
 import com.postgraduate.domain.mentoring.application.dto.req.MentoringApplyRequest;
 import com.postgraduate.domain.mentoring.application.dto.req.MentoringDateRequest;
+import com.postgraduate.domain.mentoring.application.dto.res.ApplyingResponse;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
-import com.postgraduate.domain.mentoring.domain.service.MentoringSaveService;
 import com.postgraduate.domain.mentoring.domain.service.MentoringUpdateService;
-import com.postgraduate.domain.mentoring.exception.MentoringNotExpectedException;
+import com.postgraduate.domain.mentoring.exception.MentoringDateException;
 import com.postgraduate.domain.mentoring.exception.MentoringNotFoundException;
-import com.postgraduate.domain.mentoring.exception.MentoringNotWaitingException;
+import com.postgraduate.domain.mentoring.exception.MentoringPresentException;
 import com.postgraduate.domain.payment.application.usecase.PaymentManageUseCase;
 import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.payment.domain.entity.constant.Status;
-import com.postgraduate.domain.payment.domain.service.PaymentGetService;
-import com.postgraduate.domain.payment.domain.service.PaymentUpdateService;
+import com.postgraduate.domain.payment.exception.PaymentNotFoundException;
 import com.postgraduate.domain.refuse.application.dto.req.MentoringRefuseRequest;
-import com.postgraduate.domain.refuse.domain.entity.Refuse;
 import com.postgraduate.domain.refuse.domain.service.RefuseSaveService;
 import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.salary.domain.service.SalaryGetService;
@@ -27,6 +25,7 @@ import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.global.slack.SlackErrorMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -37,10 +36,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
-import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.*;
+import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.WAITING;
 import static com.postgraduate.domain.senior.domain.entity.constant.Status.APPROVE;
+import static com.postgraduate.domain.user.domain.entity.constant.Role.SENIOR;
 import static com.postgraduate.domain.user.domain.entity.constant.Role.USER;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
@@ -48,46 +49,32 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class MentoringManageUseCaseTest {
-
+    @Mock
+    private MentoringRenewalUseCase mentoringRenewalUseCase;
     @Mock
     private MentoringUpdateService mentoringUpdateService;
-
     @Mock
     private MentoringGetService mentoringGetService;
-
-    @Mock
-    private MentoringSaveService mentoringSaveService;
-
-    @Mock
-    private PaymentGetService paymentGetService;
-
-    @Mock
-    private PaymentUpdateService paymentUpdateService;
-
-    @Mock
-    private PaymentManageUseCase paymentManageUseCase;
-
     @Mock
     private RefuseSaveService refuseSaveService;
-
     @Mock
     private AccountGetService accountGetService;
-
     @Mock
     private SeniorGetService seniorGetService;
-
     @Mock
     private SalaryGetService salaryGetService;
-
     @Mock
     private SalaryUpdateService salaryUpdateService;
-
-
+    @Mock
+    private PaymentManageUseCase paymentManageUseCase;
+    @Mock
+    private SlackErrorMessage slackErrorMessage;
+    @Mock
+    private MentoringApplyingUseCase mentoringApplyingUseCase;
     @InjectMocks
     private MentoringManageUseCase mentoringManageUseCase;
 
@@ -97,121 +84,136 @@ class MentoringManageUseCaseTest {
     private Info info;
     private Profile profile;
     private Salary salary;
+    private Account account;
+    private Payment payment;
+    private User mentoringUser;
+    private Mentoring mentoring;
 
     @BeforeEach
     void setting() {
         info = new Info("a", "a", "a", "a", "a", "a", TRUE, TRUE, "a");
-        profile = new Profile("a", "a", "a", "a", 40);
+        profile = new Profile("a", "a", "a", "a", 30);
         user = new User(-1L, 1234L, "a",
                 "a", "123", "a",
-                1, USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE);
+                0, SENIOR, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE);
+        mentoringUser = new User(-2L, 12345L, "a",
+                "a", "123", "a",
+                0, USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE);
         senior = new Senior(-1L, user, "a",
                 APPROVE, 1, info, profile,
                 LocalDateTime.now(), LocalDateTime.now());
         salary = new Salary(-1L, FALSE, senior, 10000, LocalDate.now(), LocalDateTime.now(), null);
+        account = new Account(-1L, "1", "은행", "유저", senior);
+        payment = new Payment(-1L, mentoringUser, senior, 20000, "a", "a", "a", LocalDateTime.now(), null, Status.DONE);
+        mentoring = new Mentoring(-1L, mentoringUser, senior, payment, salary, "asd", "asd", "1201,1202,1203", 30, WAITING, LocalDateTime.now(), LocalDateTime.now());
     }
 
     @Test
-    @DisplayName("정상 실행 여부 테스트")
-    void applyMentoring() {
-        Payment payment = mock(Payment.class);
-        User user = mock(User.class);
-        MentoringApplyRequest request = new MentoringApplyRequest("1", "topic", "ques", "1201,1202,1203");
+    @DisplayName("정상 실행 여부 테스트 - with Account")
+    void applyMentoringWithAccount() {
+        MentoringApplyRequest request = new MentoringApplyRequest("-1", "topic", "ques", "1201,1202,1203");
+        ApplyingResponse applyingResponse = new ApplyingResponse(true);
 
-        given(paymentGetService.byUserAndOrderId(any(), any()))
-                .willReturn(payment);
+        given(mentoringApplyingUseCase.applyMentoringWithPayment(mentoringUser, request))
+                .willReturn(applyingResponse);
 
-        mentoringManageUseCase.applyMentoringWithPayment(user, request);
-        verify(mentoringSaveService).save(any());
+        ApplyingResponse response = mentoringManageUseCase.applyMentoring(mentoringUser, request);
+        assertThat(response.account())
+                .isEqualTo(TRUE);
     }
 
-//    @ParameterizedTest
-//    @ValueSource(strings = {"1201,1203", "1201", ""})
-//    @DisplayName("날짜 예외 테스트 3보다 작을 경우")
-//    void applyMentoringWithInvalidDatesSmaller(String dates) {
-//        User user = mock(User.class);
-//        Payment payment = mock(Payment.class);
-//        MentoringApplyRequest request = new MentoringApplyRequest("1", "topic", "ques", dates);
-//        given(paymentGetService.byUserAndOrderId(any(), any()))
-//                .willReturn(payment);
-//
-//        assertThatThrownBy(()-> mentoringManageUseCase.applyMentoringWithPayment(user, request))
-//                .isInstanceOf(MentoringDateException.class);
-//    }
-//
-//    @ParameterizedTest
-//    @ValueSource(strings = {"1201,1203,1202,1203", "1201,1202,1203,1204,1205","1201,1202,1203,1204,1205,1206"})
-//    @DisplayName("날짜 예외 테스트 3보다 큰 경우")
-//    void applyMentoringWithInvalidDateBigger(String dates) {
-//        User user = mock(User.class);
-//        Payment payment = mock(Payment.class);
-//
-//        MentoringApplyRequest request = new MentoringApplyRequest("1", "topic", "ques", dates);
-//        given(paymentGetService.byUserAndOrderId(any(), any()))
-//                .willReturn(payment);
-//
-//        assertThatThrownBy(()-> mentoringManageUseCase.applyMentoringWithPayment(user, request))
-//                .isInstanceOf(MentoringDateException.class);
-//    }
-// todo: 환불 처리 관련 필요
+    @Test
+    @DisplayName("정상 실행 여부 테스트 - withOut Account")
+    void applyMentoringWithOutAccount() {
+        MentoringApplyRequest request = new MentoringApplyRequest("-1", "topic", "ques", "1201,1202,1203");
+        ApplyingResponse applyingResponse = new ApplyingResponse(false);
+
+        given(mentoringApplyingUseCase.applyMentoringWithPayment(mentoringUser, request))
+                .willReturn(applyingResponse);
+
+        ApplyingResponse response = mentoringManageUseCase.applyMentoring(mentoringUser, request);
+        assertThat(response.account())
+                .isEqualTo(FALSE);
+    }
+
+    @Test
+    @DisplayName("결제건을 찾을 수 없는 경우")
+    void PaymentNotFoundException() {
+        MentoringApplyRequest request = new MentoringApplyRequest("-1", "topic", "ques", "1201,1202,1203");
+
+        given(mentoringApplyingUseCase.applyMentoringWithPayment(mentoringUser, request))
+                .willThrow(PaymentNotFoundException.class);
+
+        assertThatThrownBy(() -> mentoringManageUseCase.applyMentoring(mentoringUser, request))
+                .isInstanceOf(PaymentNotFoundException.class);
+    }
+
+    @Test
+    @DisplayName("이미 신청된 결제건인 경우")
+    void MentoringPresentException() {
+        MentoringApplyRequest request = new MentoringApplyRequest("-1", "topic", "question", "1201,1202,1203");
+
+        given(mentoringApplyingUseCase.applyMentoringWithPayment(mentoringUser, request))
+                .willThrow(MentoringPresentException.class);
+
+        assertThatThrownBy(() -> mentoringManageUseCase.applyMentoring(mentoringUser, request))
+                .isInstanceOf(MentoringPresentException.class);
+    }
+
+    @Test
+    @DisplayName("이외의 예외 환불 테스트")
+    void ExceptionWithRefund() {
+        MentoringApplyRequest request = new MentoringApplyRequest("-1", "topic", "question", "1201,1202");
+
+        given(mentoringApplyingUseCase.applyMentoringWithPayment(mentoringUser, request))
+                .willThrow(MentoringDateException.class);
+
+        assertThatThrownBy(() -> mentoringManageUseCase.applyMentoring(mentoringUser, request))
+                .isInstanceOf(MentoringDateException.class);
+        verify(paymentManageUseCase)
+                .refundPayByUser(mentoringUser, request.orderId());
+    }
 
     @Test
     @DisplayName("CANCEL 상태 변경 성공 테스트")
     void updateCancel() {
-        Payment payment = new Payment(0L, user, senior, 24000, null
-                , null, null, null, null, Status.DONE);
-        Mentoring mentoring = new Mentoring(mentoringId, user, senior, payment, null
-                , "a", "b", "c"
-                , 40, WAITING
-                , LocalDateTime.now(), LocalDateTime.now());
-
-        given(mentoringGetService.byIdAndUserAndWaiting(mentoringId, user))
+        given(mentoringGetService.byIdAndUserAndWaiting(mentoringId, mentoringUser))
                 .willReturn(mentoring);
-        mentoringManageUseCase.updateCancel(user, mentoringId);
+        mentoringManageUseCase.updateCancel(mentoringUser, mentoringId);
 
         verify(paymentManageUseCase)
-                .refundPayByUser(user, payment.getOrderId());
+                .refundPayByUser(mentoringUser, payment.getOrderId());
         verify(mentoringUpdateService)
                 .updateCancel(mentoring);
     }
 
     @Test
-    @DisplayName("CANCEL 상태 변경 실패 테스트 - EXPECTED")
-    void updateCancelFailWithExpected() {
-        Payment payment = mock(Payment.class);
-        Mentoring mentoring = new Mentoring(mentoringId, user, senior, payment, null
-                , "a", "b", "c"
-                , 40, EXPECTED
-                , LocalDateTime.now(), LocalDateTime.now());
-
-        given(mentoringGetService.byIdAndUserAndWaiting(mentoringId, user))
+    @DisplayName("CANCEL 상태 변경 실패 테스트")
+    void updateCancelFail() {
+       given(mentoringGetService.byIdAndUserAndWaiting(mentoringId, mentoringUser))
                 .willThrow(MentoringNotFoundException.class);
-        assertThatThrownBy(() -> mentoringManageUseCase.updateCancel(user, mentoringId))
+        assertThatThrownBy(() -> mentoringManageUseCase.updateCancel(mentoringUser, mentoringId))
                 .isInstanceOf(MentoringNotFoundException.class);
     }
 
     @Test
-    @DisplayName("CANCEL 상태 변경 실패 테스트 - DONE")
-    void updateCancelFailWithDone() {
-        Payment payment = mock(Payment.class);
-        Mentoring mentoring = new Mentoring(mentoringId, user, senior, payment, null
-                , "a", "b", "c"
-                , 40, DONE
-                , LocalDateTime.now(), LocalDateTime.now());
-        given(mentoringGetService.byIdAndUserAndWaiting(mentoringId, user))
-                .willThrow(MentoringNotFoundException.class);
-        assertThatThrownBy(() -> mentoringManageUseCase.updateCancel(user, mentoringId))
-                .isInstanceOf(MentoringNotFoundException.class);
+    @DisplayName("DONE 상태 변경 성공 테스트")
+    void updateDone() {
+        given(mentoringGetService.byIdAndUserAndExpected(mentoringId, mentoringUser))
+                .willReturn(mentoring);
+        given(salaryGetService.bySenior(mentoring.getSenior()))
+                .willReturn(salary);
+        mentoringManageUseCase.updateDone(mentoringUser, mentoringId);
+
+        verify(mentoringUpdateService)
+                .updateDone(mentoring, salary);
+        verify(salaryUpdateService)
+                .plusTotalAmount(salary);
     }
 
     @Test
-    @DisplayName("DONE 상태 변경 실패 테스트 - DONE")
-    void updateDoneFailWithDone() {
-        Payment payment = mock(Payment.class);
-        Mentoring mentoring = new Mentoring(mentoringId, user, senior, payment, null
-                , "a", "b", "c",
-                40, DONE
-                , LocalDateTime.now(), LocalDateTime.now());
+    @DisplayName("DONE 상태 변경 실패 테스트")
+    void updateDoneFail() {
         given(mentoringGetService.byIdAndUserAndExpected(mentoringId, user))
                 .willThrow(MentoringNotFoundException.class);
         assertThatThrownBy(() -> mentoringManageUseCase.updateDone(user, mentoringId))
@@ -219,62 +221,27 @@ class MentoringManageUseCaseTest {
     }
 
     @Test
-    @DisplayName("DONE 상태 변경 실패 테스트 - WAITING")
-    void updateDoneFailWithWaiting() {
-        Payment payment = mock(Payment.class);
-        Mentoring mentoring = new Mentoring(mentoringId, user, senior, payment, null
-                , "a", "b", "c"
-                , 40, WAITING
-                , LocalDateTime.now(), LocalDateTime.now());
-        given(mentoringGetService.byIdAndUserAndExpected(mentoringId, user))
-                .willThrow(MentoringNotFoundException.class);
-        assertThatThrownBy(() -> mentoringManageUseCase.updateDone(user, mentoringId))
-                .isInstanceOf(MentoringNotFoundException.class);
+    @DisplayName("REFUSE 상태 변경 성공 테스트")
+    void updateRefuse() {
+        MentoringRefuseRequest request = new MentoringRefuseRequest("reason");
+        given(seniorGetService.byUser(user))
+                .willReturn(senior);
+        given(mentoringGetService.byIdAndSeniorAndWaiting(mentoringId, senior))
+                .willReturn(mentoring);
+        mentoringManageUseCase.updateRefuse(user, mentoringId, request);
+
+        verify(refuseSaveService)
+                .save(any());
+        verify(paymentManageUseCase)
+                .refundPayBySenior(senior, payment.getOrderId());
+        verify(mentoringUpdateService)
+                .updateRefuse(mentoring);
     }
 
-//    @Test
-//    @DisplayName("DONE 상태 변경 성공 테스트")
-//    void updateDone() {
-//        Payment payment = mock(Payment.class);
-//        Mentoring mentoring = new Mentoring(mentoringId, user, senior, payment, null
-//                , "a", "b", "c"
-//                , 40, EXPECTED
-//                , LocalDateTime.now(), LocalDateTime.now());
-//
-//        given(mentoringGetService.byIdAndUserAndExpected(mentoringId, user))
-//                .willReturn(mentoring);
-//        given(salaryGetService.bySenior(mentoring.getSenior()))
-//                .willReturn(salary);
-//
-//        verify(mentoringUpdateService)
-//                .updateDone(mentoring, salary);
-//    }
-
-//    @Test
-//    @DisplayName("REFUSE 상태 변경 성공 테스트")
-//    void updateRefuse() {
-//        MentoringRefuseRequest request = new MentoringRefuseRequest("abc");
-//        Payment payment = mock(Payment.class);
-//        Mentoring mentoring = new Mentoring(mentoringId, user, senior, payment, null
-//                , "a", "b", "c"
-//                , 40, WAITING
-//                , LocalDateTime.now(), LocalDateTime.now());
-//
-//        given(mentoringGetService.byIdAndUserAndWaiting(mentoringId, user))
-//                .willThrow(MentoringNotFoundException.class);
-//        assertThatThrownBy(() -> mentoringManageUseCase.updateDone(user, mentoringId))
-//                .isInstanceOf(MentoringNotFoundException.class);
-//    }
-
     @Test
-    @DisplayName("REFUSE 상태 변경 실패 테스트 - EXPECTED")
-    void updateRefuseWithExpected() {
-        MentoringRefuseRequest request = new MentoringRefuseRequest("abc");
-        Payment payment = mock(Payment.class);
-        Mentoring mentoring = new Mentoring(mentoringId, user, senior, payment, null
-                , "a", "b", "c"
-                , 40, EXPECTED
-                , LocalDateTime.now(), LocalDateTime.now());
+    @DisplayName("REFUSE 상태 변경 실패 테스트")
+    void updateRefuseFail() {
+        MentoringRefuseRequest request = new MentoringRefuseRequest("reason");
         given(seniorGetService.byUser(user))
                 .willReturn(senior);
         given(mentoringGetService.byIdAndSeniorAndWaiting(mentoringId, senior))
@@ -284,78 +251,45 @@ class MentoringManageUseCaseTest {
     }
 
     @Test
-    @DisplayName("REFUSE 상태 변경 실패 테스트 - DONE")
-    void updateRefuseWithDone() {
-        MentoringRefuseRequest request = new MentoringRefuseRequest("abc");
-        Payment payment = mock(Payment.class);
-        Mentoring mentoring = new Mentoring(mentoringId, user, senior, payment, null
-                , "a", "b", "c"
-                , 40, DONE
-                , LocalDateTime.now(), LocalDateTime.now());
-
-        given(seniorGetService.byUser(user))
-                .willReturn(senior);
-        given(mentoringGetService.byIdAndSeniorAndWaiting(mentoringId, senior))
-                .willThrow(MentoringNotFoundException.class);
-        assertThatThrownBy(() -> mentoringManageUseCase.updateRefuse(user, mentoringId, request))
-                .isInstanceOf(MentoringNotFoundException.class);
-    }
-
-//    @Test
-//    @DisplayName("EXPECTED 상태 변경 성공 테스트 - 계좌 존재")
-//    void updateExpectedTrue() {
-//        MentoringDateRequest dateRequest = new MentoringDateRequest("2023-12-12");
-//        Payment payment = mock(Payment.class);
-//        Mentoring mentoring = new Mentoring(mentoringId, user, senior, payment, null
-//                , "a", "b", "c"
-//                , 40, WAITING
-//                , LocalDateTime.now(), LocalDateTime.now());
-//
-//        given(mentoringGetService.byMentoringId(any()))
-//                .willReturn(mentoring);
-//        given(seniorGetService.byUser(user))
-//                .willReturn(senior);
-//        given(accountGetService.bySenior(senior))
-//                .willReturn(Optional.of(new Account()));
-//
-//        assertThat(mentoringManageUseCase.updateExpected(user, mentoringId, dateRequest))
-//                .isEqualTo(TRUE);
-//
-//        verify(mentoringUpdateService).updateExpected(mentoring, dateRequest.date());
-//    }
-
-//    @Test
-//    @DisplayName("EXPECTED 상태 변경 성공 테스트 - 계좌 없음")
-//    void updateExpectedFa() {
-//        MentoringDateRequest dateRequest = new MentoringDateRequest("2023-12-12");
-//        Payment payment = mock(Payment.class);
-//        Mentoring mentoring = new Mentoring(mentoringId, user, senior, payment, null
-//                , "a", "b", "c"
-//                , 40, WAITING
-//                , LocalDateTime.now(), LocalDateTime.now());
-//
-//        given(mentoringGetService.byMentoringId(any()))
-//                .willReturn(mentoring);
-//        given(seniorGetService.byUser(any()))
-//                .willReturn(senior);
-//        given(accountGetService.bySenior(any()))
-//                .willReturn(Optional.ofNullable(null));
-//
-//        assertThat(mentoringManageUseCase.updateExpected(user, mentoringId, dateRequest))
-//                .isEqualTo(FALSE);
-//
-//        verify(mentoringUpdateService).updateExpected(mentoring, dateRequest.date());
-//    }
-
-    @Test
-    @DisplayName("EXPECTED 상태 변경 실패 테스트 - EXPECTED")
-    void updateExpectedFailWithExpected() {
+    @DisplayName("EXPECTED 상태 변경 성공 테스트 - 계좌 존재")
+    void updateExpectedTrue() {
         MentoringDateRequest dateRequest = new MentoringDateRequest("2023-12-12");
-        Payment payment = mock(Payment.class);
-        Mentoring mentoring = new Mentoring(mentoringId, user, senior, payment, null
-                , "a", "b", "c"
-                , 40, EXPECTED
-                , LocalDateTime.now(), LocalDateTime.now());
+
+        given(seniorGetService.byUser(user))
+                .willReturn(senior);
+        given(mentoringGetService.byIdAndSeniorAndWaiting(mentoringId, senior))
+                .willReturn(mentoring);
+        given(accountGetService.bySenior(senior))
+                .willReturn(Optional.of(account));
+
+        assertThat(mentoringManageUseCase.updateExpected(user, mentoringId, dateRequest))
+                .isEqualTo(TRUE);
+        verify(mentoringUpdateService)
+                .updateExpected(mentoring, dateRequest.date());
+    }
+
+    @Test
+    @DisplayName("EXPECTED 상태 변경 성공 테스트 - 계좌 없음")
+    void updateExpectedFa() {
+        MentoringDateRequest dateRequest = new MentoringDateRequest("2023-12-12");
+
+        given(seniorGetService.byUser(user))
+                .willReturn(senior);
+        given(mentoringGetService.byIdAndSeniorAndWaiting(mentoringId, senior))
+                .willReturn(mentoring);
+        given(accountGetService.bySenior(senior))
+                .willReturn(Optional.ofNullable(null));
+
+        assertThat(mentoringManageUseCase.updateExpected(user, mentoringId, dateRequest))
+                .isEqualTo(FALSE);
+        verify(mentoringUpdateService)
+                .updateExpected(mentoring, dateRequest.date());
+    }
+
+    @Test
+    @DisplayName("EXPECTED 상태 변경 실패 테스트")
+    void updateExpectedFail() {
+        MentoringDateRequest dateRequest = new MentoringDateRequest("2023-12-12");
 
         given(seniorGetService.byUser(user))
                 .willReturn(senior);
@@ -366,20 +300,38 @@ class MentoringManageUseCaseTest {
     }
 
     @Test
-    @DisplayName("EXPECTED 상태 변경 실패 테스트 - DONE")
-    void updateExpectedFailwithDone() {
-        MentoringDateRequest dateRequest = new MentoringDateRequest("2023-12-12");
-        Payment payment = mock(Payment.class);
-        Mentoring mentoring = new Mentoring(mentoringId, user, senior, payment, null
-                , "a", "b", "c"
-                , 40, DONE
-                , LocalDateTime.now(), LocalDateTime.now());
+    @DisplayName("자동 취소 테스트")
+    void updateAutoCancel() {
+        List<Mentoring> mentorings = List.of(mock(Mentoring.class), mock(Mentoring.class));
+        LocalDateTime now = LocalDateTime.now()
+                .toLocalDate()
+                .atStartOfDay();
+        given(mentoringGetService.byWaitingAndCreatedAt(now))
+                .willReturn(mentorings);
+        mentoringManageUseCase.updateAutoCancel();
 
-        given(seniorGetService.byUser(user))
-                .willReturn(senior);
-        given(mentoringGetService.byIdAndSeniorAndWaiting(mentoringId, senior))
-                .willThrow(MentoringNotFoundException.class);
-        assertThatThrownBy(() -> mentoringManageUseCase.updateExpected(user, mentoringId, dateRequest))
-                .isInstanceOf(MentoringNotFoundException.class);
+        verify(mentoringRenewalUseCase, times(mentorings.size()))
+                .updateCancelWithAuto(any());
+    }
+
+    @Test
+    @DisplayName("자동 완료 테스트")
+    void updateAutoDone() {
+        Mentoring mentoring1 = mock(Mentoring.class);
+        Mentoring mentoring2 = mock(Mentoring.class);
+        Mentoring mentoring3 = mock(Mentoring.class);
+        List<Mentoring> mentorings = List.of(mentoring1, mentoring2, mentoring3);
+        given(mentoringGetService.byExpected())
+                .willReturn(mentorings);
+        given(mentoring1.checkAutoDone())
+                .willReturn(true);
+        given(mentoring2.checkAutoDone())
+                .willReturn(true);
+        given(mentoring3.checkAutoDone())
+                .willReturn(false);
+        mentoringManageUseCase.updateAutoDone();
+
+        verify(mentoringRenewalUseCase, times(mentorings.size()-1))
+                .updateDoneWithAuto(any());
     }
 }

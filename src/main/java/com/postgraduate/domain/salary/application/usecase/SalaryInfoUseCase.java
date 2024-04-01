@@ -34,7 +34,9 @@ public class SalaryInfoUseCase {
 
     public SalaryDetailsResponse getSalaryDetail(User user, Boolean status) {
         Senior senior = seniorGetService.byUser(user);
-        List<Mentoring> mentorings = mentoringGetService.bySeniorAndSalaryStatus(senior, status);
+        List<Mentoring> mentorings = status ?
+                        mentoringGetService.bySeniorAndSalaryTrue(senior) :
+                        mentoringGetService.bySeniorAndSalaryFalse(senior);
         List<SalaryDetails> salaryDetails = mentorings.stream()
                 .map(SalaryMapper::mapToSalaryDetail)
                 .toList();
