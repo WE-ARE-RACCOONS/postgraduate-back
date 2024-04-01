@@ -119,6 +119,7 @@ public class SalaryDslRepositoryImpl implements SalaryDslRepository {
                 .fetchJoin()
                 .join(senior.user, user)
                 .fetchJoin()
+                .where(salary.totalAmount.gt(0))
                 .orderBy(salary.salaryDoneDate.desc())
                 .fetch();
     }
