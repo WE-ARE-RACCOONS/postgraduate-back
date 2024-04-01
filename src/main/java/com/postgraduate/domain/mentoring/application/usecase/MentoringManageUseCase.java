@@ -52,8 +52,7 @@ public class MentoringManageUseCase {
 
     public ApplyingResponse applyMentoring(User user, MentoringApplyRequest request) {
         try {
-            ApplyingResponse applyingResponse = mentoringApplyingUseCase.applyMentoringWithPayment(user, request);
-            return applyingResponse;
+            return mentoringApplyingUseCase.applyMentoringWithPayment(user, request);
         } catch (PaymentNotFoundException ex) {
             log.error("결제건을 찾을 수 없습니다.");
             throw ex;
