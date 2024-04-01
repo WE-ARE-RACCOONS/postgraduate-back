@@ -14,6 +14,7 @@ import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.service.UserGetService;
+import com.postgraduate.global.slack.SlackPaymentMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -58,6 +59,7 @@ public class PaymentManageUseCase {
     private final SeniorGetService seniorGetService;
     private final UserGetService userGetService;
     private final WebClient webClient;
+    private final SlackPaymentMessage slackPaymentMessage;
 
     public void savePay(PaymentResultRequest request) {
         if (!request.PCD_PAY_RST().equals(SUCCESS.getName())) {
@@ -72,6 +74,7 @@ public class PaymentManageUseCase {
             Senior senior = seniorGetService.bySeniorNickName(seniorNickName);
             Payment payment = PaymentMapper.resultToPayment(senior, user, request);
             paymentSaveService.save(payment);
+            slackPaymentMessage.sendPayment(payment);
         } catch (Exception ex) {
             log.error("paymentError 발생 환불 진행 | errorMessage : {}", ex.getMessage());
             Payment payment = PaymentMapper.resultToPayment(request);
