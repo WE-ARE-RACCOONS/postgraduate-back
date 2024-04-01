@@ -14,13 +14,13 @@ import com.postgraduate.domain.senior.domain.service.SeniorSaveService;
 import com.postgraduate.domain.user.application.mapper.UserMapper;
 import com.postgraduate.domain.user.application.utils.UserUtils;
 import com.postgraduate.domain.user.domain.entity.User;
-import com.postgraduate.domain.user.domain.entity.constant.Role;
 import com.postgraduate.domain.user.domain.service.UserGetService;
 import com.postgraduate.domain.user.domain.service.UserSaveService;
 import com.postgraduate.domain.user.domain.service.UserUpdateService;
 import com.postgraduate.domain.wish.application.mapper.WishMapper;
 import com.postgraduate.domain.wish.domain.entity.Wish;
 import com.postgraduate.domain.wish.domain.service.WishSaveService;
+import com.postgraduate.global.slack.SlackSignUpMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -41,6 +41,7 @@ public class SignUpUseCase {
     private final UserGetService userGetService;
     private final WishSaveService wishSaveService;
     private final SeniorSaveService seniorSaveService;
+    private final SlackSignUpMessage slackSignUpMessage;
     private final UserUtils userUtils;
     private final SeniorUtils seniorUtils;
 
@@ -50,6 +51,7 @@ public class SignUpUseCase {
         Wish wish = WishMapper.mapToWish(user, request);
         wishSaveService.save(wish);
         userSaveService.save(user);
+        slackSignUpMessage.sendJuniorSignUp(user, wish);
         return user;
     }
 
@@ -62,6 +64,7 @@ public class SignUpUseCase {
         seniorSaveService.saveSenior(senior);
         Salary salary = SalaryMapper.mapToSalary(senior, getSalaryDate());
         salarySaveService.save(salary);
+        slackSignUpMessage.sendSeniorSignUp(senior);
         return senior.getUser();
     }
 
@@ -73,11 +76,13 @@ public class SignUpUseCase {
         userUpdateService.userToSeniorRole(user);
         Salary salary = SalaryMapper.mapToSalary(senior, getSalaryDate());
         salarySaveService.save(salary);
+        slackSignUpMessage.sendSeniorSignUp(senior);
         return user;
     }
 
     public void changeUser(User user, UserChangeRequest changeRequest) {
         Wish wish = WishMapper.mapToWish(user, changeRequest);
         wishSaveService.save(wish);
+        slackSignUpMessage.sendJuniorSignUp(user, wish);
     }
 }

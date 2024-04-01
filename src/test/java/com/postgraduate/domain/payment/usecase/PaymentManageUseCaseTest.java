@@ -11,6 +11,7 @@ import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.service.UserGetService;
+import com.postgraduate.global.slack.SlackPaymentMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -45,6 +46,8 @@ class PaymentManageUseCaseTest {
     private UserGetService userGetService;
     @Mock
     private WebClient webClient;
+    @Mock
+    private SlackPaymentMessage slackPaymentMessage;
     @InjectMocks
     private PaymentManageUseCase paymentManageUseCase;
 

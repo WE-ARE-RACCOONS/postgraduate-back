@@ -52,8 +52,7 @@ public class MentoringManageUseCase {
 
     public ApplyingResponse applyMentoring(User user, MentoringApplyRequest request) {
         try {
-            ApplyingResponse applyingResponse = mentoringApplyingUseCase.applyMentoringWithPayment(user, request);
-            return applyingResponse;
+            return mentoringApplyingUseCase.applyMentoringWithPayment(user, request);
         } catch (PaymentNotFoundException ex) {
             log.error("결제건을 찾을 수 없습니다.");
             throw ex;
@@ -115,7 +114,7 @@ public class MentoringManageUseCase {
         //TODO : 알림 보내거나 나머지 작업
     }
 
-    @Scheduled(fixedRate = 700000, zone = "Asia/Seoul")
+    @Scheduled(cron = "0 59 23 * * *", zone = "Asia/Seoul")
     public void updateAutoDone() {
         List<Mentoring> expectedMentorings = mentoringGetService.byExpected();
         expectedMentorings.stream()
