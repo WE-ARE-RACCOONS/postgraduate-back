@@ -96,6 +96,7 @@ public class MentoringDslRepositoryImpl implements MentoringDslRepository {
     @Override
     public List<Mentoring> findAllBySeniorAndSalaryStatus(Senior senior, Boolean status) {
         return queryFactory.selectFrom(mentoring)
+                .distinct()
                 .where(
                         mentoring.senior.eq(senior),
                         mentoring.status.eq(Status.DONE),
@@ -112,13 +113,14 @@ public class MentoringDslRepositoryImpl implements MentoringDslRepository {
     @Override
     public Page<Mentoring> findAllBySearchPayment(String search, Pageable pageable) {
         List<Mentoring> mentorings = queryFactory.selectFrom(mentoring)
+                .distinct()
                 .where(
                         searchLike(search),
                         mentoring.user.isDelete.eq(FALSE)
                 )
-                .join(mentoring.user, user)
+                .leftJoin(mentoring.user, user)
                 .fetchJoin()
-                .join(mentoring.payment, payment)
+                .leftJoin(mentoring.payment, payment)
                 .fetchJoin()
                 .orderBy(mentoring.payment.paidAt.desc())
                 .offset(pageable.getOffset())
@@ -150,9 +152,9 @@ public class MentoringDslRepositoryImpl implements MentoringDslRepository {
     public List<Mentoring> findAllByStatusAndCreatedAtIsBefore(Status status, LocalDateTime now) {
         return queryFactory.selectFrom(mentoring)
                 .distinct()
-                .join(mentoring.user, user)
+                .leftJoin(mentoring.user, user)
                 .fetchJoin()
-                .join(mentoring.payment, payment)
+                .leftJoin(mentoring.payment, payment)
                 .fetchJoin()
                 .where(mentoring.status.eq(status), mentoring.createdAt.before(now))
                 .fetch();
