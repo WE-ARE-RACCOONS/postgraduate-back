@@ -7,5 +7,6 @@ public record SeniorSearchResponse(
         String postgradu,
         String major,
         String lab,
+        String professor,
         String[] keyword
 ) {}
