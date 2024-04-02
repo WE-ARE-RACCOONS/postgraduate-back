@@ -229,7 +229,7 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
     public List<Senior> findAllSenior() {
         return queryFactory.selectFrom(senior)
                 .distinct()
-                .join(senior.user, user)
+                .leftJoin(senior.user, user)
                 .fetchJoin()
                 .where(senior.user.isDelete.eq(FALSE))
                 .orderBy(senior.user.nickName.asc())

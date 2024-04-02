@@ -39,6 +39,7 @@ public class SalaryDslRepositoryImpl implements SalaryDslRepository {
                         )
                 )
                 .from(salary)
+                .distinct()
                 .where(
                         searchLike(search),
                         salary.senior.user.isDelete.eq(FALSE)
@@ -86,9 +87,9 @@ public class SalaryDslRepositoryImpl implements SalaryDslRepository {
         return queryFactory.selectFrom(salary)
                 .distinct()
                 .where(salary.salaryDate.eq(salaryDate))
-                .join(salary.senior, senior)
+                .leftJoin(salary.senior, senior)
                 .fetchJoin()
-                .join(salary.senior.user, user)
+                .leftJoin(salary.senior.user, user)
                 .fetchJoin()
                 .fetch();
     }
@@ -102,9 +103,9 @@ public class SalaryDslRepositoryImpl implements SalaryDslRepository {
                         salary.salaryDate.lt(salaryDate),
                         salary.totalAmount.gt(0)
                 )
-                .join(salary.senior, senior)
+                .leftJoin(salary.senior, senior)
                 .fetchJoin()
-                .join(senior.user, user)
+                .leftJoin(senior.user, user)
                 .fetchJoin()
                 .orderBy(salary.salaryDate.asc())
                 .fetch();
@@ -115,9 +116,9 @@ public class SalaryDslRepositoryImpl implements SalaryDslRepository {
         return queryFactory.selectFrom(salary)
                 .distinct()
                 .where(salary.status.isTrue())
-                .join(salary.senior, senior)
+                .leftJoin(salary.senior, senior)
                 .fetchJoin()
-                .join(senior.user, user)
+                .leftJoin(senior.user, user)
                 .fetchJoin()
                 .where(salary.totalAmount.gt(0))
                 .orderBy(salary.salaryDoneDate.desc())
@@ -139,7 +140,7 @@ public class SalaryDslRepositoryImpl implements SalaryDslRepository {
                             salary.senior.eq(searchSenior)
                                     .and(salary.account.isNull())
                     )
-                    .join(salary.senior, senior)
+                    .leftJoin(salary.senior, senior)
                     .fetchJoin()
                     .fetch();
         }

@@ -19,7 +19,7 @@ public class PaymentDslRepositoryImpl implements PaymentDslRepository {
     public List<Payment> findAllPayment() {
         return queryFactory.selectFrom(payment)
                 .distinct()
-                .join(payment.user, user)
+                .leftJoin(payment.user, user)
                 .fetchJoin()
                 .fetch();
     }

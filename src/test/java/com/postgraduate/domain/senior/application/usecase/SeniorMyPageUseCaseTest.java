@@ -109,7 +109,7 @@ class SeniorMyPageUseCaseTest {
 
         given(seniorGetService.byUser(user))
                 .willReturn(senior);
-        given(availableGetService.bySenior(senior))
+        given(availableGetService.byMine(senior))
                 .willReturn(availables);
 
         SeniorMyPageProfileResponse myPageProfile = seniorMyPageUseCase.getSeniorMyPageProfile(user);
