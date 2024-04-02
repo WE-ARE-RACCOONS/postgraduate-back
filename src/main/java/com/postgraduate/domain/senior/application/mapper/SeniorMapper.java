@@ -184,7 +184,7 @@ public class SeniorMapper {
         String[] keyword = Arrays.copyOf(allKeywords, Math.min(3, allKeywords.length));
 
         return new SeniorSearchResponse(senior.getSeniorId(), user.getProfile(), user.getNickName(),
-                info.getPostgradu(), info.getMajor(), info.getLab(),
+                info.getPostgradu(), info.getMajor(), info.getLab(), info.getProfessor(),
                 keyword);
     }
 
