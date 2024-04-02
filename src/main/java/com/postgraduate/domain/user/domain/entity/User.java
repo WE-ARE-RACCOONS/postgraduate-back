@@ -70,13 +70,6 @@ public class User {
         this.isDelete = true;
     }
 
-    public boolean isEqual(User user) {
-        if (user == null)
-            return false;
-        return user.getUserId()
-                .equals(this.userId);
-    }
-
     public boolean isDelete() {
         return this.isDelete;
     }

@@ -14,6 +14,7 @@ import com.postgraduate.global.config.redis.RedisRepository;
 import com.postgraduate.global.config.security.jwt.util.JwtUtils;
 import com.postgraduate.global.slack.SlackLogErrorMessage;
 import com.postgraduate.global.slack.SlackSalaryMessage;
+import com.postgraduate.global.slack.SlackSignUpMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -63,6 +64,8 @@ class AuthControllerTest extends IntegrationTest {
     RedisRepository redisRepository;
     @MockBean
     private SlackLogErrorMessage slackLogErrorMessage;
+    @MockBean
+    private SlackSignUpMessage slackSignUpMessage;
     private User user;
     private final Long anonymousUserSocialId = 2L;
 
@@ -71,6 +74,8 @@ class AuthControllerTest extends IntegrationTest {
         user = new User(0L, 1L, "mail", "후배", "011", "profile", 0, USER, true, now(), now(), false);
         userRepository.save(user);
         doNothing().when(slackLogErrorMessage).sendSlackLog(any());
+        doNothing().when(slackSignUpMessage).sendSeniorSignUp(any());
+        doNothing().when(slackSignUpMessage).sendJuniorSignUp(any(), any());
     }
 
     @Test
