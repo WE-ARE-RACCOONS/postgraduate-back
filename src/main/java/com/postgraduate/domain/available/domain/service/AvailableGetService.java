@@ -16,4 +16,8 @@ public class AvailableGetService {
     public List<Available> bySenior(Senior senior) {
         return availableRepository.findAllBySenior(senior);
     }
+
+    public List<Available> byMine(Senior senior) {
+        return availableRepository.findAllByMine(senior);
+    }
 }
