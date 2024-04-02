@@ -22,4 +22,12 @@ public class AvailableDslRepositoryImpl implements AvailableDslRepository {
                 .where(available.senior.eq(senior), available.senior.status.eq(APPROVE))
                 .fetch();
     }
+
+    @Override
+    public List<Available> findAllByMine(Senior senior) {
+        return queryFactory.selectFrom(available)
+                .distinct()
+                .where(available.senior.eq(senior))
+                .fetch();
+    }
 }

@@ -54,7 +54,7 @@ public class SeniorInfoUseCase {
     }
 
     private SeniorDetailResponse getResponseMine(Senior senior, boolean isMine) {
-        List<Available> availables = availableGetService.bySenior(senior);
+        List<Available> availables = availableGetService.byMine(senior);
         List<AvailableTimeResponse> times = availables.stream()
                 .map(AvailableMapper::mapToAvailableTimes)
                 .toList();

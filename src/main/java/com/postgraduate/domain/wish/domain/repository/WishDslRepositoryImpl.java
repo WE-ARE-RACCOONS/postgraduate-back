@@ -25,7 +25,7 @@ public class WishDslRepositoryImpl implements WishDslRepository {
     public Page<Wish> findAllBySearchWish(String search, Pageable pageable) {
         List<Wish> wishes = queryFactory.selectFrom(wish)
                 .distinct()
-                .join(wish.user, user)
+                .leftJoin(wish.user, user)
                 .fetchJoin()
                 .where(
                         searchLike(search),
@@ -58,7 +58,7 @@ public class WishDslRepositoryImpl implements WishDslRepository {
     public List<Wish> findAllWish() {
         return queryFactory.selectFrom(wish)
                 .distinct()
-                .join(wish.user, user)
+                .leftJoin(wish.user, user)
                 .fetchJoin()
                 .where(wish.user.isDelete.isFalse())
                 .fetch();
