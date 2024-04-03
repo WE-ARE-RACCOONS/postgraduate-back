@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.postgraduate.domain.wish.domain.entity.constant.Status.REJECTED;
@@ -56,37 +57,45 @@ public class SlackSignUpMessage {
         }
     }
 
-    //attach 생성 -> Field를 리스트로 담자
     private Attachment generateJuniorSignUpAttachment(User user, Wish wish) {
+        LocalDateTime createdAt = user.getCreatedAt();
         Status status = wish.getStatus();
         String wantMatching = status == REJECTED ? "X" : "O";
         return Attachment.builder()
                 .color("2FC4B2")
                 .title("가입한 후배 정보")
                 .fields(List.of(
-                        generateSlackField("후배 닉네임 : ", user.getNickName()),
-                        generateSlackField("후배 전화번호", user.getPhoneNumber()),
-                        generateSlackField("후배 매칭희망 여부", wantMatching),
-                        generateSlackField("후배 매칭희망 전공, 분야", wish.getMajor() + ", " + wish.getField())
+                        generateSlackField("가입 시간 : "
+                                + createdAt.getMonth().getValue() + "월 "
+                                + createdAt.getDayOfMonth() + "일 "
+                                + createdAt.getHour() + "시 "
+                                + createdAt.getMinute() + "분 "
+                                + createdAt.getSecond() + "초", null),
+                        generateSlackField("후배 닉네임 : " + user.getNickName(), null),
+                        generateSlackField("후배 매칭희망 여부 : " + wantMatching, null),
+                        generateSlackField("후배 매칭희망 전공, 분야 : " + (wish.getMajor() + " " + wish.getField()), null)
                 ))
                 .build();
     }
 
     private Attachment generateSeniorSignUpAttachment(Senior senior) {
+        LocalDateTime createdAt = senior.getCreatedAt();
         User user = senior.getUser();
         Info info = senior.getInfo();
         return Attachment.builder()
                 .color("2FC4B2")
                 .title("가입한 선배 정보")
                 .fields(List.of(
-                        generateSlackField("선배 닉네임 : ", user.getNickName()),
-                        generateSlackField("선배 전화번호", user.getPhoneNumber()),
-                        generateSlackField("선배 대학원", info.getPostgradu()),
-                        generateSlackField("선배 랩실", info.getLab()),
-                        generateSlackField("선배 교수님", info.getProfessor()),
-                        generateSlackField("선배 전공", info.getMajor()),
-                        generateSlackField("선배 분야", info.getField()),
-                        generateSlackField("선배 키워드", info.getKeyword())
+                        generateSlackField("선배 닉네임 : " + user.getNickName(), null),
+                        generateSlackField("가입 시간 : "
+                                + createdAt.getMonth().getValue() + "월 "
+                                + createdAt.getDayOfMonth() + "일 "
+                                + createdAt.getHour() + "시 "
+                                + createdAt.getMinute() + "분 "
+                                + createdAt.getSecond() + "초", null),
+                        generateSlackField("선배 대학원 : " + info.getPostgradu(), null),
+                        generateSlackField("선배 연구실 : " + info.getLab(), null),
+                        generateSlackField("선배 교수님 : " + info.getProfessor(), null)
                 ))
                 .build();
     }
