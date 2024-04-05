@@ -1,6 +1,8 @@
 package com.postgraduate.global.slack;
 
 import com.postgraduate.domain.payment.domain.entity.Payment;
+import com.postgraduate.domain.senior.domain.entity.Senior;
+import com.postgraduate.domain.user.domain.entity.User;
 import com.slack.api.Slack;
 import com.slack.api.model.Attachment;
 import com.slack.api.webhook.Payload;
@@ -40,6 +42,9 @@ public class SlackPaymentMessage {
 
     private Attachment generatePaymentAttachment(Payment payment) {
         LocalDateTime createdAt = payment.getPaidAt();
+        User user = payment.getUser();
+        Senior senior = payment.getSenior();
+        User seniorUser = senior.getUser();
         return Attachment.builder()
                 .color("2FC4B2")
                 .title("결제정보")
@@ -49,7 +54,10 @@ public class SlackPaymentMessage {
                                 + createdAt.getDayOfMonth() + "일 "
                                 + createdAt.getHour() + "시 "
                                 + createdAt.getMinute() + "분 "
-                                + createdAt.getSecond() + "초", null)
+                                + createdAt.getSecond() + "초", null),
+                        generateSlackField("결제 금액 : " + payment.getPay(), null),
+                        generateSlackField("후배 닉네임 : " + user.getNickName() , null),
+                        generateSlackField("선배 닉네임 : " + seniorUser.getNickName(), null)
                 ))
                 .build();
     }
