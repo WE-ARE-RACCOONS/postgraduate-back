@@ -36,6 +36,19 @@ public class BizppurioMapper {
     private static String juniorMentoringApply;
     @Value("${bizppurio.template.senior_signUp}")
     private static String seniorSignUp;
+    @Value("${bizppurio.url.certification}")
+    private static String certificationPage;
+    @Value("${bizppurio.url.profile}")
+    private static String profilePage;
+    @Value("${bizppurio.url.senior_mentoring}")
+    private static String seniorMentoringPage;
+    @Value("${bizppurio.url.junior_mentoring}")
+    private static String juniorMentoringPage;
+    @Value("${bizppurio.url.main}")
+    private static String mainPage;
+
+
+    private static String type = "WL";
 
     private BizppurioMapper() {
         throw new IllegalArgumentException();
@@ -52,8 +65,8 @@ public class BizppurioMapper {
                         + "선배님에 성공적인 멘토링 매칭을 기원하겠습니다!(미소)"
         );
 
-        WebLinkButton certification = new WebLinkButton("대학원 인증하기", "WL", "https://www.kimseonbae.com/signup/select/common-info/auth");
-        WebLinkButton profile = new WebLinkButton("프로필 작성하기", "WL", "https://www.kimseonbae.com/senior/edit-profile");
+        WebLinkButton certification = new WebLinkButton("대학원 인증하기", type, certificationPage);
+        WebLinkButton profile = new WebLinkButton("프로필 작성하기", "WL", profilePage);
         WebLinkButton[] buttons = {certification, profile};
         Message messageBody = new SeniorSingUpMessage(message, senderKey, seniorSignUp, buttons);
         return createCommonRequest(messageBody, user);
@@ -66,7 +79,7 @@ public class BizppurioMapper {
                         + "후배님으로부터 멘토링 신청이 들어왔습니다! 다음날 오후 11시 59분까지 신청해주시지 않으면 멘토링 신청이 자동 취소되니! 지금 수락하러 가볼까요? (미소)"
         );
 
-        WebLinkButton mentoringCheck = new WebLinkButton("멘토링 신청 확인하기", "WL", "https://www.kimseonbae.com/senior/mentoring");
+        WebLinkButton mentoringCheck = new WebLinkButton("멘토링 신청 확인하기", type, seniorMentoringPage);
         WebLinkButton[] buttons = {mentoringCheck};
         Message messageBody = new SeniorApplyMessage(message, senderKey, seniorMentoringApply, buttons);
         return createCommonRequest(messageBody, user);
@@ -92,7 +105,7 @@ public class BizppurioMapper {
                         + "\n\n"
                         + "이제 프로필 작성만 완료되면, 선배님의 멘토링 신청률이 up!up! (축하)"
         );
-        WebLinkButton profile = new WebLinkButton("프로필 작성하기", "WL", "https://www.kimseonbae.com/senior/edit-profile");
+        WebLinkButton profile = new WebLinkButton("프로필 작성하기", type, profilePage);
         WebLinkButton[] buttons = {profile};
         CertificationApproveMessage messageBody = new CertificationApproveMessage(message, senderKey, certificationApprove, buttons);
         return createCommonRequest(messageBody, user);
@@ -106,7 +119,7 @@ public class BizppurioMapper {
                         + "\n\n"
                         + "재신청 해주시면 빠르게 재심사 하도록 하겠습니다!"
         );
-        WebLinkButton certification = new WebLinkButton("대학원 재인증하기", "WL", "https://www.kimseonbae.com/signup/select/common-info/auth");
+        WebLinkButton certification = new WebLinkButton("대학원 재인증하기", type, certificationPage);
         WebLinkButton[] buttons = {certification};
         CertificationDeniedMessage messageBody = new CertificationDeniedMessage(message, senderKey, certificationDenied, buttons);
         return createCommonRequest(messageBody, user);
@@ -162,7 +175,7 @@ public class BizppurioMapper {
                         + "\n\n" +
                         "혹시 멘토링을 진행하고 싶었던 다른 선배님이 있다면 지금 신청해보세요!"
         );
-        WebLinkButton otherSenior = new WebLinkButton("다른 선배 보러기가", "WL", "https://www.kimseonbae.com");
+        WebLinkButton otherSenior = new WebLinkButton("다른 선배 보러기가", type, mainPage);
         WebLinkButton[] buttons = {otherSenior};
         JuniorRefuseMessage messageBody = new JuniorRefuseMessage(message, senderKey, juniorMentoringRefuse, buttons);
         return createCommonRequest(messageBody, user);
@@ -180,7 +193,7 @@ public class BizppurioMapper {
                         + "\n\n"
                         + "별도의 문의가 없다면, 3일 후 멘토링이 자동 확정되며 선배님께 보수비가 정산됩니다!"
         );
-        WebLinkButton mentoringFinish = new WebLinkButton("진행 확정하러가기", "WL", "https://www.kimseonbae.com/junior/mentoring");
+        WebLinkButton mentoringFinish = new WebLinkButton("진행 확정하러가기", type, juniorMentoringPage);
         WebLinkButton[] buttons = {mentoringFinish};
 
         JuniorFinishMessage messageBody = new JuniorFinishMessage(message, senderKey, juniorMentoringFinish, buttons);

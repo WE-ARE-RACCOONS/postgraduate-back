@@ -35,6 +35,11 @@ public class BizppurioJuniorMessage {
         sendMessage(commonRequest);
     }
 
+    public void mentoringRefuse(User user) {
+        CommonRequest commonRequest = mapToJuniorRefuseMessage(user);
+        sendMessage(commonRequest);
+    }
+
     public void mentoringFinish(User user) {
         CommonRequest commonRequest = mapToJuniorFinish(user);
         sendMessage(commonRequest);
