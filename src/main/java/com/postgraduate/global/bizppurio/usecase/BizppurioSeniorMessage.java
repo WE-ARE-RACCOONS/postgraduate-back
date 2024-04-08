@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import static com.postgraduate.global.bizppurio.mapper.BizppurioMapper.mapToSeniorApplyMessage;
 import static com.postgraduate.global.bizppurio.mapper.BizppurioMapper.mapToSeniorSignUpMessage;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
@@ -18,14 +19,23 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 @Slf4j
 public class BizppurioSeniorMessage {
     private final WebClient webClient;
+    private final BizppurioAuth bizppurioAuth;
 
     @Value("${bizppurio.message}")
     private String messageUrl;
-    @Value("${bizppurio.id}")
-    private String bizzpurioId;
 
-    public void signUpMessage(BizppurioTokenResponse tokenResponse, User user) {
+    public void signUpMessage(User user) {
         CommonRequest commonRequest = mapToSeniorSignUpMessage(user);
+        sendMessage(commonRequest);
+    }
+
+    public void mentoringApply(User user) {
+        CommonRequest commonRequest = mapToSeniorApplyMessage(user);
+        sendMessage(commonRequest);
+    }
+
+    private void sendMessage(CommonRequest commonRequest) {
+        BizppurioTokenResponse tokenResponse = bizppurioAuth.getAuth();
         webClient.post()
                 .uri(messageUrl)
                 .headers(h -> h.setContentType(APPLICATION_JSON))
