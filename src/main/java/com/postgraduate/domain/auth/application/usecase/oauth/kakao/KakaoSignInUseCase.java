@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 public class KakaoSignInUseCase implements SignInUseCase {
     private final KakaoAccessTokenUseCase kakaoTokenUseCase;
     private final UserGetService userGetService;

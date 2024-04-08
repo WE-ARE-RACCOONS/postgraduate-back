@@ -23,7 +23,7 @@ import static com.postgraduate.domain.mentoring.application.mapper.MentoringMapp
 import static java.time.Duration.between;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class MentoringSeniorInfoUseCase {
     private final MentoringGetService mentoringGetService;

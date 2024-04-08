@@ -27,6 +27,7 @@ public class AdminSalaryUseCase {
     private final SalaryUpdateService salaryUpdateService;
     private final EncryptorUtils encryptorUtils;
 
+    @Transactional(readOnly = true)
     public List<SalaryInfoWithOutId> salaryInfos() {
         List<Salary> all = salaryGetService.findAll();
         return all.stream()
@@ -40,6 +41,7 @@ public class AdminSalaryUseCase {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public SalaryInfoWithOutId seniorSalary(Long seniorId) {
         Senior senior = seniorGetService.bySeniorId(seniorId);
         Salary salary = salaryGetService.bySenior(senior);
@@ -55,6 +57,7 @@ public class AdminSalaryUseCase {
         salaryUpdateService.updateDone(salary);
     }
 
+    @Transactional(readOnly = true)
     public List<UnSettledSalaryInfo> unSettledSalaryInfo() {
         List<Salary> salaries = salaryGetService.allByNotDone();
         return salaries.stream()

@@ -33,7 +33,7 @@ import static java.util.Optional.ofNullable;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 public class SeniorMyPageUseCase {
     private final SeniorGetService seniorGetService;
     private final AvailableGetService availableGetService;
@@ -51,7 +51,7 @@ public class SeniorMyPageUseCase {
     public SeniorMyPageProfileResponse getSeniorMyPageProfile(User user) {
         Senior senior = seniorGetService.byUser(user);
         if (senior.getProfile() == null) {
-            throw new NoneProfileException();
+            return mapToMyPageProfile(senior);
         }
         List<Available> availables = availableGetService.byMine(senior);
         List<AvailableTimeResponse> times = availables.stream()

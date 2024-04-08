@@ -61,6 +61,7 @@ public class SeniorInfoUseCase {
         return mapToSeniorDetail(senior, times, isMine);
     }
 
+    @Transactional(readOnly = true)
     public AllSeniorSearchResponse getSearchSenior(String search, Integer page, String sort) {
         Page<Senior> seniors = seniorGetService.bySearch(search, page, sort);
         List<SeniorSearchResponse> selectSeniors = seniors.stream()
@@ -70,6 +71,7 @@ public class SeniorInfoUseCase {
         return new AllSeniorSearchResponse(selectSeniors, totalElements);
     }
 
+    @Transactional(readOnly = true)
     public AllSeniorSearchResponse getFieldSenior(String field, String postgradu, Integer page) {
         Page<Senior> seniors = seniorGetService.byField(field, postgradu, page);
         List<SeniorSearchResponse> selectSeniors = seniors.stream()
@@ -79,11 +81,13 @@ public class SeniorInfoUseCase {
         return new AllSeniorSearchResponse(selectSeniors, totalElements);
     }
 
+    @Transactional(readOnly = true)
     public SeniorProfileResponse getSeniorProfile(User user, Long seniorId) {
         Senior senior = seniorGetService.bySeniorIdWithCertification(seniorId);
         return mapToSeniorProfile(user, senior);
     }
 
+    @Transactional(readOnly = true)
     public AvailableTimesResponse getSeniorTimes(Long seniorId) {
         Senior senior = seniorGetService.bySeniorIdWithCertification(seniorId);
         List<Available> availables = availableGetService.bySenior(senior);
@@ -93,6 +97,7 @@ public class SeniorInfoUseCase {
         return new AvailableTimesResponse(senior.getUser().getNickName(), times);
     }
 
+    @Transactional(readOnly = true)
     public AllSeniorIdResponse getAllSeniorId() {
         List<Senior> seniors = seniorGetService.allSeniorId();
         List<Long> seniorIds = seniors.stream()

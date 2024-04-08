@@ -20,6 +20,7 @@ public class AdminUserUseCase {
     private final WishGetService wishGetService;
     private final WishUpdateService wishUpdateService;
 
+    @Transactional(readOnly = true)
     public List<UserInfo> userInfos() {
         List<Wish> all = wishGetService.all();
         return all.stream()
@@ -27,6 +28,7 @@ public class AdminUserUseCase {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public WishResponse wishInfo(Long userId) {
         Wish wish = wishGetService.byUserId(userId);
         return mapToWishResponse(wish);

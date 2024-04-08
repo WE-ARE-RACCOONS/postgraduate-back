@@ -37,6 +37,7 @@ public class AdminMentoringUseCase {
     private final SalaryGetService salaryGetService;
     private final SalaryUpdateService salaryUpdateService;
 
+    @Transactional(readOnly = true)
     public MentoringManageResponse seniorMentorings(Long seniorId) {
         Senior senior = seniorGetService.bySeniorId(seniorId);
         List<Mentoring> mentorings = mentoringGetService.bySeniorId(seniorId);
@@ -47,6 +48,7 @@ public class AdminMentoringUseCase {
         return new MentoringManageResponse(mentoringInfos, seniorInfo);
     }
 
+    @Transactional(readOnly = true)
     public MentoringManageResponse userMentoringInfos(Long userId) {
         User user = userGetService.byUserId(userId);
         List<Mentoring> mentorings = mentoringGetService.byUserId(userId);
