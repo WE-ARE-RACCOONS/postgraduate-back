@@ -16,10 +16,10 @@ public class BizppurioMapper {
     private static String id;
     @Value("${bizppurio.number}")
     private static String number;
-    @Value("${bizppurio.template.senior_fin}")
-    private static String seniorFin;
-    @Value("${bizppurio.template.junior_fin}")
-    private static String juniorFin;
+    @Value("${bizppurio.template.senior_mentoring_fin}")
+    private static String seniorMentoringFinish;
+    @Value("${bizppurio.template.jnior_mentoring_fin}")
+    private static String juniorMentoringFinish;
     @Value("${bizppurio.template.certification_approve}")
     private static String certificationApprove;
     @Value("${bizppurio.template.certification_denied}")
@@ -109,6 +109,20 @@ public class BizppurioMapper {
         WebLinkButton certification = new WebLinkButton("대학원 재인증하기", "WL", "https://www.kimseonbae.com/signup/select/common-info/auth");
         WebLinkButton[] buttons = {certification};
         CertificationDeniedMessage messageBody = new CertificationDeniedMessage(message, senderKey, certificationDenied, buttons);
+        return createCommonRequest(messageBody, user);
+    }
+
+    public static CommonRequest mapToMentoringFin(User user) {
+        String message = (
+                user.getNickName() + " 선배님! 후배님과의 멘토링은 어떠셨나요?"
+                        + "\n\n"
+                        + "선배님도 만족하셨길 바라요! (미소)"
+                        + "\n\n"
+                        + "멘토링이 잘 진행되었다면, 오픈채팅방을 통해 후배님이 ‘대학원 김선배 - 내멘토링’에서 ‘멘토링 완료 확정하기’ 버튼을 눌러 주시길 유도 부탁드려요! (최고)"
+                        + "\n\n"
+                        + "멘토링 확정은 멘토링이 정상적으로 진행되었는지 확인하기 위함이며, 멘토링 완료 확정이 진행되지 않을시 정산이 지연될 수 있는점 양해 부탁드려요! (미소)"
+                );
+        SeniorFinishMessage messageBody = new SeniorFinishMessage(message, senderKey, seniorMentoringFinish);
         return createCommonRequest(messageBody, user);
     }
 

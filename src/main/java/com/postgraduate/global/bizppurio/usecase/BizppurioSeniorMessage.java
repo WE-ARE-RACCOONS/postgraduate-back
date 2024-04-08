@@ -24,7 +24,7 @@ public class BizppurioSeniorMessage {
     @Value("${bizppurio.message}")
     private String messageUrl;
 
-    public void signUpMessage(User user) {
+    public void signUp(User user) {
         CommonRequest commonRequest = mapToSeniorSignUpMessage(user);
         sendMessage(commonRequest);
     }
@@ -48,6 +48,11 @@ public class BizppurioSeniorMessage {
 
     public void certificationDenied(User user) {
         CommonRequest commonRequest = mapToCertificationDenied(user);
+        sendMessage(commonRequest);
+    }
+
+    public void mentoringFinish(User user) {
+        CommonRequest commonRequest = mapToMentoringFin(user);
         sendMessage(commonRequest);
     }
 
