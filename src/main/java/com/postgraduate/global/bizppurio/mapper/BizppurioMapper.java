@@ -24,8 +24,8 @@ public class BizppurioMapper {
     private static String certificationApprove;
     @Value("${bizppurio.template.certification_denied}")
     private static String certificationDenied;
-    @Value("${bizppurio.template.mentoring_refuse}")
-    private static String mentoringRefuse;
+    @Value("${bizppurio.template.junior_mentoring_refuse}")
+    private static String juniorMentoringRefuse;
     @Value("${bizppurio.template.senior_mentoring_accept}")
     private static String seniorMentoringAccept;
     @Value("${bizppurio.template.junior_mentoring_accept}")
@@ -112,7 +112,7 @@ public class BizppurioMapper {
         return createCommonRequest(messageBody, user);
     }
 
-    public static CommonRequest mapToSeniorMentoringFin(User user) {
+    public static CommonRequest mapToSeniorFinish(User user) {
         String message = (
                 user.getNickName() + " 선배님! 후배님과의 멘토링은 어떠셨나요?"
                         + "\n\n"
@@ -121,7 +121,7 @@ public class BizppurioMapper {
                         + "멘토링이 잘 진행되었다면, 오픈채팅방을 통해 후배님이 ‘대학원 김선배 - 내멘토링’에서 ‘멘토링 완료 확정하기’ 버튼을 눌러 주시길 유도 부탁드려요! (최고)"
                         + "\n\n"
                         + "멘토링 확정은 멘토링이 정상적으로 진행되었는지 확인하기 위함이며, 멘토링 완료 확정이 진행되지 않을시 정산이 지연될 수 있는점 양해 부탁드려요! (미소)"
-                );
+        );
         SeniorFinishMessage messageBody = new SeniorFinishMessage(message, senderKey, seniorMentoringFinish);
         return createCommonRequest(messageBody, user);
     }
@@ -135,6 +135,34 @@ public class BizppurioMapper {
                         + "선배님이 다음날 오후 11시 59분까지 멘토링을 수락해주시지 않으면 멘토링이 자동 취소 및 환불되니 유의해주세요! (미소)"
         );
         JuniorApplyMessage messageBody = new JuniorApplyMessage(message, senderKey, juniorMentoringApply);
+        return createCommonRequest(messageBody, user);
+    }
+
+    public static CommonRequest mapToJuniorAcceptMessage(User user, String link, String time) {
+        String message = (
+                user.getNickName() + " 님! 선배님이 멘토링을 수락하셨어요!"
+                        + "\n\n"
+                        + time + " 일정으로 멘토링이 수락되었답니다! 멘토링을 통해 많은 걸 얻어 가실 수 있길 바랄게요!"
+                        + "\n\n"
+                        + "멘토링 시간이 되면, 아래 오픈채팅방으로 접속 후, 멘토링 시간에 선배님이 생성하신 비대면 링크로 접속해 진행하시면 됩니다. (하트)"
+                        + "\n"
+                        + link
+                        + "\n\n"
+                        + "멘토링 시간은 꼭 지켜주세요! (해)"
+        );
+        JuniorAcceptMessage messageBody = new JuniorAcceptMessage(message, senderKey, juniorMentoringAccept);
+        return createCommonRequest(messageBody, user);
+    }
+
+    public static CommonRequest mapToJuniorRefuseMessage(User user) {
+        String message = (
+                user.getNickName() + " 님! 신청하신 멘토링이 선배님의 개인사정으로 인해 진행이 어렵게 되었어요. (눈물)"
+                        + "\n\n" +
+                        "신청하신 멘토링은 취소 및 환불 처리가 진행되며 카드사별 영업일 기준 1-3일 소요됩니다!"
+                        + "\n\n" +
+                        "혹시 멘토링을 진행하고 싶었던 다른 선배님이 있다면 지금 신청해보세요!"
+        );
+        JuniorRefuseMessage messageBody = new JuniorRefuseMessage(message, senderKey, juniorMentoringRefuse);
         return createCommonRequest(messageBody, user);
     }
 

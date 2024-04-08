@@ -17,42 +17,21 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 @RequiredArgsConstructor
 @Component
 @Slf4j
-public class BizppurioSeniorMessage {
+public class BizppurioJuniorMessage {
     private final WebClient webClient;
     private final BizppurioAuth bizppurioAuth;
 
     @Value("${bizppurio.message}")
     private String messageUrl;
 
-    public void signUp(User user) {
-        CommonRequest commonRequest = mapToSeniorSignUpMessage(user);
-        sendMessage(commonRequest);
-    }
-
     public void mentoringApply(User user) {
-        CommonRequest commonRequest = mapToSeniorApplyMessage(user);
+        CommonRequest commonRequest = mapToJuniorApplyMessage(user);
         sendMessage(commonRequest);
     }
 
-    public void mentoringAccept(Senior senior, String time) {
-        User user = senior.getUser();
+    public void mentoringAccept(User user, Senior senior, String time) {
         String chatLink = senior.getProfile().getChatLink();
-        CommonRequest commonRequest = mapToSeniorAcceptMessage(user, chatLink, time);
-        sendMessage(commonRequest);
-    }
-
-    public void certificationApprove(User user) {
-        CommonRequest commonRequest = mapToCertificationApprove(user);
-        sendMessage(commonRequest);
-    }
-
-    public void certificationDenied(User user) {
-        CommonRequest commonRequest = mapToCertificationDenied(user);
-        sendMessage(commonRequest);
-    }
-
-    public void mentoringFinish(User user) {
-        CommonRequest commonRequest = mapToSeniorFinish(user);
+        CommonRequest commonRequest = mapToJuniorAcceptMessage(user, chatLink, time);
         sendMessage(commonRequest);
     }
 
