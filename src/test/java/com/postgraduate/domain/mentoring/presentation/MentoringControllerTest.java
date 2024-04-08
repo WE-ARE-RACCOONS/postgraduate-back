@@ -353,10 +353,10 @@ class MentoringControllerTest extends IntegrationTest {
     @Test
     @DisplayName("대학원생이 멘토링을 수락한다.")
     void updateSeniorMentoringExpected() throws Exception {
-        Mentoring mentoring = new Mentoring(0L, user, senior, payment, null, "topic", "question", "date1,date2,date3", 40, Status.WAITING, now(), now());
+        Mentoring mentoring = new Mentoring(0L, user, senior, payment, null, "topic", "question", "2024-04-18-18-00,2024-04-18-18-00,2024-04-18-18-00", 40, Status.WAITING, now(), now());
         mentoringRepository.save(mentoring);
 
-        String request = objectMapper.writeValueAsString(new MentoringDateRequest("date1"));
+        String request = objectMapper.writeValueAsString(new MentoringDateRequest("2024-04-18-18-00"));
         mvc.perform(patch("/mentoring/senior/me/{mentoringId}/expected", mentoring.getMentoringId())
                         .header(AUTHORIZATION, BEARER + seniorAccessToken)
                         .content(request)

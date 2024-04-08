@@ -25,6 +25,8 @@ import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.global.bizppurio.usecase.BizppurioJuniorMessage;
+import com.postgraduate.global.bizppurio.usecase.BizppurioSeniorMessage;
 import com.postgraduate.global.slack.SlackErrorMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -73,6 +75,10 @@ class MentoringManageUseCaseTest {
     private PaymentManageUseCase paymentManageUseCase;
     @Mock
     private SlackErrorMessage slackErrorMessage;
+    @Mock
+    private BizppurioSeniorMessage bizppurioSeniorMessage;
+    @Mock
+    private BizppurioJuniorMessage bizppurioJuniorMessage;
     @Mock
     private MentoringApplyingUseCase mentoringApplyingUseCase;
     @InjectMocks

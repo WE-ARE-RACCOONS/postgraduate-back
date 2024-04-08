@@ -17,6 +17,8 @@ import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.global.bizppurio.usecase.BizppurioJuniorMessage;
+import com.postgraduate.global.bizppurio.usecase.BizppurioSeniorMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -51,6 +53,10 @@ class MentoringApplyingUseCaseTest {
     private MentoringSaveService mentoringSaveService;
     @Mock
     private AccountGetService accountGetService;
+    @Mock
+    private BizppurioSeniorMessage bizppurioSeniorMessage;
+    @Mock
+    private BizppurioJuniorMessage bizppurioJuniorMessage;
     @InjectMocks
     private MentoringApplyingUseCase mentoringApplyingUseCase;
 
