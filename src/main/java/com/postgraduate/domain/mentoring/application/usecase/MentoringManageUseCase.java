@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.postgraduate.domain.refuse.application.mapper.RefuseMapper.mapToRefuse;
+import static java.time.LocalDateTime.now;
 
 @Service
 @Slf4j
@@ -114,7 +115,7 @@ public class MentoringManageUseCase {
 
     @Scheduled(cron = "0 59 23 * * *", zone = "Asia/Seoul")
     public void updateAutoCancel() {
-        LocalDateTime now = LocalDateTime.now()
+        LocalDateTime now = now()
                 .toLocalDate()
                 .atStartOfDay();
         List<Mentoring> waitingMentorings = mentoringGetService.byWaitingAndCreatedAt(now);
@@ -135,6 +136,24 @@ public class MentoringManageUseCase {
                 })
                 .forEach(mentoringRenewalUseCase::updateDoneWithAuto);
     }
+
+//    @Scheduled(fixedDelay = 1000*60*10)
+//    @Transactional
+//    public void sendFinishMessage() {
+//        List<Mentoring> expectedMentorings = mentoringGetService.byExpected();
+//        expectedMentorings.stream()
+//                .filter(mentoring -> {
+//                    LocalDateTime mentoringDate = DateUtils.stringToLocalDateTime(mentoring.getDate());
+//                    LocalDateTime finishTime = mentoringDate.plusMinutes(mentoring.getTerm());
+//                    if (now().isAfter(finishTime))
+//                        return true;
+//                    return false;
+//                })
+//                .forEach(mentoring -> {
+//                    bizppurioJuniorMessage.mentoringFinish(mentoring.getUser());
+//                    bizppurioSeniorMessage.mentoringFinish(mentoring.getSenior().getUser());
+//                });
+//    }
 
     private String mentoringDateToTime(String date) {
         String[] split = date.split("-");
