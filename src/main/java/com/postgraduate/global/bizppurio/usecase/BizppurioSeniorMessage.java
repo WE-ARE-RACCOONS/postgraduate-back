@@ -1,6 +1,5 @@
 package com.postgraduate.global.bizppurio.usecase;
 
-import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.global.bizppurio.dto.req.CommonRequest;
@@ -44,6 +43,11 @@ public class BizppurioSeniorMessage {
 
     public void certificationApprove(User user) {
         CommonRequest commonRequest = mapToCertificationApprove(user);
+        sendMessage(commonRequest);
+    }
+
+    public void certificationDenied(User user) {
+        CommonRequest commonRequest = mapToCertificationDenied(user);
         sendMessage(commonRequest);
     }
 

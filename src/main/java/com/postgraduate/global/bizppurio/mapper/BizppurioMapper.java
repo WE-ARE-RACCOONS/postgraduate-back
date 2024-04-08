@@ -75,8 +75,8 @@ public class BizppurioMapper {
     public static CommonRequest mapToSeniorAcceptMessage(User user, String link, String time) {
         String message = (
                 user.getNickName() + " 선배님! 후배와의 멘토링이 성사되었습니다. (축하)"
-                        + "\n\n" +
-                        time + " 에 진행되는 멘토링을 위해 아래 카카오톡 오픈 채팅방으로 참여해주세요! (해) "
+                        + "\n\n"
+                        + time + " 에 진행되는 멘토링을 위해 아래 카카오톡 오픈 채팅방으로 참여해주세요! (해)"
                         + "\n"
                         + link
                         + "\n\n"
@@ -88,13 +88,27 @@ public class BizppurioMapper {
 
     public static CommonRequest mapToCertificationApprove(User user) {
         String message = (
-                user.getNickName() + " 선배님! 대학원 인증 신청이 승인되었어요! "
+                user.getNickName() + " 선배님! 대학원 인증 신청이 승인되었어요!"
                         + "\n\n"
                         + "이제 프로필 작성만 완료되면, 선배님의 멘토링 신청률이 up!up! (축하)"
         );
         WebLinkButton profile = new WebLinkButton("프로필 작성하기", "WL", "https://www.kimseonbae.com/senior/edit-profile");
         WebLinkButton[] buttons = {profile};
         CertificationApproveMessage messageBody = new CertificationApproveMessage(message, senderKey, certificationApprove, buttons);
+        return createCommonRequest(messageBody, user);
+    }
+
+    public static CommonRequest mapToCertificationDenied(User user) {
+        String message = (
+                user.getNickName() + " 선배님! 대학원 인증 신청이 반려되었어요. (눈물)"
+                        + "\n\n"
+                        + "첨부된 사진이 ‘대학원 학생증, 대학원 합격증, 연구실 멤버 확인 캡쳐본’ 중 하나가 맞는지 확인해주세요! 또한 첨부 서류가 충분히 식별 가능한 상태인지도 확인 부탁드려요! (최고)"
+                        + "\n\n"
+                        + "재신청 해주시면 빠르게 재심사 하도록 하겠습니다!"
+        );
+        WebLinkButton certification = new WebLinkButton("대학원 재인증하기", "WL", "https://www.kimseonbae.com/signup/select/common-info/auth");
+        WebLinkButton[] buttons = {certification};
+        CertificationDeniedMessage messageBody = new CertificationDeniedMessage(message, senderKey, certificationDenied, buttons);
         return createCommonRequest(messageBody, user);
     }
 
