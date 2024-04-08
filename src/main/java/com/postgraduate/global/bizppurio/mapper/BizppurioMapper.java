@@ -112,7 +112,7 @@ public class BizppurioMapper {
         return createCommonRequest(messageBody, user);
     }
 
-    public static CommonRequest mapToMentoringFin(User user) {
+    public static CommonRequest mapToSeniorMentoringFin(User user) {
         String message = (
                 user.getNickName() + " 선배님! 후배님과의 멘토링은 어떠셨나요?"
                         + "\n\n"
@@ -123,6 +123,18 @@ public class BizppurioMapper {
                         + "멘토링 확정은 멘토링이 정상적으로 진행되었는지 확인하기 위함이며, 멘토링 완료 확정이 진행되지 않을시 정산이 지연될 수 있는점 양해 부탁드려요! (미소)"
                 );
         SeniorFinishMessage messageBody = new SeniorFinishMessage(message, senderKey, seniorMentoringFinish);
+        return createCommonRequest(messageBody, user);
+    }
+
+    public static CommonRequest mapToJuniorApplyMessage(User user) {
+        String message = (
+                user.getNickName() + " 님! 멘토링 결제 및 신청이 완료되었습니다!"
+                        + "\n\n"
+                        + user.getNickName() + " 님이 기다리시지 않게, 바로 선배님께 신청서를 전달할게요!"
+                        + "\n\n"
+                        + "선배님이 다음날 오후 11시 59분까지 멘토링을 수락해주시지 않으면 멘토링이 자동 취소 및 환불되니 유의해주세요! (미소)"
+        );
+        JuniorApplyMessage messageBody = new JuniorApplyMessage(message, senderKey, juniorMentoringApply);
         return createCommonRequest(messageBody, user);
     }
 

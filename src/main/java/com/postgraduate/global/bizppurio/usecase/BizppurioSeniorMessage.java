@@ -52,7 +52,7 @@ public class BizppurioSeniorMessage {
     }
 
     public void mentoringFinish(User user) {
-        CommonRequest commonRequest = mapToMentoringFin(user);
+        CommonRequest commonRequest = mapToSeniorMentoringFin(user);
         sendMessage(commonRequest);
     }
 
