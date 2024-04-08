@@ -137,6 +137,22 @@ public class SeniorMapper {
         );
     }
 
+    public static SeniorMyPageProfileResponse mapToMyPageProfile(Senior senior) {
+        Info info = senior.getInfo();
+        String[] keyword = info.getKeyword().split(",");
+        String[] field = info.getField().split(",");
+        return new SeniorMyPageProfileResponse(
+                info.getLab(),
+                keyword,
+                null,
+                null,
+                null,
+                field,
+                null,
+                null
+        );
+    }
+
     public static SeniorMyPageUserAccountResponse mapToMyPageUserAccount(Senior senior, Account account, String accountNumber) {
         User user = senior.getUser();
         return new SeniorMyPageUserAccountResponse(
