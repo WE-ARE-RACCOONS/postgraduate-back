@@ -21,6 +21,8 @@ import com.postgraduate.domain.salary.domain.service.SalaryUpdateService;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.global.bizppurio.usecase.BizppurioJuniorMessage;
+import com.postgraduate.global.bizppurio.usecase.BizppurioSeniorMessage;
 import com.postgraduate.global.slack.SlackErrorMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +35,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.postgraduate.domain.refuse.application.mapper.RefuseMapper.mapToRefuse;
+import static java.time.LocalDateTime.now;
 
 @Service
 @Slf4j
@@ -49,6 +52,8 @@ public class MentoringManageUseCase {
     private final PaymentManageUseCase paymentManageUseCase;
     private final SlackErrorMessage slackErrorMessage;
     private final MentoringApplyingUseCase mentoringApplyingUseCase;
+    private final BizppurioJuniorMessage bizppurioJuniorMessage;
+    private final BizppurioSeniorMessage bizppurioSeniorMessage;
 
     public ApplyingResponse applyMentoring(User user, MentoringApplyRequest request) {
         try {
@@ -92,6 +97,7 @@ public class MentoringManageUseCase {
         Payment payment = mentoring.getPayment();
         paymentManageUseCase.refundPayBySenior(senior, payment.getOrderId());
         mentoringUpdateService.updateRefuse(mentoring);
+        bizppurioJuniorMessage.mentoringRefuse(mentoring.getUser());
     }
 
 
@@ -101,17 +107,19 @@ public class MentoringManageUseCase {
         Mentoring mentoring = mentoringGetService.byIdAndSeniorAndWaiting(mentoringId, senior);
         mentoringUpdateService.updateExpected(mentoring, dateRequest.date());
         Optional<Account> account = accountGetService.bySenior(senior);
+        String time = mentoringDateToTime(dateRequest.date());
+        bizppurioSeniorMessage.mentoringAccept(senior, time);
+        bizppurioJuniorMessage.mentoringAccept(mentoring.getUser(), senior, time);
         return account.isPresent();
     }
 
     @Scheduled(cron = "0 59 23 * * *", zone = "Asia/Seoul")
     public void updateAutoCancel() {
-        LocalDateTime now = LocalDateTime.now()
+        LocalDateTime now = now()
                 .toLocalDate()
                 .atStartOfDay();
         List<Mentoring> waitingMentorings = mentoringGetService.byWaitingAndCreatedAt(now);
         waitingMentorings.forEach(mentoringRenewalUseCase::updateCancelWithAuto);
-        //TODO : 알림 보내거나 나머지 작업
     }
 
     @Scheduled(cron = "0 59 23 * * *", zone = "Asia/Seoul")
@@ -127,6 +135,28 @@ public class MentoringManageUseCase {
                     }
                 })
                 .forEach(mentoringRenewalUseCase::updateDoneWithAuto);
-        //TODO : 알림 보내거나 나머지 작업
+    }
+
+//    @Scheduled(fixedDelay = 1000*60*10)
+//    @Transactional
+//    public void sendFinishMessage() {
+//        List<Mentoring> expectedMentorings = mentoringGetService.byExpected();
+//        expectedMentorings.stream()
+//                .filter(mentoring -> {
+//                    LocalDateTime mentoringDate = DateUtils.stringToLocalDateTime(mentoring.getDate());
+//                    LocalDateTime finishTime = mentoringDate.plusMinutes(mentoring.getTerm());
+//                    if (now().isAfter(finishTime))
+//                        return true;
+//                    return false;
+//                })
+//                .forEach(mentoring -> {
+//                    bizppurioJuniorMessage.mentoringFinish(mentoring.getUser());
+//                    bizppurioSeniorMessage.mentoringFinish(mentoring.getSenior().getUser());
+//                });
+//    }
+
+    private String mentoringDateToTime(String date) {
+        String[] split = date.split("-");
+        return split[1] + "월 " + split[2] + "일 " + split[3] + "시 " + split[4] + "분";
     }
 }

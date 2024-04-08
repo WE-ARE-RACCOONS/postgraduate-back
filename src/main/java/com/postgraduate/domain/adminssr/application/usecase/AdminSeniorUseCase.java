@@ -10,6 +10,7 @@ import com.postgraduate.domain.senior.domain.service.SeniorUpdateService;
 import com.postgraduate.domain.senior.exception.SeniorCertificationException;
 import com.postgraduate.domain.wish.domain.entity.Wish;
 import com.postgraduate.domain.wish.domain.service.WishGetService;
+import com.postgraduate.global.bizppurio.usecase.BizppurioSeniorMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +30,7 @@ public class AdminSeniorUseCase {
     private final SeniorUpdateService seniorUpdateService;
     private final SalaryGetService salaryGetService;
     private final WishGetService wishGetService;
+    private final BizppurioSeniorMessage bizppurioSeniorMessage;
 
     public List<SeniorInfo> allSenior() {
         List<Senior> seniors = seniorGetService.allSenior();
@@ -52,11 +54,13 @@ public class AdminSeniorUseCase {
     public void updateNotApprove(Long seniorId) {
         Senior senior = seniorGetService.bySeniorId(seniorId);
         seniorUpdateService.certificationUpdateNotApprove(senior);
+        bizppurioSeniorMessage.certificationDenied(senior.getUser());
     }
 
     public void updateApprove(Long seniorId) {
         Senior senior = seniorGetService.bySeniorId(seniorId);
         seniorUpdateService.certificationUpdateApprove(senior);
+        bizppurioSeniorMessage.certificationApprove(senior.getUser());
     }
 
 }
