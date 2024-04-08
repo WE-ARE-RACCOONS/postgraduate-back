@@ -13,6 +13,8 @@ import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.payment.domain.service.PaymentGetService;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.global.bizppurio.usecase.BizppurioJuniorMessage;
+import com.postgraduate.global.bizppurio.usecase.BizppurioSeniorMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +29,8 @@ public class MentoringApplyingUseCase {
     private final MentoringGetService mentoringGetService;
     private final MentoringSaveService mentoringSaveService;
     private final AccountGetService accountGetService;
+    private final BizppurioSeniorMessage bizppurioSeniorMessage;
+    private final BizppurioJuniorMessage bizppurioJuniorMessage;
 
     public ApplyingResponse applyMentoringWithPayment(User user, MentoringApplyRequest request) {
         Payment payment = paymentGetService.byUserAndOrderId(user, request.orderId());
@@ -38,6 +42,8 @@ public class MentoringApplyingUseCase {
         Mentoring mentoring = MentoringMapper.mapToMentoring(user, senior, payment, request);
         mentoringSaveService.save(mentoring);
         Optional<Account> account = accountGetService.bySenior(senior);
+        bizppurioJuniorMessage.mentoringApply(user);
+        bizppurioSeniorMessage.mentoringApply(senior.getUser());
         return new ApplyingResponse(account.isPresent());
     }
 }

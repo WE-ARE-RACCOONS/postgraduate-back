@@ -1,6 +1,5 @@
 package com.postgraduate.global.bizppurio.usecase;
 
-import com.postgraduate.domain.auth.exception.KakaoCodeException;
 import com.postgraduate.global.bizppurio.dto.res.BizppurioTokenResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,18 +24,14 @@ public class BizppurioAuth {
     private String bizzpurioPw;
 
     public BizppurioTokenResponse getAuth() {
-        try {
-            String auth = bizzpurioId + ":" + bizzpurioPw;
-            byte[] encode = getEncoder().encode(auth.getBytes());
-            return webClient.post()
-                    .uri(bizzppurioToken)
-                    .headers(h -> h.setContentType(APPLICATION_JSON))
-                    .headers(h -> h.setBasicAuth(Arrays.toString(encode)))
-                    .retrieve()
-                    .bodyToMono(BizppurioTokenResponse.class)
-                    .block();
-        } catch (Exception ex) {
-            throw new KakaoCodeException();
-        }
+        String auth = bizzpurioId + ":" + bizzpurioPw;
+        byte[] encode = getEncoder().encode(auth.getBytes());
+        return webClient.post()
+                .uri(bizzppurioToken)
+                .headers(h -> h.setContentType(APPLICATION_JSON))
+                .headers(h -> h.setBasicAuth(Arrays.toString(encode)))
+                .retrieve()
+                .bodyToMono(BizppurioTokenResponse.class)
+                .block();
     }
 }

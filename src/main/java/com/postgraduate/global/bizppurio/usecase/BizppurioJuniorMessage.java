@@ -46,20 +46,26 @@ public class BizppurioJuniorMessage {
     }
 
     private void sendMessage(CommonRequest commonRequest) {
-        BizppurioTokenResponse tokenResponse = bizppurioAuth.getAuth();
-        webClient.post()
-                .uri(messageUrl)
-                .headers(h -> h.setContentType(APPLICATION_JSON))
-                .headers(h -> h.setBearerAuth(tokenResponse.accesstoken()))
-                .bodyValue(commonRequest)
-                .retrieve()
-                .bodyToMono(MessageResponse.class)
-                .subscribe(response -> check(response));
+        try {
+            BizppurioTokenResponse tokenResponse = bizppurioAuth.getAuth();
+            webClient.post()
+                    .uri(messageUrl)
+                    .headers(h -> h.setContentType(APPLICATION_JSON))
+                    .headers(h -> h.setBearerAuth(tokenResponse.accesstoken()))
+                    .bodyValue(commonRequest)
+                    .retrieve()
+                    .bodyToMono(MessageResponse.class)
+                    .subscribe(this::check);
+        } catch (Exception ex) {
+            log.error("알림톡 전송 예외 발생");
+        }
     }
 
     private void check(MessageResponse response) {
-        if (response.code() != 1000)
-            throw new IllegalArgumentException();
+        if (response.code() != 1000) {
+            log.error("전송실패 errorCode : {} errorMessage : {}", response.code(), response.description());
+            return;
+        }
         log.info("알림톡 전송에 성공하였습니다.");
     }
 }
