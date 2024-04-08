@@ -1,4 +1,4 @@
-package com.postgraduate.global.bizppurio;
+package com.postgraduate.global.bizppurio.usecase;
 
 import com.postgraduate.domain.auth.exception.KakaoCodeException;
 import com.postgraduate.global.bizppurio.dto.res.BizppurioTokenResponse;
