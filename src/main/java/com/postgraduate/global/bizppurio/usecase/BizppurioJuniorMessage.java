@@ -35,6 +35,11 @@ public class BizppurioJuniorMessage {
         sendMessage(commonRequest);
     }
 
+    public void mentoringFinish(User user) {
+        CommonRequest commonRequest = mapToJuniorFinish(user);
+        sendMessage(commonRequest);
+    }
+
     private void sendMessage(CommonRequest commonRequest) {
         BizppurioTokenResponse tokenResponse = bizppurioAuth.getAuth();
         webClient.post()

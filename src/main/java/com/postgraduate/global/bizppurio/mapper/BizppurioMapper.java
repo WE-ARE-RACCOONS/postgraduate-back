@@ -166,6 +166,25 @@ public class BizppurioMapper {
         return createCommonRequest(messageBody, user);
     }
 
+    public static CommonRequest mapToJuniorFinish(User user) {
+        String message = (
+                user.getNickName() + " 님! 멘토링은 만족스러우셨을까요?"
+                        + "\n\n" +
+                        "멘토링을 잘 진행하셨다면,"
+                        + "\n"
+                        +"실제 멘토링이 진행되었는지 확인을 위해 아래 버튼을 누른 후 웹사이트에서 ‘멘토링 완료 확정하기’를 눌러주세요! (음표)"
+                        + "\n\n"
+                        + "혹시 멘토링 시간이 달라졌거나, 멘토링을 진행하지 못한 경우, 고객센터를 통해 꼭 알려주세요! (콜)"
+                        + "\n\n"
+                        + "별도의 문의가 없다면, 3일 후 멘토링이 자동 확정되며 선배님께 보수비가 정산됩니다!"
+        );
+        WebLinkButton mentoringFinish = new WebLinkButton("진행 확정하러가기", "WL", "https://www.kimseonbae.com/junior/mentoring");
+        WebLinkButton[] buttons = {mentoringFinish};
+
+        JuniorFinishMessage messageBody = new JuniorFinishMessage(message, senderKey, juniorMentoringFinish, buttons);
+        return createCommonRequest(messageBody, user);
+    }
+
     private static CommonRequest createCommonRequest(Message messageBody, User user) {
         String refKey = UUID.randomUUID().toString();
         ContentRequest contentRequest = new ContentRequest(messageBody);
