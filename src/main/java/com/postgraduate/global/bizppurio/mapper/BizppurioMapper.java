@@ -3,10 +3,7 @@ package com.postgraduate.global.bizppurio.mapper;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.global.bizppurio.dto.req.CommonRequest;
 import com.postgraduate.global.bizppurio.dto.req.ContentRequest;
-import com.postgraduate.global.bizppurio.dto.req.content.Message;
-import com.postgraduate.global.bizppurio.dto.req.content.SeniorAcceptMessage;
-import com.postgraduate.global.bizppurio.dto.req.content.SeniorApplyMessage;
-import com.postgraduate.global.bizppurio.dto.req.content.SeniorSingUpMessage;
+import com.postgraduate.global.bizppurio.dto.req.content.*;
 import com.postgraduate.global.bizppurio.dto.req.content.button.WebLinkButton;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -56,7 +53,7 @@ public class BizppurioMapper {
         );
 
         WebLinkButton certification = new WebLinkButton("대학원 인증하기", "WL", "https://www.kimseonbae.com/signup/select/common-info/auth");
-        WebLinkButton profile = new WebLinkButton("프로필 작성하기", "WL", "https://www.kimseonbae.com/signup/select/common-info/auth");
+        WebLinkButton profile = new WebLinkButton("프로필 작성하기", "WL", "https://www.kimseonbae.com/senior/edit-profile");
         WebLinkButton[] buttons = {certification, profile};
         Message messageBody = new SeniorSingUpMessage(message, senderKey, seniorSignUp, buttons);
         return createCommonRequest(messageBody, user);
@@ -86,6 +83,18 @@ public class BizppurioMapper {
                         + "멘토링 진행 일시에 선배님께서 줌 또는 구글미트를 활용하여 비대면 대화 링크를 열어주시면 됩니다!"
         );
         Message messageBody = new SeniorAcceptMessage(message, senderKey, seniorMentoringAccept);
+        return createCommonRequest(messageBody, user);
+    }
+
+    public static CommonRequest mapToCertificationApprove(User user) {
+        String message = (
+                user.getNickName() + " 선배님! 대학원 인증 신청이 승인되었어요! "
+                        + "\n\n"
+                        + "이제 프로필 작성만 완료되면, 선배님의 멘토링 신청률이 up!up! (축하)"
+        );
+        WebLinkButton profile = new WebLinkButton("프로필 작성하기", "WL", "https://www.kimseonbae.com/senior/edit-profile");
+        WebLinkButton[] buttons = {profile};
+        CertificationApproveMessage messageBody = new CertificationApproveMessage(message, senderKey, certificationApprove, buttons);
         return createCommonRequest(messageBody, user);
     }
 

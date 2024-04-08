@@ -1,5 +1,7 @@
 package com.postgraduate.global.bizppurio.usecase;
 
+import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
+import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.global.bizppurio.dto.req.CommonRequest;
 import com.postgraduate.global.bizppurio.dto.res.BizppurioTokenResponse;
@@ -10,8 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import static com.postgraduate.global.bizppurio.mapper.BizppurioMapper.mapToSeniorApplyMessage;
-import static com.postgraduate.global.bizppurio.mapper.BizppurioMapper.mapToSeniorSignUpMessage;
+import static com.postgraduate.global.bizppurio.mapper.BizppurioMapper.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @RequiredArgsConstructor
@@ -31,6 +32,18 @@ public class BizppurioSeniorMessage {
 
     public void mentoringApply(User user) {
         CommonRequest commonRequest = mapToSeniorApplyMessage(user);
+        sendMessage(commonRequest);
+    }
+
+    public void mentoringAccept(Senior senior, String time) {
+        User user = senior.getUser();
+        String chatLink = senior.getProfile().getChatLink();
+        CommonRequest commonRequest = mapToSeniorAcceptMessage(user, chatLink, time);
+        sendMessage(commonRequest);
+    }
+
+    public void certificationApprove(User user) {
+        CommonRequest commonRequest = mapToCertificationApprove(user);
         sendMessage(commonRequest);
     }
 
