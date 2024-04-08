@@ -162,7 +162,9 @@ public class BizppurioMapper {
                         + "\n\n" +
                         "혹시 멘토링을 진행하고 싶었던 다른 선배님이 있다면 지금 신청해보세요!"
         );
-        JuniorRefuseMessage messageBody = new JuniorRefuseMessage(message, senderKey, juniorMentoringRefuse);
+        WebLinkButton otherSenior = new WebLinkButton("다른 선배 보러기가", "WL", "https://www.kimseonbae.com");
+        WebLinkButton[] buttons = {otherSenior};
+        JuniorRefuseMessage messageBody = new JuniorRefuseMessage(message, senderKey, juniorMentoringRefuse, buttons);
         return createCommonRequest(messageBody, user);
     }
 
