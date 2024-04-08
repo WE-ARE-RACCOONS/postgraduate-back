@@ -33,7 +33,7 @@ import static java.util.Optional.ofNullable;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 public class SeniorMyPageUseCase {
     private final SeniorGetService seniorGetService;
     private final AvailableGetService availableGetService;

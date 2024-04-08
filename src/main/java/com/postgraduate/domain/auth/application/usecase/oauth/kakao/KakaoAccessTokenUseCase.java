@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -18,18 +17,17 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 
 @RequiredArgsConstructor
 @Service
-@Transactional
 @Slf4j
 public class KakaoAccessTokenUseCase {
 
     @Value("${app-id.kakao}")
-    private String APP_ID;
+    private String appId;
     @Value("${kakao.redirect-uri}")
-    private String REDIRECT_URI;
+    private String redirectUrl;
     @Value("${kakao.dev-redirect-uri}")
-    private String DEV_REDIRECT_URI;
+    private String devRedirectUrl;
     @Value("${kakao.authorization-grant-type}")
-    private String AUTHORIZATION_GRANT_TYPE;
+    private String authorizationGrantType;
     private final WebClient webClient;
 
     private static final String KAKAO_TOKEN_URI = "https://kauth.kakao.com/oauth/token";
@@ -71,9 +69,9 @@ public class KakaoAccessTokenUseCase {
 
     private MultiValueMap<String, String> getRequestBody(String code) {
         MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
-        requestBody.add("grant_type", AUTHORIZATION_GRANT_TYPE);
-        requestBody.add("client_id", APP_ID);
-        requestBody.add("redirect_uri", REDIRECT_URI);
+        requestBody.add("grant_type", authorizationGrantType);
+        requestBody.add("client_id", appId);
+        requestBody.add("redirect_uri", redirectUrl);
         requestBody.add("code", code);
         return requestBody;
     }
@@ -94,9 +92,9 @@ public class KakaoAccessTokenUseCase {
 
     private MultiValueMap<String, String> getDevRequestBody(String code) {
         MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
-        requestBody.add("grant_type", AUTHORIZATION_GRANT_TYPE);
-        requestBody.add("client_id", APP_ID);
-        requestBody.add("redirect_uri", DEV_REDIRECT_URI);
+        requestBody.add("grant_type", authorizationGrantType);
+        requestBody.add("client_id", appId);
+        requestBody.add("redirect_uri", devRedirectUrl);
         requestBody.add("code", code);
         return requestBody;
     }

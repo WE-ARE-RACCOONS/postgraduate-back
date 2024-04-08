@@ -32,6 +32,7 @@ public class AdminSeniorUseCase {
     private final WishGetService wishGetService;
     private final BizppurioSeniorMessage bizppurioSeniorMessage;
 
+    @Transactional(readOnly = true)
     public List<SeniorInfo> allSenior() {
         List<Senior> seniors = seniorGetService.allSenior();
         return seniors.stream()
@@ -43,6 +44,7 @@ public class AdminSeniorUseCase {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public CertificationDetailsResponse getCertification(Long seniorId) {
         Senior senior = seniorGetService.bySeniorId(seniorId);
         if (senior.getStatus() == APPROVE)
