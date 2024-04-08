@@ -125,8 +125,11 @@ class SeniorMyPageUseCaseTest {
         given(seniorGetService.byUser(user))
                 .willReturn(nullSenior);
 
-        assertThatThrownBy(() -> seniorMyPageUseCase.getSeniorMyPageProfile(user))
-                .isInstanceOf(NoneProfileException.class);
+        SeniorMyPageProfileResponse myPageProfile = seniorMyPageUseCase.getSeniorMyPageProfile(user);
+        assertThat(myPageProfile.times())
+                .isNull();
+        assertThat(myPageProfile.lab())
+                .isEqualTo(info.getLab());
     }
 
     @Test
