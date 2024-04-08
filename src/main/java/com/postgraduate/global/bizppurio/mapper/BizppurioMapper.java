@@ -4,6 +4,7 @@ import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.global.bizppurio.dto.req.CommonRequest;
 import com.postgraduate.global.bizppurio.dto.req.ContentRequest;
 import com.postgraduate.global.bizppurio.dto.req.content.Message;
+import com.postgraduate.global.bizppurio.dto.req.content.SeniorAcceptMessage;
 import com.postgraduate.global.bizppurio.dto.req.content.SeniorApplyMessage;
 import com.postgraduate.global.bizppurio.dto.req.content.SeniorSingUpMessage;
 import com.postgraduate.global.bizppurio.dto.req.content.button.WebLinkButton;
@@ -28,10 +29,10 @@ public class BizppurioMapper {
     private static String certificationDenied;
     @Value("${bizppurio.template.mentoring_refuse}")
     private static String mentoringRefuse;
-    @Value("${bizppurio.template.senior_mentoring_approve}")
-    private static String seniorMentoringApprove;
-    @Value("${bizppurio.template.junior_mentoring_approve}")
-    private static String juniorMentoringApprove;
+    @Value("${bizppurio.template.senior_mentoring_accept}")
+    private static String seniorMentoringAccept;
+    @Value("${bizppurio.template.junior_mentoring_accept}")
+    private static String juniorMentoringAccept;
     @Value("${bizppurio.template.senior_mentoring_apply}")
     private static String seniorMentoringApply;
     @Value("${bizppurio.template.junior_mentoring_apply}")
@@ -71,6 +72,20 @@ public class BizppurioMapper {
         WebLinkButton mentoringCheck = new WebLinkButton("멘토링 신청 확인하기", "WL", "https://www.kimseonbae.com/senior/mentoring");
         WebLinkButton[] buttons = {mentoringCheck};
         Message messageBody = new SeniorApplyMessage(message, senderKey, seniorMentoringApply, buttons);
+        return createCommonRequest(messageBody, user);
+    }
+
+    public static CommonRequest mapToSeniorAcceptMessage(User user, String link, String time) {
+        String message = (
+                user.getNickName() + " 선배님! 후배와의 멘토링이 성사되었습니다. (축하)"
+                        + "\n\n" +
+                        time + " 에 진행되는 멘토링을 위해 아래 카카오톡 오픈 채팅방으로 참여해주세요! (해) "
+                        + "\n"
+                        + link
+                        + "\n\n"
+                        + "멘토링 진행 일시에 선배님께서 줌 또는 구글미트를 활용하여 비대면 대화 링크를 열어주시면 됩니다!"
+        );
+        Message messageBody = new SeniorAcceptMessage(message, senderKey, seniorMentoringAccept);
         return createCommonRequest(messageBody, user);
     }
 
