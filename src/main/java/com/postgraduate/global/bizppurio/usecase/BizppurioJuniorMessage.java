@@ -3,7 +3,6 @@ package com.postgraduate.global.bizppurio.usecase;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.global.bizppurio.dto.req.CommonRequest;
-import com.postgraduate.global.bizppurio.dto.res.BizppurioTokenResponse;
 import com.postgraduate.global.bizppurio.dto.res.MessageResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,11 +46,11 @@ public class BizppurioJuniorMessage {
 
     private void sendMessage(CommonRequest commonRequest) {
         try {
-            BizppurioTokenResponse tokenResponse = bizppurioAuth.getAuth();
+            String accessToken = bizppurioAuth.getAuth();
             webClient.post()
                     .uri(messageUrl)
                     .headers(h -> h.setContentType(APPLICATION_JSON))
-                    .headers(h -> h.setBearerAuth(tokenResponse.accesstoken()))
+                    .headers(h -> h.setBearerAuth(accessToken))
                     .bodyValue(commonRequest)
                     .retrieve()
                     .bodyToMono(MessageResponse.class)
