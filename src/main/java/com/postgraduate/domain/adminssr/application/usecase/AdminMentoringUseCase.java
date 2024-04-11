@@ -66,7 +66,7 @@ public class AdminMentoringUseCase {
         if (mentoring.getStatus() == DONE) {
             Senior senior = mentoring.getSenior();
             Salary salary = salaryGetService.bySenior(senior);
-            salaryUpdateService.minusTotalAmount(salary);
+            salaryUpdateService.minusTotalAmount(salary, mentoring.calculateForSenior());
         }
         mentoringUpdateService.updateCancel(mentoring);
     }

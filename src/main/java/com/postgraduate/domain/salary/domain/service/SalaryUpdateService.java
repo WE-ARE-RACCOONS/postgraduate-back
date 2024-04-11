@@ -8,8 +8,6 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class SalaryUpdateService {
-    private static final int AMOUNT = 20000; //todo : 디폴트 20000원 이후 수정
-
     public void updateDone(Salary salary) {
         salary.updateStatus(true);
     }
@@ -18,12 +16,12 @@ public class SalaryUpdateService {
         salary.updateStatus(false);
     }
 
-    public void plusTotalAmount(Salary salary) {
-        salary.plusAmount(AMOUNT);
+    public void plusTotalAmount(Salary salary, int amount) {
+        salary.plusAmount(amount);
     }
 
-    public void minusTotalAmount(Salary salary) {
-        salary.minusAmount(AMOUNT);
+    public void minusTotalAmount(Salary salary, int amount) {
+        salary.minusAmount(amount);
     }
 
     public void updateAccount(Salary salary, SalaryAccount account) {
