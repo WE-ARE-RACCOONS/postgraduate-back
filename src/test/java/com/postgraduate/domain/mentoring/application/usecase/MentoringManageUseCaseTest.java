@@ -214,7 +214,7 @@ class MentoringManageUseCaseTest {
         verify(mentoringUpdateService)
                 .updateDone(mentoring, salary);
         verify(salaryUpdateService)
-                .plusTotalAmount(salary);
+                .plusTotalAmount(salary, mentoring.calculateForSenior());
     }
 
     @Test

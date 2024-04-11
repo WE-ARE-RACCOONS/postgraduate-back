@@ -56,7 +56,7 @@ public class MentoringRenewalUseCase {
             Mentoring doneMentoring = mentoringGetService.byMentoringIdWithLazy(mentoring.getMentoringId());
             Senior senior = mentoring.getSenior();
             Salary salary = salaryGetService.bySenior(senior);
-            salaryUpdateService.plusTotalAmount(salary);
+            salaryUpdateService.plusTotalAmount(salary, doneMentoring.calculateForSenior());
             mentoringUpdateService.updateDone(doneMentoring, salary);
             log.info("mentoringId : {} 자동 완료", mentoring.getMentoringId());
         } catch (Exception ex) {

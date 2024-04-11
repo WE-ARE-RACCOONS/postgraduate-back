@@ -83,7 +83,7 @@ public class MentoringManageUseCase {
     public void updateDone(User user, Long mentoringId) {
         Mentoring mentoring = mentoringGetService.byIdAndUserAndExpected(mentoringId, user);
         Salary salary = salaryGetService.bySenior(mentoring.getSenior());
-        salaryUpdateService.plusTotalAmount(salary);
+        salaryUpdateService.plusTotalAmount(salary, mentoring.calculateForSenior());
         mentoringUpdateService.updateDone(mentoring, salary);
     }
 

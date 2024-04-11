@@ -232,7 +232,7 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
                 .leftJoin(senior.user, user)
                 .fetchJoin()
                 .where(senior.user.isDelete.eq(FALSE))
-                .orderBy(senior.user.nickName.asc())
+                .orderBy(senior.createdAt.desc())
                 .fetch();
     }
 }
