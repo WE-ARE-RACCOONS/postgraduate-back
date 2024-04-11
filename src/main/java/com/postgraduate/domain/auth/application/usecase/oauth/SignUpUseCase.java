@@ -65,7 +65,9 @@ public class SignUpUseCase {
         Senior senior = SeniorMapper.mapToSenior(user, request);
         seniorSaveService.saveSenior(senior);
         Salary salary = SalaryMapper.mapToSalary(senior, getSalaryDate());
+        Salary nextSalary = SalaryMapper.mapToSalary(senior, getSalaryDate().plusDays(7));
         salarySaveService.save(salary);
+        salarySaveService.save(nextSalary);
         slackSignUpMessage.sendSeniorSignUp(senior);
         bizppurioSeniorMessage.signUp(user);
         return senior.getUser();
@@ -78,7 +80,9 @@ public class SignUpUseCase {
         user = userGetService.byUserId(user.getUserId());
         userUpdateService.userToSeniorRole(user);
         Salary salary = SalaryMapper.mapToSalary(senior, getSalaryDate());
+        Salary nextSalary = SalaryMapper.mapToSalary(senior, getSalaryDate().plusDays(7));
         salarySaveService.save(salary);
+        salarySaveService.save(nextSalary);
         slackSignUpMessage.sendSeniorSignUp(senior);
         bizppurioSeniorMessage.signUp(user);
         return user;
