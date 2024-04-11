@@ -25,6 +25,8 @@ import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.global.bizppurio.usecase.BizppurioJuniorMessage;
+import com.postgraduate.global.bizppurio.usecase.BizppurioSeniorMessage;
 import com.postgraduate.global.slack.SlackErrorMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -73,6 +75,10 @@ class MentoringManageUseCaseTest {
     private PaymentManageUseCase paymentManageUseCase;
     @Mock
     private SlackErrorMessage slackErrorMessage;
+    @Mock
+    private BizppurioSeniorMessage bizppurioSeniorMessage;
+    @Mock
+    private BizppurioJuniorMessage bizppurioJuniorMessage;
     @Mock
     private MentoringApplyingUseCase mentoringApplyingUseCase;
     @InjectMocks
@@ -208,7 +214,7 @@ class MentoringManageUseCaseTest {
         verify(mentoringUpdateService)
                 .updateDone(mentoring, salary);
         verify(salaryUpdateService)
-                .plusTotalAmount(salary);
+                .plusTotalAmount(salary, mentoring.calculateForSenior());
     }
 
     @Test
@@ -253,7 +259,7 @@ class MentoringManageUseCaseTest {
     @Test
     @DisplayName("EXPECTED 상태 변경 성공 테스트 - 계좌 존재")
     void updateExpectedTrue() {
-        MentoringDateRequest dateRequest = new MentoringDateRequest("2023-12-12");
+        MentoringDateRequest dateRequest = new MentoringDateRequest("2023-12-12-18-00");
 
         given(seniorGetService.byUser(user))
                 .willReturn(senior);
@@ -270,8 +276,8 @@ class MentoringManageUseCaseTest {
 
     @Test
     @DisplayName("EXPECTED 상태 변경 성공 테스트 - 계좌 없음")
-    void updateExpectedFa() {
-        MentoringDateRequest dateRequest = new MentoringDateRequest("2023-12-12");
+    void updateExpectedWithOoutACcount() {
+        MentoringDateRequest dateRequest = new MentoringDateRequest("2023-12-12-18-00");
 
         given(seniorGetService.byUser(user))
                 .willReturn(senior);

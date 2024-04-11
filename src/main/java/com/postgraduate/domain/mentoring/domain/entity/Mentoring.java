@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.WAITING;
+import static com.postgraduate.domain.mentoring.domain.entity.constant.TermUnit.SHORT;
 import static java.time.LocalDateTime.now;
 import static java.time.LocalDateTime.parse;
 import static java.time.format.DateTimeFormatter.ofPattern;
@@ -85,5 +86,10 @@ public class Mentoring {
         LocalDateTime doneDate = parse(this.date, formatter);
         return now().minusDays(3)
                 .isAfter(doneDate);
+    }
+
+    public int calculateForSenior() {
+        int pay = this.payment.getPay();
+        return pay - SHORT.getCharge();
     }
 }

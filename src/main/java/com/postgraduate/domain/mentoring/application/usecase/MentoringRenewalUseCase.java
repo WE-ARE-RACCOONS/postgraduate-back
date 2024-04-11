@@ -10,6 +10,7 @@ import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.salary.domain.service.SalaryGetService;
 import com.postgraduate.domain.salary.domain.service.SalaryUpdateService;
 import com.postgraduate.domain.senior.domain.entity.Senior;
+import com.postgraduate.global.bizppurio.usecase.BizppurioJuniorMessage;
 import com.postgraduate.global.slack.SlackErrorMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +32,7 @@ public class MentoringRenewalUseCase {
     private final SalaryUpdateService salaryUpdateService;
     private final SalaryGetService salaryGetService;
     private final SlackErrorMessage slackErrorMessage;
+    private final BizppurioJuniorMessage bizppurioJuniorMessage;
 
     public void updateCancelWithAuto(Mentoring mentoring) {
         try {
@@ -40,6 +42,7 @@ public class MentoringRenewalUseCase {
             Refuse refuse = mapToRefuse(mentoring);
             refuseSaveService.save(refuse);
             log.info("mentoringId : {} 자동 취소", mentoring.getMentoringId());
+            bizppurioJuniorMessage.mentoringRefuse(mentoring.getUser());
         } catch (Exception ex) {
             log.error("mentoringId : {} 자동 취소 실패", mentoring.getMentoringId());
             log.error(ex.getMessage());
@@ -53,7 +56,7 @@ public class MentoringRenewalUseCase {
             Mentoring doneMentoring = mentoringGetService.byMentoringIdWithLazy(mentoring.getMentoringId());
             Senior senior = mentoring.getSenior();
             Salary salary = salaryGetService.bySenior(senior);
-            salaryUpdateService.plusTotalAmount(salary);
+            salaryUpdateService.plusTotalAmount(salary, doneMentoring.calculateForSenior());
             mentoringUpdateService.updateDone(doneMentoring, salary);
             log.info("mentoringId : {} 자동 완료", mentoring.getMentoringId());
         } catch (Exception ex) {

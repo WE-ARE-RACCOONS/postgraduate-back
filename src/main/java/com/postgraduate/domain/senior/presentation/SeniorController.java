@@ -75,10 +75,10 @@ public class SeniorController {
 
     @PatchMapping("/me/profile")
     @Operation(summary = "대학원생 마이페이지 프로필 수정 | 토큰 필요")
-    public ResponseDto<Void> updateSeniorProfile(@AuthenticationPrincipal User user,
+    public ResponseDto<SeniorProfileUpdateResponse> updateSeniorProfile(@AuthenticationPrincipal User user,
                                            @RequestBody @Valid SeniorMyPageProfileRequest myPageProfileRequest) {
-        seniorManageUseCase.updateSeniorMyPageProfile(user, myPageProfileRequest);
-        return ResponseDto.create(SENIOR_UPDATE.getCode(), UPDATE_MYPAGE_PROFILE.getMessage());
+        SeniorProfileUpdateResponse updateResponse = seniorManageUseCase.updateSeniorMyPageProfile(user, myPageProfileRequest);
+        return ResponseDto.create(SENIOR_UPDATE.getCode(), UPDATE_MYPAGE_PROFILE.getMessage(), updateResponse);
     }
 
     @GetMapping("/me/account")

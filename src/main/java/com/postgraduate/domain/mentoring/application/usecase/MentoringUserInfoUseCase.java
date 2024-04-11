@@ -18,7 +18,7 @@ import java.util.List;
 import static com.postgraduate.domain.mentoring.application.mapper.MentoringMapper.mapToAppliedDetailInfo;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class MentoringUserInfoUseCase {
     private final MentoringGetService mentoringGetService;

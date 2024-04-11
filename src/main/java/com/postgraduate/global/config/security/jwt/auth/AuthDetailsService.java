@@ -1,4 +1,4 @@
-package com.postgraduate.global.auth;
+package com.postgraduate.global.config.security.jwt.auth;
 
 import com.postgraduate.domain.user.exception.UserNotFoundException;
 import com.postgraduate.domain.user.domain.entity.User;

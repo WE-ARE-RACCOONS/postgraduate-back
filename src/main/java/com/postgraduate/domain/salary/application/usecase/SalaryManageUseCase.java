@@ -29,8 +29,8 @@ public class SalaryManageUseCase {
 
         List<SeniorAndAccount> seniorAndAccounts = seniorGetService.findAllSeniorAndAccount();
         LocalDate salaryDate = getSalaryDate().plusDays(7);
-        seniorAndAccounts.forEach(
-                seniorAndAccount -> salaryRenewalUseCase.createSalaryWithAuto(seniorAndAccount, salaryDate)
-        );
+        seniorAndAccounts.stream()
+                .filter(seniorAndAccount -> salaryGetService.bySeniorOptional(seniorAndAccount.senior(), salaryDate).isEmpty())
+                .forEach(seniorAndAccount -> salaryRenewalUseCase.createSalaryWithAuto(seniorAndAccount, salaryDate));
     }
 }

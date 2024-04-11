@@ -61,6 +61,7 @@ public class WishDslRepositoryImpl implements WishDslRepository {
                 .leftJoin(wish.user, user)
                 .fetchJoin()
                 .where(wish.user.isDelete.isFalse())
+                .orderBy(wish.user.createdAt.desc())
                 .fetch();
     }
 }

@@ -306,6 +306,17 @@ class SeniorControllerTest extends IntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(PROFILE_NOT_FOUND.getCode()))
                 .andExpect(jsonPath("$.message").value(NOT_FOUND_PROFILE.getMessage()));
+//                        .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.code").value(SENIOR_FIND.getCode()))
+//                .andExpect(jsonPath("$.message").value(GET_SENIOR_MYPAGE_PROFILE.getMessage()))
+//                .andExpect(jsonPath("$.data.lab").isNotEmpty())
+//                .andExpect(jsonPath("$.data.keyword").isNotEmpty())
+//                .andExpect(jsonPath("$.data.info").isEmpty())
+//                .andExpect(jsonPath("$.data.target").isEmpty())
+//                .andExpect(jsonPath("$.data.chatLink").isEmpty())
+//                .andExpect(jsonPath("$.data.field").isNotEmpty())
+//                .andExpect(jsonPath("$.data.oneLiner").isEmpty())
+//                .andExpect(jsonPath("$.data.times").isEmpty());
     }
 
     @Test

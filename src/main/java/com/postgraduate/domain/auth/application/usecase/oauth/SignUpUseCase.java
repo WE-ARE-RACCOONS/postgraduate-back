@@ -20,6 +20,7 @@ import com.postgraduate.domain.user.domain.service.UserUpdateService;
 import com.postgraduate.domain.wish.application.mapper.WishMapper;
 import com.postgraduate.domain.wish.domain.entity.Wish;
 import com.postgraduate.domain.wish.domain.service.WishSaveService;
+import com.postgraduate.global.bizppurio.usecase.BizppurioSeniorMessage;
 import com.postgraduate.global.slack.SlackSignUpMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -44,6 +45,7 @@ public class SignUpUseCase {
     private final SlackSignUpMessage slackSignUpMessage;
     private final UserUtils userUtils;
     private final SeniorUtils seniorUtils;
+    private final BizppurioSeniorMessage bizppurioSeniorMessage;
 
     public User userSignUp(SignUpRequest request) {
         userUtils.checkPhoneNumber(request.phoneNumber());
@@ -63,8 +65,11 @@ public class SignUpUseCase {
         Senior senior = SeniorMapper.mapToSenior(user, request);
         seniorSaveService.saveSenior(senior);
         Salary salary = SalaryMapper.mapToSalary(senior, getSalaryDate());
+        Salary nextSalary = SalaryMapper.mapToSalary(senior, getSalaryDate().plusDays(7));
         salarySaveService.save(salary);
+        salarySaveService.save(nextSalary);
         slackSignUpMessage.sendSeniorSignUp(senior);
+        bizppurioSeniorMessage.signUp(user);
         return senior.getUser();
     }
 
@@ -75,8 +80,11 @@ public class SignUpUseCase {
         user = userGetService.byUserId(user.getUserId());
         userUpdateService.userToSeniorRole(user);
         Salary salary = SalaryMapper.mapToSalary(senior, getSalaryDate());
+        Salary nextSalary = SalaryMapper.mapToSalary(senior, getSalaryDate().plusDays(7));
         salarySaveService.save(salary);
+        salarySaveService.save(nextSalary);
         slackSignUpMessage.sendSeniorSignUp(senior);
+        bizppurioSeniorMessage.signUp(user);
         return user;
     }
 

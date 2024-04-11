@@ -32,6 +32,7 @@ public class AdminPaymentUseCase {
     private final SalaryGetService salaryGetService;
     private final SalaryUpdateService salaryUpdateService;
 
+    @Transactional(readOnly = true)
     public List<PaymentInfo> paymentInfos() {
         List<Payment> all = paymentGetService.all();
         return all.stream()
@@ -44,6 +45,7 @@ public class AdminPaymentUseCase {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public MentoringWithPaymentResponse paymentMentoringInfo(Long paymentId) {
         Payment payment = paymentGetService.byId(paymentId);
         Mentoring mentoring = mentoringGetService.byPayment(payment);
@@ -58,7 +60,7 @@ public class AdminPaymentUseCase {
             mentoringUpdateService.updateCancel(mentoring);
             Senior senior = mentoring.getSenior();
             Salary salary = salaryGetService.bySenior(senior);
-            salaryUpdateService.minusTotalAmount(salary);
+            salaryUpdateService.minusTotalAmount(salary, mentoring.calculateForSenior());
         }
     }
 }

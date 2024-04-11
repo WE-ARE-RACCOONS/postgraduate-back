@@ -8,13 +8,11 @@ import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.entity.constant.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import static com.postgraduate.domain.user.application.mapper.UserMapper.mapToInfo;
 import static com.postgraduate.domain.user.domain.entity.constant.Role.SENIOR;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class UserMyPageUseCase {
     public UserMyPageResponse getUserInfo(User user) {
