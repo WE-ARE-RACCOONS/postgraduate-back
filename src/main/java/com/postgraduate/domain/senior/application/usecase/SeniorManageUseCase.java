@@ -13,6 +13,7 @@ import com.postgraduate.domain.salary.domain.entity.SalaryAccount;
 import com.postgraduate.domain.salary.domain.service.SalaryGetService;
 import com.postgraduate.domain.salary.domain.service.SalaryUpdateService;
 import com.postgraduate.domain.senior.application.dto.req.*;
+import com.postgraduate.domain.senior.application.dto.res.SeniorProfileUpdateResponse;
 import com.postgraduate.domain.senior.application.utils.SeniorUtils;
 import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
@@ -76,7 +77,7 @@ public class SeniorManageUseCase {
         updateSalaryAccount(senior, account);
     }
 
-    public void updateSeniorMyPageProfile(User user, SeniorMyPageProfileRequest myPageProfileRequest) {
+    public SeniorProfileUpdateResponse updateSeniorMyPageProfile(User user, SeniorMyPageProfileRequest myPageProfileRequest) {
         seniorUtils.checkKeyword(myPageProfileRequest.keyword());
         Senior senior = seniorGetService.byUser(user);
         Profile profile = mapToProfile(myPageProfileRequest);
@@ -85,6 +86,7 @@ public class SeniorManageUseCase {
         List<AvailableCreateRequest> availableCreateRequests = myPageProfileRequest.times();
         List<Available> sortedAvailable = sortAvailable(availableCreateRequests, senior);
         sortedAvailable.forEach(availableSaveService::save);
+        return new SeniorProfileUpdateResponse(senior.getSeniorId());
     }
 
     public void updateSeniorMyPageUserAccount(User user, SeniorMyPageUserAccountRequest myPageUserAccountRequest) {

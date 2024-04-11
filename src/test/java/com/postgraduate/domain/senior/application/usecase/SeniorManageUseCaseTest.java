@@ -12,6 +12,7 @@ import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.salary.domain.service.SalaryGetService;
 import com.postgraduate.domain.salary.domain.service.SalaryUpdateService;
 import com.postgraduate.domain.senior.application.dto.req.*;
+import com.postgraduate.domain.senior.application.dto.res.SeniorProfileUpdateResponse;
 import com.postgraduate.domain.senior.application.utils.SeniorUtils;
 import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Profile;
@@ -39,6 +40,7 @@ import java.util.Optional;
 import static com.postgraduate.domain.senior.domain.entity.constant.Status.APPROVE;
 import static com.postgraduate.domain.user.domain.entity.constant.Role.SENIOR;
 import static java.lang.Boolean.TRUE;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.*;
 
@@ -182,12 +184,14 @@ class SeniorManageUseCaseTest {
         given(seniorGetService.byUser(user))
                 .willReturn(senior);
 
-        seniorManageUseCase.updateSeniorMyPageProfile(user, request);
+        SeniorProfileUpdateResponse response = seniorManageUseCase.updateSeniorMyPageProfile(user, request);
 
         verify(seniorUpdateService, times(1))
                 .updateMyPageProfile(any(Senior.class), any(SeniorMyPageProfileRequest.class), any(Profile.class));
         verify(availableDeleteService, times(1))
                 .delete(senior);
+        assertThat(response.seniorId())
+                .isEqualTo(senior.getSeniorId());
     }
 
     @Test
