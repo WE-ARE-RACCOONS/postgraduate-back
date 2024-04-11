@@ -8,6 +8,7 @@ import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -30,6 +31,7 @@ import static java.util.Optional.ofNullable;
 
 @RequiredArgsConstructor
 @Repository
+@Slf4j
 public class SeniorDslRepositoryImpl implements SeniorDslRepository{
     private final JPAQueryFactory queryFactory;
     private static final String ALL = "all";
@@ -211,13 +213,18 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
                 .where(senior.user.isDelete.isFalse())
                 .fetch();
         List<Account> accounts = queryFactory.selectFrom(account)
+                .distinct()
                 .where(account.senior.in(seniors))
+                .leftJoin(account.senior, senior)
+                .fetchJoin()
                 .fetch();
 
         return seniors.stream()
                 .map(senior -> {
                     Account account = accounts.stream()
-                            .filter(a -> a.getSenior().equals(senior))
+                            .filter(a -> a.getSenior().getSeniorId()
+                                            .equals(senior.getSeniorId())
+                            )
                             .findFirst()
                             .orElse(null);
                     return new SeniorAndAccount(senior, account);

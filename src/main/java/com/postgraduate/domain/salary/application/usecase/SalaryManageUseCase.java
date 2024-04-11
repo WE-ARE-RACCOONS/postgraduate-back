@@ -22,7 +22,8 @@ public class SalaryManageUseCase {
     private final SlackSalaryMessage slackSalaryMessage;
     private final SalaryRenewalUseCase salaryRenewalUseCase;
 
-    @Scheduled(cron = "0 0 0 * * 4", zone = "Asia/Seoul")
+//    @Scheduled(cron = "0 0 0 * * 4", zone = "Asia/Seoul")
+    @Scheduled(fixedDelay = 1000000)
     public void createSalary() {
         List<Salary> salaries = salaryGetService.findAllLast();
         slackSalaryMessage.sendSlackSalary(salaries);
