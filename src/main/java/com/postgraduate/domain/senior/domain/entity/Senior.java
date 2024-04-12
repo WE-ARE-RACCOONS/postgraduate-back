@@ -59,7 +59,7 @@ public class Senior {
     }
 
     public void updateInfo(SeniorMyPageProfileRequest myPageProfileRequest) {
-        this.info.updateMyPage(myPageProfileRequest);
+        this.info.updateMyPage(this.user.getNickName(), myPageProfileRequest);
     }
 
     public void updateCertification(String certification) {
