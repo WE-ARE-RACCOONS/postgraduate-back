@@ -181,13 +181,17 @@ class SeniorManageUseCaseTest {
     void updateSeniorMyPage() {
         SeniorMyPageProfileRequest request =
                 mock(SeniorMyPageProfileRequest.class);
+        given(request.field())
+                .willReturn("a,b,c");
+        given(request.keyword())
+                .willReturn("a,b,c");
         given(seniorGetService.byUser(user))
                 .willReturn(senior);
 
         SeniorProfileUpdateResponse response = seniorManageUseCase.updateSeniorMyPageProfile(user, request);
 
         verify(seniorUpdateService, times(1))
-                .updateMyPageProfile(any(Senior.class), any(SeniorMyPageProfileRequest.class), any(Profile.class));
+                .updateMyPageProfile(any(Senior.class), any(Info.class), any(Profile.class));
         verify(availableDeleteService, times(1))
                 .delete(senior);
         assertThat(response.seniorId())

@@ -44,7 +44,8 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
                 .leftJoin(senior.user, user)
                 .fetchJoin()
                 .where(
-                        senior.info.totalInfo.like("%" + search + "%"),
+                        senior.info.totalInfo.like("%" + search + "%")
+                                .or(senior.user.nickName.like("%" + search + "%")),
                         senior.status.eq(APPROVE),
                         senior.user.isDelete.eq(FALSE),
                         senior.profile.isNotNull()
@@ -60,7 +61,8 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
                 .distinct()
                 .leftJoin(senior.user, user)
                 .where(
-                        senior.info.totalInfo.like("%" + search + "%"),
+                        senior.info.totalInfo.like("%" + search + "%")
+                                .or(senior.user.nickName.like("%" + search + "%")),
                         senior.status.eq(APPROVE),
                         senior.user.isDelete.eq(FALSE)
                 )

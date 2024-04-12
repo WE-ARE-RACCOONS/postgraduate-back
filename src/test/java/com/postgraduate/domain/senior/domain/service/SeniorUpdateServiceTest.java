@@ -14,6 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static com.postgraduate.domain.senior.application.mapper.SeniorMapper.mapToInfo;
 import static com.postgraduate.domain.senior.application.mapper.SeniorMapper.mapToProfile;
 import static com.postgraduate.domain.senior.domain.entity.constant.Status.APPROVE;
 import static com.postgraduate.domain.user.domain.entity.constant.Role.SENIOR;
@@ -76,15 +77,16 @@ class SeniorUpdateServiceTest {
                 of(availableCreateRequest1, availableCreateRequest2, availableCreateRequest3)
         );
         Profile profile = mapToProfile(request);
-        seniorUpdateService.updateMyPageProfile(senior, request, profile);
-        Info info = senior.getInfo();
+        Info info = mapToInfo(senior, request);
+        seniorUpdateService.updateMyPageProfile(senior, info, profile);
+        Info changeInfo = senior.getInfo();
         Profile changeProfile = senior.getProfile();
 
-        assertThat(info.getKeyword())
+        assertThat(changeInfo.getKeyword())
                 .isEqualTo(request.keyword());
-        assertThat(info.getLab())
+        assertThat(changeInfo.getLab())
                 .isEqualTo(request.lab());
-        assertThat(info.getField())
+        assertThat(changeInfo.getField())
                 .isEqualTo(request.field());
 
         assertThat(changeProfile.getTerm())

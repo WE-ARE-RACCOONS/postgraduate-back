@@ -15,6 +15,7 @@ import com.postgraduate.domain.salary.domain.service.SalaryUpdateService;
 import com.postgraduate.domain.senior.application.dto.req.*;
 import com.postgraduate.domain.senior.application.dto.res.SeniorProfileUpdateResponse;
 import com.postgraduate.domain.senior.application.utils.SeniorUtils;
+import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
@@ -34,6 +35,7 @@ import java.util.Optional;
 import static com.postgraduate.domain.account.application.mapper.AccountMapper.mapToAccount;
 import static com.postgraduate.domain.available.application.util.AvailableUtil.sortAvailable;
 import static com.postgraduate.domain.salary.application.mapper.SalaryMapper.mapToSalaryAccount;
+import static com.postgraduate.domain.senior.application.mapper.SeniorMapper.mapToInfo;
 import static com.postgraduate.domain.senior.application.mapper.SeniorMapper.mapToProfile;
 
 @Service
@@ -81,7 +83,8 @@ public class SeniorManageUseCase {
         seniorUtils.checkKeyword(myPageProfileRequest.keyword());
         Senior senior = seniorGetService.byUser(user);
         Profile profile = mapToProfile(myPageProfileRequest);
-        seniorUpdateService.updateMyPageProfile(senior, myPageProfileRequest, profile);
+        Info info = mapToInfo(senior, myPageProfileRequest);
+        seniorUpdateService.updateMyPageProfile(senior, info, profile);
         availableDeleteService.delete(senior);
         List<AvailableCreateRequest> availableCreateRequests = myPageProfileRequest.times();
         List<Available> sortedAvailable = sortAvailable(availableCreateRequests, senior);
