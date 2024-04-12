@@ -1,6 +1,6 @@
 package com.postgraduate.domain.senior.domain.service;
 
-import com.postgraduate.domain.senior.application.dto.req.SeniorMyPageProfileRequest;
+import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import lombok.RequiredArgsConstructor;
@@ -20,9 +20,9 @@ public class SeniorUpdateService {
         senior.updateStatus(WAITING);
     }
 
-    public void updateMyPageProfile(Senior senior, SeniorMyPageProfileRequest myPageProfileRequest, Profile profile) {
+    public void updateMyPageProfile(Senior senior, Info info, Profile profile) {
         senior.updateProfile(profile);
-        senior.updateInfo(myPageProfileRequest);
+        senior.updateInfo(info);
     }
 
     public void updateHit(Senior senior) {

@@ -1,15 +1,11 @@
 package com.postgraduate.domain.senior.domain.entity;
 
-import com.postgraduate.domain.senior.application.dto.req.SeniorMyPageProfileRequest;
-import com.postgraduate.domain.senior.domain.entity.constant.Field;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.Set;
 
 @Getter
 @AllArgsConstructor
@@ -45,24 +41,4 @@ public class Info {
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String totalInfo; // 모든 Info정보 String으로 가지는 컬럼 - 검색시 사용
-
-    protected void updateMyPage(String nickName, SeniorMyPageProfileRequest request) {
-        String[] fileds = request.field().split(",");
-        Set<String> fieldNames = Field.fieldNames();
-        this.keyword = request.keyword();
-        this.lab = request.lab();
-        this.field = request.field();
-        for (String newField : fileds) {
-            if (fieldNames.contains(newField)) {
-                this.etcField = false;
-                return;
-            }
-            this.etcField = true;
-        }
-        combineTotalInfo(nickName);
-    }
-
-    private void combineTotalInfo(String nickName) {
-        this.totalInfo = major + lab + field + professor + postgradu + keyword + nickName;
-    }
 }
