@@ -27,12 +27,12 @@ public class SeniorMapper {
     public static Senior mapToSenior(User user, SeniorSignUpRequest request) {
         return Senior.builder()
                 .user(user)
-                .info(mapToInfo(request))
+                .info(mapToInfo(user, request))
                 .certification(request.certification())
                 .build();
     }
 
-    public static Info mapToInfo(SeniorSignUpRequest request) {
+    public static Info mapToInfo(User user, SeniorSignUpRequest request) {
         String[] fields = request.field().split(",");
         Set<String> fieldNames = Field.fieldNames();
         Set<String> postgraduNames = Postgradu.postgraduNames();
@@ -47,7 +47,7 @@ public class SeniorMapper {
                 .etcPostgradu(false)
                 .etcField(false)
                 .totalInfo(request.major() + request.lab() + request.field()
-                        + request.professor() + request.postgradu() + request.keyword());
+                        + request.professor() + request.postgradu() + request.keyword() + user.getNickName());
 
         for (String field : fields) {
             if (!fieldNames.contains(field)) {
@@ -82,12 +82,12 @@ public class SeniorMapper {
     public static Senior mapToSenior(User user, SeniorChangeRequest request) {
         return Senior.builder()
                 .user(user)
-                .info(mapToInfo(request))
+                .info(mapToInfo(user, request))
                 .certification(request.certification())
                 .build();
     }
 
-    public static Info mapToInfo(SeniorChangeRequest request) {
+    public static Info mapToInfo(User user, SeniorChangeRequest request) {
         String[] fields = request.field().split(",");
         Set<String> fieldNames = Field.fieldNames();
         Set<String> postgraduNames = Postgradu.postgraduNames();
@@ -102,7 +102,7 @@ public class SeniorMapper {
                 .etcPostgradu(true)
                 .etcField(true)
                 .totalInfo(request.major() + request.lab() + request.field()
-                        + request.professor() + request.postgradu() + request.keyword());
+                        + request.professor() + request.postgradu() + request.keyword() + user.getNickName());
 
         for (String field : fields) {
             if (fieldNames.contains(field)) {

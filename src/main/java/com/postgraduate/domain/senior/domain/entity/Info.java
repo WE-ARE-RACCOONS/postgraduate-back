@@ -46,7 +46,7 @@ public class Info {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String totalInfo; // 모든 Info정보 String으로 가지는 컬럼 - 검색시 사용
 
-    protected void updateMyPage(SeniorMyPageProfileRequest request) {
+    protected void updateMyPage(String nickName, SeniorMyPageProfileRequest request) {
         String[] fileds = request.field().split(",");
         Set<String> fieldNames = Field.fieldNames();
         this.keyword = request.keyword();
@@ -59,10 +59,10 @@ public class Info {
             }
             this.etcField = true;
         }
-        combineTotalInfo();
+        combineTotalInfo(nickName);
     }
 
-    private void combineTotalInfo() {
-        this.totalInfo = major + lab + field + professor + postgradu + keyword;
+    private void combineTotalInfo(String nickName) {
+        this.totalInfo = major + lab + field + professor + postgradu + keyword + nickName;
     }
 }
