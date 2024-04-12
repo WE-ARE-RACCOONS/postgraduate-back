@@ -187,7 +187,7 @@ class SeniorManageUseCaseTest {
         SeniorProfileUpdateResponse response = seniorManageUseCase.updateSeniorMyPageProfile(user, request);
 
         verify(seniorUpdateService, times(1))
-                .updateMyPageProfile(any(Senior.class), any(SeniorMyPageProfileRequest.class), any(Profile.class));
+                .updateMyPageProfile(any(Senior.class), any(Info.class), any(Profile.class));
         verify(availableDeleteService, times(1))
                 .delete(senior);
         assertThat(response.seniorId())

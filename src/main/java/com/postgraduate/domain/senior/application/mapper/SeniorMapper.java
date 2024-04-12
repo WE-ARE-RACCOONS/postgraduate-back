@@ -27,12 +27,48 @@ public class SeniorMapper {
     public static Senior mapToSenior(User user, SeniorSignUpRequest request) {
         return Senior.builder()
                 .user(user)
-                .info(mapToInfo(user, request))
+                .info(mapToInfo(request))
                 .certification(request.certification())
                 .build();
     }
 
-    public static Info mapToInfo(User user, SeniorSignUpRequest request) {
+    public static Senior mapToSenior(User user, SeniorChangeRequest request) {
+        return Senior.builder()
+                .user(user)
+                .info(mapToInfo(request))
+                .certification(request.certification())
+                .build();
+    }
+
+    public static Info mapToInfo(SeniorChangeRequest request) {
+        String[] fields = request.field().split(",");
+        Set<String> fieldNames = Field.fieldNames();
+        Set<String> postgraduNames = Postgradu.postgraduNames();
+
+        Info.InfoBuilder infoBuilder = Info.builder()
+                .major(request.major())
+                .postgradu(request.postgradu())
+                .professor(request.professor())
+                .lab(request.lab())
+                .keyword(request.keyword())
+                .field(request.field())
+                .etcPostgradu(true)
+                .etcField(true)
+                .totalInfo(request.major() + request.lab() + request.field()
+                        + request.professor() + request.postgradu() + request.keyword());
+
+        for (String field : fields) {
+            if (fieldNames.contains(field)) {
+                infoBuilder.etcField(false);
+                break;
+            }
+        }
+        if (postgraduNames.contains(request.postgradu()))
+            infoBuilder.etcPostgradu(false);
+        return infoBuilder.build();
+    }
+
+    public static Info mapToInfo(SeniorSignUpRequest request) {
         String[] fields = request.field().split(",");
         Set<String> fieldNames = Field.fieldNames();
         Set<String> postgraduNames = Postgradu.postgraduNames();
@@ -47,7 +83,7 @@ public class SeniorMapper {
                 .etcPostgradu(false)
                 .etcField(false)
                 .totalInfo(request.major() + request.lab() + request.field()
-                        + request.professor() + request.postgradu() + request.keyword() + user.getNickName());
+                        + request.professor() + request.postgradu() + request.keyword());
 
         for (String field : fields) {
             if (!fieldNames.contains(field)) {
@@ -57,6 +93,34 @@ public class SeniorMapper {
         }
         if (!postgraduNames.contains(request.postgradu()))
             infoBuilder.etcPostgradu(true);
+
+        return infoBuilder.build();
+    }
+
+    public static Info mapToInfo(Senior senior, SeniorMyPageProfileRequest request) {
+        Info info = senior.getInfo();
+        String[] fields = request.field().split(",");
+        Set<String> fieldNames = Field.fieldNames();
+
+        Info.InfoBuilder infoBuilder = Info.builder()
+                .major(info.getMajor())
+                .postgradu(info.getPostgradu())
+                .professor(info.getProfessor())
+                .lab(request.lab())
+                .keyword(request.keyword())
+                .field(request.field())
+                .etcPostgradu(false)
+                .etcField(false)
+                .totalInfo(info.getMajor() + request.lab() + request.field()
+                        + info.getProfessor() + info.getPostgradu() + request.keyword());
+
+        for (String field : fields) {
+            if (!fieldNames.contains(field)) {
+                infoBuilder.etcField(true);
+                break;
+            }
+        }
+        infoBuilder.etcPostgradu(info.getEtcPostgradu());
 
         return infoBuilder.build();
     }
@@ -77,42 +141,6 @@ public class SeniorMapper {
                 .oneLiner(profileRequest.oneLiner())
                 .target(profileRequest.target())
                 .build();
-    }
-
-    public static Senior mapToSenior(User user, SeniorChangeRequest request) {
-        return Senior.builder()
-                .user(user)
-                .info(mapToInfo(user, request))
-                .certification(request.certification())
-                .build();
-    }
-
-    public static Info mapToInfo(User user, SeniorChangeRequest request) {
-        String[] fields = request.field().split(",");
-        Set<String> fieldNames = Field.fieldNames();
-        Set<String> postgraduNames = Postgradu.postgraduNames();
-
-        Info.InfoBuilder infoBuilder = Info.builder()
-                .major(request.major())
-                .postgradu(request.postgradu())
-                .professor(request.professor())
-                .lab(request.lab())
-                .keyword(request.keyword())
-                .field(request.field())
-                .etcPostgradu(true)
-                .etcField(true)
-                .totalInfo(request.major() + request.lab() + request.field()
-                        + request.professor() + request.postgradu() + request.keyword() + user.getNickName());
-
-        for (String field : fields) {
-            if (fieldNames.contains(field)) {
-                infoBuilder.etcField(false);
-                break;
-            }
-        }
-        if (postgraduNames.contains(request.postgradu()))
-            infoBuilder.etcPostgradu(false);
-        return infoBuilder.build();
     }
 
     public static SeniorMyPageResponse mapToSeniorMyPageInfo(Senior senior, Status certificationRegister, boolean profileRegister) {
