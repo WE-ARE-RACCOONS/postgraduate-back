@@ -181,6 +181,10 @@ class SeniorManageUseCaseTest {
     void updateSeniorMyPage() {
         SeniorMyPageProfileRequest request =
                 mock(SeniorMyPageProfileRequest.class);
+        given(request.field())
+                .willReturn("a,b,c");
+        given(request.keyword())
+                .willReturn("a,b,c");
         given(seniorGetService.byUser(user))
                 .willReturn(senior);
 
