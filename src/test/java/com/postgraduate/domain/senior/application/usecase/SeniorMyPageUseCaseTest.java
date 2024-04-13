@@ -119,14 +119,30 @@ class SeniorMyPageUseCaseTest {
     }
 
     @Test
-    @DisplayName("선배 자신의 마이페이지 프로필 예외 테스트")
+    @DisplayName("선배 자신의 마이페이지 프로필 작성 이전 Info조회 테스트")
     void getSeniorMyPageProfileWithNull() {
         Senior nullSenior = new Senior(-2L, user, "asd", APPROVE, 1, info, null, LocalDateTime.now(), null);
         given(seniorGetService.byUser(user))
                 .willReturn(nullSenior);
 
-        assertThatThrownBy(() -> seniorMyPageUseCase.getSeniorMyPageProfile(user))
-                .isInstanceOf(NoneProfileException.class);
+        SeniorMyPageProfileResponse myPageProfile = seniorMyPageUseCase.getSeniorMyPageProfile(user);
+
+        assertThat(myPageProfile.lab())
+                .isNotEmpty();
+        assertThat(myPageProfile.field())
+                .isNotEmpty();
+        assertThat(myPageProfile.keyword())
+                .isNotEmpty();
+        assertThat(myPageProfile.info())
+                .isNull();
+        assertThat(myPageProfile.target())
+                .isNull();
+        assertThat(myPageProfile.chatLink())
+                .isNull();
+        assertThat(myPageProfile.oneLiner())
+                .isNull();
+        assertThat(myPageProfile.times())
+                .isNull();
     }
 
     @Test

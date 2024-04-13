@@ -11,8 +11,6 @@ import com.postgraduate.domain.user.domain.entity.User;
 import java.time.LocalDate;
 
 public class SalaryMapper {
-    private static final int AMOUNT = 20000;
-
     private SalaryMapper() {
         throw new IllegalArgumentException();
     }
@@ -43,7 +41,7 @@ public class SalaryMapper {
                 user.getNickName(),
                 mentoring.getDate(),
                 mentoring.getTerm(),
-                AMOUNT,
+                mentoring.calculateForSenior(),
                 salary.getSalaryDate()
         );
     }
