@@ -14,7 +14,6 @@ import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.entity.constant.Status;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
-import com.postgraduate.domain.senior.exception.NoneProfileException;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.wish.domain.entity.Wish;
 import com.postgraduate.domain.wish.domain.service.WishGetService;
@@ -51,7 +50,7 @@ public class SeniorMyPageUseCase {
     public SeniorMyPageProfileResponse getSeniorMyPageProfile(User user) {
         Senior senior = seniorGetService.byUser(user);
         if (senior.getProfile() == null) {
-            throw new NoneProfileException();
+            return mapToMyPageProfile(senior);
         }
         List<Available> availables = availableGetService.byMine(senior);
         List<AvailableTimeResponse> times = availables.stream()
