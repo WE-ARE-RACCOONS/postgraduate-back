@@ -3,8 +3,7 @@ package com.postgraduate.domain.mentoring.application.usecase;
 import com.postgraduate.domain.mentoring.application.dto.DoneSeniorMentoringInfo;
 import com.postgraduate.domain.mentoring.application.dto.ExpectedSeniorMentoringInfo;
 import com.postgraduate.domain.mentoring.application.dto.WaitingSeniorMentoringInfo;
-import com.postgraduate.domain.mentoring.application.dto.res.SeniorMentoringDetailResponse;
-import com.postgraduate.domain.mentoring.application.dto.res.SeniorMentoringResponse;
+import com.postgraduate.domain.mentoring.application.dto.res.*;
 import com.postgraduate.domain.mentoring.application.mapper.MentoringMapper;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
@@ -35,7 +34,7 @@ public class MentoringSeniorInfoUseCase {
         return mapToSeniorMentoringDetail(mentoring);
     }
 
-    public SeniorMentoringResponse getSeniorWaiting(User user) {
+    public WaitingSeniorMentoringResponse getSeniorWaiting(User user) {
         Senior senior = seniorGetService.byUser(user);
         List<Mentoring> mentorings = mentoringGetService.bySeniorWaiting(senior);
         List<WaitingSeniorMentoringInfo> waitingMentoringInfos = mentorings.stream()
@@ -49,10 +48,10 @@ public class MentoringSeniorInfoUseCase {
                     return mapToSeniorWaitingInfo(mentoring, remain);
                 })
                 .toList();
-        return new SeniorMentoringResponse(waitingMentoringInfos);
+        return new WaitingSeniorMentoringResponse(waitingMentoringInfos);
     }
 
-    public SeniorMentoringResponse getSeniorExpected(User user) {
+    public ExpectedSeniorMentoringResponse getSeniorExpected(User user) {
         Senior senior = seniorGetService.byUser(user);
         List<Mentoring> mentorings = mentoringGetService.bySeniorExpected(senior);
         List<ExpectedSeniorMentoringInfo> expectedMentoringInfos = mentorings.stream()
@@ -63,15 +62,15 @@ public class MentoringSeniorInfoUseCase {
                     return mapToSeniorExpectedInfo(mentoring, dDay);
                 })
                 .toList();
-        return new SeniorMentoringResponse(expectedMentoringInfos);
+        return new ExpectedSeniorMentoringResponse(expectedMentoringInfos);
     }
 
-    public SeniorMentoringResponse getSeniorDone(User user) {
+    public DoneSeniorMentoringResponse getSeniorDone(User user) {
         Senior senior = seniorGetService.byUser(user);
         List<Mentoring> mentorings = mentoringGetService.bySeniorDone(senior);
         List<DoneSeniorMentoringInfo> doneSeniorMentoringInfos = mentorings.stream()
                 .map(MentoringMapper::mapToSeniorDoneInfo)
                 .toList();
-        return new SeniorMentoringResponse(doneSeniorMentoringInfos);
+        return new DoneSeniorMentoringResponse(doneSeniorMentoringInfos);
     }
 }
