@@ -1,9 +1,10 @@
 package com.postgraduate.domain.mentoring.application.usecase;
 
-import com.postgraduate.domain.mentoring.application.dto.res.AppliedMentoringResponse;
+import com.postgraduate.domain.mentoring.application.dto.res.DoneMentoringResponse;
+import com.postgraduate.domain.mentoring.application.dto.res.ExpectedMentoringResponse;
+import com.postgraduate.domain.mentoring.application.dto.res.WaitingMentoringResponse;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
-import com.postgraduate.domain.mentoring.exception.MentoringDetailNotFoundException;
 import com.postgraduate.domain.mentoring.exception.MentoringNotFoundException;
 import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.payment.domain.entity.constant.Status;
@@ -32,9 +33,7 @@ import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
 class MentoringUserInfoUseCaseTest {
@@ -112,7 +111,7 @@ class MentoringUserInfoUseCaseTest {
         given(mentoringGetService.byUserWaiting(user))
                 .willReturn(mentorings);
 
-        AppliedMentoringResponse waiting = mentoringUserInfoUseCase.getWaiting(user);
+        WaitingMentoringResponse waiting = mentoringUserInfoUseCase.getWaiting(user);
 
         assertThat(waiting.mentoringInfos())
                 .hasSameSizeAs(mentorings);
@@ -138,7 +137,7 @@ class MentoringUserInfoUseCaseTest {
         given(mentoringGetService.byUserExpected(user))
                 .willReturn(mentorings);
 
-        AppliedMentoringResponse expected = mentoringUserInfoUseCase.getExpected(user);
+        ExpectedMentoringResponse expected = mentoringUserInfoUseCase.getExpected(user);
 
         assertThat(expected.mentoringInfos())
                 .hasSameSizeAs(mentorings);
@@ -164,7 +163,7 @@ class MentoringUserInfoUseCaseTest {
         given(mentoringGetService.byUserDone(user))
                 .willReturn(mentorings);
 
-        AppliedMentoringResponse done = mentoringUserInfoUseCase.getDone(user);
+        DoneMentoringResponse done = mentoringUserInfoUseCase.getDone(user);
 
         assertThat(done.mentoringInfos())
                 .hasSameSizeAs(mentorings);
