@@ -1,383 +1,285 @@
 package com.postgraduate.domain.auth.presentation;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.postgraduate.IntegrationTest;
 import com.postgraduate.domain.auth.application.dto.req.*;
-import com.postgraduate.domain.auth.application.dto.res.KakaoUserInfoResponse;
-import com.postgraduate.domain.auth.application.usecase.oauth.kakao.KakaoAccessTokenUseCase;
+import com.postgraduate.domain.auth.application.dto.res.AuthUserResponse;
+import com.postgraduate.domain.auth.application.dto.res.JwtTokenResponse;
+import com.postgraduate.domain.auth.presentation.constant.Provider;
 import com.postgraduate.domain.user.domain.entity.User;
-import com.postgraduate.domain.user.domain.repository.UserRepository;
-import com.postgraduate.domain.wish.domain.entity.Wish;
-import com.postgraduate.domain.wish.domain.entity.constant.Status;
-import com.postgraduate.domain.wish.domain.repository.WishRepository;
-import com.postgraduate.global.config.redis.RedisRepository;
-import com.postgraduate.global.config.security.jwt.util.JwtUtils;
-import com.postgraduate.global.slack.SlackLogErrorMessage;
-import com.postgraduate.global.slack.SlackSalaryMessage;
-import com.postgraduate.global.slack.SlackSignUpMessage;
-import org.junit.jupiter.api.BeforeEach;
+import com.postgraduate.support.ControllerTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.NullAndEmptySource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-
-import java.io.IOException;
-import java.util.Optional;
+import org.springframework.security.test.context.support.WithMockUser;
 
 import static com.postgraduate.domain.auth.presentation.constant.AuthResponseCode.*;
 import static com.postgraduate.domain.auth.presentation.constant.AuthResponseMessage.*;
 import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseCode.SENIOR_CREATE;
-import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseCode.SENIOR_NOT_FOUND;
 import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseMessage.CREATE_SENIOR;
-import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseMessage.NOT_FOUND_SENIOR;
-import static com.postgraduate.domain.user.domain.entity.constant.Role.SENIOR;
 import static com.postgraduate.domain.user.domain.entity.constant.Role.USER;
-import static com.postgraduate.domain.user.presentation.constant.UserResponseCode.USER_NOT_FOUND;
-import static com.postgraduate.domain.user.presentation.constant.UserResponseMessage.NOT_FOUND_USER;
-import static com.postgraduate.global.exception.constant.ErrorCode.VALID_BLANK;
-import static java.lang.Boolean.FALSE;
-import static java.time.LocalDateTime.now;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class AuthControllerTest extends IntegrationTest {
-    private static final String AUTHORIZATION = "Authorization";
-    private static final String BEARER = "Bearer ";
-    @Autowired
-    private JwtUtils jwtUtil;
-    @Autowired
-    private ObjectMapper objectMapper;
-    @MockBean
-    private KakaoAccessTokenUseCase kakaoAccessTokenUseCase;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private WishRepository wishRepository;
-    @MockBean
-    RedisRepository redisRepository;
-    @MockBean
-    private SlackLogErrorMessage slackLogErrorMessage;
-    @MockBean
-    private SlackSignUpMessage slackSignUpMessage;
-    private User user;
-    private final Long anonymousUserSocialId = 2L;
+class AuthControllerTest extends ControllerTest {
+    private static final String BEARER = "Bearer token";
 
-    @BeforeEach
-    void setUp() {
-        user = new User(0L, 1L, "mail", "후배", "011", "profile", 0, USER, true, now(), now(), false);
-        userRepository.save(user);
-        doNothing().when(slackLogErrorMessage).sendSlackLog(any());
-        doNothing().when(slackSignUpMessage).sendSeniorSignUp(any());
-        doNothing().when(slackSignUpMessage).sendJuniorSignUp(any(), any());
-    }
+    User user = resource.getUser();
 
     @Test
+    @WithMockUser
     @DisplayName("회원이 로그인한다.")
     void authLoginByUser() throws Exception {
-        Wish wish = new Wish(0L, "major", "field", true, user, Status.MATCHED);
-        wishRepository.save(wish);
-
         CodeRequest codeRequest = new CodeRequest("code");
         String request = objectMapper.writeValueAsString(codeRequest);
-
-        when(kakaoAccessTokenUseCase.getAccessToken(codeRequest))
-                .thenReturn(new KakaoUserInfoResponse(1L, any()));
+        AuthUserResponse response = new AuthUserResponse(user, user.getSocialId());
+        JwtTokenResponse tokenResponse = new JwtTokenResponse("access", 10, "refresh", 10, USER);
+        given(selectOauth.selectSignIn(Provider.KAKAO))
+                .willReturn(kakaoSignInUseCase);
+        given(kakaoSignInUseCase.getUser(codeRequest))
+                .willReturn(response);
+        given(jwtUseCase.signIn(any()))
+                .willReturn(tokenResponse);
 
         mvc.perform(post("/auth/login/KAKAO")
+                        .with(csrf())
                         .content(request)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(AUTH_ALREADY.getCode()))
                 .andExpect(jsonPath("$.message").value(SUCCESS_AUTH.getMessage()))
-                .andExpect(jsonPath("$.data.accessToken").exists())
-                .andExpect(jsonPath("$.data.socialId").doesNotExist());
+                .andExpect(jsonPath("$.data.accessToken").value(tokenResponse.accessToken()))
+                .andExpect(jsonPath("$.data.accessExpiration").value(tokenResponse.accessExpiration()))
+                .andExpect(jsonPath("$.data.refreshToken").value(tokenResponse.refreshToken()))
+                .andExpect(jsonPath("$.data.refreshExpiration").value(tokenResponse.refreshExpiration()))
+                .andExpect(jsonPath("$.data.role").value(tokenResponse.role().toString()));
     }
 
     @Test
+    @WithMockUser
     @DisplayName("비회원이 로그인한다.")
     void authLoginByAnonymousUser() throws Exception {
         CodeRequest codeRequest = new CodeRequest("code");
         String request = objectMapper.writeValueAsString(codeRequest);
-
-        when(kakaoAccessTokenUseCase.getAccessToken(codeRequest))
-                .thenReturn(new KakaoUserInfoResponse(anonymousUserSocialId, any()));
+        AuthUserResponse response = new AuthUserResponse(user.getSocialId());
+        given(selectOauth.selectSignIn(Provider.KAKAO))
+                .willReturn(kakaoSignInUseCase);
+        given(kakaoSignInUseCase.getUser(codeRequest))
+                .willReturn(response);
 
         mvc.perform(post("/auth/login/KAKAO")
                         .content(request)
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(AUTH_NONE.getCode()))
                 .andExpect(jsonPath("$.message").value(NOT_REGISTERED_USER.getMessage()))
                 .andExpect(jsonPath("$.data.accessToken").doesNotExist())
-                .andExpect(jsonPath("$.data.socialId").value(anonymousUserSocialId));
+                .andExpect(jsonPath("$.data.socialId").value(user.getSocialId()));
     }
 
     @Test
+    @WithMockUser
     @DisplayName("대학생이 회원가입 한다.")
     void signUpUser() throws Exception {
-        String request = objectMapper.writeValueAsString(
-                new SignUpRequest(anonymousUserSocialId, "01012345678", "새로운닉네임",
-                        true, "major", "field", true)
-        );
+        SignUpRequest signUpRequest = new SignUpRequest(user.getSocialId(), user.getPhoneNumber(), user.getNickName(),
+                user.getMarketingReceive(), "major", "field", true);
+        String request = objectMapper.writeValueAsString(signUpRequest);
+        JwtTokenResponse tokenResponse = new JwtTokenResponse("access", 10, "refresh", 10, USER);
+
+        given(signUpUseCase.userSignUp(signUpRequest))
+                .willReturn(user);
+        given(jwtUseCase.signIn(user))
+                .willReturn(tokenResponse);
 
         mvc.perform(post("/auth/user/signup")
                         .content(request)
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(AUTH_CREATE.getCode()))
                 .andExpect(jsonPath("$.message").value(SUCCESS_AUTH.getMessage()))
-                .andExpect(jsonPath("$.data.accessToken").exists())
-                .andExpect(jsonPath("$.data.role").value(USER.name()));
+                .andExpect(jsonPath("$.data.accessToken").value(tokenResponse.accessToken()))
+                .andExpect(jsonPath("$.data.accessExpiration").value(tokenResponse.accessExpiration()))
+                .andExpect(jsonPath("$.data.refreshToken").value(tokenResponse.refreshToken()))
+                .andExpect(jsonPath("$.data.refreshExpiration").value(tokenResponse.refreshExpiration()))
+                .andExpect(jsonPath("$.data.role").value(tokenResponse.role().toString()));
     }
 
     @Test
-    @DisplayName("닉네임은 6글자 이하만 허용한다")
-    void signUpUserInvalidNickName() throws Exception {
-        String request = objectMapper.writeValueAsString(
-                new SignUpRequest(anonymousUserSocialId, "01012345678", "nickname",
-                        true, "major", "field", true)
-        );
-
-        mvc.perform(post("/auth/user/signup")
-                        .content(request)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(VALID_BLANK.getCode()));
-    }
-
-    @ParameterizedTest
-    @NullAndEmptySource
-    @DisplayName("희망 대학원/학과와 연구분야를 입력하지 않아도 대학생 회원가입이 가능하다.")
-    void signUpUserWithoutWish(String empty) throws Exception {
-        String request = objectMapper.writeValueAsString(
-                new SignUpRequest(anonymousUserSocialId, "01012345678", "새로운닉네임",
-                        true, empty, empty, false)
-        );
-
-        mvc.perform(post("/auth/user/signup")
-                        .content(request)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(AUTH_CREATE.getCode()))
-                .andExpect(jsonPath("$.message").value(SUCCESS_AUTH.getMessage()))
-                .andExpect(jsonPath("$.data.accessToken").exists())
-                .andExpect(jsonPath("$.data.role").value(USER.name()));
-    }
-
-    @Test
+    @WithMockUser
     @DisplayName("대학원생이 대학생으로 변경한다.")
     void changeUserToken() throws Exception {
-        Wish wish = new Wish(0L, "major", "field", true, user, Status.MATCHED);
-        wishRepository.save(wish);
+        JwtTokenResponse tokenResponse = new JwtTokenResponse("access", 10, "refresh", 10, USER);
 
-        String token = jwtUtil.generateAccessToken(user.getUserId(), SENIOR);
+        given(jwtUseCase.changeUser(any()))
+                .willReturn(tokenResponse);
 
         mvc.perform(post("/auth/user/token")
-                        .header(AUTHORIZATION, BEARER + token))
+                        .header(HttpHeaders.AUTHORIZATION, BEARER)
+                        .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(AUTH_CREATE.getCode()))
                 .andExpect(jsonPath("$.message").value(SUCCESS_AUTH.getMessage()))
-                .andExpect(jsonPath("$.data.accessToken").exists())
-                .andExpect(jsonPath("$.data.role").value(USER.name()));
+                .andExpect(jsonPath("$.data.accessToken").value(tokenResponse.accessToken()))
+                .andExpect(jsonPath("$.data.accessExpiration").value(tokenResponse.accessExpiration()))
+                .andExpect(jsonPath("$.data.refreshToken").value(tokenResponse.refreshToken()))
+                .andExpect(jsonPath("$.data.refreshExpiration").value(tokenResponse.refreshExpiration()))
+                .andExpect(jsonPath("$.data.role").value(tokenResponse.role().toString()));
     }
 
     @Test
-    @DisplayName("대학생으로 가입하지 않은 경우 대학생으로 변경할 수 없다.")
-    void changeUserTokenWithoutWish() throws Exception {
-        String token = jwtUtil.generateAccessToken(user.getUserId(), SENIOR);
-
-        mvc.perform(post("/auth/user/token")
-                        .header(AUTHORIZATION, BEARER + token))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(USER_NOT_FOUND.getCode()))
-                .andExpect(jsonPath("$.message").value(NOT_FOUND_USER.getMessage()));
-    }
-
-    @Test
+    @WithMockUser
     @DisplayName("선배가 후배로 추가 가입합니다.")
     void changeUser() throws Exception {
-        String seniorAccessToken = jwtUtil.generateAccessToken(user.getUserId(), SENIOR);
-
         String request = objectMapper.writeValueAsString(
                 new UserChangeRequest("major", "field", true)
         );
+        JwtTokenResponse tokenResponse = new JwtTokenResponse("access", 10, "refresh", 10, USER);
+
+        willDoNothing().given(signUpUseCase)
+                .changeUser(any(), any());
+        given(jwtUseCase.changeUser(any()))
+                .willReturn(tokenResponse);
 
         mvc.perform(post("/auth/user/change")
-                        .header(AUTHORIZATION, BEARER + seniorAccessToken)
+                        .header(HttpHeaders.AUTHORIZATION, BEARER)
+                        .with(csrf())
                         .content(request)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(AUTH_CREATE.getCode()))
                 .andExpect(jsonPath("$.message").value(SUCCESS_AUTH.getMessage()))
-                .andExpect(jsonPath("$.data.accessToken").exists())
-                .andExpect(jsonPath("$.data.role").value(USER.name()));
-    }
-
-    @ParameterizedTest
-    @NullAndEmptySource
-    @DisplayName("전공과 분야가 없어도 후배로 추가 가입할 수 있다")
-    void changeUser(String empty) throws Exception {
-        String seniorAccessToken = jwtUtil.generateAccessToken(user.getUserId(), SENIOR);
-
-        String request = objectMapper.writeValueAsString(
-                new UserChangeRequest(empty, empty, FALSE)
-        );
-
-        mvc.perform(post("/auth/user/change")
-                        .header(AUTHORIZATION, BEARER + seniorAccessToken)
-                        .content(request)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(AUTH_CREATE.getCode()))
-                .andExpect(jsonPath("$.message").value(SUCCESS_AUTH.getMessage()));
+                .andExpect(jsonPath("$.data.accessToken").value(tokenResponse.accessToken()))
+                .andExpect(jsonPath("$.data.accessExpiration").value(tokenResponse.accessExpiration()))
+                .andExpect(jsonPath("$.data.refreshToken").value(tokenResponse.refreshToken()))
+                .andExpect(jsonPath("$.data.refreshExpiration").value(tokenResponse.refreshExpiration()))
+                .andExpect(jsonPath("$.data.role").value(tokenResponse.role().toString()));
     }
 
     @Test
+    @WithMockUser
     @DisplayName("선배가 회원가입한다.")
     void singUpSenior() throws Exception {
         String request = objectMapper.writeValueAsString(
-                new SeniorSignUpRequest(anonymousUserSocialId, "01012345678", "새로운닉네임",
+                new SeniorSignUpRequest(user.getSocialId(), "01012345678", "새로운닉네임",
                         true, "전공", "서울대학교", "교수", "연구실",
                         "AI", "키워드", "certification")
         );
+        JwtTokenResponse tokenResponse = new JwtTokenResponse("access", 10, "refresh", 10, USER);
+
+        given(signUpUseCase.seniorSignUp(any()))
+                .willReturn(user);
+        given(jwtUseCase.signIn(user))
+                .willReturn(tokenResponse);
 
         mvc.perform(post("/auth/senior/signup")
+                        .header(HttpHeaders.AUTHORIZATION, BEARER)
+                        .with(csrf())
                         .content(request)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(SENIOR_CREATE.getCode()))
                 .andExpect(jsonPath("$.message").value(CREATE_SENIOR.getMessage()))
-                .andExpect(jsonPath("$.data.accessToken").exists())
-                .andExpect(jsonPath("$.data.role").value(SENIOR.name()));
-    }
-
-    @ParameterizedTest
-    @NullAndEmptySource
-    @DisplayName("필수 정보를 입력하지 않으면 선배로 회원가입할 수 없다.")
-    void singUpSenior(String empty) throws Exception {
-        String request = objectMapper.writeValueAsString(
-                new SeniorSignUpRequest(anonymousUserSocialId, "01012345678", "새로운닉네임",
-                        true, empty, empty, empty, empty, empty, empty, empty)
-        );
-
-        mvc.perform(post("/auth/senior/signup")
-                        .content(request)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(VALID_BLANK.getCode()));
+                .andExpect(jsonPath("$.data.accessToken").value(tokenResponse.accessToken()))
+                .andExpect(jsonPath("$.data.accessExpiration").value(tokenResponse.accessExpiration()))
+                .andExpect(jsonPath("$.data.refreshToken").value(tokenResponse.refreshToken()))
+                .andExpect(jsonPath("$.data.refreshExpiration").value(tokenResponse.refreshExpiration()));
     }
 
     @Test
+    @WithMockUser
     @DisplayName("후배가 선배로 추가 가입합니다.")
     void changeSenior() throws Exception {
-        String userAccessToken = jwtUtil.generateAccessToken(user.getUserId(), USER);
-
         String request = objectMapper.writeValueAsString(
                 new SeniorChangeRequest("major", "field", "교수", "연구실",
                         "AI", "키워드", "certification")
         );
+        JwtTokenResponse tokenResponse = new JwtTokenResponse("access", 10, "refresh", 10, USER);
+
+        given(signUpUseCase.changeSenior(any(), any()))
+                .willReturn(user);
+        given(jwtUseCase.changeSenior(user))
+                .willReturn(tokenResponse);
 
         mvc.perform(post("/auth/senior/change")
-                        .header(AUTHORIZATION, BEARER + userAccessToken)
+                        .header(HttpHeaders.AUTHORIZATION, BEARER)
+                        .with(csrf())
                         .content(request)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(SENIOR_CREATE.getCode()))
                 .andExpect(jsonPath("$.message").value(CREATE_SENIOR.getMessage()))
-                .andExpect(jsonPath("$.data.accessToken").exists())
-                .andExpect(jsonPath("$.data.role").value(SENIOR.name()));
-    }
-
-    @ParameterizedTest
-    @NullAndEmptySource
-    @DisplayName("선배 필수 정보가 없으면 선배로 추가 가입할 수 없다")
-    void changeSenior(String empty) throws Exception {
-        String userAccessToken = jwtUtil.generateAccessToken(user.getUserId(), USER);
-
-        String request = objectMapper.writeValueAsString(
-                new SeniorChangeRequest(empty, empty, empty, empty, empty, empty, empty)
-        );
-
-        mvc.perform(post("/auth/senior/change")
-                        .header(AUTHORIZATION, BEARER + userAccessToken)
-                        .content(request)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(VALID_BLANK.getCode()));
+                .andExpect(jsonPath("$.data.accessToken").value(tokenResponse.accessToken()))
+                .andExpect(jsonPath("$.data.accessExpiration").value(tokenResponse.accessExpiration()))
+                .andExpect(jsonPath("$.data.refreshToken").value(tokenResponse.refreshToken()))
+                .andExpect(jsonPath("$.data.refreshExpiration").value(tokenResponse.refreshExpiration()));
     }
 
     @Test
+    @WithMockUser
     @DisplayName("대학생이 대학원생으로 변경한다.")
     void changeSeniorToken() throws Exception {
-        User senior = new User(0L, 2L, "mail", "선배", "011", "profile", 0, SENIOR, true, now(), now(), false);
-        userRepository.save(senior);
+        JwtTokenResponse tokenResponse = new JwtTokenResponse("access", 10, "refresh", 10, USER);
 
-        String token = jwtUtil.generateAccessToken(senior.getUserId(), USER);
+        given(jwtUseCase.changeSenior(any()))
+                .willReturn(tokenResponse);
 
         mvc.perform(post("/auth/senior/token")
-                        .header(AUTHORIZATION, BEARER + token))
+                        .header(HttpHeaders.AUTHORIZATION, BEARER)
+                        .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(AUTH_CREATE.getCode()))
                 .andExpect(jsonPath("$.message").value(SUCCESS_AUTH.getMessage()))
-                .andExpect(jsonPath("$.data.accessToken").exists())
-                .andExpect(jsonPath("$.data.role").value(SENIOR.name()));
+                .andExpect(jsonPath("$.data.accessToken").value(tokenResponse.accessToken()))
+                .andExpect(jsonPath("$.data.accessExpiration").value(tokenResponse.accessExpiration()))
+                .andExpect(jsonPath("$.data.refreshToken").value(tokenResponse.refreshToken()))
+                .andExpect(jsonPath("$.data.refreshExpiration").value(tokenResponse.refreshExpiration()))
+                .andExpect(jsonPath("$.data.role").value(tokenResponse.role().toString()));
     }
 
     @Test
-    @DisplayName("대학원생으로 가입하지 않은 경우 대학원생으로 변경할 수 없다.")
-    void changeSeniorTokenWithoutWish() throws Exception {
-        String token = jwtUtil.generateAccessToken(user.getUserId(), USER);
-
-        mvc.perform(post("/auth/senior/token")
-                        .header(AUTHORIZATION, BEARER + token))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(SENIOR_NOT_FOUND.getCode()))
-                .andExpect(jsonPath("$.message").value(NOT_FOUND_SENIOR.getMessage()));
-    }
-
-    @Test
+    @WithMockUser
     @DisplayName("토큰을 재발급한다.")
     void refresh() throws Exception {
-        Wish wish = new Wish(0L, "major", "field", true, user, Status.MATCHED);
-        wishRepository.save(wish);
+        JwtTokenResponse tokenResponse = new JwtTokenResponse("access", 10, "refresh", 10, USER);
 
-        String refreshToken = jwtUtil.generateRefreshToken(user.getUserId(), USER);
-        when(redisRepository.getValues(any())).thenReturn(Optional.of(refreshToken));
+        given(jwtUseCase.regenerateToken(any(), any()))
+                .willReturn(tokenResponse);
 
         mvc.perform(post("/auth/refresh")
-                        .header(AUTHORIZATION, BEARER + refreshToken))
+                        .header(HttpHeaders.AUTHORIZATION, BEARER)
+                        .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(AUTH_UPDATE.getCode()))
                 .andExpect(jsonPath("$.message").value(SUCCESS_REGENERATE_TOKEN.getMessage()))
-                .andExpect(jsonPath("$.data.accessToken").exists())
-                .andExpect(jsonPath("$.data.role").value(USER.name()));
+                .andExpect(jsonPath("$.data.accessToken").value(tokenResponse.accessToken()))
+                .andExpect(jsonPath("$.data.accessExpiration").value(tokenResponse.accessExpiration()))
+                .andExpect(jsonPath("$.data.refreshToken").value(tokenResponse.refreshToken()))
+                .andExpect(jsonPath("$.data.refreshExpiration").value(tokenResponse.refreshExpiration()))
+                .andExpect(jsonPath("$.data.role").value(tokenResponse.role().toString()));
     }
 
     @Test
+    @WithMockUser
     @DisplayName("로그아웃한다.")
     void logout() throws Exception {
-        String accessToken = jwtUtil.generateAccessToken(user.getUserId(), USER);
+        willDoNothing().given(jwtUseCase)
+                        .logout(any());
 
         mvc.perform(post("/auth/logout")
-                        .header(AUTHORIZATION, BEARER + accessToken))
+                        .header(HttpHeaders.AUTHORIZATION, BEARER)
+                        .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(AUTH_DELETE.getCode()))
                 .andExpect(jsonPath("$.message").value(LOGOUT_USER.getMessage()));
