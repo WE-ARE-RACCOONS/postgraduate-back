@@ -1,457 +1,331 @@
 package com.postgraduate.domain.mentoring.presentation;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.postgraduate.IntegrationTest;
+import com.postgraduate.domain.mentoring.application.dto.*;
+import com.postgraduate.domain.mentoring.application.dto.req.MentoringApplyRequest;
 import com.postgraduate.domain.mentoring.application.dto.req.MentoringDateRequest;
+import com.postgraduate.domain.mentoring.application.dto.res.*;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
-import com.postgraduate.domain.mentoring.domain.entity.constant.Status;
-import com.postgraduate.domain.mentoring.domain.repository.MentoringRepository;
-import com.postgraduate.domain.payment.domain.entity.Payment;
-import com.postgraduate.domain.payment.domain.repository.PaymentRepository;
 import com.postgraduate.domain.refuse.application.dto.req.MentoringRefuseRequest;
-import com.postgraduate.domain.salary.domain.entity.Salary;
-import com.postgraduate.domain.salary.domain.entity.SalaryAccount;
-import com.postgraduate.domain.salary.domain.repository.SalaryRepository;
 import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
-import com.postgraduate.domain.senior.domain.repository.SeniorRepository;
 import com.postgraduate.domain.user.domain.entity.User;
-import com.postgraduate.domain.user.domain.entity.constant.Role;
-import com.postgraduate.domain.user.domain.repository.UserRepository;
-import com.postgraduate.global.config.security.jwt.util.JwtUtils;
-import com.postgraduate.global.exception.constant.ErrorCode;
-import com.postgraduate.global.slack.SlackLogErrorMessage;
-import org.junit.jupiter.api.BeforeEach;
+import com.postgraduate.support.ControllerTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.EnumSource;
-import org.junit.jupiter.params.provider.NullAndEmptySource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.junit.jupiter.params.provider.ValueSource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 
-import java.io.IOException;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.util.List;
 
-import static com.postgraduate.domain.auth.presentation.constant.AuthResponseCode.AUTH_DENIED;
-import static com.postgraduate.domain.auth.presentation.constant.AuthResponseMessage.PERMISSION_DENIED;
 import static com.postgraduate.domain.mentoring.presentation.constant.MentoringResponseCode.*;
 import static com.postgraduate.domain.mentoring.presentation.constant.MentoringResponseMessage.*;
-import static com.postgraduate.domain.payment.domain.entity.constant.Status.DONE;
-import static com.postgraduate.domain.salary.util.SalaryUtil.getSalaryDate;
-import static com.postgraduate.domain.senior.domain.entity.constant.Status.WAITING;
-import static java.time.LocalDateTime.now;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class MentoringControllerTest extends IntegrationTest {
-    private static final String AUTHORIZATION = "Authorization";
-    private static final String BEARER = "Bearer ";
-    @Autowired
-    private ObjectMapper objectMapper;
-    @Autowired
-    private JwtUtils jwtUtil;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private SeniorRepository seniorRepository;
-    @Autowired
-    private MentoringRepository mentoringRepository;
-    @Autowired
-    private SalaryRepository salaryRepository;
-    @Autowired
-    private PaymentRepository paymentRepository;
-    @MockBean
-    private SlackLogErrorMessage slackLogErrorMessage;
-    private User user;
-    private Senior senior;
-    private Payment payment;
-    private Salary salary;
-    private String userAccessToken;
-    private String seniorAccessToken;
+class MentoringControllerTest extends ControllerTest {
+    private static final String BEARER = "Bearer token";
+    Mentoring waitingMentoring = resource.getWaitingMentoring();
+    Mentoring expectedMentoring = resource.getExpectedMentoring();
+    Mentoring doneMentoring = resource.getDoneMentoring();
+    Senior senior = resource.getSenior();
+    Info info = senior.getInfo();
+    Profile profile = senior.getProfile();
+    User userOfSenior = resource.getSeniorUser();
+    User user = resource.getUser();
 
-    @BeforeEach
-    void setUp() throws IOException {
-        user = new User(0L, 1L, "mail", "후배", "011", "profile", 0, Role.USER, true, now(), now(), false);
-        userRepository.save(user);
+    @Test
+    @DisplayName("대학생이 확정대기 상태의 멘토링 목록을 조회한다")
+    @WithMockUser
+    void getWaitingMentorings() throws Exception {
+        WaitingMentoringInfo mentoringInfo = new WaitingMentoringInfo(waitingMentoring.getMentoringId(), senior.getSeniorId(), userOfSenior.getProfile(), userOfSenior.getNickName(), info.getPostgradu(), info.getMajor(), info.getLab(), waitingMentoring.getTerm());
+        WaitingMentoringResponse waitingResponse = new WaitingMentoringResponse(List.of(mentoringInfo));
 
-        User userOfSenior = new User(0L, 2L, "mail", "선배", "012", "profile", 0, Role.SENIOR, true, now(), now(), false);
-        userRepository.save(userOfSenior);
+        given(mentoringUserInfoUseCase.getWaiting(any()))
+                .willReturn(waitingResponse);
 
-        Info info = new Info("major", "서울대학교", "교수님", "키워드1,키워드2", "랩실", "인공지능", false, false, "인공지능,키워드1,키워드2");
-        Profile profile = new Profile("저는요", "한줄소개", "대상", "chatLink", 40);
-        senior = new Senior(0L, userOfSenior, "certification", WAITING, 0, info, profile, now(), now());
-        seniorRepository.save(senior);
-
-        SalaryAccount salaryAccount = new SalaryAccount("bank", "1234", "holder");
-        salary = new Salary(0L, false, senior, 20000, getSalaryDate(), LocalDateTime.now(), salaryAccount);
-        salaryRepository.save(salary);
-
-        payment = new Payment(0L, user, senior, 20000, "1", "123", "123", LocalDateTime.now(), LocalDateTime.now(), DONE);
-        paymentRepository.save(payment);
-
-        userAccessToken = jwtUtil.generateAccessToken(user.getUserId(), Role.USER);
-        seniorAccessToken = jwtUtil.generateAccessToken(userOfSenior.getUserId(), Role.SENIOR);
-
-        doNothing().when(slackLogErrorMessage).sendSlackLog(any());
-    }
-
-    @ParameterizedTest
-    @EnumSource(value = Status.class, names = {"WAITING", "DONE"})
-    @DisplayName("대학생이 확정대기 및 완료 상태의 멘토링 목록을 조회한다")
-    void getWaitingMentorings(Status status) throws Exception {
-        Mentoring mentoring = new Mentoring(0L, user, senior, payment, salary, "topic", "question", "date", 40, status, now(), now());
-        mentoringRepository.save(mentoring);
-
-        mvc.perform(get("/mentoring/me/{status}", status.name().toLowerCase())
-                        .header(AUTHORIZATION, BEARER + userAccessToken))
+        mvc.perform(get("/mentoring/me/waiting")
+                        .header(HttpHeaders.AUTHORIZATION, BEARER ))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(MENTORING_FIND.getCode()))
                 .andExpect(jsonPath("$.message").value(GET_MENTORING_LIST_INFO.getMessage()))
-                .andExpect(jsonPath("$.data.mentoringInfos[0].mentoringId").value(mentoring.getMentoringId()))
-                .andExpect(jsonPath("$.data.mentoringInfos[0].chatLink").doesNotExist());
+                .andExpect(jsonPath("$.data.mentoringInfos[0].mentoringId").value(mentoringInfo.mentoringId()))
+                .andExpect(jsonPath("$.data.mentoringInfos[0].seniorId").value(mentoringInfo.seniorId()))
+                .andExpect(jsonPath("$.data.mentoringInfos[0].profile").value(mentoringInfo.profile()))
+                .andExpect(jsonPath("$.data.mentoringInfos[0].nickName").value(mentoringInfo.nickName()))
+                .andExpect(jsonPath("$.data.mentoringInfos[0].postgradu").value(mentoringInfo.postgradu()))
+                .andExpect(jsonPath("$.data.mentoringInfos[0].major").value(mentoringInfo.major()))
+                .andExpect(jsonPath("$.data.mentoringInfos[0].lab").value(mentoringInfo.lab()))
+                .andExpect(jsonPath("$.data.mentoringInfos[0].term").value(mentoringInfo.term()));
+
     }
 
     @Test
+    @WithMockUser
     @DisplayName("대학생이 예정된 멘토링 목록을 조회한다")
     void getExpectedMentorings() throws Exception {
-        Mentoring mentoring = new Mentoring(0L, user, senior, payment, null, "topic", "question", "date", 40, Status.EXPECTED, now(), now());
-        mentoringRepository.save(mentoring);
+        ExpectedMentoringInfo mentoringInfo = new ExpectedMentoringInfo(expectedMentoring.getMentoringId(), senior.getSeniorId(), userOfSenior.getProfile(), userOfSenior.getNickName(), info.getPostgradu(), info.getMajor(), info.getLab(), expectedMentoring.getDate(), expectedMentoring.getTerm(), profile.getChatLink());
+        ExpectedMentoringResponse expectedResponse = new ExpectedMentoringResponse(List.of(mentoringInfo));
+        given(mentoringUserInfoUseCase.getExpected(any()))
+                .willReturn(expectedResponse);
 
         mvc.perform(get("/mentoring/me/expected")
-                        .header(AUTHORIZATION, BEARER + userAccessToken))
+                        .header(HttpHeaders.AUTHORIZATION, BEARER))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(MENTORING_FIND.getCode()))
                 .andExpect(jsonPath("$.message").value(GET_MENTORING_LIST_INFO.getMessage()))
-                .andExpect(jsonPath("$.data.mentoringInfos[0].mentoringId").value(mentoring.getMentoringId()));
+                .andExpect(jsonPath("$.data.mentoringInfos[0].mentoringId").value(mentoringInfo.mentoringId()))
+                .andExpect(jsonPath("$.data.mentoringInfos[0].seniorId").value(mentoringInfo.seniorId()))
+                .andExpect(jsonPath("$.data.mentoringInfos[0].profile").value(mentoringInfo.profile()))
+                .andExpect(jsonPath("$.data.mentoringInfos[0].nickName").value(mentoringInfo.nickName()))
+                .andExpect(jsonPath("$.data.mentoringInfos[0].postgradu").value(mentoringInfo.postgradu()))
+                .andExpect(jsonPath("$.data.mentoringInfos[0].major").value(mentoringInfo.major()))
+                .andExpect(jsonPath("$.data.mentoringInfos[0].lab").value(mentoringInfo.lab()))
+                .andExpect(jsonPath("$.data.mentoringInfos[0].date").value(mentoringInfo.date()))
+                .andExpect(jsonPath("$.data.mentoringInfos[0].term").value(mentoringInfo.term()))
+                .andExpect(jsonPath("$.data.mentoringInfos[0].chatLink").value(mentoringInfo.chatLink()));
     }
 
-    @ParameterizedTest
-    @EnumSource(value = Status.class, names = {"WAITING", "EXPECTED"})
-    @DisplayName("대학생이 멘토링을 상세조회한다.")
-    void getMentoringDetail(Status status) throws Exception {
-        Mentoring mentoring = new Mentoring(0L, user, senior, payment, null, "topic", "question", "date", 40, status, now(), now());
-        mentoringRepository.save(mentoring);
+    @Test
+    @WithMockUser
+    @DisplayName("대학생이 완료된 멘토링 목록을 조회한다.")
+    void getDoneMentorings() throws Exception {
+        DoneMentoringInfo mentoringInfo = new DoneMentoringInfo(expectedMentoring.getMentoringId(), senior.getSeniorId(), userOfSenior.getProfile(), userOfSenior.getNickName(), info.getPostgradu(), info.getMajor(), info.getLab(), expectedMentoring.getDate(), expectedMentoring.getTerm());
+        DoneMentoringResponse doneResponse = new DoneMentoringResponse(List.of(mentoringInfo));
+        given(mentoringUserInfoUseCase.getDone(any()))
+                .willReturn(doneResponse);
 
-        mvc.perform(get("/mentoring/me/{mentoringId}", mentoring.getMentoringId())
-                        .header(AUTHORIZATION, BEARER + userAccessToken))
+        mvc.perform(get("/mentoring/me/done")
+                        .header(HttpHeaders.AUTHORIZATION, BEARER))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(MENTORING_FIND.getCode()))
+                .andExpect(jsonPath("$.message").value(GET_MENTORING_LIST_INFO.getMessage()))
+                .andExpect(jsonPath("$.data.mentoringInfos[0].mentoringId").value(mentoringInfo.mentoringId()))
+                .andExpect(jsonPath("$.data.mentoringInfos[0].seniorId").value(mentoringInfo.seniorId()))
+                .andExpect(jsonPath("$.data.mentoringInfos[0].profile").value(mentoringInfo.profile()))
+                .andExpect(jsonPath("$.data.mentoringInfos[0].nickName").value(mentoringInfo.nickName()))
+                .andExpect(jsonPath("$.data.mentoringInfos[0].postgradu").value(mentoringInfo.postgradu()))
+                .andExpect(jsonPath("$.data.mentoringInfos[0].major").value(mentoringInfo.major()))
+                .andExpect(jsonPath("$.data.mentoringInfos[0].lab").value(mentoringInfo.lab()))
+                .andExpect(jsonPath("$.data.mentoringInfos[0].date").value(mentoringInfo.date()))
+                .andExpect(jsonPath("$.data.mentoringInfos[0].term").value(mentoringInfo.term()));
+    }
+
+    @Test
+    @WithMockUser
+    @DisplayName("대학생이 신청한 멘토링 상세 조회한다.")
+    void getMentoringDetail() throws Exception {
+        AppliedMentoringDetailResponse detailResponse = new AppliedMentoringDetailResponse(senior.getSeniorId(), userOfSenior.getProfile(), userOfSenior.getNickName(), info.getPostgradu(), info.getMajor(), info.getLab(), waitingMentoring.getTopic(), waitingMentoring.getQuestion(), waitingMentoring.getDate().split(","));
+        given(mentoringUserInfoUseCase.getMentoringDetail(any(), any()))
+                .willReturn(detailResponse);
+
+        mvc.perform(get("/mentoring/me/{mentoringId}", waitingMentoring.getMentoringId())
+                        .header(HttpHeaders.AUTHORIZATION, BEARER))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(MENTORING_FIND.getCode()))
                 .andExpect(jsonPath("$.message").value(GET_MENTORING_DETAIL_INFO.getMessage()))
-                .andExpect(jsonPath("$.data.seniorId").value(senior.getSeniorId()));
+                .andExpect(jsonPath("$.data.seniorId").value(detailResponse.seniorId()))
+                .andExpect(jsonPath("$.data.profile").value(detailResponse.profile()))
+                .andExpect(jsonPath("$.data.nickName").value(detailResponse.nickName()))
+                .andExpect(jsonPath("$.data.postgradu").value(detailResponse.postgradu()))
+                .andExpect(jsonPath("$.data.major").value(detailResponse.major()))
+                .andExpect(jsonPath("$.data.lab").value(detailResponse.lab()))
+                .andExpect(jsonPath("$.data.topic").value(detailResponse.topic()))
+                .andExpect(jsonPath("$.data.question").value(detailResponse.question()));
     }
-
-    @Test
-    @DisplayName("자신이 신청한 멘토링이 아니라면 상세조회되지 않는다")
-    void getOtherMentoringDetail() throws Exception {
-        User otherUser = new User(-1L, 0L, "mail", "다른 후배", "011", "profile", 0, Role.USER, true, now(), now(), false);
-        userRepository.save(otherUser);
-        Mentoring mentoring = new Mentoring(0L, otherUser, senior, payment, null, "topic", "question", "date", 40, Status.EXPECTED, now(), now());
-        mentoringRepository.save(mentoring);
-
-        mvc.perform(get("/mentoring/me/{mentoringId}", mentoring.getMentoringId())
-                        .header(AUTHORIZATION, BEARER + userAccessToken))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(MENTORING_NOT_FOUND.getCode()))
-                .andExpect(jsonPath("$.message").value(NOT_FOUND_MENTORING.getMessage()));
-    }
-
 
     @ParameterizedTest
-    @EnumSource(value = Status.class, names = {"DONE", "CANCEL", "REFUSE"})
-    @DisplayName("대학생의 완료, 취소, 거절 상태의 멘토링은 상세조회되지 않는다.")
-    void getDoneMentoringDetail(Status status) throws Exception {
-        Mentoring mentoring = new Mentoring(0L, user, senior, payment, null, "topic", "question", "date", 40, status, now(), now());
-        mentoringRepository.save(mentoring);
+    @ValueSource(booleans = {true, false})
+    @WithMockUser
+    @DisplayName("대학생이 멘토링을 신청한다.")
+    void applyMentoring(boolean tf) throws Exception {
+        String request = objectMapper.writeValueAsString(new MentoringApplyRequest("orderId", "topic", "question", "date1,date2,date3"));
 
-        mvc.perform(get("/mentoring/me/{mentoringId}", mentoring.getMentoringId())
-                        .header(AUTHORIZATION, BEARER + userAccessToken))
+        ApplyingResponse applyingResponse = new ApplyingResponse(tf);
+        given(mentoringManageUseCase.applyMentoring(any(), any()))
+                .willReturn(applyingResponse);
+
+        mvc.perform(post("/mentoring/applying")
+                        .header(HttpHeaders.AUTHORIZATION, BEARER )
+                        .content(request)
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(MENTORING_NOT_FOUND.getCode()))
-                .andExpect(jsonPath("$.message").value(NOT_FOUND_MENTORING.getMessage()));
+                .andExpect(jsonPath("$.code").value(MENTORING_CREATE.getCode()))
+                .andExpect(jsonPath("$.message").value(CREATE_MENTORING.getMessage()))
+                .andExpect(jsonPath("$.data.account").value(applyingResponse.account()));
     }
 
-//    @Test
-//    @DisplayName("대학생이 멘토링을 신청한다.")
-//    void applyMentoring() throws Exception {
-//        String request = objectMapper.writeValueAsString(new MentoringApplyRequest("1", "topic", "question", "date1,date2,date3"));
-//
-//        mvc.perform(post("/mentoring/applying")
-//                        .header(AUTHORIZATION, BEARER + userAccessToken)
-//                        .content(request)
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.code").value(MENTORING_CREATE.getCode()))
-//                .andExpect(jsonPath("$.message").value(CREATE_MENTORING.getMessage()));
-//    }
-
-//    @ParameterizedTest
-//    @ValueSource(strings = {"date1", "date1,date2", "date1,date2,date3,date4"})
-//    @DisplayName("날짜가 3개가 아니라면 멘토링을 신청할 수 없다.")
-//    void applyMentoringWithoutThreeDates(String date) throws Exception {
-//        String request = objectMapper.writeValueAsString(new MentoringApplyRequest("1", "topic", "question", date));
-//
-//        mvc.perform(post("/mentoring/applying")
-//                        .header(AUTHORIZATION, BEARER + userAccessToken)
-//                        .content(request)
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.code").value(MentoringResponseCode.INVALID_DATE.getCode()))
-//                .andExpect(jsonPath("$.message").value(MentoringResponseMessage.INVALID_DATE.getMessage()));
-//
-//    }
-//todo:    환불 로직 추가되어 수정 필요
-
-//    @ParameterizedTest
-//    @NullAndEmptySource
-//    @DisplayName("신청서가 빈 칸이라면 멘토링을 신청할 수 없다")
-//    void emptyApplyMentoring(String empty) throws Exception {
-//        String request = objectMapper.writeValueAsString(new MentoringApplyRequest("1", empty, empty, empty));
-//
-//        mvc.perform(post("/mentoring/applying")
-//                        .header(AUTHORIZATION, BEARER + userAccessToken)
-//                        .content(request)
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.code").value(ErrorCode.VALID_BLANK.getCode()));
-//    }
-//todo: 환불 로직 추가되어 수정 필요
-
     @Test
+    @WithMockUser
     @DisplayName("대학생이 멘토링을 완료한다.")
     void updateMentoringDone() throws Exception {
-        Mentoring mentoring = new Mentoring(0L, user, senior, payment, null, "topic", "question", "date", 40, Status.EXPECTED, now(), now());
-        mentoringRepository.save(mentoring);
+        willDoNothing()
+                .given(mentoringManageUseCase)
+                .updateDone(any(), any());
 
-        mvc.perform(patch("/mentoring/me/{mentoringId}/done", mentoring.getMentoringId())
-                        .header(AUTHORIZATION, BEARER + userAccessToken))
+        mvc.perform(patch("/mentoring/me/{mentoringId}/done", expectedMentoring.getMentoringId())
+                        .with(csrf())
+                        .header(HttpHeaders.AUTHORIZATION, BEARER ))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(MENTORING_UPDATE.getCode()))
                 .andExpect(jsonPath("$.message").value(UPDATE_MENTORING.getMessage()));
     }
 
-    @ParameterizedTest
-    @EnumSource(value = Status.class, names = {"WAITING", "DONE", "CANCEL", "REFUSE"})
-    @DisplayName("진행예정이 아닌 멘토링의 경우 완료할 수 없다.")
-    void updateMentoringDoneWithoutExpected(Status status) throws Exception {
-        Mentoring mentoring = new Mentoring(0L, user, senior, payment, null, "topic", "question", "date", 40, status, now(), now());
-        mentoringRepository.save(mentoring);
+    @Test
+    @WithMockUser
+    @DisplayName("대학생이 멘토링을 취소한다.")
+    void updateMentoringCancel() throws Exception {
+        willDoNothing()
+                .given(mentoringManageUseCase)
+                .updateCancel(any(), any());
 
-        SalaryAccount salaryAccount = new SalaryAccount("bank", "1234", "holder");
-        Salary salary = new Salary(0L, false, senior, 10000, getSalaryDate(), now(), salaryAccount);
-        salaryRepository.save(salary);
-
-        mvc.perform(patch("/mentoring/me/{mentoringId}/done", mentoring.getMentoringId())
-                        .header(AUTHORIZATION, BEARER + userAccessToken))
+        mvc.perform(patch("/mentoring/me/{mentoringId}/cancel", waitingMentoring.getMentoringId())
+                        .with(csrf())
+                        .header(HttpHeaders.AUTHORIZATION, BEARER ))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(MENTORING_NOT_FOUND.getCode()))
-                .andExpect(jsonPath("$.message").value(NOT_FOUND_MENTORING.getMessage()));
+                .andExpect(jsonPath("$.code").value(MENTORING_UPDATE.getCode()))
+                .andExpect(jsonPath("$.message").value(UPDATE_MENTORING.getMessage()));
     }
 
-//    @Test
-//    @DisplayName("대학생이 멘토링을 취소한다.")
-//    void updateMentoringCancel() throws Exception {
-//        Mentoring mentoring = new Mentoring(0L, user, senior, payment, "topic", "question", "date", 40, Status.WAITING, now(), now());
-//        mentoringRepository.save(mentoring);
-//
-//        mvc.perform(patch("/mentoring/me/{mentoringId}/cancel", mentoring.getMentoringId())
-//                        .header(AUTHORIZATION, BEARER + userAccessToken))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.code").value(MENTORING_UPDATE.getCode()))
-//                .andExpect(jsonPath("$.message").value(UPDATE_MENTORING.getMessage()));
-//    }
-    //todo : 환불 관련하여 작성 필요 (환불 처리에 대한 코드가 발생하여 다를 수 있음)
+    @Test
+    @WithMockUser("SENIOR")
+    @DisplayName("대학원생이 확정 대기 멘토링 목록을 조회한다.")
+    void getSeniorWaitingMentorings() throws Exception {
+        WaitingSeniorMentoringInfo waitingMentoringInfo = new WaitingSeniorMentoringInfo(waitingMentoring.getMentoringId(), user.getProfile(), user.getNickName(), waitingMentoring.getTerm(), "remain");
+        WaitingSeniorMentoringResponse mentoringResponse = new WaitingSeniorMentoringResponse(List.of(waitingMentoringInfo));
+        given(mentoringSeniorInfoUseCase.getSeniorWaiting(any()))
+                .willReturn(mentoringResponse);
 
-    @ParameterizedTest
-    @EnumSource(value = Status.class, names = {"EXPECTED", "DONE", "CANCEL", "REFUSE"})
-    @DisplayName("멘토링이 확정대기 상태가 아니라면 취소할 수 없다.")
-    void updateMentoringCancelWithoutWaiting(Status status) throws Exception {
-        Mentoring mentoring = new Mentoring(0L, user, senior, payment, null, "topic", "question", "date", 40, status, now(), now());
-        mentoringRepository.save(mentoring);
-
-        mvc.perform(patch("/mentoring/me/{mentoringId}/cancel", mentoring.getMentoringId())
-                        .header(AUTHORIZATION, BEARER + userAccessToken))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(MENTORING_NOT_FOUND.getCode()))
-                .andExpect(jsonPath("$.message").value(NOT_FOUND_MENTORING.getMessage()));
-    }
-
-    @ParameterizedTest
-    @EnumSource(value = Status.class, names = {"WAITING", "EXPECTED", "DONE"})
-    @DisplayName("대학원생이 멘토링 목록을 조회한다.")
-    void getSeniorMentorings(Status status) throws Exception {
-        Mentoring mentoring = new Mentoring(0L, user, senior, payment, salary, "topic", "question", "2024-01-20-18-00", 40, status, now(), now());
-        mentoringRepository.save(mentoring);
-
-        mvc.perform(get("/mentoring/senior/me/{status}", status.name().toLowerCase())
-                        .header(AUTHORIZATION, BEARER + seniorAccessToken))
+        mvc.perform(get("/mentoring/senior/me/waiting")
+                        .header(HttpHeaders.AUTHORIZATION, BEARER ))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(MENTORING_FIND.getCode()))
                 .andExpect(jsonPath("$.message").value(GET_MENTORING_LIST_INFO.getMessage()))
-                .andExpect(jsonPath("$.data.seniorMentoringInfos[0].mentoringId").value(mentoring.getMentoringId()));
+                .andExpect(jsonPath("$.data.seniorMentoringInfos[0].mentoringId").value(waitingMentoringInfo.mentoringId()))
+                .andExpect(jsonPath("$.data.seniorMentoringInfos[0].profile").value(waitingMentoringInfo.profile()))
+                .andExpect(jsonPath("$.data.seniorMentoringInfos[0].nickName").value(waitingMentoringInfo.nickName()))
+                .andExpect(jsonPath("$.data.seniorMentoringInfos[0].term").value(waitingMentoringInfo.term()))
+                .andExpect(jsonPath("$.data.seniorMentoringInfos[0].remainTime").value(waitingMentoringInfo.remainTime()));
+    }
+
+    @Test
+    @WithMockUser("SENIOR")
+    @DisplayName("대학원생이 진행 예정 멘토링 목록을 조회한다.")
+    void getSeniorExpectedMentorings() throws Exception {
+        ExpectedSeniorMentoringInfo expectedMentoringInfo = new ExpectedSeniorMentoringInfo(expectedMentoring.getMentoringId(), user.getProfile(), user.getNickName(), expectedMentoring.getTerm(), expectedMentoring.getDate(), 1L);
+        ExpectedSeniorMentoringResponse mentoringResponse = new ExpectedSeniorMentoringResponse(List.of(expectedMentoringInfo));
+        given(mentoringSeniorInfoUseCase.getSeniorExpected(any()))
+                .willReturn(mentoringResponse);
+
+        mvc.perform(get("/mentoring/senior/me/expected")
+                        .header(HttpHeaders.AUTHORIZATION, BEARER ))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(MENTORING_FIND.getCode()))
+                .andExpect(jsonPath("$.message").value(GET_MENTORING_LIST_INFO.getMessage()))
+                .andExpect(jsonPath("$.data.seniorMentoringInfos[0].mentoringId").value(expectedMentoringInfo.mentoringId()))
+                .andExpect(jsonPath("$.data.seniorMentoringInfos[0].profile").value(expectedMentoringInfo.profile()))
+                .andExpect(jsonPath("$.data.seniorMentoringInfos[0].nickName").value(expectedMentoringInfo.nickName()))
+                .andExpect(jsonPath("$.data.seniorMentoringInfos[0].term").value(expectedMentoringInfo.term()))
+                .andExpect(jsonPath("$.data.seniorMentoringInfos[0].date").value(expectedMentoringInfo.date()))
+                .andExpect(jsonPath("$.data.seniorMentoringInfos[0].dDay").value(expectedMentoringInfo.dDay()));
     }
 
     @ParameterizedTest
-    @EnumSource(value = Status.class, names = {"WAITING", "EXPECTED"})
-    @DisplayName("대학원생이 멘토링을 상세조회합니다.")
-    void getSeniorMentoringDetails(Status status) throws Exception {
-        Mentoring mentoring = new Mentoring(0L, user, senior, payment, null, "topic", "question", "date", 40, status, now(), now());
-        mentoringRepository.save(mentoring);
+    @ValueSource(booleans = {true, false})
+    @WithMockUser("SENIOR")
+    @DisplayName("대학원생이 완료 멘토링 목록을 조회한다.")
+    void getSeniorDoneMentorings(boolean tf) throws Exception {
+        DoneSeniorMentoringInfo doneMentoringInfo = new DoneSeniorMentoringInfo(doneMentoring.getMentoringId(), user.getProfile(), user.getNickName(), doneMentoring.getTerm(), doneMentoring.getDate(), LocalDate.now(), tf);
+        DoneSeniorMentoringResponse mentoringResponse = new DoneSeniorMentoringResponse(List.of(doneMentoringInfo));
+        given(mentoringSeniorInfoUseCase.getSeniorDone(any()))
+                .willReturn(mentoringResponse);
 
-        mvc.perform(get("/mentoring/senior/me/{mentoringId}", mentoring.getMentoringId())
-                        .header(AUTHORIZATION, BEARER + seniorAccessToken))
+        mvc.perform(get("/mentoring/senior/me/done")
+                        .header(HttpHeaders.AUTHORIZATION, BEARER ))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(MENTORING_FIND.getCode()))
+                .andExpect(jsonPath("$.message").value(GET_MENTORING_LIST_INFO.getMessage()))
+                .andExpect(jsonPath("$.data.seniorMentoringInfos[0].mentoringId").value(doneMentoringInfo.mentoringId()))
+                .andExpect(jsonPath("$.data.seniorMentoringInfos[0].profile").value(doneMentoringInfo.profile()))
+                .andExpect(jsonPath("$.data.seniorMentoringInfos[0].nickName").value(doneMentoringInfo.nickName()))
+                .andExpect(jsonPath("$.data.seniorMentoringInfos[0].term").value(doneMentoringInfo.term()))
+                .andExpect(jsonPath("$.data.seniorMentoringInfos[0].date").value(doneMentoringInfo.date()))
+                .andExpect(jsonPath("$.data.seniorMentoringInfos[0].salaryDate").value(doneMentoringInfo.salaryDate().toString()))
+                .andExpect(jsonPath("$.data.seniorMentoringInfos[0].status").value(doneMentoringInfo.status()));
+    }
+
+    @Test
+    @WithMockUser("SENIOR")
+    @DisplayName("대학원생이 멘토링을 상세조회합니다.")
+    void getSeniorMentoringDetails() throws Exception {
+        SeniorMentoringDetailResponse detailResponse = new SeniorMentoringDetailResponse(user.getProfile(), user.getNickName(), waitingMentoring.getTopic(), waitingMentoring.getQuestion(), waitingMentoring.getDate().split(","), waitingMentoring.getTerm());
+        given(mentoringSeniorInfoUseCase.getSeniorMentoringDetail(any(), any()))
+                .willReturn(detailResponse);
+
+        mvc.perform(get("/mentoring/senior/me/{mentoringId}", waitingMentoring.getMentoringId())
+                        .header(HttpHeaders.AUTHORIZATION, BEARER ))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(MENTORING_FIND.getCode()))
                 .andExpect(jsonPath("$.message").value(GET_MENTORING_DETAIL_INFO.getMessage()))
-                .andExpect(jsonPath("$.data.nickName").value("후배"));
-
-    }
-
-    @Test
-    @DisplayName("자신이 신청받은 멘토링이 아니라면 상세조회되지 않는다")
-    void getOtherSeniorMentoringDetail() throws Exception {
-        User otherUser = new User(-1L, 0L, "mail", "다른 후배", "011", "profile", 0, Role.USER, true, now(), now(), false);
-        userRepository.save(otherUser);
-
-        Info info = new Info("major", "서울대학교", "교수님", "키워드1,키워드2", "랩실", "인공지능", false, false, "인공지능,키워드1,키워드2");
-        Senior otherSenior = new Senior(-1L, otherUser, "certification", WAITING, 0, info, null, now(), now());
-        seniorRepository.save(otherSenior);
-
-        Mentoring mentoring = new Mentoring(0L, otherUser, otherSenior, payment, null, "topic", "question", "date", 40, Status.EXPECTED, now(), now());
-        mentoringRepository.save(mentoring);
-
-        mvc.perform(get("/mentoring/senior/me/{mentoringId}", mentoring.getMentoringId())
-                        .header(AUTHORIZATION, BEARER + userAccessToken))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(AUTH_DENIED.getCode()))
-                .andExpect(jsonPath("$.message").value(PERMISSION_DENIED.getMessage()));
+                .andExpect(jsonPath("$.data.profile").value(detailResponse.profile()))
+                .andExpect(jsonPath("$.data.nickName").value(detailResponse.nickName()))
+                .andExpect(jsonPath("$.data.topic").value(detailResponse.topic()))
+                .andExpect(jsonPath("$.data.question").value(detailResponse.question()))
+                .andExpect(jsonPath("$.data.dates").isArray())
+                .andExpect(jsonPath("$.data.term").value(detailResponse.term()));
     }
 
     @ParameterizedTest
-    @EnumSource(value = Status.class, names = {"DONE", "CANCEL", "REFUSE"})
-    @DisplayName("대학원생의 완료, 취소, 거절 상태의 멘토링은 상세조회되지 않는다.")
-    void doNotGetMentoringDetails(Status status) throws Exception {
-        Mentoring mentoring = new Mentoring(0L, user, senior, payment, null, "topic", "question", "date", 40, status, now(), now());
-        mentoringRepository.save(mentoring);
+    @ValueSource(booleans = {true, false})
+    @WithMockUser("SENIOR")
+    @DisplayName("대학원생이 멘토링을 수락한다.")
+    void updateSeniorMentoringExpected(boolean tf) throws Exception {
+        String request = objectMapper.writeValueAsString(new MentoringDateRequest("date"));
 
-        mvc.perform(get("/mentoring/senior/me/{mentoringId}", mentoring.getMentoringId())
-                        .header(AUTHORIZATION, BEARER + seniorAccessToken))
+        given(mentoringManageUseCase.updateExpected(any(), any(), any()))
+                .willReturn(tf);
+
+        mvc.perform(patch("/mentoring/senior/me/{mentoringId}/expected", waitingMentoring.getMentoringId())
+                        .header(HttpHeaders.AUTHORIZATION, BEARER )
+                        .with(csrf())
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(MENTORING_NOT_FOUND.getCode()))
-                .andExpect(jsonPath("$.message").value(NOT_FOUND_MENTORING.getMessage()));
+                .andExpect(jsonPath("$.code").value(MENTORING_UPDATE.getCode()))
+                .andExpect(jsonPath("$.message").value(UPDATE_MENTORING.getMessage()))
+                .andExpect(jsonPath("$.data").value(tf));
     }
 
     @Test
-    @DisplayName("대학원생이 멘토링을 수락한다.")
-    void updateSeniorMentoringExpected() throws Exception {
-        Mentoring mentoring = new Mentoring(0L, user, senior, payment, null, "topic", "question", "2024-04-18-18-00,2024-04-18-18-00,2024-04-18-18-00", 40, Status.WAITING, now(), now());
-        mentoringRepository.save(mentoring);
+    @WithMockUser("SENIOR")
+    @DisplayName("대학원생이 멘토링을 거절한다.")
+    void updateSeniorMentoringRefuse() throws Exception {
+        String request = objectMapper.writeValueAsString(new MentoringRefuseRequest("reason"));
 
-        String request = objectMapper.writeValueAsString(new MentoringDateRequest("2024-04-18-18-00"));
-        mvc.perform(patch("/mentoring/senior/me/{mentoringId}/expected", mentoring.getMentoringId())
-                        .header(AUTHORIZATION, BEARER + seniorAccessToken)
+        willDoNothing()
+                .given(mentoringManageUseCase)
+                .updateRefuse(any(), any(), any());
+
+        mvc.perform(patch("/mentoring/senior/me/{mentoringId}/refuse", waitingMentoring.getMentoringId())
+                        .header(HttpHeaders.AUTHORIZATION, BEARER )
+                        .with(csrf())
                         .content(request)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(MENTORING_UPDATE.getCode()))
                 .andExpect(jsonPath("$.message").value(UPDATE_MENTORING.getMessage()));
-    }
-
-    @ParameterizedTest
-    @EnumSource(value = Status.class, names = {"EXPECTED", "DONE", "CANCEL", "REFUSE"})
-    @DisplayName("멘토링이 확정대기 상태가 아니라면 수락할 수 없다.")
-    void updateSeniorMentoringExpectedWithoutWaiting(Status status) throws Exception {
-        Mentoring mentoring = new Mentoring(0L, user, senior, payment, null, "topic", "question", "date1,date2,date3", 40, status, now(), now());
-        mentoringRepository.save(mentoring);
-
-        String request = objectMapper.writeValueAsString(new MentoringDateRequest("date1"));
-        mvc.perform(patch("/mentoring/senior/me/{mentoringId}/expected", mentoring.getMentoringId())
-                        .header(AUTHORIZATION, BEARER + seniorAccessToken)
-                        .content(request)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(MENTORING_NOT_FOUND.getCode()))
-                .andExpect(jsonPath("$.message").value(NOT_FOUND_MENTORING.getMessage()));
-    }
-
-    @ParameterizedTest
-    @NullAndEmptySource
-    @DisplayName("확정날짜가 비어있다면 멘토링을 수락할 수 없다")
-    void updateSeniorMentoringExpectedWithoutDate(String empty) throws Exception {
-        Mentoring mentoring = new Mentoring(0L, user, senior, payment, null, "topic", "question", "date1,date2,date3", 40, Status.WAITING, now(), now());
-        mentoringRepository.save(mentoring);
-
-        String request = objectMapper.writeValueAsString(new MentoringDateRequest(empty));
-        mvc.perform(patch("/mentoring/senior/me/{mentoringId}/expected", mentoring.getMentoringId())
-                        .header(AUTHORIZATION, BEARER + seniorAccessToken)
-                        .content(request)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(ErrorCode.VALID_BLANK.getCode()));
-    }
-
-//    @Test
-//    @DisplayName("대학원생이 멘토링을 거절한다.")
-//    void updateSeniorMentoringRefuse() throws Exception {
-//        Mentoring mentoring = new Mentoring(0L, user, senior, payment, null, "topic", "question", "date1,date2,date3", 40, Status.WAITING, now(), now());
-//        mentoringRepository.save(mentoring);
-//
-//        String request = objectMapper.writeValueAsString(new MentoringRefuseRequest("reason"));
-//        mvc.perform(patch("/mentoring/senior/me/{mentoringId}/refuse", mentoring.getMentoringId())
-//                        .header(AUTHORIZATION, BEARER + seniorAccessToken)
-//                        .content(request)
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.code").value(MENTORING_UPDATE.getCode()))
-//                .andExpect(jsonPath("$.message").value(UPDATE_MENTORING.getMessage()));
-//    }
-    //todo : 환불 처리 요청(payple) 처리 필요
-
-    @ParameterizedTest
-    @EnumSource(value = Status.class, names = {"EXPECTED", "DONE", "CANCEL", "REFUSE"})
-    @DisplayName("멘토링이 확정대기 상태가 아니라면 거절할 수 없다.")
-    void updateSeniorMentoringRefuseWithoutWaiting(Status status) throws Exception {
-        Mentoring mentoring = new Mentoring(0L, user, senior, payment, null, "topic", "question", "date", 40, status, now(), now());
-        mentoringRepository.save(mentoring);
-
-        String request = objectMapper.writeValueAsString(new MentoringRefuseRequest("reason"));
-        mvc.perform(patch("/mentoring/senior/me/{mentoringId}/refuse", mentoring.getMentoringId())
-                        .header(AUTHORIZATION, BEARER + seniorAccessToken)
-                        .content(request)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(MENTORING_NOT_FOUND.getCode()))
-                .andExpect(jsonPath("$.message").value(NOT_FOUND_MENTORING.getMessage()));
-    }
-
-    @ParameterizedTest
-    @NullAndEmptySource
-    @DisplayName("사유가 비어있다면 멘토링을 거절할 수 없다")
-    void updateSeniorMentoringExpectedWithoutRefuse(String empty) throws Exception {
-        Mentoring mentoring = new Mentoring(0L, user, senior, payment, null, "topic", "question", "date1,date2,date3", 40, Status.WAITING, now(), now());
-        mentoringRepository.save(mentoring);
-
-        String request = objectMapper.writeValueAsString(new MentoringRefuseRequest(empty));
-        mvc.perform(patch("/mentoring/senior/me/{mentoringId}/refuse", mentoring.getMentoringId())
-                        .header(AUTHORIZATION, BEARER + seniorAccessToken)
-                        .content(request)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(ErrorCode.VALID_BLANK.getCode()));
     }
 }
