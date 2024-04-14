@@ -1,4 +1,4 @@
-package com.postgraduate;
+package com.postgraduate.support;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
