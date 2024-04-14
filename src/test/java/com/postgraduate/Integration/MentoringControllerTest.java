@@ -1,35 +1,25 @@
 package com.postgraduate.Integration;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.postgraduate.support.IntegrationTest;
 import com.postgraduate.domain.mentoring.application.dto.req.MentoringDateRequest;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.entity.constant.Status;
-import com.postgraduate.domain.mentoring.domain.repository.MentoringRepository;
 import com.postgraduate.domain.payment.domain.entity.Payment;
-import com.postgraduate.domain.payment.domain.repository.PaymentRepository;
 import com.postgraduate.domain.refuse.application.dto.req.MentoringRefuseRequest;
 import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.salary.domain.entity.SalaryAccount;
-import com.postgraduate.domain.salary.domain.repository.SalaryRepository;
 import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
-import com.postgraduate.domain.senior.domain.repository.SeniorRepository;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.entity.constant.Role;
-import com.postgraduate.domain.user.domain.repository.UserRepository;
-import com.postgraduate.global.config.security.jwt.util.JwtUtils;
 import com.postgraduate.global.exception.constant.ErrorCode;
-import com.postgraduate.global.slack.SlackLogErrorMessage;
+import com.postgraduate.support.IntegrationTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 
 import java.io.IOException;
@@ -53,22 +43,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class MentoringControllerTest extends IntegrationTest {
     private static final String AUTHORIZATION = "Authorization";
     private static final String BEARER = "Bearer ";
-    @Autowired
-    private ObjectMapper objectMapper;
-    @Autowired
-    private JwtUtils jwtUtil;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private SeniorRepository seniorRepository;
-    @Autowired
-    private MentoringRepository mentoringRepository;
-    @Autowired
-    private SalaryRepository salaryRepository;
-    @Autowired
-    private PaymentRepository paymentRepository;
-    @MockBean
-    private SlackLogErrorMessage slackLogErrorMessage;
     private User user;
     private Senior senior;
     private Payment payment;

@@ -1,25 +1,18 @@
 package com.postgraduate.Integration;
 
-import com.postgraduate.support.IntegrationTest;
 import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.salary.domain.entity.SalaryAccount;
-import com.postgraduate.domain.salary.domain.repository.SalaryRepository;
 import com.postgraduate.domain.salary.util.SalaryUtil;
 import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.entity.constant.Status;
-import com.postgraduate.domain.senior.domain.repository.SeniorRepository;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.entity.constant.Role;
-import com.postgraduate.domain.user.domain.repository.UserRepository;
-import com.postgraduate.global.config.security.jwt.util.JwtUtils;
-import com.postgraduate.global.slack.SlackLogErrorMessage;
+import com.postgraduate.support.IntegrationTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.io.IOException;
 
@@ -36,16 +29,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class SalaryControllerTest extends IntegrationTest {
     private static final String AUTHORIZATION = "Authorization";
     private static final String BEARER = "Bearer ";
-    @Autowired
-    private JwtUtils jwtUtil;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private SeniorRepository seniorRepository;
-    @Autowired
-    private SalaryRepository salaryRepository;
-    @MockBean
-    private SlackLogErrorMessage slackLogErrorMessage;
     private String token;
     private Salary salary;
 

@@ -1,21 +1,15 @@
 package com.postgraduate.Integration;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.postgraduate.support.IntegrationTest;
 import com.postgraduate.domain.user.application.dto.req.UserInfoRequest;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.entity.constant.Role;
-import com.postgraduate.domain.user.domain.repository.UserRepository;
 import com.postgraduate.domain.user.presentation.constant.UserResponseCode;
-import com.postgraduate.global.config.security.jwt.util.JwtUtils;
-import com.postgraduate.global.slack.SlackLogErrorMessage;
+import com.postgraduate.support.IntegrationTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 
 import java.io.IOException;
@@ -34,14 +28,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class UserControllerTest extends IntegrationTest {
     private static final String AUTHORIZATION = "Authorization";
     private static final String BEARER = "Bearer ";
-    @Autowired
-    private ObjectMapper objectMapper;
-    @Autowired
-    private JwtUtils jwtUtil;
-    @Autowired
-    private UserRepository userRepository;
-    @MockBean
-    private SlackLogErrorMessage slackLogErrorMessage;
     private String token;
 
     @BeforeEach

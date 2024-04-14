@@ -1,26 +1,16 @@
 package com.postgraduate.Integration;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.postgraduate.support.IntegrationTest;
 import com.postgraduate.domain.auth.application.dto.req.*;
 import com.postgraduate.domain.auth.application.dto.res.KakaoUserInfoResponse;
-import com.postgraduate.domain.auth.application.usecase.oauth.kakao.KakaoAccessTokenUseCase;
 import com.postgraduate.domain.user.domain.entity.User;
-import com.postgraduate.domain.user.domain.repository.UserRepository;
 import com.postgraduate.domain.wish.domain.entity.Wish;
 import com.postgraduate.domain.wish.domain.entity.constant.Status;
-import com.postgraduate.domain.wish.domain.repository.WishRepository;
-import com.postgraduate.global.config.redis.RedisRepository;
-import com.postgraduate.global.config.security.jwt.util.JwtUtils;
-import com.postgraduate.global.slack.SlackLogErrorMessage;
-import com.postgraduate.global.slack.SlackSignUpMessage;
+import com.postgraduate.support.IntegrationTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 
 import java.util.Optional;
@@ -48,22 +38,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class AuthControllerTest extends IntegrationTest {
     private static final String AUTHORIZATION = "Authorization";
     private static final String BEARER = "Bearer ";
-    @Autowired
-    private JwtUtils jwtUtil;
-    @Autowired
-    private ObjectMapper objectMapper;
-    @MockBean
-    private KakaoAccessTokenUseCase kakaoAccessTokenUseCase;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private WishRepository wishRepository;
-    @MockBean
-    RedisRepository redisRepository;
-    @MockBean
-    private SlackLogErrorMessage slackLogErrorMessage;
-    @MockBean
-    private SlackSignUpMessage slackSignUpMessage;
     private User user;
     private final Long anonymousUserSocialId = 2L;
 

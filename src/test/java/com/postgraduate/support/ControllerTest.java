@@ -36,7 +36,7 @@ import org.springframework.web.context.WebApplicationContext;
         AuthController.class
 })
 @AutoConfigureMockMvc
-public abstract class ControllerTest {
+public class ControllerTest {
 
     @Autowired
     protected MockMvc mvc;
