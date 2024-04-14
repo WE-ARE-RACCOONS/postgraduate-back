@@ -102,6 +102,8 @@ public class MentoringDslRepositoryImpl implements MentoringDslRepository {
                         mentoring.status.eq(Status.DONE),
                         mentoring.salary.status.eq(status)
                 )
+                .leftJoin(mentoring.payment, payment)
+                .fetchJoin()
                 .leftJoin(mentoring.salary, salary)
                 .fetchJoin()
                 .leftJoin(mentoring.user, user)

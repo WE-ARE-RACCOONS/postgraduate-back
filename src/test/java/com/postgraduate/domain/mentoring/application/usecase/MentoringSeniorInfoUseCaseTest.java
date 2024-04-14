@@ -1,14 +1,14 @@
 package com.postgraduate.domain.mentoring.application.usecase;
 
-import com.postgraduate.domain.account.domain.entity.Account;
-import com.postgraduate.domain.mentoring.application.dto.res.SeniorMentoringResponse;
+import com.postgraduate.domain.mentoring.application.dto.res.DoneSeniorMentoringResponse;
+import com.postgraduate.domain.mentoring.application.dto.res.ExpectedSeniorMentoringResponse;
+import com.postgraduate.domain.mentoring.application.dto.res.WaitingSeniorMentoringResponse;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
 import com.postgraduate.domain.mentoring.exception.MentoringNotFoundException;
 import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.payment.domain.entity.constant.Status;
 import com.postgraduate.domain.salary.domain.entity.Salary;
-import com.postgraduate.domain.salary.domain.service.SalaryGetService;
 import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
@@ -26,7 +26,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.*;
+import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.WAITING;
 import static com.postgraduate.domain.senior.domain.entity.constant.Status.APPROVE;
 import static com.postgraduate.domain.user.domain.entity.constant.Role.SENIOR;
 import static com.postgraduate.domain.user.domain.entity.constant.Role.USER;
@@ -115,7 +115,7 @@ class MentoringSeniorInfoUseCaseTest {
         given(mentoringGetService.bySeniorWaiting(senior))
                 .willReturn(mentorings);
 
-        SeniorMentoringResponse seniorWaiting = mentoringSeniorInfoUseCase.getSeniorWaiting(user);
+        WaitingSeniorMentoringResponse seniorWaiting = mentoringSeniorInfoUseCase.getSeniorWaiting(user);
 
         assertThat(seniorWaiting.seniorMentoringInfos())
                 .hasSameSizeAs(mentorings);
@@ -138,7 +138,7 @@ class MentoringSeniorInfoUseCaseTest {
         given(mentoringGetService.bySeniorExpected(senior))
                 .willReturn(mentorings);
 
-        SeniorMentoringResponse seniorExpected = mentoringSeniorInfoUseCase.getSeniorExpected(user);
+        ExpectedSeniorMentoringResponse seniorExpected = mentoringSeniorInfoUseCase.getSeniorExpected(user);
 
         assertThat(seniorExpected.seniorMentoringInfos())
                 .hasSameSizeAs(mentorings);
@@ -165,7 +165,7 @@ class MentoringSeniorInfoUseCaseTest {
         given(mentoringGetService.bySeniorDone(senior))
                 .willReturn(mentorings);
 
-        SeniorMentoringResponse seniorDone = mentoringSeniorInfoUseCase.getSeniorDone(user);
+        DoneSeniorMentoringResponse seniorDone = mentoringSeniorInfoUseCase.getSeniorDone(user);
 
         assertThat(seniorDone.seniorMentoringInfos())
                 .hasSameSizeAs(mentorings);
