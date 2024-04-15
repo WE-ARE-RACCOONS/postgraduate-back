@@ -31,7 +31,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class JwtUseCaseTest {
+class JwtUseTypeTest {
     @Mock
     private JwtUtils jwtUtils;
     @Mock
@@ -130,13 +130,13 @@ class JwtUseCaseTest {
                 .willReturn("refreshToken");
         given(wishGetService.byUser(user))
                 .willReturn(Optional.of(mock(Wish.class)));
-        given(jwtUtils.checkRedis(user.getUserId(), request))
+        given(jwtUtils.checkPast(user.getUserId(), request))
                 .willReturn(USER.toString());
 
         JwtTokenResponse jwtTokenResponse = jwtUseCase.regenerateToken(user, request);
 
         verify(jwtUtils, times(1))
-                .checkRedis(eq(user.getUserId()), eq(request));
+                .checkPast(eq(user.getUserId()), eq(request));
         assertThat(jwtTokenResponse.accessToken())
                 .isEqualTo("accessToken");
         assertThat(jwtTokenResponse.refreshToken())
@@ -151,7 +151,7 @@ class JwtUseCaseTest {
         MockHttpServletRequest request = new MockHttpServletRequest();
         willThrow(NoneRefreshTokenException.class)
                 .given(jwtUtils)
-                .checkRedis(user.getUserId(), request);
+                .checkPast(user.getUserId(), request);
         assertThatThrownBy(() -> jwtUseCase.regenerateToken(user, request))
                 .isInstanceOf(NoneRefreshTokenException.class);
     }
@@ -162,7 +162,7 @@ class JwtUseCaseTest {
         MockHttpServletRequest request = new MockHttpServletRequest();
         willThrow(InvalidRefreshTokenException.class)
                 .given(jwtUtils)
-                .checkRedis(user.getUserId(), request);
+                .checkPast(user.getUserId(), request);
 
         assertThatThrownBy(() -> jwtUseCase.regenerateToken(user, request))
                 .isInstanceOf(InvalidRefreshTokenException.class);
