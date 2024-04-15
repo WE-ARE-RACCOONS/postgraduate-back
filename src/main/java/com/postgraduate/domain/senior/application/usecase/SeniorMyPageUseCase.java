@@ -6,10 +6,7 @@ import com.postgraduate.domain.available.application.dto.res.AvailableTimeRespon
 import com.postgraduate.domain.available.application.mapper.AvailableMapper;
 import com.postgraduate.domain.available.domain.entity.Available;
 import com.postgraduate.domain.available.domain.service.AvailableGetService;
-import com.postgraduate.domain.senior.application.dto.res.SeniorMyPageProfileResponse;
-import com.postgraduate.domain.senior.application.dto.res.SeniorMyPageResponse;
-import com.postgraduate.domain.senior.application.dto.res.SeniorMyPageUserAccountResponse;
-import com.postgraduate.domain.senior.application.dto.res.SeniorPossibleResponse;
+import com.postgraduate.domain.senior.application.dto.res.*;
 import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.entity.constant.Status;
@@ -74,5 +71,14 @@ public class SeniorMyPageUseCase {
         if (wish.isEmpty())
             return new SeniorPossibleResponse(FALSE, user.getSocialId());
         return new SeniorPossibleResponse(TRUE, user.getSocialId());
+    }
+
+    /**
+     * Case B 코드
+     */
+    public SeniorMyPageResponseB getSeniorInfoB(User user) {
+        Senior senior = seniorGetService.byUser(user);
+        Optional<Profile> profile = ofNullable(senior.getProfile());
+        return mapToSeniorMyPageInfoWithProfile(senior, profile.isPresent());
     }
 }
