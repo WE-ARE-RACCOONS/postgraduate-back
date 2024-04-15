@@ -23,7 +23,7 @@ import static java.lang.Boolean.TRUE;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
-class KakaoSignInUseCaseTest {
+class KakaoSignInUseTypeTest {
     @Mock
     private KakaoAccessTokenUseCase kakaoAccessTokenUseCase;
     @Mock

@@ -44,7 +44,7 @@ import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-class MentoringApplyingUseCaseTest {
+class MentoringApplyingUseTypeTest {
     @Mock
     private PaymentGetService paymentGetService;
     @Mock

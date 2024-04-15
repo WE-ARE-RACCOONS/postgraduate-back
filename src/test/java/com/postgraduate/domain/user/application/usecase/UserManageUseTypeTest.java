@@ -19,7 +19,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class UserManageUseCaseTest {
+class UserManageUseTypeTest {
     @Mock
     UserUpdateService userUpdateService;
     @Mock
