@@ -30,4 +30,12 @@ public class AvailableDslRepositoryImpl implements AvailableDslRepository {
                 .where(available.senior.eq(senior))
                 .fetch();
     }
+
+    @Override
+    public List<Available> findAllByAnySenior(Senior senior) {
+        return queryFactory.selectFrom(available)
+                .distinct()
+                .where(available.senior.eq(senior))
+                .fetch();
+    }
 }

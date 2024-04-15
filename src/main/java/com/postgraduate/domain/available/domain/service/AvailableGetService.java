@@ -20,4 +20,11 @@ public class AvailableGetService {
     public List<Available> byMine(Senior senior) {
         return availableRepository.findAllByMine(senior);
     }
+
+    /**
+     * Case B
+     */
+    public List<Available> bySeniorWithAny(Senior senior) {
+        return availableRepository.findAllByAnySenior(senior);
+    }
 }
