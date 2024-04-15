@@ -1,6 +1,7 @@
 package com.postgraduate.domain.user.application.mapper;
 
 import com.postgraduate.domain.auth.application.dto.req.SeniorSignUpRequest;
+import com.postgraduate.domain.auth.application.dto.req.SeniorSignUpRequestB;
 import com.postgraduate.domain.auth.application.dto.req.SignUpRequest;
 import com.postgraduate.domain.user.application.dto.res.UserInfoResponse;
 import com.postgraduate.domain.user.application.dto.res.UserMyPageResponse;
@@ -40,6 +41,20 @@ public class UserMapper {
     }
 
     public static User mapToUser(SeniorSignUpRequest request, String profile) {
+        return User.builder()
+                .socialId(request.socialId())
+                .nickName(request.nickName())
+                .phoneNumber(request.phoneNumber())
+                .marketingReceive(request.marketingReceive())
+                .profile(profile)
+                .role(SENIOR)
+                .build();
+    }
+
+    /**
+     * 여기부터 Case B를 위한 코드
+     */
+    public static User mapToUser(SeniorSignUpRequestB request, String profile) {
         return User.builder()
                 .socialId(request.socialId())
                 .nickName(request.nickName())

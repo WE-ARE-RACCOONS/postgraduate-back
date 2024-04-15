@@ -77,4 +77,26 @@ public class SeniorGetService {
     public List<Senior> allSenior() {
         return seniorRepository.findAllSenior();
     }
+
+    /**
+     * Case B
+     */
+    public Senior bySeniorIdWithAnyCertification(Long seniorId) {
+        return seniorRepository.findBySeniorIdWithAnyCertification(seniorId)
+                .orElseThrow(NoneSeniorException::new);
+    }
+
+    public Page<Senior> bySearchWithAny(String search, Integer page, String sort) {
+        if (page == null)
+            page = 1;
+        Pageable pageable = PageRequest.of(page-1, SENIOR_PAGE_SIZE);
+        return seniorRepository.findAllBySearchAnySenior(search, sort, pageable);
+    }
+
+    public Page<Senior> byFieldWithAny(String field, String postgradu, Integer page) {
+        if (page == null)
+            page = 1;
+        Pageable pageable = PageRequest.of(page-1, SENIOR_PAGE_SIZE);
+        return seniorRepository.findAllByFieldAnySenior(field, postgradu, pageable);
+    }
 }

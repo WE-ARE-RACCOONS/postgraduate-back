@@ -17,4 +17,11 @@ public interface SeniorDslRepository {
     Optional<Senior> findByUserWithAll(User user);
     List<SeniorAndAccount> findAllSeniorAndAccount();
     List<Senior> findAllSenior();
+
+    /**
+     * Case B
+     */
+    Optional<Senior> findBySeniorIdWithAnyCertification(Long seniorId);
+    Page<Senior> findAllByFieldAnySenior(String field, String postgradu, Pageable pageable);
+    Page<Senior> findAllBySearchAnySenior(String search, String sort, Pageable pageable);
 }
