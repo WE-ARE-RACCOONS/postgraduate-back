@@ -53,13 +53,13 @@ public class BizppurioMapper {
 
     public CommonRequest mapToSeniorSignUpMessage(User user) {
         String message = (
-                user.getNickName() + " 선배님! 대학원 김선배에 회원가입을 해주셔서 정말 감사드립니다!"
-                        + "\n\n"
-                        + user.getNickName() + " 선배님 덕분에, 대학생 후배들의 랩실 입시가 더 쉬워질 수 있겠네요!"
-                        + "\n\n"
-                        + "매칭을 위해서 대학원 인증과 프로필 작성을 꼭 완료해주세요! 대학원 인증 뱃지가 없고 프로필이 비어있는 회원님들은 매칭에 어려움이 있을 수 있어요 (눈물)"
-                        + "\n\n"
-                        + "선배님에 성공적인 멘토링 매칭을 기원하겠습니다!(미소)"
+                user.getNickName() + "  선배님! 대학원 김선배에 회원가입을 해주셔서 정말 감사드립니다! \n" +
+                        "\n" +
+                        user.getNickName() + "  선배님 덕분에, 대학생 후배들의 랩실 입시가 더 쉬워질 수 있겠네요! \n" +
+                        "\n" +
+                        "매칭을 위해서 대학원 인증과 프로필 작성을 꼭 완료해주세요! 대학원 인증 뱃지가 없고 프로필이 비어있는 회원님들은 매칭에 어려움이 있을 수 있어요 \uD83D\uDE2D \n" +
+                        "\n" +
+                        "선배님에 성공적인 멘토링 매칭을 기원하겠습니다! \uD83D\uDE42"
         );
 
         WebLinkButton certification = new WebLinkButton("대학원 인증하기", type, certificationPage);
