@@ -101,7 +101,7 @@ public class BizppurioMapper {
                         "\n" +
                         "이제 프로필 작성만 완료되면, 선배님의 멘토링 신청률이 up!up! \uD83D\uDD25"
         );
-        WebLinkButton profile = new WebLinkButton("프로필 작성하기", type, profilePage);
+        WebLinkButton profile = new WebLinkButton("프로필 완성하기", type, profilePage);
         WebLinkButton[] buttons = {profile};
         CertificationApproveMessage messageBody = new CertificationApproveMessage(message, senderKey, certificationApprove, buttons);
         return createCommonRequest(messageBody, user);
@@ -170,7 +170,7 @@ public class BizppurioMapper {
                         "\n" +
                         "혹시 멘토링을 진행하고 싶었던 다른 선배님이 있다면 지금 신청해보세요!"
         );
-        WebLinkButton otherSenior = new WebLinkButton("다른 선배 보러기가", type, mainPage);
+        WebLinkButton otherSenior = new WebLinkButton("다른 선배 보러가기", type, mainPage);
         WebLinkButton[] buttons = {otherSenior};
         JuniorRefuseMessage messageBody = new JuniorRefuseMessage(message, senderKey, juniorMentoringRefuse, buttons);
         return createCommonRequest(messageBody, user);
