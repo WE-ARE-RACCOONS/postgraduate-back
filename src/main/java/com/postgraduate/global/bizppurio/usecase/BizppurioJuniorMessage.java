@@ -1,16 +1,17 @@
 package com.postgraduate.global.bizppurio.usecase;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.global.bizppurio.dto.req.CommonRequest;
 import com.postgraduate.global.bizppurio.dto.res.MessageResponse;
+import com.postgraduate.global.bizppurio.mapper.BizppurioMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import static com.postgraduate.global.bizppurio.mapper.BizppurioMapper.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @RequiredArgsConstructor
@@ -19,39 +20,42 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 public class BizppurioJuniorMessage {
     private final WebClient webClient;
     private final BizppurioAuth bizppurioAuth;
+    private final ObjectMapper objectMapper;
+    private final BizppurioMapper mapper;
 
     @Value("${bizppurio.message}")
     private String messageUrl;
 
     public void mentoringApply(User user) {
-        CommonRequest commonRequest = mapToJuniorApplyMessage(user);
+        CommonRequest commonRequest = mapper.mapToJuniorApplyMessage(user);
         sendMessage(commonRequest);
     }
 
     public void mentoringAccept(User user, Senior senior, String time) {
         String chatLink = senior.getProfile().getChatLink();
-        CommonRequest commonRequest = mapToJuniorAcceptMessage(user, chatLink, time);
+        CommonRequest commonRequest = mapper.mapToJuniorAcceptMessage(user, chatLink, time);
         sendMessage(commonRequest);
     }
 
     public void mentoringRefuse(User user) {
-        CommonRequest commonRequest = mapToJuniorRefuseMessage(user);
+        CommonRequest commonRequest = mapper.mapToJuniorRefuseMessage(user);
         sendMessage(commonRequest);
     }
 
     public void mentoringFinish(User user) {
-        CommonRequest commonRequest = mapToJuniorFinish(user);
+        CommonRequest commonRequest = mapper.mapToJuniorFinish(user);
         sendMessage(commonRequest);
     }
 
     private void sendMessage(CommonRequest commonRequest) {
         try {
             String accessToken = bizppurioAuth.getAuth();
+            String request = objectMapper.writeValueAsString(commonRequest);
             webClient.post()
                     .uri(messageUrl)
                     .headers(h -> h.setContentType(APPLICATION_JSON))
                     .headers(h -> h.setBearerAuth(accessToken))
-                    .bodyValue(commonRequest)
+                    .bodyValue(request)
                     .retrieve()
                     .bodyToMono(MessageResponse.class)
                     .subscribe(this::check);

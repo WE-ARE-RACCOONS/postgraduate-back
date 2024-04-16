@@ -147,4 +147,8 @@ public class MentoringGetService {
         Pageable pageable = PageRequest.of(page - 1, ADMIN_PAGE_SIZE);
         return mentoringRepository.findAllBySearchPayment(search, pageable);
     }
+
+    public List<Mentoring> byForMessage() {
+        return mentoringRepository.findAllForMessage();
+    }
 }

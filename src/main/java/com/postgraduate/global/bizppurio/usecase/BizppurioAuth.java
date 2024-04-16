@@ -38,8 +38,10 @@ public class BizppurioAuth {
         String auth = bizzpurioId + ":" + bizzpurioPw;
         String encode = Base64Util.encode(auth);
         Optional<String> accessToken = redisRepository.getValues(encode);
-        if (accessToken.isPresent())
+        if (accessToken.isPresent()) {
+            log.info("기존 알림톡 토큰 이용");
             return accessToken.get();
+        }
 
         BizppurioTokenResponse tokenResponse = getToken(encode);
         DateTimeFormatter formatter = ofPattern("yyyyMMddHHmmss");

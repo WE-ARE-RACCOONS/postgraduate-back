@@ -34,6 +34,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import static com.postgraduate.domain.mentoring.util.DateUtils.*;
+import static com.postgraduate.domain.mentoring.util.DateUtils.mentoringDateToTime;
 import static com.postgraduate.domain.refuse.application.mapper.RefuseMapper.mapToRefuse;
 import static java.time.LocalDateTime.now;
 
@@ -137,26 +139,19 @@ public class MentoringManageUseCase {
                 .forEach(mentoringRenewalUseCase::updateDoneWithAuto);
     }
 
-//    @Scheduled(fixedDelay = 1000*60*10)
-//    @Transactional
-//    public void sendFinishMessage() {
-//        List<Mentoring> expectedMentorings = mentoringGetService.byExpected();
-//        expectedMentorings.stream()
-//                .filter(mentoring -> {
-//                    LocalDateTime mentoringDate = DateUtils.stringToLocalDateTime(mentoring.getDate());
-//                    LocalDateTime finishTime = mentoringDate.plusMinutes(mentoring.getTerm());
-//                    if (now().isAfter(finishTime))
-//                        return true;
-//                    return false;
-//                })
-//                .forEach(mentoring -> {
-//                    bizppurioJuniorMessage.mentoringFinish(mentoring.getUser());
-//                    bizppurioSeniorMessage.mentoringFinish(mentoring.getSenior().getUser());
-//                });
-//    }
-
-    private String mentoringDateToTime(String date) {
-        String[] split = date.split("-");
-        return split[1] + "월 " + split[2] + "일 " + split[3] + "시 " + split[4] + "분";
+    @Scheduled(fixedDelay = 1000*60*10)
+    @Transactional
+    public void sendFinishMessage() {
+        List<Mentoring> expectedMentorings = mentoringGetService.byForMessage();
+        expectedMentorings.stream()
+                .filter(mentoring -> {
+                    LocalDateTime mentoringDate = stringToLocalDateTime(mentoring.getDate());
+                    LocalDateTime finishTime = mentoringDate.plusMinutes(mentoring.getTerm()).plusMinutes(10);
+                    return (finishTime.isBefore(now()) && finishTime.isAfter(now().minusMinutes(10)));
+                })
+                .forEach(mentoring -> {
+                    bizppurioJuniorMessage.mentoringFinish(mentoring.getUser());
+                    bizppurioSeniorMessage.mentoringFinish(mentoring.getSenior().getUser());
+                });
     }
 }

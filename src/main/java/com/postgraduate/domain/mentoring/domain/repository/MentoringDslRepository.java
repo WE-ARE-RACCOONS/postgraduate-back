@@ -23,4 +23,6 @@ public interface MentoringDslRepository {
     List<Mentoring> findAllByStatus(Status status);
     Optional<Mentoring> findByMentoringIdAndUserForDetails(Long mentoringId, User user);
     Optional<Mentoring> findByMentoringIdAndSeniorForDetails(Long mentoringId, Senior senior);
+
+    List<Mentoring> findAllForMessage();
 }
