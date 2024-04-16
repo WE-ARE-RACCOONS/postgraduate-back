@@ -22,4 +22,9 @@ public class DateUtils {
         minutes -= 60*hours;
         return (hours + "-" + minutes);
     }
+
+    public static String mentoringDateToTime(String date) {
+        String[] split = date.split("-");
+        return split[1] + "월 " + split[2] + "일 " + split[3] + "시 " + split[4] + "분";
+    }
 }

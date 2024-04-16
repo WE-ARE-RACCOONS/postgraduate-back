@@ -3,6 +3,7 @@ package com.postgraduate.domain.mentoring.domain.repository;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.entity.constant.Status;
 import com.postgraduate.domain.senior.domain.entity.Senior;
+import com.postgraduate.domain.user.domain.entity.QUser;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -202,5 +203,22 @@ public class MentoringDslRepositoryImpl implements MentoringDslRepository {
                 )
                 .fetchOne()
         );
+    }
+
+    @Override
+    public List<Mentoring> findAllForMessage() {
+        QUser user1 = new QUser("user1");
+        QUser user2 = new QUser("user2");
+
+        return queryFactory.selectFrom(mentoring)
+                .distinct()
+                .leftJoin(mentoring.user, user1)
+                .fetchJoin()
+                .leftJoin(mentoring.senior, senior)
+                .fetchJoin()
+                .leftJoin(mentoring.senior.user, user2)
+                .fetchJoin()
+                .where(mentoring.status.eq(EXPECTED))
+                .fetch();
     }
 }

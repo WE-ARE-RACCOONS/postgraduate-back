@@ -6,55 +6,52 @@ import com.postgraduate.global.bizppurio.dto.req.ContentRequest;
 import com.postgraduate.global.bizppurio.dto.req.content.*;
 import com.postgraduate.global.bizppurio.dto.req.content.button.WebLinkButton;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
+@Component
 public class BizppurioMapper {
     @Value("${bizppurio.sender_key}")
-    private static String senderKey;
+    private String senderKey;
     @Value("${bizppurio.id}")
-    private static String id;
+    private String id;
     @Value("${bizppurio.number}")
-    private static String number;
+    private String number;
     @Value("${bizppurio.template.senior_mentoring_fin}")
-    private static String seniorMentoringFinish;
-    @Value("${bizppurio.template.jnior_mentoring_fin}")
-    private static String juniorMentoringFinish;
+    private String seniorMentoringFinish;
+    @Value("${bizppurio.template.junior_mentoring_fin}")
+    private String juniorMentoringFinish;
     @Value("${bizppurio.template.certification_approve}")
-    private static String certificationApprove;
+    private String certificationApprove;
     @Value("${bizppurio.template.certification_denied}")
-    private static String certificationDenied;
+    private String certificationDenied;
     @Value("${bizppurio.template.junior_mentoring_refuse}")
-    private static String juniorMentoringRefuse;
+    private String juniorMentoringRefuse;
     @Value("${bizppurio.template.senior_mentoring_accept}")
-    private static String seniorMentoringAccept;
+    private String seniorMentoringAccept;
     @Value("${bizppurio.template.junior_mentoring_accept}")
-    private static String juniorMentoringAccept;
+    private String juniorMentoringAccept;
     @Value("${bizppurio.template.senior_mentoring_apply}")
-    private static String seniorMentoringApply;
+    private String seniorMentoringApply;
     @Value("${bizppurio.template.junior_mentoring_apply}")
-    private static String juniorMentoringApply;
+    private String juniorMentoringApply;
     @Value("${bizppurio.template.senior_signUp}")
-    private static String seniorSignUp;
+    private String seniorSignUp;
     @Value("${bizppurio.url.certification}")
-    private static String certificationPage;
+    private String certificationPage;
     @Value("${bizppurio.url.profile}")
-    private static String profilePage;
+    private String profilePage;
     @Value("${bizppurio.url.senior_mentoring}")
-    private static String seniorMentoringPage;
+    private String seniorMentoringPage;
     @Value("${bizppurio.url.junior_mentoring}")
-    private static String juniorMentoringPage;
+    private String juniorMentoringPage;
     @Value("${bizppurio.url.main}")
-    private static String mainPage;
+    private String mainPage;
 
+    private String type = "WL";
 
-    private static String type = "WL";
-
-    private BizppurioMapper() {
-        throw new IllegalArgumentException();
-    }
-
-    public static CommonRequest mapToSeniorSignUpMessage(User user) {
+    public CommonRequest mapToSeniorSignUpMessage(User user) {
         String message = (
                 user.getNickName() + " 선배님! 대학원 김선배에 회원가입을 해주셔서 정말 감사드립니다!"
                         + "\n\n"
@@ -72,7 +69,7 @@ public class BizppurioMapper {
         return createCommonRequest(messageBody, user);
     }
 
-    public static CommonRequest mapToSeniorApplyMessage(User user) {
+    public CommonRequest mapToSeniorApplyMessage(User user) {
         String message = (
                 user.getNickName() + " 선배님! 멘토링 신청이 들어왔어요!"
                         + "\n\n"
@@ -85,7 +82,7 @@ public class BizppurioMapper {
         return createCommonRequest(messageBody, user);
     }
 
-    public static CommonRequest mapToSeniorAcceptMessage(User user, String link, String time) {
+    public CommonRequest mapToSeniorAcceptMessage(User user, String link, String time) {
         String message = (
                 user.getNickName() + " 선배님! 후배와의 멘토링이 성사되었습니다. (축하)"
                         + "\n\n"
@@ -99,7 +96,7 @@ public class BizppurioMapper {
         return createCommonRequest(messageBody, user);
     }
 
-    public static CommonRequest mapToCertificationApprove(User user) {
+    public CommonRequest mapToCertificationApprove(User user) {
         String message = (
                 user.getNickName() + " 선배님! 대학원 인증 신청이 승인되었어요!"
                         + "\n\n"
@@ -111,7 +108,7 @@ public class BizppurioMapper {
         return createCommonRequest(messageBody, user);
     }
 
-    public static CommonRequest mapToCertificationDenied(User user) {
+    public CommonRequest mapToCertificationDenied(User user) {
         String message = (
                 user.getNickName() + " 선배님! 대학원 인증 신청이 반려되었어요. (눈물)"
                         + "\n\n"
@@ -125,7 +122,7 @@ public class BizppurioMapper {
         return createCommonRequest(messageBody, user);
     }
 
-    public static CommonRequest mapToSeniorFinish(User user) {
+    public CommonRequest mapToSeniorFinish(User user) {
         String message = (
                 user.getNickName() + " 선배님! 후배님과의 멘토링은 어떠셨나요?"
                         + "\n\n"
@@ -139,7 +136,7 @@ public class BizppurioMapper {
         return createCommonRequest(messageBody, user);
     }
 
-    public static CommonRequest mapToJuniorApplyMessage(User user) {
+    public CommonRequest mapToJuniorApplyMessage(User user) {
         String message = (
                 user.getNickName() + " 님! 멘토링 결제 및 신청이 완료되었습니다!"
                         + "\n\n"
@@ -151,7 +148,7 @@ public class BizppurioMapper {
         return createCommonRequest(messageBody, user);
     }
 
-    public static CommonRequest mapToJuniorAcceptMessage(User user, String link, String time) {
+    public CommonRequest mapToJuniorAcceptMessage(User user, String link, String time) {
         String message = (
                 user.getNickName() + " 님! 선배님이 멘토링을 수락하셨어요!"
                         + "\n\n"
@@ -167,7 +164,7 @@ public class BizppurioMapper {
         return createCommonRequest(messageBody, user);
     }
 
-    public static CommonRequest mapToJuniorRefuseMessage(User user) {
+    public CommonRequest mapToJuniorRefuseMessage(User user) {
         String message = (
                 user.getNickName() + " 님! 신청하신 멘토링이 선배님의 개인사정으로 인해 진행이 어렵게 되었어요. (눈물)"
                         + "\n\n" +
@@ -181,7 +178,7 @@ public class BizppurioMapper {
         return createCommonRequest(messageBody, user);
     }
 
-    public static CommonRequest mapToJuniorFinish(User user) {
+    public CommonRequest mapToJuniorFinish(User user) {
         String message = (
                 user.getNickName() + " 님! 멘토링은 만족스러우셨을까요?"
                         + "\n\n" +
@@ -200,8 +197,8 @@ public class BizppurioMapper {
         return createCommonRequest(messageBody, user);
     }
 
-    private static CommonRequest createCommonRequest(Message messageBody, User user) {
-        String refKey = UUID.randomUUID().toString();
+    private CommonRequest createCommonRequest(Message messageBody, User user) {
+        String refKey = UUID.randomUUID().toString().replace("-", "");
         ContentRequest contentRequest = new ContentRequest(messageBody);
         return new CommonRequest(id, "at", number , user.getPhoneNumber(), contentRequest, refKey);
     }

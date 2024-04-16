@@ -41,7 +41,7 @@ public class JwtUseCase {
     }
 
     public JwtTokenResponse regenerateToken(User user, HttpServletRequest request) {
-        String role = jwtUtils.checkRedis(user.getUserId(), request);
+        String role = jwtUtils.checkPast(user.getUserId(), request);
         if (role.equals(SENIOR.toString()))
             return seniorToken(user);
         if (role.equals(ADMIN.toString()))
