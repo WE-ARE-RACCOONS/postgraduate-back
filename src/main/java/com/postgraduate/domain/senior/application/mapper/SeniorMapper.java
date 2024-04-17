@@ -385,10 +385,4 @@ public class SeniorMapper {
                 info.getPostgradu(), info.getMajor(), info.getLab(), info.getProfessor(),
                 keyword);
     }
-
-    public static SeniorMyPageResponseB mapToSeniorMyPageInfoWithProfile(Senior senior, boolean profileRegister) {
-        User user = senior.getUser();
-        return new SeniorMyPageResponseB(user.getSocialId(), senior.getSeniorId(), user.getNickName(), user.getProfile(), profileRegister);
-    }
-
 }

@@ -62,7 +62,7 @@ public class SeniorController {
     @GetMapping("/me")
     @Operation(summary = "대학원생 마이페이지 기본 정보 조회 | 토큰 필요", description = "닉네임, 프로필 사진, 인증 여부")
     public ResponseDto<SeniorMyPageResponse> getSeniorInfo(@AuthenticationPrincipal User user) {
-        SeniorMyPageResponse seniorMyPageResponse = seniorMyPageUseCase.getSeniorInfo(user);
+        SeniorMyPageResponse seniorMyPageResponse = seniorMyPageUseCase.getSeniorMyPage(user);
         return ResponseDto.create(SENIOR_FIND.getCode(), GET_SENIOR_INFO.getMessage(), seniorMyPageResponse);
     }
 
@@ -188,8 +188,8 @@ public class SeniorController {
 
     @GetMapping("/me/b")
     @Operation(summary = "대학원생 마이페이지 기본 정보 조회 | 토큰 필요(Case B)", description = "닉네임, 프로필 사진, 프로필 작성 여부")
-    public ResponseDto<SeniorMyPageResponseB> getSeniorInfoB(@AuthenticationPrincipal User user) {
-        SeniorMyPageResponseB seniorMyPageResponse = seniorMyPageUseCase.getSeniorInfoB(user);
+    public ResponseDto<SeniorMyPageResponse> getSeniorInfoB(@AuthenticationPrincipal User user) {
+        SeniorMyPageResponse seniorMyPageResponse = seniorMyPageUseCase.getSeniorMyPageB(user);
         return ResponseDto.create(SENIOR_FIND.getCode(), GET_SENIOR_INFO.getMessage(), seniorMyPageResponse);
     }
 }
