@@ -3,7 +3,10 @@ package com.postgraduate.domain.mentoring.application.usecase;
 import com.postgraduate.domain.mentoring.application.dto.DoneMentoringInfo;
 import com.postgraduate.domain.mentoring.application.dto.ExpectedMentoringInfo;
 import com.postgraduate.domain.mentoring.application.dto.WaitingMentoringInfo;
-import com.postgraduate.domain.mentoring.application.dto.res.*;
+import com.postgraduate.domain.mentoring.application.dto.res.AppliedMentoringDetailResponse;
+import com.postgraduate.domain.mentoring.application.dto.res.DoneMentoringResponse;
+import com.postgraduate.domain.mentoring.application.dto.res.ExpectedMentoringResponse;
+import com.postgraduate.domain.mentoring.application.dto.res.WaitingMentoringResponse;
 import com.postgraduate.domain.mentoring.application.mapper.MentoringMapper;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
@@ -15,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static com.postgraduate.domain.mentoring.application.mapper.MentoringMapper.mapToAppliedDetailInfo;
+import static com.postgraduate.domain.mentoring.util.DateUtils.stringToLocalDateTime;
 
 @Service
 @Transactional(readOnly = true)
@@ -47,6 +51,12 @@ public class MentoringUserInfoUseCase {
         List<Mentoring> mentorings = mentoringGetService.byUserDone(user);
         List<DoneMentoringInfo> doneMentoringInfos = mentorings.stream()
                 .map(MentoringMapper::mapToDoneInfo)
+                .sorted((o1, o2) -> {
+                    if (stringToLocalDateTime(o1.date())
+                            .isAfter(stringToLocalDateTime(o2.date())))
+                        return -1;
+                    return 1;
+                })
                 .toList();
         return new DoneMentoringResponse(doneMentoringInfos);
     }

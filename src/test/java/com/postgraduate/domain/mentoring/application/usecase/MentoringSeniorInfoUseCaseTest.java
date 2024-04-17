@@ -1,5 +1,6 @@
 package com.postgraduate.domain.mentoring.application.usecase;
 
+import com.postgraduate.domain.mentoring.application.dto.DoneSeniorMentoringInfo;
 import com.postgraduate.domain.mentoring.application.dto.res.DoneSeniorMentoringResponse;
 import com.postgraduate.domain.mentoring.application.dto.res.ExpectedSeniorMentoringResponse;
 import com.postgraduate.domain.mentoring.application.dto.res.WaitingSeniorMentoringResponse;
@@ -155,9 +156,9 @@ class MentoringSeniorInfoUseCaseTest {
         Payment payment2 = new Payment(2l, user, senior, 10000, "1", "1", "a", LocalDateTime.now(), LocalDateTime.now(), Status.DONE);
         Payment payment3 = new Payment(3l, user, senior, 10000, "1", "1", "a", LocalDateTime.now(), LocalDateTime.now(), Status.DONE);
 
-        Mentoring mentoring1 = new Mentoring(1L, user, senior, payment1, salary, "A", "b", "a", 40, WAITING, LocalDateTime.now(), LocalDateTime.now());
-        Mentoring mentoring2 = new Mentoring(2L, user, senior, payment2, salary, "A", "b", "a", 40, WAITING, LocalDateTime.now(), LocalDateTime.now());
-        Mentoring mentoring3 = new Mentoring(3L, user, senior, payment3, salary, "A", "b", "a", 40, WAITING, LocalDateTime.now(), LocalDateTime.now());
+        Mentoring mentoring1 = new Mentoring(1L, user, senior, payment1, salary, "A", "b", "2024-03-02-18-18", 40, WAITING, LocalDateTime.now(), LocalDateTime.now());
+        Mentoring mentoring2 = new Mentoring(2L, user, senior, payment2, salary, "A", "b", "2024-02-02-18-18", 40, WAITING, LocalDateTime.now(), LocalDateTime.now());
+        Mentoring mentoring3 = new Mentoring(3L, user, senior, payment3, salary, "A", "b", "2024-01-02-18-18", 40, WAITING, LocalDateTime.now(), LocalDateTime.now());
         List<Mentoring> mentorings = List.of(mentoring1, mentoring2, mentoring3);
 
         given(seniorGetService.byUser(user))
@@ -166,8 +167,8 @@ class MentoringSeniorInfoUseCaseTest {
                 .willReturn(mentorings);
 
         DoneSeniorMentoringResponse seniorDone = mentoringSeniorInfoUseCase.getSeniorDone(user);
-
-        assertThat(seniorDone.seniorMentoringInfos())
+        List<DoneSeniorMentoringInfo> doneSeniorMentoringInfos = seniorDone.seniorMentoringInfos();
+        assertThat(doneSeniorMentoringInfos)
                 .hasSameSizeAs(mentorings);
     }
 }
