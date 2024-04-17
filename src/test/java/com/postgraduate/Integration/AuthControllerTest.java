@@ -25,7 +25,7 @@ import static com.postgraduate.domain.user.domain.entity.constant.Role.SENIOR;
 import static com.postgraduate.domain.user.domain.entity.constant.Role.USER;
 import static com.postgraduate.domain.user.presentation.constant.UserResponseCode.USER_NOT_FOUND;
 import static com.postgraduate.domain.user.presentation.constant.UserResponseMessage.NOT_FOUND_USER;
-import static com.postgraduate.global.exception.constant.ErrorCode.VALID_BLANK;
+import static com.postgraduate.global.constant.ErrorCode.VALID_BLANK;
 import static java.lang.Boolean.FALSE;
 import static java.time.LocalDateTime.now;
 import static org.mockito.ArgumentMatchers.any;

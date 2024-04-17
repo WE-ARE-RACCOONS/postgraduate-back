@@ -54,7 +54,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class MentoringManageUseCaseTest {
+class MentoringManageUseTypeTest {
     @Mock
     private MentoringRenewalUseCase mentoringRenewalUseCase;
     @Mock

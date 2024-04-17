@@ -1,17 +1,12 @@
 package com.postgraduate.domain.auth.application.usecase.oauth;
 
-import com.postgraduate.domain.auth.application.dto.req.SeniorChangeRequest;
-import com.postgraduate.domain.auth.application.dto.req.SeniorSignUpRequest;
-import com.postgraduate.domain.auth.application.dto.req.SignUpRequest;
-import com.postgraduate.domain.auth.application.dto.req.UserChangeRequest;
+import com.postgraduate.domain.auth.application.dto.req.*;
 import com.postgraduate.domain.salary.application.mapper.SalaryMapper;
 import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.salary.domain.service.SalarySaveService;
-import com.postgraduate.domain.senior.application.mapper.SeniorMapper;
 import com.postgraduate.domain.senior.application.utils.SeniorUtils;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorSaveService;
-import com.postgraduate.domain.user.application.mapper.UserMapper;
 import com.postgraduate.domain.user.application.utils.UserUtils;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.service.UserGetService;
@@ -28,6 +23,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import static com.postgraduate.domain.salary.util.SalaryUtil.getSalaryDate;
+import static com.postgraduate.domain.senior.application.mapper.SeniorMapper.mapToSenior;
+import static com.postgraduate.domain.user.application.mapper.UserMapper.mapToUser;
 
 @Transactional
 @Service
@@ -49,7 +46,7 @@ public class SignUpUseCase {
 
     public User userSignUp(SignUpRequest request) {
         userUtils.checkPhoneNumber(request.phoneNumber());
-        User user = UserMapper.mapToUser(request, profile);
+        User user = mapToUser(request, profile);
         Wish wish = WishMapper.mapToWish(user, request);
         wishSaveService.save(wish);
         userSaveService.save(user);
@@ -60,22 +57,36 @@ public class SignUpUseCase {
     public User seniorSignUp(SeniorSignUpRequest request) {
         seniorUtils.checkKeyword(request.keyword());
         userUtils.checkPhoneNumber(request.phoneNumber());
-        User user = UserMapper.mapToUser(request, profile);
+        User user = mapToUser(request, profile);
         userSaveService.save(user);
-        Senior senior = SeniorMapper.mapToSenior(user, request);
+        Senior senior = mapToSenior(user, request);
+        return seniorSignUpFin(senior);
+    }
+
+    public User changeSenior(User user, SeniorChangeRequest changeRequest) {
+        seniorUtils.checkKeyword(changeRequest.keyword());
+        Senior senior = mapToSenior(user, changeRequest);
+        return changeSeniorFin(senior, user);
+    }
+
+    public void changeUser(User user, UserChangeRequest changeRequest) {
+        Wish wish = WishMapper.mapToWish(user, changeRequest);
+        wishSaveService.save(wish);
+        slackSignUpMessage.sendJuniorSignUp(user, wish);
+    }
+
+    private User seniorSignUpFin(Senior senior) {
         seniorSaveService.saveSenior(senior);
         Salary salary = SalaryMapper.mapToSalary(senior, getSalaryDate());
         Salary nextSalary = SalaryMapper.mapToSalary(senior, getSalaryDate().plusDays(7));
         salarySaveService.save(salary);
         salarySaveService.save(nextSalary);
         slackSignUpMessage.sendSeniorSignUp(senior);
-        bizppurioSeniorMessage.signUp(user);
+        bizppurioSeniorMessage.signUp(senior.getUser());
         return senior.getUser();
     }
 
-    public User changeSenior(User user, SeniorChangeRequest changeRequest) {
-        seniorUtils.checkKeyword(changeRequest.keyword());
-        Senior senior = SeniorMapper.mapToSenior(user, changeRequest);
+    private User changeSeniorFin(Senior senior, User user) {
         seniorSaveService.saveSenior(senior);
         user = userGetService.byUserId(user.getUserId());
         userUpdateService.userToSeniorRole(user);
@@ -88,9 +99,21 @@ public class SignUpUseCase {
         return user;
     }
 
-    public void changeUser(User user, UserChangeRequest changeRequest) {
-        Wish wish = WishMapper.mapToWish(user, changeRequest);
-        wishSaveService.save(wish);
-        slackSignUpMessage.sendJuniorSignUp(user, wish);
+    /**
+     * 여기부터 Case B를 위한 코드
+     */
+    public User seniorSignUpB(SeniorSignUpRequestB request) {
+        seniorUtils.checkKeyword(request.keyword());
+        userUtils.checkPhoneNumber(request.phoneNumber());
+        User user = mapToUser(request, profile);
+        userSaveService.save(user);
+        Senior senior = mapToSenior(user, request);
+        return seniorSignUpFin(senior);
+    }
+
+    public User changeSeniorB(User user, SeniorChangeRequestB changeRequest) {
+        seniorUtils.checkKeyword(changeRequest.keyword());
+        Senior senior = mapToSenior(user, changeRequest);
+        return changeSeniorFin(senior, user);
     }
 }

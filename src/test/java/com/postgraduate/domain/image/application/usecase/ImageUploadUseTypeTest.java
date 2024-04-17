@@ -20,7 +20,7 @@ import static java.lang.Boolean.TRUE;
 import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class ImageUploadUseCaseTest {
+class ImageUploadUseTypeTest {
     @Mock
     private S3UploadService s3UploadService;
 

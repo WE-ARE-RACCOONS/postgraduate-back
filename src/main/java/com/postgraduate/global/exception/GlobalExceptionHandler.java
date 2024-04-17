@@ -2,7 +2,7 @@ package com.postgraduate.global.exception;
 
 import com.postgraduate.global.dto.ErrorResponse;
 import com.postgraduate.global.dto.ResponseDto;
-import com.postgraduate.global.exception.constant.ErrorCode;
+import com.postgraduate.global.constant.ErrorCode;
 import com.postgraduate.global.logging.dto.LogRequest;
 import com.postgraduate.global.logging.service.LogService;
 import lombok.RequiredArgsConstructor;
@@ -11,8 +11,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import java.io.IOException;
 
 @Slf4j
 @RestControllerAdvice

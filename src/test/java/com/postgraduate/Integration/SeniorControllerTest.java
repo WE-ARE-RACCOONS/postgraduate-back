@@ -14,7 +14,7 @@ import com.postgraduate.domain.senior.presentation.constant.SeniorResponseCode;
 import com.postgraduate.domain.senior.presentation.constant.SeniorResponseMessage;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.entity.constant.Role;
-import com.postgraduate.global.exception.constant.ErrorCode;
+import com.postgraduate.global.constant.ErrorCode;
 import com.postgraduate.support.IntegrationTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

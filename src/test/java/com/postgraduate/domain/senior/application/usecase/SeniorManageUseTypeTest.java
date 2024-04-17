@@ -45,7 +45,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class SeniorManageUseCaseTest {
+class SeniorManageUseTypeTest {
     @Mock
     private UserUpdateService userUpdateService;
     @Mock

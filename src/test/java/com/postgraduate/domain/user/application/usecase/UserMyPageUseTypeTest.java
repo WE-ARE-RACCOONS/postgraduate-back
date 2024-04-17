@@ -20,7 +20,7 @@ import static java.time.LocalDate.now;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
-class UserMyPageUseCaseTest {
+class UserMyPageUseTypeTest {
     @InjectMocks
     UserMyPageUseCase userMyPageUseCase;
 

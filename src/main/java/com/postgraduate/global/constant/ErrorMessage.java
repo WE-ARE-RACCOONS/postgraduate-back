@@ -1,4 +1,4 @@
-package com.postgraduate.global.exception.constant;
+package com.postgraduate.global.constant;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
