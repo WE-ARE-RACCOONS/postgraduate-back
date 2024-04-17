@@ -132,7 +132,7 @@ class SeniorControllerTest extends ControllerTest {
     @DisplayName("대학원생 마이페이지 기본 정보를 조회한다")
     void getSeniorInfo(boolean tf) throws Exception {
         SeniorMyPageResponse response = new SeniorMyPageResponse(userOfSenior.getSocialId(), senior.getSeniorId(), userOfSenior.getNickName(), userOfSenior.getProfile(), senior.getStatus(), tf);
-        given(seniorMyPageUseCase.getSeniorInfo(any()))
+        given(seniorMyPageUseCase.getSeniorMyPage(any()))
                 .willReturn(response);
 
         mvc.perform(get("/senior/me")

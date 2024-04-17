@@ -9,7 +9,6 @@ import com.postgraduate.domain.available.domain.service.AvailableGetService;
 import com.postgraduate.domain.senior.application.dto.res.*;
 import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
-import com.postgraduate.domain.senior.domain.entity.constant.Status;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.wish.domain.entity.Wish;
@@ -37,11 +36,10 @@ public class SeniorMyPageUseCase {
     private final EncryptorUtils encryptorUtils;
     private final WishGetService wishGetService;
 
-    public SeniorMyPageResponse getSeniorInfo(User user) {
+    public SeniorMyPageResponse getSeniorMyPage(User user) {
         Senior senior = seniorGetService.byUser(user);
-        Status status = senior.getStatus();
         Optional<Profile> profile = ofNullable(senior.getProfile());
-        return mapToSeniorMyPageInfo(senior, status, profile.isPresent());
+        return mapToSeniorMyPageInfo(senior, senior.getStatus(), profile.isPresent());
     }
 
     public SeniorMyPageProfileResponse getSeniorMyPageProfile(User user) {
@@ -76,9 +74,9 @@ public class SeniorMyPageUseCase {
     /**
      * Case B 코드
      */
-    public SeniorMyPageResponseB getSeniorInfoB(User user) {
+    public SeniorMyPageResponse getSeniorMyPageB(User user) {
         Senior senior = seniorGetService.byUser(user);
         Optional<Profile> profile = ofNullable(senior.getProfile());
-        return mapToSeniorMyPageInfoWithProfile(senior, profile.isPresent());
+        return mapToSeniorMyPageInfo(senior, senior.getStatus(), profile.isPresent());
     }
 }

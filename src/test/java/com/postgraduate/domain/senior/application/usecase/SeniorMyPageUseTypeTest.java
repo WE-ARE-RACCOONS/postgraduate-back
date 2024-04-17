@@ -81,7 +81,7 @@ class SeniorMyPageUseTypeTest {
         given(seniorGetService.byUser(user))
                 .willReturn(senior);
 
-        SeniorMyPageResponse seniorInfo = seniorMyPageUseCase.getSeniorInfo(user);
+        SeniorMyPageResponse seniorInfo = seniorMyPageUseCase.getSeniorMyPage(user);
 
         assertThat(seniorInfo.profileRegister())
                 .isFalse();
@@ -93,7 +93,7 @@ class SeniorMyPageUseTypeTest {
         given(seniorGetService.byUser(user))
                 .willReturn(senior);
 
-        SeniorMyPageResponse seniorInfo = seniorMyPageUseCase.getSeniorInfo(user);
+        SeniorMyPageResponse seniorInfo = seniorMyPageUseCase.getSeniorMyPage(user);
 
         assertThat(seniorInfo.profileRegister())
                 .isTrue();
