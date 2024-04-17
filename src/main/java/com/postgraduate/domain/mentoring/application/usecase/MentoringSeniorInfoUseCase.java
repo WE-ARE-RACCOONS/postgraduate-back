@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.postgraduate.domain.mentoring.application.mapper.MentoringMapper.*;
+import static com.postgraduate.domain.mentoring.util.DateUtils.stringToLocalDateTime;
 import static java.time.Duration.between;
 
 @Service
@@ -70,6 +71,12 @@ public class MentoringSeniorInfoUseCase {
         List<Mentoring> mentorings = mentoringGetService.bySeniorDone(senior);
         List<DoneSeniorMentoringInfo> doneSeniorMentoringInfos = mentorings.stream()
                 .map(MentoringMapper::mapToSeniorDoneInfo)
+                .sorted((o1, o2) -> {
+                    if (stringToLocalDateTime(o1.date())
+                            .isAfter(stringToLocalDateTime(o2.date())))
+                        return -1;
+                    return 1;
+                })
                 .toList();
         return new DoneSeniorMentoringResponse(doneSeniorMentoringInfos);
     }

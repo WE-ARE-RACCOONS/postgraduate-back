@@ -147,15 +147,15 @@ class MentoringUserInfoUseCaseTest {
     @DisplayName("DONE 반환 테스트")
     void getDone() {
         Mentoring mentoring1 = new Mentoring(1L, user, senior, payment, null
-                , "a", "b", "c"
+                , "a", "b", "2024-02-03-18-12"
                 , 40, DONE
                 , LocalDateTime.now(), LocalDateTime.now());
         Mentoring mentoring2 = new Mentoring(2L, user, senior, payment, null
-                , "a", "b", "c"
+                , "a", "b", "2024-02-03-18-12"
                 , 40, DONE
                 , LocalDateTime.now(), LocalDateTime.now());
         Mentoring mentoring3 = new Mentoring(3L, user, senior, payment, null
-                , "a", "b", "c"
+                , "a", "b", "2024-02-03-18-12"
                 , 40, DONE
                 , LocalDateTime.now(), LocalDateTime.now());
         List<Mentoring> mentorings = List.of(mentoring1, mentoring2, mentoring3);
