@@ -7,4 +7,9 @@ public interface SignInUseCase {
     AuthUserResponse getUser(CodeRequest request);
 
     AuthUserResponse getDevUser(CodeRequest codeRequest);
+
+    /**
+     *
+     */
+    AuthUserResponse getUserB(CodeRequest codeRequest);
 }
