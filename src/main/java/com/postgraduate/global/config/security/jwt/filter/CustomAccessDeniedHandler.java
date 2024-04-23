@@ -36,7 +36,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding("UTF-8");
         logService.save(new LogRequest(env, CustomAccessDeniedHandler.class.getSimpleName(), PERMISSION_DENIED.getMessage()));
-        log.error("AccessDenied : {}", PERMISSION_DENIED.getMessage());
+        log.error("AuthenticationEntryPoint : {} {}", PERMISSION_DENIED.getMessage(), request.getRequestURI());
         objectMapper.writeValue(
                 response.getOutputStream(),
                 new ErrorResponse(AUTH_DENIED.getCode(), PERMISSION_DENIED.getMessage())

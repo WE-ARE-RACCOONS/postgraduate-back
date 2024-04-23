@@ -37,7 +37,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding("UTF-8");
         logService.save(new LogRequest(env, CustomAuthenticationEntryPoint.class.getSimpleName(), FAILED_AUTH.getMessage()));
-        log.error("AuthenticationEntryPoint : {}", FAILED_AUTH.getMessage());
+        log.error("AuthenticationEntryPoint : {} {}", FAILED_AUTH.getMessage(), request.getRequestURI());
         objectMapper.writeValue(
                 response.getOutputStream(),
                 new ErrorResponse(AUTH_FAILED.getCode(), FAILED_AUTH.getMessage())
