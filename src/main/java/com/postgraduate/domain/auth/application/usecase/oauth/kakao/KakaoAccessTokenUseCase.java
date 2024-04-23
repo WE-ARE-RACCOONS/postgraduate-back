@@ -24,6 +24,8 @@ public class KakaoAccessTokenUseCase {
     private String appId;
     @Value("${kakao.redirect-uri}")
     private String redirectUrl;
+    @Value("${kakao.redirect-uri-b}")
+    private String redirectUrlB;
     @Value("${kakao.dev-redirect-uri}")
     private String devRedirectUrl;
     @Value("${kakao.authorization-grant-type}")
@@ -95,6 +97,36 @@ public class KakaoAccessTokenUseCase {
         requestBody.add("grant_type", authorizationGrantType);
         requestBody.add("client_id", appId);
         requestBody.add("redirect_uri", devRedirectUrl);
+        requestBody.add("code", code);
+        return requestBody;
+    }
+
+    /**
+     * case B
+     */
+
+    public KakaoUserInfoResponse getAccessTokenB (CodeRequest codeRequest) {
+        MultiValueMap<String, String> requestBody = getRequestBodyB(codeRequest.code());
+        try {
+            KakaoTokenInfoResponse tokenInfoResponse = webClient.post()
+                    .uri(KAKAO_TOKEN_URI)
+                    .headers(h -> h.setContentType(MediaType.APPLICATION_FORM_URLENCODED))
+                    .bodyValue(requestBody)
+                    .retrieve()
+                    .bodyToMono(KakaoTokenInfoResponse.class)
+                    .block();
+            return getUserInfo(tokenInfoResponse.access_token());
+        } catch (WebClientResponseException ex) {
+            log.error("errorMessage : {}", ex.getMessage());
+            throw new KakaoCodeException();
+        }
+    }
+
+    private MultiValueMap<String, String> getRequestBodyB(String code) {
+        MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
+        requestBody.add("grant_type", authorizationGrantType);
+        requestBody.add("client_id", appId);
+        requestBody.add("redirect_uri", redirectUrlB);
         requestBody.add("code", code);
         return requestBody;
     }
