@@ -64,7 +64,8 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
                         senior.info.totalInfo.like("%" + search + "%")
                                 .or(senior.user.nickName.like("%" + search + "%")),
                         senior.status.eq(APPROVE),
-                        senior.user.isDelete.eq(FALSE)
+                        senior.user.isDelete.eq(FALSE),
+                        senior.profile.isNotNull()
                 )
                 .fetchOne();
 
@@ -107,7 +108,8 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
                         fieldSpecifier(field),
                         postgraduSpecifier(postgradu),
                         senior.status.eq(APPROVE),
-                        senior.user.isDelete.eq(FALSE)
+                        senior.user.isDelete.eq(FALSE),
+                        senior.profile.isNotNull()
                 )
                 .fetchOne();
 
@@ -243,5 +245,84 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
                 .where(senior.user.isDelete.eq(FALSE))
                 .orderBy(senior.createdAt.desc())
                 .fetch();
+    }
+
+    /**
+     * Case B를 위한 코드
+     */
+    @Override
+    public Optional<Senior> findBySeniorIdWithAnyCertification(Long seniorId) {
+        return ofNullable(queryFactory.selectFrom(senior)
+                .distinct()
+                .leftJoin(senior.user, user)
+                .fetchJoin()
+                .where(
+                        senior.seniorId.eq(seniorId),
+                        senior.user.isDelete.isFalse()
+                )
+                .fetchOne());
+    }
+
+    @Override
+    public Page<Senior> findAllBySearchAnySenior(String search, String sort, Pageable pageable) {
+        List<Senior> seniors = queryFactory.selectFrom(senior)
+                .distinct()
+                .leftJoin(senior.user, user)
+                .fetchJoin()
+                .where(
+                        senior.info.totalInfo.like("%" + search + "%")
+                                .or(senior.user.nickName.like("%" + search + "%")),
+                        senior.user.isDelete.eq(FALSE)
+                )
+                .orderBy(orderSpecifier(sort))
+                .orderBy(senior.user.nickName.asc()).
+                offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        Long total = queryFactory.select(senior.count())
+                .from(senior)
+                .distinct()
+                .leftJoin(senior.user, user)
+                .where(
+                        senior.info.totalInfo.like("%" + search + "%")
+                                .or(senior.user.nickName.like("%" + search + "%")),
+                        senior.user.isDelete.eq(FALSE)
+                )
+                .fetchOne();
+
+
+        return new PageImpl<>(seniors, pageable, total);
+    }
+
+    @Override
+    public Page<Senior> findAllByFieldAnySenior(String field, String postgradu, Pageable pageable) {
+        List<Senior> seniors = queryFactory.selectFrom(senior)
+                .distinct()
+                .leftJoin(senior.user, user)
+                .fetchJoin()
+                .where(
+                        fieldSpecifier(field),
+                        postgraduSpecifier(postgradu),
+                        senior.user.isDelete.eq(FALSE)
+                )
+                .orderBy(senior.hit.desc())
+                .orderBy(senior.user.nickName.asc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        Long total = queryFactory.select(senior.count())
+                .from(senior)
+                .distinct()
+                .leftJoin(senior.user, user)
+                .where(
+                        fieldSpecifier(field),
+                        postgraduSpecifier(postgradu),
+                        senior.user.isDelete.eq(FALSE)
+                )
+                .fetchOne();
+
+        return new PageImpl<>(seniors, pageable, total);
     }
 }

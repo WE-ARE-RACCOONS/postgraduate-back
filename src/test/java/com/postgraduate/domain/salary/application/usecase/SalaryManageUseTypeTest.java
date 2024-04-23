@@ -17,7 +17,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class SalaryManageUseCaseTest {
+class SalaryManageUseTypeTest {
     @Mock
     private SalaryGetService salaryGetService;
     @Mock

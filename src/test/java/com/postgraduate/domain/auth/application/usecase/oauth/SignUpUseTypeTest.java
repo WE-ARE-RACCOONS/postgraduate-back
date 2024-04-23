@@ -44,7 +44,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class SignUpUseCaseTest {
+class SignUpUseTypeTest {
     @Mock
     private UserSaveService userSaveService;
     @Mock

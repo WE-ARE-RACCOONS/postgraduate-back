@@ -33,7 +33,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-class PaymentManageUseCaseTest {
+class PaymentManageUseTypeTest {
     @Mock
     private PaymentSaveService paymentSaveService;
     @Mock

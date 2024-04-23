@@ -36,7 +36,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
-class MentoringUserInfoUseCaseTest {
+class MentoringUserInfoUseTypeTest {
     @Mock
     private MentoringGetService mentoringGetService;
 

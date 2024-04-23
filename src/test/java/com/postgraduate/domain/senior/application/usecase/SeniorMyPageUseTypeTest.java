@@ -42,7 +42,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
-class SeniorMyPageUseCaseTest {
+class SeniorMyPageUseTypeTest {
     @Mock
     private SeniorGetService seniorGetService;
     @Mock
@@ -81,7 +81,7 @@ class SeniorMyPageUseCaseTest {
         given(seniorGetService.byUser(user))
                 .willReturn(senior);
 
-        SeniorMyPageResponse seniorInfo = seniorMyPageUseCase.getSeniorInfo(user);
+        SeniorMyPageResponse seniorInfo = seniorMyPageUseCase.getSeniorMyPage(user);
 
         assertThat(seniorInfo.profileRegister())
                 .isFalse();
@@ -93,7 +93,7 @@ class SeniorMyPageUseCaseTest {
         given(seniorGetService.byUser(user))
                 .willReturn(senior);
 
-        SeniorMyPageResponse seniorInfo = seniorMyPageUseCase.getSeniorInfo(user);
+        SeniorMyPageResponse seniorInfo = seniorMyPageUseCase.getSeniorMyPage(user);
 
         assertThat(seniorInfo.profileRegister())
                 .isTrue();

@@ -6,13 +6,9 @@ import com.postgraduate.domain.available.application.dto.res.AvailableTimeRespon
 import com.postgraduate.domain.available.application.mapper.AvailableMapper;
 import com.postgraduate.domain.available.domain.entity.Available;
 import com.postgraduate.domain.available.domain.service.AvailableGetService;
-import com.postgraduate.domain.senior.application.dto.res.SeniorMyPageProfileResponse;
-import com.postgraduate.domain.senior.application.dto.res.SeniorMyPageResponse;
-import com.postgraduate.domain.senior.application.dto.res.SeniorMyPageUserAccountResponse;
-import com.postgraduate.domain.senior.application.dto.res.SeniorPossibleResponse;
+import com.postgraduate.domain.senior.application.dto.res.*;
 import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
-import com.postgraduate.domain.senior.domain.entity.constant.Status;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.wish.domain.entity.Wish;
@@ -40,11 +36,10 @@ public class SeniorMyPageUseCase {
     private final EncryptorUtils encryptorUtils;
     private final WishGetService wishGetService;
 
-    public SeniorMyPageResponse getSeniorInfo(User user) {
+    public SeniorMyPageResponse getSeniorMyPage(User user) {
         Senior senior = seniorGetService.byUser(user);
-        Status status = senior.getStatus();
         Optional<Profile> profile = ofNullable(senior.getProfile());
-        return mapToSeniorMyPageInfo(senior, status, profile.isPresent());
+        return mapToSeniorMyPageInfo(senior, senior.getStatus(), profile.isPresent());
     }
 
     public SeniorMyPageProfileResponse getSeniorMyPageProfile(User user) {
@@ -74,5 +69,14 @@ public class SeniorMyPageUseCase {
         if (wish.isEmpty())
             return new SeniorPossibleResponse(FALSE, user.getSocialId());
         return new SeniorPossibleResponse(TRUE, user.getSocialId());
+    }
+
+    /**
+     * Case B 코드
+     */
+    public SeniorMyPageResponse getSeniorMyPageB(User user) {
+        Senior senior = seniorGetService.byUser(user);
+        Optional<Profile> profile = ofNullable(senior.getProfile());
+        return mapToSeniorMyPageInfo(senior, senior.getStatus(), profile.isPresent());
     }
 }

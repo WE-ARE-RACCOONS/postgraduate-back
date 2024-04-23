@@ -29,7 +29,7 @@ public class Senior {
     @OneToOne(fetch = FetchType.LAZY)
     private User user;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT")
     private String certification;
 
     @Column(nullable = false)
