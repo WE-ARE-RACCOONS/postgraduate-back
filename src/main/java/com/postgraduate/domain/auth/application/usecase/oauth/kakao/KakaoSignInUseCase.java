@@ -42,4 +42,19 @@ public class KakaoSignInUseCase implements SignInUseCase {
             return AuthMapper.mapToAuthUser(socialId);
         }
     }
+
+    /**
+     * case B
+     */
+    @Override
+    public AuthUserResponse getUserB(CodeRequest codeRequest) {
+        KakaoUserInfoResponse userInfo = kakaoTokenUseCase.getAccessTokenB(codeRequest);
+        Long socialId = userInfo.id();
+        try {
+            User user = userGetService.bySocialId(socialId);
+            return AuthMapper.mapToAuthUser(user, socialId);
+        } catch (UserNotFoundException e) {
+            return AuthMapper.mapToAuthUser(socialId);
+        }
+    }
 }

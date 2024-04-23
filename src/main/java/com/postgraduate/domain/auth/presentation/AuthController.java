@@ -151,4 +151,14 @@ public class AuthController {
         return ResponseDto.create(SENIOR_CREATE.getCode(), CREATE_SENIOR.getMessage(), jwtToken);
     }
 
+    @PostMapping("/login/{provider}/b")
+    @Operation(summary = "소셜 로그인", description = "회원인 경우 JWT를, 회원이 아닌 경우 socialId를 반환합니다(회원가입은 진행하지 않습니다).")
+    public ResponseDto<AuthResponse> authLoginB(@RequestBody @Valid CodeRequest request, @PathVariable Provider provider) {
+        SignInUseCase signInUseCase = selectOauth.selectSignIn(provider);
+        AuthUserResponse authUser = signInUseCase.getUserB(request);
+        if (authUser.user() == null)
+            return ResponseDto.create(AUTH_NONE.getCode(), NOT_REGISTERED_USER.getMessage(), authUser);
+        JwtTokenResponse jwtToken = jwtUseCase.signIn(authUser.user());
+        return ResponseDto.create(AUTH_ALREADY.getCode(), SUCCESS_AUTH.getMessage(), jwtToken);
+    }
 }
