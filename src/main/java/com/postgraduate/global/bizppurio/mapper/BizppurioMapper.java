@@ -62,8 +62,8 @@ public class BizppurioMapper {
                         "선배님에 성공적인 멘토링 매칭을 기원하겠습니다! \uD83D\uDE42"
         );
 
-        WebLinkButton certification = new WebLinkButton("대학원 인증하기", type, certificationPage);
-        WebLinkButton profile = new WebLinkButton("프로필 작성하기", "WL", profilePage);
+        WebLinkButton certification = new WebLinkButton("대학원 인증하기", type, certificationPage, certificationPage);
+        WebLinkButton profile = new WebLinkButton("프로필 작성하기", "WL", profilePage, profilePage);
         WebLinkButton[] buttons = {certification, profile};
         Message messageBody = new SeniorSingUpMessage(message, senderKey, seniorSignUp, buttons);
         return createCommonRequest(messageBody, user);
@@ -76,7 +76,7 @@ public class BizppurioMapper {
                         "후배님으로부터 멘토링 신청이 들어왔습니다! 다음날 오후 11시 59분까지 신청해주시지 않으면 멘토링 신청이 자동 취소되니! 지금 수락하러 가볼까요? \uD83D\uDE42"
         );
 
-        WebLinkButton mentoringCheck = new WebLinkButton("멘토링 신청 확인하기", type, seniorMentoringPage);
+        WebLinkButton mentoringCheck = new WebLinkButton("멘토링 신청 확인하기", type, seniorMentoringPage, seniorMentoringPage);
         WebLinkButton[] buttons = {mentoringCheck};
         Message messageBody = new SeniorApplyMessage(message, senderKey, seniorMentoringApply, buttons);
         return createCommonRequest(messageBody, user);
@@ -101,7 +101,7 @@ public class BizppurioMapper {
                         "\n" +
                         "이제 프로필 작성만 완료되면, 선배님의 멘토링 신청률이 up!up! \uD83D\uDD25"
         );
-        WebLinkButton profile = new WebLinkButton("프로필 완성하기", type, profilePage);
+        WebLinkButton profile = new WebLinkButton("프로필 완성하기", type, profilePage, profilePage);
         WebLinkButton[] buttons = {profile};
         CertificationApproveMessage messageBody = new CertificationApproveMessage(message, senderKey, certificationApprove, buttons);
         return createCommonRequest(messageBody, user);
@@ -115,7 +115,7 @@ public class BizppurioMapper {
                         "\n" +
                         "재신청 해주시면 빠르게 재심사 하도록 하겠습니다!"
         );
-        WebLinkButton certification = new WebLinkButton("대학원 재인증하기", type, certificationPage);
+        WebLinkButton certification = new WebLinkButton("대학원 재인증하기", type, certificationPage, certificationPage);
         WebLinkButton[] buttons = {certification};
         CertificationDeniedMessage messageBody = new CertificationDeniedMessage(message, senderKey, certificationDenied, buttons);
         return createCommonRequest(messageBody, user);
@@ -170,7 +170,7 @@ public class BizppurioMapper {
                         "\n" +
                         "혹시 멘토링을 진행하고 싶었던 다른 선배님이 있다면 지금 신청해보세요!"
         );
-        WebLinkButton otherSenior = new WebLinkButton("다른 선배 보러가기", type, mainPage);
+        WebLinkButton otherSenior = new WebLinkButton("다른 선배 보러가기", type, mainPage, mainPage);
         WebLinkButton[] buttons = {otherSenior};
         JuniorRefuseMessage messageBody = new JuniorRefuseMessage(message, senderKey, juniorMentoringRefuse, buttons);
         return createCommonRequest(messageBody, user);
@@ -187,7 +187,7 @@ public class BizppurioMapper {
                         "\n" +
                         "별도의 문의가 없다면, 3일 후 멘토링이 자동 확정되며 선배님께 보수비가 정산됩니다!"
         );
-        WebLinkButton mentoringFinish = new WebLinkButton("진행 확정하러가기", type, juniorMentoringPage);
+        WebLinkButton mentoringFinish = new WebLinkButton("진행 확정하러가기", type, juniorMentoringPage, juniorMentoringPage);
         WebLinkButton[] buttons = {mentoringFinish};
 
         JuniorFinishMessage messageBody = new JuniorFinishMessage(message, senderKey, juniorMentoringFinish, buttons);
