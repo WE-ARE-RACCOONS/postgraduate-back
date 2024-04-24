@@ -329,8 +329,8 @@ public class SeniorMapper {
         if (senior.getProfile() != null) {
             Profile profile = senior.getProfile();
             return new SeniorDetailResponseB(
-                    senior.getStatus().equals(APPROVE),
                     isMine,
+                    senior.getStatus().equals(APPROVE),
                     senior.getUser().getNickName(),
                     profile.getTerm(),
                     senior.getUser().getProfile(),
@@ -346,8 +346,8 @@ public class SeniorMapper {
             );
         }
         return new SeniorDetailResponseB(
-                senior.getStatus().equals(APPROVE),
                 isMine,
+                senior.getStatus().equals(APPROVE),
                 senior.getUser().getNickName(),
                 30,
                 senior.getUser().getProfile(),
