@@ -2,7 +2,6 @@ package com.postgraduate.domain.payment.presentation;
 
 import com.postgraduate.domain.payment.application.dto.req.PaymentResultRequest;
 import com.postgraduate.domain.payment.application.usecase.PaymentManageUseCase;
-import com.postgraduate.domain.senior.application.usecase.SeniorInfoUseCase;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -19,9 +18,10 @@ import java.io.IOException;
 @Tag(name = "PAYMENT Controller", description = "")
 public class PaymentController {
     private final PaymentManageUseCase paymentManageUseCase;
-    private final SeniorInfoUseCase seniorInfoUseCase;
     @Value("${payple.redirect-uri}")
     private String redirectUri;
+    @Value("${payple.redirect-uri-b}")
+    private String redirectUriB;
     @Value("${payple.redirect-uri-dev}")
     private String redirectUriDev;
 
@@ -41,4 +41,11 @@ public class PaymentController {
     public void webhook(@RequestBody PaymentResultRequest request) {
         log.info("payple webhook");
     }
+
+    @PostMapping("/payple/result/b")
+    public void resultGetB(HttpServletResponse response, @ModelAttribute PaymentResultRequest request) throws IOException {
+        paymentManageUseCase.savePay(request);
+        response.sendRedirect(redirectUriB + request.PCD_PAY_OID());
+    }
+
 }
