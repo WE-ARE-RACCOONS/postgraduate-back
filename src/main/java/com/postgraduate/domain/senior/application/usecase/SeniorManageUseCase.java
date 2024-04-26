@@ -61,7 +61,7 @@ public class SeniorManageUseCase {
         seniorUpdateService.updateCertification(senior, certificationRequest.certification());
     }
 
-    public void signUpProfile(User user, SeniorProfileRequest profileRequest) {
+    public SeniorProfileUpdateResponse signUpProfile(User user, SeniorProfileRequest profileRequest) {
         Senior senior = seniorGetService.byUser(user);
         Profile profile = mapToProfile(profileRequest);
         seniorUpdateService.signUpSeniorProfile(senior, profile);
@@ -69,6 +69,7 @@ public class SeniorManageUseCase {
         availableDeleteService.delete(senior);
         List<Available> sortedAvailable = sortAvailable(availableCreateRequests, senior);
         sortedAvailable.forEach(availableSaveService::save);
+        return new SeniorProfileUpdateResponse(senior.getSeniorId());
     }
 
     public void saveAccount(User user, SeniorAccountRequest accountRequest) {
