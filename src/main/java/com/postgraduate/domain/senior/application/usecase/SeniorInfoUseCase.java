@@ -43,7 +43,7 @@ public class SeniorInfoUseCase {
     }
 
     private SeniorDetailResponse getResponse(Long seniorId, boolean isMine) {
-        Senior senior = seniorGetService.bySeniorIdWithCertification(seniorId);
+        Senior senior = seniorGetService.bySeniorId(seniorId);
         seniorUpdateService.updateHit(senior);
         List<Available> availables = availableGetService.bySenior(senior);
         List<AvailableTimeResponse> times = availables.stream()
@@ -64,7 +64,7 @@ public class SeniorInfoUseCase {
     public AllSeniorSearchResponse getSearchSenior(String search, Integer page, String sort) {
         Page<Senior> seniors = seniorGetService.bySearch(search, page, sort);
         List<SeniorSearchResponse> selectSeniors = seniors.stream()
-                .map(SeniorMapper::mapToSeniorSearch)
+                .map(SeniorMapper::mapToSeniorSearchWithStatus)
                 .toList();
         long totalElements = seniors.getTotalElements();
         return new AllSeniorSearchResponse(selectSeniors, totalElements);
@@ -74,7 +74,7 @@ public class SeniorInfoUseCase {
     public AllSeniorSearchResponse getFieldSenior(String field, String postgradu, Integer page) {
         Page<Senior> seniors = seniorGetService.byField(field, postgradu, page);
         List<SeniorSearchResponse> selectSeniors = seniors.stream()
-                .map(SeniorMapper::mapToSeniorSearch)
+                .map(SeniorMapper::mapToSeniorSearchWithStatus)
                 .toList();
         long totalElements = seniors.getTotalElements();
         return new AllSeniorSearchResponse(selectSeniors, totalElements);
@@ -82,13 +82,13 @@ public class SeniorInfoUseCase {
 
     @Transactional(readOnly = true)
     public SeniorProfileResponse getSeniorProfile(User user, Long seniorId) {
-        Senior senior = seniorGetService.bySeniorIdWithCertification(seniorId);
-        return mapToSeniorProfile(user, senior);
+        Senior senior = seniorGetService.bySeniorId(seniorId);
+        return mapToSeniorProfileWithNull(user, senior);
     }
 
     @Transactional(readOnly = true)
     public AvailableTimesResponse getSeniorTimes(Long seniorId) {
-        Senior senior = seniorGetService.bySeniorIdWithCertification(seniorId);
+        Senior senior = seniorGetService.bySeniorId(seniorId);
         List<Available> availables = availableGetService.bySenior(senior);
         List<AvailableTimeResponse> times = availables.stream()
                 .map(AvailableMapper::mapToAvailableTimes)
@@ -103,75 +103,5 @@ public class SeniorInfoUseCase {
                 .map(Senior::getSeniorId)
                 .toList();
         return new AllSeniorIdResponse(seniorIds);
-    }
-
-    /**
-     * 여기서부터 Case B를 위한 코드
-     */
-    public SeniorDetailResponseB getSeniorDetailB(User user, Long seniorId) {
-        if (user != null && user.getRole() == SENIOR)
-            return checkIsMineB(user, seniorId);
-        return getResponseB(seniorId, false);
-    }
-
-    private SeniorDetailResponseB checkIsMineB(User user, Long seniorId) {
-        Senior mySenior = seniorGetService.byUser(user);
-        if (mySenior.getSeniorId().equals(seniorId))
-            return getResponseMineB(mySenior, true);
-        return getResponseB(seniorId, false);
-    }
-
-    private SeniorDetailResponseB getResponseB(Long seniorId, boolean isMine) {
-        Senior senior = seniorGetService.bySeniorIdWithAnyCertification(seniorId);
-        seniorUpdateService.updateHit(senior);
-        List<Available> availables = availableGetService.bySeniorWithAny(senior);
-        List<AvailableTimeResponse> times = availables.stream()
-                .map(AvailableMapper::mapToAvailableTimes)
-                .toList();
-        return mapToSeniorDetailWithNull(senior, times, isMine);
-    }
-
-    private SeniorDetailResponseB getResponseMineB(Senior senior, boolean isMine) {
-        List<Available> availables = availableGetService.byMine(senior);
-        List<AvailableTimeResponse> times = availables.stream()
-                .map(AvailableMapper::mapToAvailableTimes)
-                .toList();
-        return mapToSeniorDetailWithNull(senior, times, isMine);
-    }
-
-    @Transactional(readOnly = true)
-    public SeniorProfileResponse getSeniorProfileB(User user, Long seniorId) {
-        Senior senior = seniorGetService.bySeniorIdWithAnyCertification(seniorId);
-        return mapToSeniorProfileWithNull(user, senior);
-    }
-
-    @Transactional(readOnly = true)
-    public AvailableTimesResponse getSeniorTimesB(Long seniorId) {
-        Senior senior = seniorGetService.bySeniorIdWithAnyCertification(seniorId);
-        List<Available> availables = availableGetService.bySeniorWithAny(senior);
-        List<AvailableTimeResponse> times = availables.stream()
-                .map(AvailableMapper::mapToAvailableTimes)
-                .toList();
-        return new AvailableTimesResponse(senior.getUser().getNickName(), times);
-    }
-
-    @Transactional(readOnly = true)
-    public AllSeniorSearchResponseB getSearchSeniorB(String search, Integer page, String sort) {
-        Page<Senior> seniors = seniorGetService.bySearchWithAny(search, page, sort);
-        List<SeniorSearchResponseB> selectSeniors = seniors.stream()
-                .map(SeniorMapper::mapToSeniorSearchWithStatus)
-                .toList();
-        long totalElements = seniors.getTotalElements();
-        return new AllSeniorSearchResponseB(selectSeniors, totalElements);
-    }
-
-    @Transactional(readOnly = true)
-    public AllSeniorSearchResponseB getFieldSeniorB(String field, String postgradu, Integer page) {
-        Page<Senior> seniors = seniorGetService.byFieldWithAny(field, postgradu, page);
-        List<SeniorSearchResponseB> selectSeniors = seniors.stream()
-                .map(SeniorMapper::mapToSeniorSearchWithStatus)
-                .toList();
-        long totalElements = seniors.getTotalElements();
-        return new AllSeniorSearchResponseB(selectSeniors, totalElements);
     }
 }

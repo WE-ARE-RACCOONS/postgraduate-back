@@ -6,6 +6,7 @@ import java.util.List;
 
 public record SeniorDetailResponse(
         boolean isMine,
+        boolean certification,
         String nickName,
         int term,
         String profile,

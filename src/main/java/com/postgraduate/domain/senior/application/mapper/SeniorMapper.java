@@ -205,50 +205,6 @@ public class SeniorMapper {
                 user.getNickName());
     }
 
-    public static SeniorDetailResponse mapToSeniorDetail(Senior senior, List<AvailableTimeResponse> times, boolean isMine) {
-        Info info = senior.getInfo();
-        Profile profile = senior.getProfile();
-        String[] keyword = info.getKeyword().split(",");
-        return new SeniorDetailResponse(
-                isMine,
-                senior.getUser().getNickName(),
-                profile.getTerm(),
-                senior.getUser().getProfile(),
-                info.getPostgradu(),
-                info.getMajor(),
-                info.getLab(),
-                info.getProfessor(),
-                keyword,
-                profile.getInfo(),
-                profile.getOneLiner(),
-                profile.getTarget(),
-                times
-        );
-    }
-
-    public static SeniorSearchResponse mapToSeniorSearch(Senior senior) {
-        User user = senior.getUser();
-        Info info = senior.getInfo();
-        String[] allKeywords = info.getKeyword().split(",");
-        String[] keyword = Arrays.copyOf(allKeywords, Math.min(3, allKeywords.length));
-
-        return new SeniorSearchResponse(senior.getSeniorId(), user.getProfile(), user.getNickName(),
-                info.getPostgradu(), info.getMajor(), info.getLab(), info.getProfessor(),
-                keyword);
-    }
-
-    public static SeniorProfileResponse mapToSeniorProfile(User user, Senior senior) {
-        User seniorUser = senior.getUser();
-        Info info = senior.getInfo();
-        Profile profile = senior.getProfile();
-        return new SeniorProfileResponse(seniorUser.getNickName(), seniorUser.getProfile(),
-                info.getPostgradu(), info.getMajor(), info.getLab(), profile.getTerm(), user.getUserId(), user.getPhoneNumber());
-    }
-
-    /**
-     * 여기서부터 Case B 위한 코드
-     */
-
     public static Senior mapToSenior(User user, SeniorSignUpRequestB request) {
         return Senior.builder()
                 .user(user)
@@ -323,12 +279,12 @@ public class SeniorMapper {
         return infoBuilder.build();
     }
 
-    public static SeniorDetailResponseB mapToSeniorDetailWithNull(Senior senior, List<AvailableTimeResponse> times, boolean isMine) {
+    public static SeniorDetailResponse mapToSeniorDetail(Senior senior, List<AvailableTimeResponse> times, boolean isMine) {
         Info info = senior.getInfo();
         String[] keyword = info.getKeyword().split(",");
         if (senior.getProfile() != null) {
             Profile profile = senior.getProfile();
-            return new SeniorDetailResponseB(
+            return new SeniorDetailResponse(
                     isMine,
                     senior.getStatus().equals(APPROVE),
                     senior.getUser().getNickName(),
@@ -345,7 +301,7 @@ public class SeniorMapper {
                     times
             );
         }
-        return new SeniorDetailResponseB(
+        return new SeniorDetailResponse(
                 isMine,
                 senior.getStatus().equals(APPROVE),
                 senior.getUser().getNickName(),
@@ -375,13 +331,13 @@ public class SeniorMapper {
                 info.getPostgradu(), info.getMajor(), info.getLab(), 30, user.getUserId(), user.getPhoneNumber());
     }
 
-    public static SeniorSearchResponseB mapToSeniorSearchWithStatus(Senior senior) {
+    public static SeniorSearchResponse mapToSeniorSearchWithStatus(Senior senior) {
         User user = senior.getUser();
         Info info = senior.getInfo();
         String[] allKeywords = info.getKeyword().split(",");
         String[] keyword = Arrays.copyOf(allKeywords, Math.min(3, allKeywords.length));
 
-        return new SeniorSearchResponseB(senior.getSeniorId(), senior.getStatus().equals(APPROVE),user.getProfile(), user.getNickName(),
+        return new SeniorSearchResponse(senior.getSeniorId(), senior.getStatus().equals(APPROVE),user.getProfile(), user.getNickName(),
                 info.getPostgradu(), info.getMajor(), info.getLab(), info.getProfessor(),
                 keyword);
     }
