@@ -74,7 +74,7 @@ class SeniorInfoUseTypeTest {
         Available available3 = new Available(3L, "수", "12:00", "18:00", senior);
         List<Available> availables = List.of(available1, available2, available3);
 
-        given(seniorGetService.bySeniorIdWithCertification(any()))
+        given(seniorGetService.bySeniorId(any()))
                 .willReturn(senior);
         given(availableGetService.bySenior(senior))
                 .willReturn(availables);
@@ -163,7 +163,7 @@ class SeniorInfoUseTypeTest {
     @Test
     @DisplayName("선배 프로필 조회")
     void getSeniorProfile() {
-        given(seniorGetService.bySeniorIdWithCertification(senior.getSeniorId()))
+        given(seniorGetService.bySeniorId(senior.getSeniorId()))
                 .willReturn(senior);
 
         SeniorProfileResponse seniorProfile = seniorInfoUseCase.getSeniorProfile(originUser, senior.getSeniorId());
@@ -192,7 +192,7 @@ class SeniorInfoUseTypeTest {
         Available available3 = new Available(3L, "수", "12:00", "18:00", senior);
         List<Available> availables = List.of(available1, available2, available3);
 
-        given(seniorGetService.bySeniorIdWithCertification(senior.getSeniorId()))
+        given(seniorGetService.bySeniorId(senior.getSeniorId()))
                 .willReturn(senior);
         given(availableGetService.bySenior(senior))
                 .willReturn(availables);

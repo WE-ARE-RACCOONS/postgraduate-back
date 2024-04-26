@@ -35,18 +35,8 @@ public class SeniorGetService {
                 .orElseThrow(NoneSeniorException::new);
     }
 
-    public Senior bySeniorId(Long seniorId) {
-        return seniorRepository.findBySeniorIdAndUser_IsDelete(seniorId, FALSE)
-                .orElseThrow(NoneSeniorException::new);
-    }
-
     public Senior bySeniorNickName(String nickName) {
         return seniorRepository.findByUser_NickNameAndUser_IsDelete(nickName, FALSE)
-                .orElseThrow(NoneSeniorException::new);
-    }
-
-    public Senior bySeniorIdWithCertification(Long seniorId) {
-        return seniorRepository.findBySeniorId(seniorId)
                 .orElseThrow(NoneSeniorException::new);
     }
 
@@ -54,6 +44,19 @@ public class SeniorGetService {
         page = page == null ? 1 : page;
         Pageable pageable = PageRequest.of(page - 1, ADMIN_PAGE_SIZE);
         return seniorRepository.findAllBySearchSeniorWithAdmin(search, pageable);
+    }
+
+    public List<Senior> allSeniorId() {
+        return seniorRepository.findAllByUser_IsDelete(FALSE);
+    }
+
+    public List<Senior> allSenior() {
+        return seniorRepository.findAllSenior();
+    }
+
+    public Senior bySeniorId(Long seniorId) {
+        return seniorRepository.findBySeniorId(seniorId)
+                .orElseThrow(NoneSeniorException::new);
     }
 
     public Page<Senior> bySearch(String search, Integer page, String sort) {
@@ -68,35 +71,5 @@ public class SeniorGetService {
             page = 1;
         Pageable pageable = PageRequest.of(page-1, SENIOR_PAGE_SIZE);
         return seniorRepository.findAllByFieldSenior(field, postgradu, pageable);
-    }
-
-    public List<Senior> allSeniorId() {
-        return seniorRepository.findAllByUser_IsDelete(FALSE);
-    }
-
-    public List<Senior> allSenior() {
-        return seniorRepository.findAllSenior();
-    }
-
-    /**
-     * Case B
-     */
-    public Senior bySeniorIdWithAnyCertification(Long seniorId) {
-        return seniorRepository.findBySeniorIdWithAnyCertification(seniorId)
-                .orElseThrow(NoneSeniorException::new);
-    }
-
-    public Page<Senior> bySearchWithAny(String search, Integer page, String sort) {
-        if (page == null)
-            page = 1;
-        Pageable pageable = PageRequest.of(page-1, SENIOR_PAGE_SIZE);
-        return seniorRepository.findAllBySearchAnySenior(search, sort, pageable);
-    }
-
-    public Page<Senior> byFieldWithAny(String field, String postgradu, Integer page) {
-        if (page == null)
-            page = 1;
-        Pageable pageable = PageRequest.of(page-1, SENIOR_PAGE_SIZE);
-        return seniorRepository.findAllByFieldAnySenior(field, postgradu, pageable);
     }
 }

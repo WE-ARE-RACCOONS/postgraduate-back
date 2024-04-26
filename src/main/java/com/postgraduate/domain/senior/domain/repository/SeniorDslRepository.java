@@ -10,18 +10,11 @@ import java.util.List;
 import java.util.Optional;
 
 public interface SeniorDslRepository {
-    Page<Senior> findAllBySearchSenior(String search, String sort, Pageable pageable);
-    Page<Senior> findAllByFieldSenior(String field, String postgradu, Pageable pageable);
     Page<Senior> findAllBySearchSeniorWithAdmin(String search, Pageable pageable);
     Optional<Senior> findBySeniorId(Long seniorId);
     Optional<Senior> findByUserWithAll(User user);
     List<SeniorAndAccount> findAllSeniorAndAccount();
     List<Senior> findAllSenior();
-
-    /**
-     * Case B
-     */
-    Optional<Senior> findBySeniorIdWithAnyCertification(Long seniorId);
-    Page<Senior> findAllByFieldAnySenior(String field, String postgradu, Pageable pageable);
-    Page<Senior> findAllBySearchAnySenior(String search, String sort, Pageable pageable);
+    Page<Senior> findAllByFieldSenior(String field, String postgradu, Pageable pageable);
+    Page<Senior> findAllBySearchSenior(String search, String sort, Pageable pageable);
 }
