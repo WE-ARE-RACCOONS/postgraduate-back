@@ -74,7 +74,7 @@ class SeniorGetServiceTest {
     @Test
     @DisplayName("SeniorId 기반 Senior 조회 예외 테스트")
     void bySeniorIdFail() {
-        given(seniorRepository.findBySeniorIdAndUser_IsDelete(seniorId, FALSE))
+        given(seniorRepository.findBySeniorId(seniorId))
                 .willReturn(ofNullable(null));
 
         assertThatThrownBy(() -> seniorGetService.bySeniorId(seniorId))
@@ -84,7 +84,7 @@ class SeniorGetServiceTest {
     @Test
     @DisplayName("SeniorId 기반 Senior 조회 테스트")
     void bySeniorId() {
-        given(seniorRepository.findBySeniorIdAndUser_IsDelete(seniorId, FALSE))
+        given(seniorRepository.findBySeniorId(seniorId))
                 .willReturn(of(senior));
 
         assertThat(seniorGetService.bySeniorId(seniorId))
@@ -108,26 +108,6 @@ class SeniorGetServiceTest {
                 .willReturn(of(senior));
 
         assertThat(seniorGetService.bySeniorNickName(nickName))
-                .isEqualTo(senior);
-    }
-
-    @Test
-    @DisplayName("Certification 기반 Senior 조회 예외 테스트")
-    void byCertificationFail() {
-        given(seniorRepository.findBySeniorId(seniorId))
-                .willReturn(ofNullable(null));
-
-        assertThatThrownBy(() -> seniorGetService.bySeniorIdWithCertification(seniorId))
-                .isInstanceOf(NoneSeniorException.class);
-    }
-
-    @Test
-    @DisplayName("Certification 기반 Senior 조회 테스트")
-    void byCertification() {
-        given(seniorRepository.findBySeniorId(seniorId))
-                .willReturn(of(senior));
-
-        assertThat(seniorGetService.bySeniorIdWithCertification(seniorId))
                 .isEqualTo(senior);
     }
 }

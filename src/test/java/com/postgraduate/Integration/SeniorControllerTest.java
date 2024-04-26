@@ -529,20 +529,6 @@ class SeniorControllerTest extends IntegrationTest {
                 .andExpect(jsonPath("$.data.times").isNotEmpty());
     }
 
-    @ParameterizedTest
-    @EnumSource(value = Status.class, names = {"NOT_APPROVE", "WAITING"})
-    @WithMockUser(authorities = {"USER", "SENIOR", "ADMIN"})
-    @DisplayName("승인되지 않은 대학원생은 조회되지 않는다.")
-    void getNotApprovedSeniorDetails(Status status) throws Exception {
-        senior.updateStatus(status);
-        seniorRepository.save(senior);
-
-        mvc.perform(get("/senior/{seniorId}", senior.getSeniorId()))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(SENIOR_NOT_FOUND.getCode()))
-                .andExpect(jsonPath("$.message").value(NOT_FOUND_SENIOR.getMessage()));
-    }
-
     @Test
     @WithMockUser(authorities = {"USER"})
     @DisplayName("결제 시 대학원생의 기본 정보를 확인한다")

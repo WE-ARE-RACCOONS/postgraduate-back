@@ -22,6 +22,7 @@ import org.springframework.test.web.servlet.ResultMatcher;
 
 import java.util.List;
 
+import static com.postgraduate.domain.senior.domain.entity.constant.Status.APPROVE;
 import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseCode.*;
 import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseMessage.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -286,7 +287,7 @@ class SeniorControllerTest extends ControllerTest {
                 .map(available -> new AvailableTimeResponse(available.getDay(), available.getStartTime(), available.getEndTime()))
                 .toList();
         SeniorDetailResponse response = new SeniorDetailResponse(
-                tf, userOfSenior.getNickName(), profile.getTerm(), userOfSenior.getProfile(), info.getPostgradu(), info.getMajor(),
+                tf, tf, userOfSenior.getNickName(), profile.getTerm(), userOfSenior.getProfile(), info.getPostgradu(), info.getMajor(),
                 info.getLab(), info.getProfessor(), info.getKeyword().split(","), profile.getInfo(), profile.getOneLiner(), profile.getTarget(),
                 availableTimeResponses
         );
@@ -300,6 +301,7 @@ class SeniorControllerTest extends ControllerTest {
                 .andExpect(jsonPath("$.code").value(SENIOR_FIND.getCode()))
                 .andExpect(jsonPath("$.message").value(GET_SENIOR_INFO.getMessage()))
                 .andExpect(jsonPath("$.data.isMine").value(tf))
+                .andExpect(jsonPath("$.data.certification").value(tf))
                 .andExpect(jsonPath("$.data.nickName").value(response.nickName()))
                 .andExpect(jsonPath("$.data.term").value(response.term()))
                 .andExpect(jsonPath("$.data.profile").value(response.profile()))
@@ -363,13 +365,14 @@ class SeniorControllerTest extends ControllerTest {
                 .andExpect(jsonPath("$.data.times").isArray());
     }
 
-    @Test
+    @ParameterizedTest
+    @ValueSource(booleans = {true, false})
     @WithMockUser
     @DisplayName("대학원생을 검색한다")
-    void getSearchSenior() throws Exception {
+    void getSearchSenior(boolean tf) throws Exception {
         Info info = senior.getInfo();
         SeniorSearchResponse searchResponse = new SeniorSearchResponse(
-                senior.getSeniorId(), userOfSenior.getProfile(), userOfSenior.getNickName(),
+                senior.getSeniorId(), tf, userOfSenior.getProfile(), userOfSenior.getNickName(),
                 info.getPostgradu(), info.getMajor(), info.getLab(), info.getProfessor(), info.getKeyword().split(",")
         );
         List<SeniorSearchResponse> seniorSearchResponses = List.of(searchResponse, mock(SeniorSearchResponse.class), mock(SeniorSearchResponse.class));
@@ -384,6 +387,7 @@ class SeniorControllerTest extends ControllerTest {
                 .andExpect(jsonPath("$.code").value(SENIOR_FIND.getCode()))
                 .andExpect(jsonPath("$.message").value(GET_SENIOR_LIST_INFO.getMessage()))
                 .andExpect(jsonPath("$.data.seniorSearchResponses[0].seniorId").value(searchResponse.seniorId()))
+                .andExpect(jsonPath("$.data.seniorSearchResponses[0].certification").value(tf))
                 .andExpect(jsonPath("$.data.seniorSearchResponses[0].profile").value(searchResponse.profile()))
                 .andExpect(jsonPath("$.data.seniorSearchResponses[0].nickName").value(searchResponse.nickName()))
                 .andExpect(jsonPath("$.data.seniorSearchResponses[0].postgradu").value(searchResponse.postgradu()))
@@ -393,13 +397,14 @@ class SeniorControllerTest extends ControllerTest {
                 .andExpect(jsonPath("$.data.totalElements").value(seniorSearchResponses.size()));
     }
 
-    @Test
+    @ParameterizedTest
+    @ValueSource(booleans = {true, false})
     @WithMockUser
     @DisplayName("대학원생을 분야와 대학교로 검색한다")
-    void getFieldSenior() throws Exception {
+    void getFieldSenior(boolean tf) throws Exception {
         Info info = senior.getInfo();
         SeniorSearchResponse searchResponse = new SeniorSearchResponse(
-                senior.getSeniorId(), userOfSenior.getProfile(), userOfSenior.getNickName(),
+                senior.getSeniorId(), tf, userOfSenior.getProfile(), userOfSenior.getNickName(),
                 info.getPostgradu(), info.getMajor(), info.getLab(), info.getProfessor(), info.getKeyword().split(",")
         );
         List<SeniorSearchResponse> seniorSearchResponses = List.of(searchResponse, mock(SeniorSearchResponse.class), mock(SeniorSearchResponse.class));
@@ -416,6 +421,7 @@ class SeniorControllerTest extends ControllerTest {
                 .andExpect(jsonPath("$.code").value(SENIOR_FIND.getCode()))
                 .andExpect(jsonPath("$.message").value(GET_SENIOR_LIST_INFO.getMessage()))
                 .andExpect(jsonPath("$.data.seniorSearchResponses[0].seniorId").value(searchResponse.seniorId()))
+                .andExpect(jsonPath("$.data.seniorSearchResponses[0].certification").value(tf))
                 .andExpect(jsonPath("$.data.seniorSearchResponses[0].profile").value(searchResponse.profile()))
                 .andExpect(jsonPath("$.data.seniorSearchResponses[0].nickName").value(searchResponse.nickName()))
                 .andExpect(jsonPath("$.data.seniorSearchResponses[0].postgradu").value(searchResponse.postgradu()))
