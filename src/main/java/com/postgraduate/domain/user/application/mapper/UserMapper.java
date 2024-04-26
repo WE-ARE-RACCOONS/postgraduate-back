@@ -49,18 +49,4 @@ public class UserMapper {
                 .role(SENIOR)
                 .build();
     }
-
-    /**
-     * 여기부터 Case B를 위한 코드
-     */
-    public static User mapToUser(SeniorSignUpRequestB request, String profile) {
-        return User.builder()
-                .socialId(request.socialId())
-                .nickName(request.nickName())
-                .phoneNumber(request.phoneNumber())
-                .marketingReceive(request.marketingReceive())
-                .profile(profile)
-                .role(SENIOR)
-                .build();
-    }
 }

@@ -224,7 +224,7 @@ class AuthControllerTest extends IntegrationTest {
         String request = objectMapper.writeValueAsString(
                 new SeniorSignUpRequest(anonymousUserSocialId, "01012345678", "새로운닉네임",
                         true, "전공", "서울대학교", "교수", "연구실",
-                        "AI", "키워드", "certification")
+                        "AI", "키워드")
         );
 
         mvc.perform(post("/auth/senior/signup")
@@ -244,7 +244,7 @@ class AuthControllerTest extends IntegrationTest {
     void singUpSenior(String empty) throws Exception {
         String request = objectMapper.writeValueAsString(
                 new SeniorSignUpRequest(anonymousUserSocialId, "01012345678", "새로운닉네임",
-                        true, empty, empty, empty, empty, empty, empty, empty)
+                        true, empty, empty, empty, empty, empty, empty)
         );
 
         mvc.perform(post("/auth/senior/signup")
@@ -262,7 +262,7 @@ class AuthControllerTest extends IntegrationTest {
 
         String request = objectMapper.writeValueAsString(
                 new SeniorChangeRequest("major", "field", "교수", "연구실",
-                        "AI", "키워드", "certification")
+                        "AI", "키워드")
         );
 
         mvc.perform(post("/auth/senior/change")
@@ -284,7 +284,7 @@ class AuthControllerTest extends IntegrationTest {
         String userAccessToken = jwtUtil.generateAccessToken(user.getUserId(), USER);
 
         String request = objectMapper.writeValueAsString(
-                new SeniorChangeRequest(empty, empty, empty, empty, empty, empty, empty)
+                new SeniorChangeRequest(empty, empty, empty, empty, empty, empty)
         );
 
         mvc.perform(post("/auth/senior/change")
