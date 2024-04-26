@@ -18,6 +18,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.ResultMatcher;
 
 import java.util.List;
 
@@ -89,9 +90,10 @@ class SeniorControllerTest extends ControllerTest {
         String request = objectMapper.writeValueAsString(
                 new SeniorProfileRequest("저는요", "대상", "chatLink", "한줄소개", availableCreateRequests)
         );
+        SeniorProfileUpdateResponse response = new SeniorProfileUpdateResponse(senior.getSeniorId());
 
-        willDoNothing().given(seniorManageUseCase)
-                        .signUpProfile(any(), any());
+        given(seniorManageUseCase.signUpProfile(any(), any()))
+                .willReturn(response);
 
         mvc.perform(patch("/senior/profile")
                         .header(HttpHeaders.AUTHORIZATION, BEARER)
@@ -101,7 +103,8 @@ class SeniorControllerTest extends ControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(SENIOR_UPDATE.getCode()))
-                .andExpect(jsonPath("$.message").value(UPDATE_PROFILE.getMessage()));
+                .andExpect(jsonPath("$.message").value(UPDATE_PROFILE.getMessage()))
+                .andExpect(jsonPath("$.data.seniorId").value(response.seniorId()));
     }
 
     @Test
