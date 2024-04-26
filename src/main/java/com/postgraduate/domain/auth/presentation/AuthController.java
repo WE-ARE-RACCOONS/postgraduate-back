@@ -136,8 +136,8 @@ public class AuthController {
 
     @PostMapping("/senior/signup/b")
     @Operation(summary = "대학원생 가입(Case B) - 필수 과정만", description = "대학원생 회원가입 - 필수 과정만")
-    public ResponseDto<JwtTokenResponse> singUpSeniorB(@RequestBody @Valid SeniorSignUpRequestB request) {
-        User user = signUpUseCase.seniorSignUpB(request);
+    public ResponseDto<JwtTokenResponse> singUpSeniorB(@RequestBody @Valid SeniorSignUpRequest request) {
+        User user = signUpUseCase.seniorSignUp(request);
         JwtTokenResponse jwtToken = jwtUseCase.signIn(user);
         return ResponseDto.create(SENIOR_CREATE.getCode(), CREATE_SENIOR.getMessage(), jwtToken);
     }
@@ -145,8 +145,8 @@ public class AuthController {
     @PostMapping("/senior/change/b")
     @Operation(summary = "선배로 추가 가입(Case B) | 토큰 필요", description = "대학생 대학원생으로 변경 추가 가입")
     public ResponseDto<JwtTokenResponse> changeSeniorB(@AuthenticationPrincipal User user,
-                                                      @RequestBody @Valid SeniorChangeRequestB changeRequest) {
-        User changeUser = signUpUseCase.changeSeniorB(user, changeRequest);
+                                                      @RequestBody @Valid SeniorChangeRequest changeRequest) {
+        User changeUser = signUpUseCase.changeSenior(user, changeRequest);
         JwtTokenResponse jwtToken = jwtUseCase.changeSenior(changeUser);
         return ResponseDto.create(SENIOR_CREATE.getCode(), CREATE_SENIOR.getMessage(), jwtToken);
     }

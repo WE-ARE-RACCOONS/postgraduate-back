@@ -98,22 +98,4 @@ public class SignUpUseCase {
         bizppurioSeniorMessage.signUp(user);
         return user;
     }
-
-    /**
-     * 여기부터 Case B를 위한 코드
-     */
-    public User seniorSignUpB(SeniorSignUpRequestB request) {
-        seniorUtils.checkKeyword(request.keyword());
-        userUtils.checkPhoneNumber(request.phoneNumber());
-        User user = mapToUser(request, profile);
-        userSaveService.save(user);
-        Senior senior = mapToSenior(user, request);
-        return seniorSignUpFin(senior);
-    }
-
-    public User changeSeniorB(User user, SeniorChangeRequestB changeRequest) {
-        seniorUtils.checkKeyword(changeRequest.keyword());
-        Senior senior = mapToSenior(user, changeRequest);
-        return changeSeniorFin(senior, user);
-    }
 }

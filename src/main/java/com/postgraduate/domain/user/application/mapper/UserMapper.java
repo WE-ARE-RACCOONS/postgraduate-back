@@ -1,7 +1,6 @@
 package com.postgraduate.domain.user.application.mapper;
 
 import com.postgraduate.domain.auth.application.dto.req.SeniorSignUpRequest;
-import com.postgraduate.domain.auth.application.dto.req.SeniorSignUpRequestB;
 import com.postgraduate.domain.auth.application.dto.req.SignUpRequest;
 import com.postgraduate.domain.user.application.dto.res.UserInfoResponse;
 import com.postgraduate.domain.user.application.dto.res.UserMyPageResponse;
