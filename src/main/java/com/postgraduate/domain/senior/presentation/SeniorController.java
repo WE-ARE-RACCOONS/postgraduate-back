@@ -45,10 +45,10 @@ public class SeniorController {
 
     @PatchMapping("/profile")
     @Operation(summary = "대학원생 프로필 등록 | 토큰 필요")
-    public ResponseDto<Void> singUpSenior(@AuthenticationPrincipal User user,
+    public ResponseDto<SeniorProfileUpdateResponse> singUpSenior(@AuthenticationPrincipal User user,
                                     @RequestBody @Valid SeniorProfileRequest profileRequest) {
-        seniorManageUseCase.signUpProfile(user, profileRequest);
-        return ResponseDto.create(SENIOR_UPDATE.getCode(), UPDATE_PROFILE.getMessage());
+        SeniorProfileUpdateResponse updateResponse = seniorManageUseCase.signUpProfile(user, profileRequest);
+        return ResponseDto.create(SENIOR_UPDATE.getCode(), UPDATE_PROFILE.getMessage(), updateResponse);
     }
 
     @PostMapping("/account")
