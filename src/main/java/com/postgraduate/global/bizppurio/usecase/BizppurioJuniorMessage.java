@@ -1,6 +1,5 @@
 package com.postgraduate.global.bizppurio.usecase;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.user.domain.entity.User;
@@ -12,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
+
+import java.util.function.Supplier;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
@@ -28,58 +29,40 @@ public class BizppurioJuniorMessage {
     private String messageUrl;
 
     public void mentoringApply(User user) {
-        try {
-            CommonRequest commonRequest = mapper.mapToJuniorApplyMessage(user);
-            sendMessage(commonRequest);
-        } catch (Exception ex) {
-            log.error("알림톡 전송 예외 발생");
-            log.error("{}", ex.getMessage());
-        }
+        sendMessageWithExceptionHandling(() -> mapper.mapToJuniorApplyMessage(user));
     }
 
     public void mentoringAccept(User user, Senior senior, String time) {
-        try {
+        sendMessageWithExceptionHandling(() -> {
             String chatLink = senior.getProfile().getChatLink();
-            CommonRequest commonRequest = mapper.mapToJuniorAcceptMessage(user, chatLink, time);
-            sendMessage(commonRequest);
-        } catch (Exception ex) {
-            log.error("알림톡 전송 예외 발생");
-            log.error("{}", ex.getMessage());
-        }
+            return mapper.mapToJuniorAcceptMessage(user, chatLink, time);
+        });
     }
 
     public void mentoringRefuse(User user) {
-        try {
-            CommonRequest commonRequest = mapper.mapToJuniorRefuseMessage(user);
-            sendMessage(commonRequest);
-        } catch (Exception ex) {
-            log.error("알림톡 전송 예외 발생");
-            log.error("{}", ex.getMessage());
-        }
-
+        sendMessageWithExceptionHandling(() -> mapper.mapToJuniorRefuseMessage(user));
     }
 
     public void mentoringFinish(User user) {
-        try {
-            CommonRequest commonRequest = mapper.mapToJuniorFinish(user);
-            sendMessage(commonRequest);
-        } catch (Exception ex) {
-            log.error("알림톡 전송 예외 발생");
-            log.error("{}", ex.getMessage());
-        }
+        sendMessageWithExceptionHandling(() -> mapper.mapToJuniorFinish(user));
     }
 
-    private void sendMessage(CommonRequest commonRequest) throws JsonProcessingException {
-        String accessToken = bizppurioAuth.getAuth();
-        String request = objectMapper.writeValueAsString(commonRequest);
-        webClient.post()
-                .uri(messageUrl)
-                .headers(h -> h.setContentType(APPLICATION_JSON))
-                .headers(h -> h.setBearerAuth(accessToken))
-                .bodyValue(request)
-                .retrieve()
-                .bodyToMono(MessageResponse.class)
-                .subscribe(this::check);
+    private void sendMessageWithExceptionHandling(Supplier<CommonRequest> messageSupplier) {
+        try {
+            CommonRequest commonRequest = messageSupplier.get();
+            String accessToken = bizppurioAuth.getAuth();
+            String request = objectMapper.writeValueAsString(commonRequest);
+            webClient.post()
+                    .uri(messageUrl)
+                    .headers(h -> h.setContentType(APPLICATION_JSON))
+                    .headers(h -> h.setBearerAuth(accessToken))
+                    .bodyValue(request)
+                    .retrieve()
+                    .bodyToMono(MessageResponse.class)
+                    .subscribe(this::check);
+        } catch (Exception ex) {
+            log.error("알림톡 전송 예외 발생: {}", ex.getMessage());
+        }
     }
 
     private void check(MessageResponse response) {
