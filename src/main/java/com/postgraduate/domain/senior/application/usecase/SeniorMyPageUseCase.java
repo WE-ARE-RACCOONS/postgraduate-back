@@ -70,13 +70,4 @@ public class SeniorMyPageUseCase {
             return new SeniorPossibleResponse(FALSE, user.getSocialId());
         return new SeniorPossibleResponse(TRUE, user.getSocialId());
     }
-
-    /**
-     * Case B 코드
-     */
-    public SeniorMyPageResponse getSeniorMyPageB(User user) {
-        Senior senior = seniorGetService.byUser(user);
-        Optional<Profile> profile = ofNullable(senior.getProfile());
-        return mapToSeniorMyPageInfo(senior, senior.getStatus(), profile.isPresent());
-    }
 }

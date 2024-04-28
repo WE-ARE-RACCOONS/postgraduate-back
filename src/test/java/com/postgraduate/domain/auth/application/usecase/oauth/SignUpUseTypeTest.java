@@ -121,7 +121,7 @@ class SignUpUseTypeTest {
     void seniorSignUp() {
         SeniorSignUpRequest request = new SeniorSignUpRequest(user.getSocialId(), user.getPhoneNumber(), user.getNickName(), user.getMarketingReceive(),
                 info.getMajor(), info.getPostgradu(), info.getProfessor(), info.getLab(), info.getField(),
-                info.getKeyword(), senior.getCertification());
+                info.getKeyword());
 
         User saveUser = signUpUseCase.seniorSignUp(request);
 
@@ -138,7 +138,7 @@ class SignUpUseTypeTest {
     void invalidKeyword() {
         SeniorSignUpRequest request = new SeniorSignUpRequest(user.getSocialId(), user.getPhoneNumber(), user.getNickName(), user.getMarketingReceive(),
                 info.getMajor(), info.getPostgradu(), info.getProfessor(), info.getLab(), info.getField(),
-                info.getKeyword(), senior.getCertification());
+                info.getKeyword());
 
         doThrow(KeywordException.class)
                 .when(seniorUtils)
@@ -152,8 +152,7 @@ class SignUpUseTypeTest {
     @DisplayName("선배 변경 테스트")
     void changeSenior() {
         SeniorChangeRequest seniorChangeRequest = new SeniorChangeRequest(info.getMajor(), info.getPostgradu(), info.getProfessor(),
-                info.getLab(), info.getField(), info.getKeyword(),
-                senior.getCertification());
+                info.getLab(), info.getField(), info.getKeyword());
 
         given(userGetService.byUserId(user.getUserId()))
                 .willReturn(user);

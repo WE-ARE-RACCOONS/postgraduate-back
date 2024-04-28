@@ -13,18 +13,11 @@ import java.util.List;
 public class AvailableGetService {
     private final AvailableRepository availableRepository;
 
-    public List<Available> bySenior(Senior senior) {
-        return availableRepository.findAllBySenior(senior);
-    }
-
     public List<Available> byMine(Senior senior) {
         return availableRepository.findAllByMine(senior);
     }
 
-    /**
-     * Case B
-     */
-    public List<Available> bySeniorWithAny(Senior senior) {
-        return availableRepository.findAllByAnySenior(senior);
+    public List<Available> bySenior(Senior senior) {
+        return availableRepository.findAllBySenior(senior);
     }
 }
