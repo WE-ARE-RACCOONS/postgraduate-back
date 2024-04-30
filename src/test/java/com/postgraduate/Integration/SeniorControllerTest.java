@@ -279,7 +279,7 @@ class SeniorControllerTest extends IntegrationTest {
                 .andExpect(jsonPath("$.data.keyword").isNotEmpty())
                 .andExpect(jsonPath("$.data.info").isEmpty())
                 .andExpect(jsonPath("$.data.target").isEmpty())
-                .andExpect(jsonPath("$.data.chatLink").isEmpty())
+                .andExpect(jsonPath("$.data.chatLink").isNotEmpty())
                 .andExpect(jsonPath("$.data.field").isNotEmpty())
                 .andExpect(jsonPath("$.data.oneLiner").isEmpty())
                 .andExpect(jsonPath("$.data.times").isEmpty());
