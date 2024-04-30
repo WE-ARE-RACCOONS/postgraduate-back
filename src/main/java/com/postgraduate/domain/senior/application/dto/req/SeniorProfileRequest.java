@@ -12,8 +12,6 @@ public record SeniorProfileRequest(
         @NotBlank
         String target,
         @NotBlank
-        String chatLink,
-        @NotBlank
         String oneLiner,
         @NotEmpty
         List<AvailableCreateRequest> times

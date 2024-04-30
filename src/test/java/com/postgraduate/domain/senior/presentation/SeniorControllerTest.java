@@ -89,7 +89,7 @@ class SeniorControllerTest extends ControllerTest {
                 new AvailableCreateRequest("토", "10:00", "20:00")
         );
         String request = objectMapper.writeValueAsString(
-                new SeniorProfileRequest("저는요", "대상", "chatLink", "한줄소개", availableCreateRequests)
+                new SeniorProfileRequest("저는요", "대상", "한줄소개", availableCreateRequests)
         );
         SeniorProfileUpdateResponse response = new SeniorProfileUpdateResponse(senior.getSeniorId());
 
@@ -161,7 +161,7 @@ class SeniorControllerTest extends ControllerTest {
         List<AvailableTimeResponse> availableTimeResponses = availables.stream()
                 .map(available -> new AvailableTimeResponse(available.getDay(), available.getStartTime(), available.getEndTime()))
                 .toList();
-        SeniorMyPageProfileResponse response = new SeniorMyPageProfileResponse(info.getLab(), info.getKeyword().split(","), profile.getInfo(), profile.getTarget(), profile.getChatLink(), info.getField().split(","), profile.getOneLiner(), availableTimeResponses);
+        SeniorMyPageProfileResponse response = new SeniorMyPageProfileResponse(info.getLab(), info.getKeyword().split(","), profile.getInfo(), profile.getTarget(), info.getChatLink(), info.getField().split(","), profile.getOneLiner(), availableTimeResponses);
 
         given(seniorMyPageUseCase.getSeniorMyPageProfile(any()))
                 .willReturn(response);
@@ -287,7 +287,7 @@ class SeniorControllerTest extends ControllerTest {
                 .map(available -> new AvailableTimeResponse(available.getDay(), available.getStartTime(), available.getEndTime()))
                 .toList();
         SeniorDetailResponse response = new SeniorDetailResponse(
-                tf, tf, userOfSenior.getNickName(), profile.getTerm(), userOfSenior.getProfile(), info.getPostgradu(), info.getMajor(),
+                tf, tf, userOfSenior.getNickName(), info.getTerm(), userOfSenior.getProfile(), info.getPostgradu(), info.getMajor(),
                 info.getLab(), info.getProfessor(), info.getKeyword().split(","), profile.getInfo(), profile.getOneLiner(), profile.getTarget(),
                 availableTimeResponses
         );
@@ -321,10 +321,9 @@ class SeniorControllerTest extends ControllerTest {
     @DisplayName("결제 시 대학원생의 기본 정보를 확인한다")
     void testGetSeniorProfile() throws Exception {
         Info info = senior.getInfo();
-        Profile profile = senior.getProfile();
         SeniorProfileResponse response = new SeniorProfileResponse(
                 userOfSenior.getNickName(), userOfSenior.getProfile(),
-                info.getPostgradu(),info.getMajor(), info.getLab(), profile.getTerm(),
+                info.getPostgradu(),info.getMajor(), info.getLab(), info.getTerm(),
                 user.getUserId(), user.getPhoneNumber()
         );
 

@@ -71,8 +71,8 @@ class MentoringApplyingUseTypeTest {
 
     @BeforeEach
     void setting() {
-        info = new Info("a", "a", "a", "a", "a", "a", TRUE, TRUE, "a");
-        profile = new Profile("a", "a", "a", "a", 30);
+        info = new Info("a", "a", "a", "a", "a", "a", TRUE, TRUE, "a", "chatLink", 30);
+        profile = new Profile("a", "a", "a");
         user = new User(-1L, 1234L, "a",
                 "a", "123", "a",
                 0, SENIOR, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE);

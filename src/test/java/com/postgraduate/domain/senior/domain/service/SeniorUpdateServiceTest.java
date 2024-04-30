@@ -39,7 +39,7 @@ class SeniorUpdateServiceTest {
     @Test
     @DisplayName("profile 업데이트")
     void seniorProfile() {
-        Profile profile = new Profile("a", "b", "c", "d", 10);
+        Profile profile = new Profile("a", "b", "c");
         seniorUpdateService.signUpSeniorProfile(senior, profile);
         Profile changeProfile = senior.getProfile();
 
@@ -47,12 +47,8 @@ class SeniorUpdateServiceTest {
                 .isEqualTo(profile.getInfo());
         assertThat(changeProfile.getOneLiner())
                 .isEqualTo(profile.getOneLiner());
-        assertThat(changeProfile.getChatLink())
-                .isEqualTo(profile.getChatLink());
         assertThat(changeProfile.getTarget())
                 .isEqualTo(profile.getTarget());
-        assertThat(changeProfile.getTerm())
-                .isEqualTo(profile.getTerm());
     }
 
     @Test
@@ -88,15 +84,13 @@ class SeniorUpdateServiceTest {
                 .isEqualTo(request.lab());
         assertThat(changeInfo.getField())
                 .isEqualTo(request.field());
+        assertThat(changeInfo.getChatLink())
+                .isEqualTo(request.chatLink());
 
-        assertThat(changeProfile.getTerm())
-                .isEqualTo(profile.getTerm());
         assertThat(changeProfile.getInfo())
                 .isEqualTo(profile.getInfo());
         assertThat(changeProfile.getTarget())
                 .isEqualTo(profile.getTarget());
-        assertThat(changeProfile.getChatLink())
-                .isEqualTo(profile.getChatLink());
         assertThat(changeProfile.getOneLiner())
                 .isEqualTo(profile.getOneLiner());
     }

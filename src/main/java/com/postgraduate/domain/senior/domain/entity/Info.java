@@ -41,4 +41,10 @@ public class Info {
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String totalInfo; // 모든 Info정보 String으로 가지는 컬럼 - 검색시 사용
+
+    @Column(columnDefinition = "TEXT")
+    private String chatLink;
+
+    @Builder.Default
+    private Integer term = 30;
 }
