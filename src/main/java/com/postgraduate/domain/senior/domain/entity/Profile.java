@@ -20,10 +20,4 @@ public class Profile {
 
     @Column(columnDefinition = "TEXT")
     private String target;
-
-    @Column(columnDefinition = "TEXT")
-    private String chatLink;
-
-    @Builder.Default
-    private Integer term = 30;
 }
