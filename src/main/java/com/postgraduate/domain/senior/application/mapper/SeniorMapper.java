@@ -44,92 +44,68 @@ public class SeniorMapper {
     }
 
     private static Info mapToInfo(SeniorSignUpRequest request) {
-        String[] fields = request.field().split(",");
-        Set<String> fieldNames = Field.fieldNames();
-        Set<String> postgraduNames = Postgradu.postgraduNames();
-
-        Info.InfoBuilder infoBuilder = Info.builder()
+        return Info.builder()
                 .major(request.major())
                 .postgradu(request.postgradu())
                 .professor(request.professor())
                 .lab(request.lab())
                 .keyword(request.keyword())
                 .field(request.field())
-                .etcPostgradu(false)
-                .etcField(false)
+                .etcPostgradu(checkEtcPostgradu(request.postgradu()))
+                .etcField(checkEtcField(request.field()))
                 .chatLink(request.chatLink())
                 .totalInfo(request.major() + request.lab() + request.field()
-                        + request.professor() + request.postgradu() + request.keyword());
-
-        for (String field : fields) {
-            if (!fieldNames.contains(field)) {
-                infoBuilder.etcField(true);
-                break;
-            }
-        }
-        if (!postgraduNames.contains(request.postgradu()))
-            infoBuilder.etcPostgradu(true);
-
-        return infoBuilder.build();
+                        + request.professor() + request.postgradu() + request.keyword())
+                .build();
     }
 
     private static Info mapToInfo(SeniorChangeRequest request) {
-        String[] fields = request.field().split(",");
-        Set<String> fieldNames = Field.fieldNames();
-        Set<String> postgraduNames = Postgradu.postgraduNames();
-
-        Info.InfoBuilder infoBuilder = Info.builder()
+        return Info.builder()
                 .major(request.major())
                 .postgradu(request.postgradu())
                 .professor(request.professor())
                 .lab(request.lab())
                 .keyword(request.keyword())
                 .field(request.field())
-                .etcPostgradu(false)
-                .etcField(false)
+                .etcPostgradu(checkEtcPostgradu(request.postgradu()))
+                .etcField(checkEtcField(request.field()))
                 .chatLink(request.chatLink())
                 .totalInfo(request.major() + request.lab() + request.field()
-                        + request.professor() + request.postgradu() + request.keyword());
-
-        for (String field : fields) {
-            if (!fieldNames.contains(field)) {
-                infoBuilder.etcField(true);
-                break;
-            }
-        }
-        if (!postgraduNames.contains(request.postgradu()))
-            infoBuilder.etcPostgradu(true);
-
-        return infoBuilder.build();
+                        + request.professor() + request.postgradu() + request.keyword())
+                .build();
     }
 
     public static Info mapToInfo(Senior senior, SeniorMyPageProfileRequest request) {
         Info info = senior.getInfo();
-        String[] fields = request.field().split(",");
-        Set<String> fieldNames = Field.fieldNames();
 
-        Info.InfoBuilder infoBuilder = Info.builder()
+        return Info.builder()
                 .major(info.getMajor())
                 .postgradu(info.getPostgradu())
                 .professor(info.getProfessor())
                 .lab(request.lab())
                 .keyword(request.keyword())
                 .field(request.field())
-                .etcPostgradu(false)
-                .etcField(false)
+                .etcPostgradu(info.getEtcPostgradu())
+                .etcField(checkEtcField(request.field()))
                 .chatLink(request.chatLink())
                 .totalInfo(info.getMajor() + request.lab() + request.field()
-                        + info.getProfessor() + info.getPostgradu() + request.keyword());
+                        + info.getProfessor() + info.getPostgradu() + request.keyword())
+                .build();
+    }
 
+    private static boolean checkEtcField(String requestField) {
+        String[] fields = requestField.split(",");
+        Set<String> fieldNames = Field.fieldNames();
         for (String field : fields) {
-            if (!fieldNames.contains(field)) {
-                infoBuilder.etcField(true);
-                break;
-            }
+            if (!fieldNames.contains(field))
+                return true;
         }
-        infoBuilder.etcPostgradu(info.getEtcPostgradu());
+        return false;
+    }
 
-        return infoBuilder.build();
+    private static boolean checkEtcPostgradu(String postgradu) {
+        Set<String> postgraduNames = Postgradu.postgraduNames();
+        return !postgraduNames.contains(postgradu);
     }
 
     public static Profile mapToProfile(SeniorProfileRequest profileRequest) {
