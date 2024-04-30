@@ -8,5 +8,5 @@ public record SeniorSignUpRequest(@NotNull Long socialId, @NotBlank String phone
                                   @Size(max = 6, message = "6글자까지 입력 가능합니다.") @NotBlank String nickName,
                                   Boolean marketingReceive, @NotBlank String major, @NotBlank String postgradu,
                                   @NotBlank String professor, @NotBlank String lab, @NotBlank String field,
-                                  @NotBlank String keyword) {
+                                  @NotBlank String keyword, @NotBlank String chatLink) {
 }
