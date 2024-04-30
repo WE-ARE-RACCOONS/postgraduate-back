@@ -63,8 +63,8 @@ class SeniorMyPageUseTypeTest {
 
     @BeforeEach
     void setting() {
-        info = new Info("a", "a", "a", "a", "a", "a", TRUE, TRUE, "a");
-        profile = new Profile("a", "a", "a", "a", 40);
+        info = new Info("a", "a", "a", "a", "a", "a", TRUE, TRUE, "a", "chatLink", 30);
+        profile = new Profile("a", "a", "a");
         user = new User(1L, 1234L, "a",
                 "a", "123", "a",
                 1, USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE);
@@ -133,11 +133,11 @@ class SeniorMyPageUseTypeTest {
                 .isNotEmpty();
         assertThat(myPageProfile.keyword())
                 .isNotEmpty();
+        assertThat(myPageProfile.chatLink())
+                .isNotEmpty();
         assertThat(myPageProfile.info())
                 .isNull();
         assertThat(myPageProfile.target())
-                .isNull();
-        assertThat(myPageProfile.chatLink())
                 .isNull();
         assertThat(myPageProfile.oneLiner())
                 .isNull();

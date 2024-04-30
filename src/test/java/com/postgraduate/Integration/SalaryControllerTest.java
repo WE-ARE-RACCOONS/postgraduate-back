@@ -38,8 +38,8 @@ class SalaryControllerTest extends IntegrationTest {
         User user = new User(0L, 1L, "mail", "후배", "011", "profile", 0, Role.SENIOR, true, now(), now(), false);
         userRepository.save(user);
 
-        Info info = new Info("major", "postgradu", "교수님", "keyword1,keyword2", "랩실", "field", false, false, "field,keyword1,keyword2");
-        Profile profile = new Profile("저는요", "한줄소개", "대상", "chatLink", 40);
+        Info info = new Info("major", "postgradu", "교수님", "keyword1,keyword2", "랩실", "field", false, false, "field,keyword1,keyword2", "chatLink", 30);
+        Profile profile = new Profile("저는요", "한줄소개", "대상");
         Senior senior = new Senior(0L, user, "certification", Status.APPROVE, 0, info, profile, now(), now());
         seniorRepository.save(senior);
 

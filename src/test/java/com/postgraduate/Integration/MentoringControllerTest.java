@@ -58,8 +58,8 @@ class MentoringControllerTest extends IntegrationTest {
         User userOfSenior = new User(0L, 2L, "mail", "선배", "012", "profile", 0, Role.SENIOR, true, now(), now(), false);
         userRepository.save(userOfSenior);
 
-        Info info = new Info("major", "서울대학교", "교수님", "키워드1,키워드2", "랩실", "인공지능", false, false, "인공지능,키워드1,키워드2");
-        Profile profile = new Profile("저는요", "한줄소개", "대상", "chatLink", 40);
+        Info info = new Info("major", "서울대학교", "교수님", "키워드1,키워드2", "랩실", "인공지능", false, false, "인공지능,키워드1,키워드2", "chatLink", 30);
+        Profile profile = new Profile("저는요", "한줄소개", "대상");
         senior = new Senior(0L, userOfSenior, "certification", WAITING, 0, info, profile, now(), now());
         seniorRepository.save(senior);
 
@@ -296,7 +296,7 @@ class MentoringControllerTest extends IntegrationTest {
         User otherUser = new User(-1L, 0L, "mail", "다른 후배", "011", "profile", 0, Role.USER, true, now(), now(), false);
         userRepository.save(otherUser);
 
-        Info info = new Info("major", "서울대학교", "교수님", "키워드1,키워드2", "랩실", "인공지능", false, false, "인공지능,키워드1,키워드2");
+        Info info = new Info("major", "서울대학교", "교수님", "키워드1,키워드2", "랩실", "인공지능", false, false, "인공지능,키워드1,키워드2", "chatLink", 30);
         Senior otherSenior = new Senior(-1L, otherUser, "certification", WAITING, 0, info, null, now(), now());
         seniorRepository.save(otherSenior);
 

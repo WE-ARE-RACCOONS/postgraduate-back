@@ -73,7 +73,7 @@ class MentoringControllerTest extends ControllerTest {
     @WithMockUser
     @DisplayName("대학생이 예정된 멘토링 목록을 조회한다")
     void getExpectedMentorings() throws Exception {
-        ExpectedMentoringInfo mentoringInfo = new ExpectedMentoringInfo(expectedMentoring.getMentoringId(), senior.getSeniorId(), userOfSenior.getProfile(), userOfSenior.getNickName(), info.getPostgradu(), info.getMajor(), info.getLab(), expectedMentoring.getDate(), expectedMentoring.getTerm(), profile.getChatLink());
+        ExpectedMentoringInfo mentoringInfo = new ExpectedMentoringInfo(expectedMentoring.getMentoringId(), senior.getSeniorId(), userOfSenior.getProfile(), userOfSenior.getNickName(), info.getPostgradu(), info.getMajor(), info.getLab(), expectedMentoring.getDate(), expectedMentoring.getTerm(), info.getChatLink());
         ExpectedMentoringResponse expectedResponse = new ExpectedMentoringResponse(List.of(mentoringInfo));
         given(mentoringUserInfoUseCase.getExpected(any()))
                 .willReturn(expectedResponse);
