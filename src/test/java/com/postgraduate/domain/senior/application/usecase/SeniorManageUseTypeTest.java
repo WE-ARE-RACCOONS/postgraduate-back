@@ -82,8 +82,8 @@ class SeniorManageUseTypeTest {
 
     @BeforeEach
     void setting() {
-        info = new Info("a", "a", "a", "a", "a", "a", TRUE, TRUE, "a");
-        profile = new Profile("a", "a", "a", "a", 40);
+        info = new Info("a", "a", "a", "a", "a", "a", TRUE, TRUE, "a", "chatLink", 30);
+        profile = new Profile("a", "a", "a");
         user = new User(1L, 1234L, "a",
                 "a", "123", "a",
                 1, SENIOR, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE);
@@ -112,8 +112,7 @@ class SeniorManageUseTypeTest {
         AvailableCreateRequest available3 = new AvailableCreateRequest("수", "12:00", "18:00");
         List<AvailableCreateRequest> availableCreateRequests = List.of(available1, available2, available3);
         SeniorProfileRequest request = new SeniorProfileRequest(
-                profile.getInfo(), profile.getTarget(),
-                profile.getChatLink(), profile.getOneLiner(),
+                profile.getInfo(), profile.getTarget(), profile.getOneLiner(),
                 availableCreateRequests);
 
         given(seniorGetService.byUser(user))

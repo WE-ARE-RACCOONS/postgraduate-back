@@ -61,12 +61,12 @@ class SeniorControllerTest extends IntegrationTest {
         userRepository.save(user);
         userRepository.save(otherUser);
 
-        Info info1 = new Info("major", "postgradu", "교수님", "keyword1,keyword2", "랩실", "field", false, false, "field,keyword1,keyword2");
-        Profile profile1 = new Profile("info", "one", "u", "chat", 30);
+        Info info1 = new Info("major", "postgradu", "교수님", "keyword1,keyword2", "랩실", "field", false, false, "field,keyword1,keyword2", "chatLink", 30);
+        Profile profile1 = new Profile("info", "one", "u");
         senior = new Senior(-2L, user, "certification", Status.APPROVE, 0, info1, profile1, now(), now());
         seniorRepository.save(senior);
 
-        Info info2 = new Info("major", "postgradu", "교수님", "keyword1,keyword2", "랩실", "field", false, false, "field,keyword1,keyword2");
+        Info info2 = new Info("major", "postgradu", "교수님", "keyword1,keyword2", "랩실", "field", false, false, "field,keyword1,keyword2", "chatLink", 30);
         otherSenior = new Senior(-1L, otherUser, "certification", Status.APPROVE, 0, info2, null, now(), now());
         seniorRepository.save(otherSenior);
 
@@ -80,7 +80,7 @@ class SeniorControllerTest extends IntegrationTest {
 
 
     private void updateProfile() {
-        Profile profile = new Profile("저는요", "한줄소개", "대상", "chatLink", 30);
+        Profile profile = new Profile("저는요", "한줄소개", "대상");
         senior.updateProfile(profile);
         seniorRepository.save(senior);
     }
@@ -136,7 +136,7 @@ class SeniorControllerTest extends IntegrationTest {
                 new AvailableCreateRequest("토", "10:00", "20:00")
         );
         String request = objectMapper.writeValueAsString(
-                new SeniorProfileRequest("저는요", "대상", "chatLink", "한줄소개", availableCreateRequests)
+                new SeniorProfileRequest("저는요", "대상", "한줄소개", availableCreateRequests)
         );
 
         mvc.perform(patch("/senior/profile")
@@ -155,7 +155,7 @@ class SeniorControllerTest extends IntegrationTest {
     void singUpInvalidSenior(String empty) throws Exception {
         List<AvailableCreateRequest> availableCreateRequests = new ArrayList<>();
         String request = objectMapper.writeValueAsString(
-                new SeniorProfileRequest(empty, empty, empty, empty, availableCreateRequests)
+                new SeniorProfileRequest(empty, empty, empty, availableCreateRequests)
         );
 
         mvc.perform(patch("/senior/profile")
@@ -176,7 +176,7 @@ class SeniorControllerTest extends IntegrationTest {
         );
 
         String request = objectMapper.writeValueAsString(
-                new SeniorProfileRequest("저는요", "대상", "chatLink", "한줄소개", availableCreateRequests)
+                new SeniorProfileRequest("저는요", "대상", "chatLink", availableCreateRequests)
         );
 
         mvc.perform(patch("/senior/profile")
@@ -279,7 +279,7 @@ class SeniorControllerTest extends IntegrationTest {
                 .andExpect(jsonPath("$.data.keyword").isNotEmpty())
                 .andExpect(jsonPath("$.data.info").isEmpty())
                 .andExpect(jsonPath("$.data.target").isEmpty())
-                .andExpect(jsonPath("$.data.chatLink").isEmpty())
+                .andExpect(jsonPath("$.data.chatLink").isNotEmpty())
                 .andExpect(jsonPath("$.data.field").isNotEmpty())
                 .andExpect(jsonPath("$.data.oneLiner").isEmpty())
                 .andExpect(jsonPath("$.data.times").isEmpty());

@@ -83,7 +83,7 @@ public class SeniorInfoUseCase {
     @Transactional(readOnly = true)
     public SeniorProfileResponse getSeniorProfile(User user, Long seniorId) {
         Senior senior = seniorGetService.bySeniorId(seniorId);
-        return mapToSeniorProfileWithNull(user, senior);
+        return mapToSeniorProfile(user, senior);
     }
 
     @Transactional(readOnly = true)

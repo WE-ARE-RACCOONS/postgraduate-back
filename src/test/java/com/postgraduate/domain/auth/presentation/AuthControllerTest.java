@@ -172,7 +172,7 @@ class AuthControllerTest extends ControllerTest {
         String request = objectMapper.writeValueAsString(
                 new SeniorSignUpRequest(user.getSocialId(), "01012345678", "새로운닉네임",
                         true, "전공", "서울대학교", "교수", "연구실",
-                        "AI", "키워드")
+                        "AI", "키워드", "chatLink")
         );
         JwtTokenResponse tokenResponse = new JwtTokenResponse("access", 10, "refresh", 10, USER);
 
@@ -202,7 +202,7 @@ class AuthControllerTest extends ControllerTest {
     void changeSenior() throws Exception {
         String request = objectMapper.writeValueAsString(
                 new SeniorChangeRequest("major", "field", "교수", "연구실",
-                        "AI", "키워드")
+                        "AI", "키워드", "chatLink")
         );
         JwtTokenResponse tokenResponse = new JwtTokenResponse("access", 10, "refresh", 10, USER);
 

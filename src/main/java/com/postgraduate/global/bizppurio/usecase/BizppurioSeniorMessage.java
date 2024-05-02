@@ -25,7 +25,7 @@ public class BizppurioSeniorMessage {
     public void mentoringAccept(Senior senior, String time) {
         bizppurioSend.sendMessageWithExceptionHandling(() -> {
             User user = senior.getUser();
-            String chatLink = senior.getProfile().getChatLink();
+            String chatLink = senior.getInfo().getChatLink();
             return mapper.mapToSeniorAcceptMessage(user, chatLink, time);
         });
     }

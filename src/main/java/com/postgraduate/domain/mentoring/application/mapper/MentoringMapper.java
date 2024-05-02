@@ -8,7 +8,6 @@ import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.senior.domain.entity.Info;
-import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.user.domain.entity.User;
 
@@ -21,7 +20,6 @@ public class MentoringMapper {
         Senior senior = mentoring.getSenior();
         User user = senior.getUser();
         Info info = senior.getInfo();
-        Profile profile = senior.getProfile();
         return new ExpectedMentoringInfo(
                 mentoring.getMentoringId(),
                 senior.getSeniorId(),
@@ -32,7 +30,7 @@ public class MentoringMapper {
                 info.getLab(),
                 mentoring.getDate(),
                 mentoring.getTerm(),
-                profile.getChatLink()
+                info.getChatLink()
         );
     }
 
