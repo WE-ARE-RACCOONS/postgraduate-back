@@ -20,8 +20,6 @@ public class PaymentController {
     private final PaymentManageUseCase paymentManageUseCase;
     @Value("${payple.redirect-uri}")
     private String redirectUri;
-    @Value("${payple.redirect-uri-b}")
-    private String redirectUriB;
     @Value("${payple.redirect-uri-dev}")
     private String redirectUriDev;
 
@@ -41,11 +39,4 @@ public class PaymentController {
     public void webhook(@RequestBody PaymentResultRequest request) {
         log.info("payple webhook");
     }
-
-    @PostMapping("/payple/result/b")
-    public void resultGetB(HttpServletResponse response, @ModelAttribute PaymentResultRequest request) throws IOException {
-        paymentManageUseCase.savePay(request);
-        response.sendRedirect(redirectUriB + request.PCD_PAY_OID());
-    }
-
 }
