@@ -63,10 +63,6 @@ public class AuthController {
         return ResponseDto.create(AUTH_DELETE.getCode(), LOGOUT_USER.getMessage());
     }
 
-    /**
-     * 우선 문의를 통해 탈퇴를 시켜준다 했으니 유저 토큰을 받을 수 없다
-     * 다만, userId를 통해 탈퇴를 처리시켜줄 때 그 어떤 보안 장치도 없다면 문제인 것 같으니 관리자의 권한으로 처리한다
-     */
     @PostMapping("/signout/{provider}/{userId}")
     @Operation(summary = "회원 탈퇴 | 관리자 토큰 필요", description = "회원 탈퇴 진행")
     public ResponseDto<Void> signOut(@PathVariable Provider provider, @PathVariable Long userId) {
@@ -128,37 +124,5 @@ public class AuthController {
     public ResponseDto<JwtTokenResponse> refresh(@AuthenticationPrincipal User user, HttpServletRequest request) {
         JwtTokenResponse jwtToken = jwtUseCase.regenerateToken(user, request);
         return ResponseDto.create(AUTH_UPDATE.getCode(), SUCCESS_REGENERATE_TOKEN.getMessage(), jwtToken);
-    }
-
-    /**
-     * 여기부터 케이스 B 위한 임시 매핑
-     */
-
-    @PostMapping("/senior/signup/b")
-    @Operation(summary = "대학원생 가입(Case B) - 필수 과정만", description = "대학원생 회원가입 - 필수 과정만")
-    public ResponseDto<JwtTokenResponse> singUpSeniorB(@RequestBody @Valid SeniorSignUpRequest request) {
-        User user = signUpUseCase.seniorSignUp(request);
-        JwtTokenResponse jwtToken = jwtUseCase.signIn(user);
-        return ResponseDto.create(SENIOR_CREATE.getCode(), CREATE_SENIOR.getMessage(), jwtToken);
-    }
-
-    @PostMapping("/senior/change/b")
-    @Operation(summary = "선배로 추가 가입(Case B) | 토큰 필요", description = "대학생 대학원생으로 변경 추가 가입")
-    public ResponseDto<JwtTokenResponse> changeSeniorB(@AuthenticationPrincipal User user,
-                                                      @RequestBody @Valid SeniorChangeRequest changeRequest) {
-        User changeUser = signUpUseCase.changeSenior(user, changeRequest);
-        JwtTokenResponse jwtToken = jwtUseCase.changeSenior(changeUser);
-        return ResponseDto.create(SENIOR_CREATE.getCode(), CREATE_SENIOR.getMessage(), jwtToken);
-    }
-
-    @PostMapping("/login/{provider}/b")
-    @Operation(summary = "소셜 로그인", description = "회원인 경우 JWT를, 회원이 아닌 경우 socialId를 반환합니다(회원가입은 진행하지 않습니다).")
-    public ResponseDto<AuthResponse> authLoginB(@RequestBody @Valid CodeRequest request, @PathVariable Provider provider) {
-        SignInUseCase signInUseCase = selectOauth.selectSignIn(provider);
-        AuthUserResponse authUser = signInUseCase.getUserB(request);
-        if (authUser.user() == null)
-            return ResponseDto.create(AUTH_NONE.getCode(), NOT_REGISTERED_USER.getMessage(), authUser);
-        JwtTokenResponse jwtToken = jwtUseCase.signIn(authUser.user());
-        return ResponseDto.create(AUTH_ALREADY.getCode(), SUCCESS_AUTH.getMessage(), jwtToken);
     }
 }
