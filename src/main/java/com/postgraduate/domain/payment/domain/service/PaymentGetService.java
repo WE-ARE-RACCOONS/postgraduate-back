@@ -27,6 +27,11 @@ public class PaymentGetService {
                 .orElseThrow(PaymentNotFoundException::new);
     }
 
+    public Payment byUserIdAndOrderId(Long userId, Long paymentId) {
+        return paymentRepository.findByUser_UserIdAndPaymentIdAndStatus(userId, paymentId, DONE)
+                .orElseThrow(PaymentNotFoundException::new);
+    }
+
     public Payment bySeniorAndOrderId(Senior senior, String orderId) {
         return paymentRepository.findBySeniorAndOrderIdAndStatus(senior, orderId, DONE).orElseThrow(PaymentNotFoundException::new);
     }

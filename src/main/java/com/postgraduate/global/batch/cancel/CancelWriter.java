@@ -1,11 +1,8 @@
 package com.postgraduate.global.batch.cancel;
 
-import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
-import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
-import com.postgraduate.domain.mentoring.domain.service.MentoringUpdateService;
 import com.postgraduate.domain.payment.application.usecase.PaymentManageUseCase;
-import com.postgraduate.domain.refuse.domain.entity.Refuse;
-import com.postgraduate.domain.refuse.domain.service.RefuseSaveService;
+import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.user.domain.service.UserGetService;
 import com.postgraduate.global.bizppurio.usecase.BizppurioJuniorMessage;
 import com.postgraduate.global.slack.SlackErrorMessage;
 import lombok.RequiredArgsConstructor;
@@ -16,41 +13,33 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-import static com.postgraduate.domain.refuse.application.mapper.RefuseMapper.mapToRefuse;
-
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class CancelWriter implements ItemWriter<Mentoring> {
-    private final MentoringGetService mentoringGetService;
-    private final MentoringUpdateService mentoringUpdateService;
+public class CancelWriter implements ItemWriter<CancelMentoring> {
+    private final UserGetService userGetService;
     private final PaymentManageUseCase paymentManageUseCase;
-    private final RefuseSaveService refuseSaveService;
     private final SlackErrorMessage slackErrorMessage;
+    private final CancelMentoringRepository cancelMentoringRepository;
     private final BizppurioJuniorMessage bizppurioJuniorMessage;
     @Override
-    public void write(Chunk<? extends Mentoring> chunk) {
+    public void write(Chunk<? extends CancelMentoring> chunk) {
         log.info("ChunkSize : {}", chunk.size());
         chunk.forEach(this::updateCancelWithAuto);
     }
 
-    public void updateCancelWithAuto(Mentoring mentoring) {
+    public void updateCancelWithAuto(CancelMentoring mentoring) {
         try {
-//            paymentManageUseCase.refundPayByUser(mentoring.getUser(), mentoring.getPayment().getOrderId());
-            Mentoring cancelMentoring = mentoringGetService.byMentoringIdWithLazy(mentoring.getMentoringId());
-            mentoringUpdateService.updateCancel(cancelMentoring);
-            Refuse refuse = mapToRefuse(cancelMentoring);
-            refuseSaveService.save(refuse);
-            log.info("mentoringId : {} 자동 취소", cancelMentoring.getMentoringId());
-            bizppurioJuniorMessage.mentoringRefuse(cancelMentoring.getUser());
-
-            if (cancelMentoring.getSenior().getSeniorId() == 12604)
-                throw new IllegalArgumentException();
-
+            User user = userGetService.byUserId(mentoring.userId());
+            paymentManageUseCase.refundPayByUser(mentoring.userId(), mentoring.paymentId());
+            cancelMentoringRepository.updateAll(List.of(mentoring));
+            cancelMentoringRepository.insertAll(List.of(mentoring));
+            log.info("mentoringId : {} 자동 취소", mentoring.mentoringId());
+            bizppurioJuniorMessage.mentoringRefuse(user);
         } catch (Exception ex) {
-            log.error("mentoringId : {} 자동 취소 실패", mentoring.getMentoringId());
+            log.error("mentoringId : {} 자동 취소 실패", mentoring.mentoringId());
             log.error(ex.getMessage());
-//            slackErrorMessage.sendSlackError(mentoring, ex);
+            slackErrorMessage.sendSlackError(mentoring.mentoringId(), ex);
             throw ex;
         }
     }

@@ -38,6 +38,31 @@ public class SlackErrorMessage {
         }
     }
 
+    public void sendSlackError(Long mentoringId, Exception ex) {
+        try {
+            slackClient.send(logWebHookUrl, Payload.builder()
+                    .text("자동 갱신 에러 발생!! 백엔드팀 확인 요망!!")
+                    .attachments(
+                            List.of(generateErrorSlackAttachment(mentoringId, ex))
+                    )
+                    .build());
+        } catch (IOException e) {
+            log.error("slack 전송 오류");
+        }
+    }
+
+    private Attachment generateErrorSlackAttachment(Long mentoringId, Exception ex) {
+        String requestTime = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:SS").format(LocalDateTime.now());
+        return Attachment.builder()
+                .color("ff0000")
+                .title(requestTime + "에 발생한 에러 로그")
+                .fields(List.of(
+                        generateSlackField("Error Message", ex.getMessage()),
+                        generateSlackField("Mentoring 번호", String.valueOf(mentoringId))
+                ))
+                .build();
+    }
+
     private Attachment generateErrorSlackAttachment(Mentoring mentoring, Exception ex) {
         String requestTime = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:SS").format(LocalDateTime.now());
         return Attachment.builder()

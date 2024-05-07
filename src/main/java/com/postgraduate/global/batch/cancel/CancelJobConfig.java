@@ -1,8 +1,5 @@
 package com.postgraduate.global.batch.cancel;
 
-import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
-import com.postgraduate.domain.mentoring.domain.repository.MentoringRepository;
-import jakarta.persistence.EntityManagerFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
@@ -19,6 +16,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+
+import static java.time.LocalDateTime.now;
 
 @Configuration
 @RequiredArgsConstructor
@@ -41,7 +44,7 @@ public class CancelJobConfig {
     @Bean(name = "cancelStep")
     public Step cancelStep() throws Exception {
         return new StepBuilder("cancelStep", jobRepository)
-                .<Mentoring, Mentoring>chunk(CHUNK_SIZE, transactionManager)
+                .<CancelMentoring, CancelMentoring>chunk(CHUNK_SIZE, transactionManager)
                 .reader(itemReader())
                 .writer(cancelWriter)
                 .faultTolerant()
@@ -50,26 +53,34 @@ public class CancelJobConfig {
                 .build();
     }
 
-    @Bean
-    public JdbcPagingItemReader<Mentoring> itemReader() throws Exception {
-        return new JdbcPagingItemReaderBuilder<Mentoring>()
+    @Bean(name = "cancelReader")
+    public JdbcPagingItemReader<CancelMentoring> itemReader() throws Exception {
+        Map<String, Object> parameter = new HashMap<>();
+        LocalDateTime now = now()
+                .toLocalDate()
+                .atStartOfDay();
+        parameter.put("date", Timestamp.valueOf(now));
+
+        return new JdbcPagingItemReaderBuilder<CancelMentoring>()
                 .pageSize(CHUNK_SIZE)
                 .fetchSize(CHUNK_SIZE)
                 .dataSource(dataSource)
-                .rowMapper(new MentoringRowMapper())
-                .queryProvider(queryProvider())
-                .name("reader")
+                .rowMapper(new CancelMentoringRowMapper())
+                .queryProvider(cancelQueryProvider())
+                .parameterValues(parameter)
+                .name("cancelReader")
                 .build();
     }
 
-    @Bean
-    public PagingQueryProvider queryProvider() throws Exception {
+    @Bean(name = "cancelQuery")
+    public PagingQueryProvider cancelQueryProvider() throws Exception {
         SqlPagingQueryProviderFactoryBean queryProvider = new SqlPagingQueryProviderFactoryBean();
         queryProvider.setDataSource(dataSource);
-        queryProvider.setSelectClause("select mentoring_id");
+        queryProvider.setSelectClause("select mentoring_id, user_user_id, senior_senior_id, payment_payment_id");
         queryProvider.setFromClause("from mentoring");
-        queryProvider.setWhereClause("where mentoring.status = 'WAITING'");
+        queryProvider.setWhereClause("where status = 'WAITING' and created_at < :date");
         queryProvider.setSortKey("mentoring_id");
         return queryProvider.getObject();
     }
 }
+
