@@ -71,6 +71,9 @@ public class CreateSalaryJobConfig {
                 .<CreateSalary, CreateSalary>chunk(CHUNK_SIZE, transactionManager)
                 .reader(salaryReader())
                 .writer(createSalaryItemWriter)
+                .faultTolerant()
+                .skip(Exception.class)
+                .skipLimit(Integer.MAX_VALUE)
                 .build();
     }
 
