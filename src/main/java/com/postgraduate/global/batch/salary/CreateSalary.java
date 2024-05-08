@@ -1,8 +1,6 @@
 package com.postgraduate.global.batch.salary;
 
-import java.time.LocalDate;
-
-public record SalaryInfo(
+public record CreateSalary(
         Long seniorId,
         Long accountId,
         String bank,

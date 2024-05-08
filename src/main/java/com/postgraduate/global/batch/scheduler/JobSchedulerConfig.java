@@ -25,6 +25,8 @@ public class JobSchedulerConfig {
     private final Job cancelJob;
     @Qualifier("doneJob")
     private final Job doneJob;
+    @Qualifier("salaryJob")
+    private final Job salaryJob;
 
 //    @Scheduled(fixedDelay = 60000) //todo : 스케줄링 수정
     public void launchCancelJob() throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
@@ -34,11 +36,19 @@ public class JobSchedulerConfig {
         jobLauncher.run(cancelJob, jobParameters);
     }
 
-    @Scheduled(fixedDelay = 600000)
+//    @Scheduled(fixedDelay = 600000)
     public void launchDoneJob() throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
         JobParameters jobParameters = new JobParametersBuilder()
                 .addLocalDateTime("date", LocalDateTime.now())
                 .toJobParameters();
         jobLauncher.run(doneJob, jobParameters);
+    }
+
+    @Scheduled(fixedDelay = 600000)
+    public void launchSalaryJob() throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
+        JobParameters jobParameters = new JobParametersBuilder()
+                .addLocalDateTime("date", LocalDateTime.now())
+                .toJobParameters();
+        jobLauncher.run(salaryJob, jobParameters);
     }
 }
