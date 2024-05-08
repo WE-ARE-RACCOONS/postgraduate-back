@@ -16,7 +16,7 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class CancelWriter implements ItemWriter<CancelMentoring> {
+public class CancelMentoringWriter implements ItemWriter<CancelMentoring> {
     private final UserGetService userGetService;
     private final PaymentManageUseCase paymentManageUseCase;
     private final SlackErrorMessage slackErrorMessage;
@@ -27,13 +27,13 @@ public class CancelWriter implements ItemWriter<CancelMentoring> {
         log.info("ChunkSize : {}", chunk.size());
         chunk.forEach(this::updateCancelWithAuto);
     }
-
+    //todo : User 조회 수정 (비즈뿌리오와 함께)
     public void updateCancelWithAuto(CancelMentoring mentoring) {
         try {
             User user = userGetService.byUserId(mentoring.userId());
             paymentManageUseCase.refundPayByUser(mentoring.userId(), mentoring.paymentId());
-            cancelMentoringRepository.updateAll(List.of(mentoring));
-            cancelMentoringRepository.insertAll(List.of(mentoring));
+            cancelMentoringRepository.updateAllMentoring(List.of(mentoring));
+            cancelMentoringRepository.insertAllRefuse(List.of(mentoring));
             log.info("mentoringId : {} 자동 취소", mentoring.mentoringId());
             bizppurioJuniorMessage.mentoringRefuse(user);
         } catch (Exception ex) {

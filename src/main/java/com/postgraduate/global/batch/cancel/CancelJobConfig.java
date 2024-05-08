@@ -29,7 +29,7 @@ import static java.time.LocalDateTime.now;
 public class CancelJobConfig {
     private final JobRepository jobRepository;
     private final PlatformTransactionManager transactionManager;
-    private final CancelWriter cancelWriter;
+    private final CancelMentoringWriter cancelMentoringWriter;
     private final DataSource dataSource;
 
     private static final int CHUNK_SIZE = 10;
@@ -46,7 +46,7 @@ public class CancelJobConfig {
         return new StepBuilder("cancelStep", jobRepository)
                 .<CancelMentoring, CancelMentoring>chunk(CHUNK_SIZE, transactionManager)
                 .reader(itemReader())
-                .writer(cancelWriter)
+                .writer(cancelMentoringWriter)
                 .faultTolerant()
                 .skip(Exception.class)
                 .skipLimit(Integer.MAX_VALUE)
