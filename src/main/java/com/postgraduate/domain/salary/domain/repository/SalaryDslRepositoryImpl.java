@@ -127,13 +127,14 @@ public class SalaryDslRepositoryImpl implements SalaryDslRepository {
 
     @Override
     public List<Salary> findAllBySalaryNoneAccount(LocalDate salaryDate, Senior searchSenior) {
-        Salary nowSalary = queryFactory.selectFrom(salary)
+        List<Salary> nowSalaries = queryFactory.selectFrom(salary)
                 .where(
                         salary.senior.eq(searchSenior),
                         salary.salaryDate.eq(salaryDate)
+                                .or(salary.salaryDate.goe(salaryDate))
                 )
-                .fetchOne();
-        if (nowSalary.getAccount() == null) {
+                .fetch();
+        if (nowSalaries.get(0).getAccount() == null) {
             return queryFactory.selectFrom(salary)
                     .distinct()
                     .where(
@@ -144,7 +145,7 @@ public class SalaryDslRepositoryImpl implements SalaryDslRepository {
                     .fetchJoin()
                     .fetch();
         }
-        return List.of(nowSalary);
+        return nowSalaries;
     }
 }
 
