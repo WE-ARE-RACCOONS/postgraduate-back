@@ -52,22 +52,22 @@ class MentoringControllerTest extends IntegrationTest {
 
     @BeforeEach
     void setUp() throws IOException {
-        user = new User(0L, 1L, "mail", "후배", "011", "profile", 0, Role.USER, true, now(), now(), false);
+        user = new User(-1L, -1L, "mail", "후배", "011", "profile", 0, Role.USER, true, now(), now(), false);
         userRepository.save(user);
 
-        User userOfSenior = new User(0L, 2L, "mail", "선배", "012", "profile", 0, Role.SENIOR, true, now(), now(), false);
+        User userOfSenior = new User(-2L, -2L, "mail", "선배", "012", "profile", 0, Role.SENIOR, true, now(), now(), false);
         userRepository.save(userOfSenior);
 
         Info info = new Info("major", "서울대학교", "교수님", "키워드1,키워드2", "랩실", "인공지능", false, false, "인공지능,키워드1,키워드2", "chatLink", 30);
         Profile profile = new Profile("저는요", "한줄소개", "대상");
-        senior = new Senior(0L, userOfSenior, "certification", WAITING, 0, info, profile, now(), now());
+        senior = new Senior(-1L, userOfSenior, "certification", WAITING, 0, info, profile, now(), now());
         seniorRepository.save(senior);
 
         SalaryAccount salaryAccount = new SalaryAccount("bank", "1234", "holder");
-        salary = new Salary(0L, false, senior, 20000, getSalaryDate(), LocalDateTime.now(), salaryAccount);
+        salary = new Salary(-1L, false, senior, 20000, getSalaryDate(), LocalDateTime.now(), salaryAccount);
         salaryRepository.save(salary);
 
-        payment = new Payment(0L, user, senior, 20000, "1", "123", "123", LocalDateTime.now(), LocalDateTime.now(), DONE);
+        payment = new Payment(-1L, user, senior, 20000, "1", "123", "123", LocalDateTime.now(), LocalDateTime.now(), DONE);
         paymentRepository.save(payment);
 
         userAccessToken = jwtUtil.generateAccessToken(user.getUserId(), Role.USER);
@@ -124,9 +124,9 @@ class MentoringControllerTest extends IntegrationTest {
     @Test
     @DisplayName("자신이 신청한 멘토링이 아니라면 상세조회되지 않는다")
     void getOtherMentoringDetail() throws Exception {
-        User otherUser = new User(-1L, 0L, "mail", "다른 후배", "011", "profile", 0, Role.USER, true, now(), now(), false);
+        User otherUser = new User(-3L, -3L, "mail", "다른 후배", "011", "profile", 0, Role.USER, true, now(), now(), false);
         userRepository.save(otherUser);
-        Mentoring mentoring = new Mentoring(0L, otherUser, senior, payment, null, "topic", "question", "date", 40, Status.EXPECTED, now(), now());
+        Mentoring mentoring = new Mentoring(-3L, otherUser, senior, payment, null, "topic", "question", "date", 40, Status.EXPECTED, now(), now());
         mentoringRepository.save(mentoring);
 
         mvc.perform(get("/mentoring/me/{mentoringId}", mentoring.getMentoringId())
@@ -293,14 +293,14 @@ class MentoringControllerTest extends IntegrationTest {
     @Test
     @DisplayName("자신이 신청받은 멘토링이 아니라면 상세조회되지 않는다")
     void getOtherSeniorMentoringDetail() throws Exception {
-        User otherUser = new User(-1L, 0L, "mail", "다른 후배", "011", "profile", 0, Role.USER, true, now(), now(), false);
+        User otherUser = new User(-3L, -3L, "mail", "다른 후배", "011", "profile", 0, Role.USER, true, now(), now(), false);
         userRepository.save(otherUser);
 
         Info info = new Info("major", "서울대학교", "교수님", "키워드1,키워드2", "랩실", "인공지능", false, false, "인공지능,키워드1,키워드2", "chatLink", 30);
-        Senior otherSenior = new Senior(-1L, otherUser, "certification", WAITING, 0, info, null, now(), now());
+        Senior otherSenior = new Senior(-3L, otherUser, "certification", WAITING, 0, info, null, now(), now());
         seniorRepository.save(otherSenior);
 
-        Mentoring mentoring = new Mentoring(0L, otherUser, otherSenior, payment, null, "topic", "question", "date", 40, Status.EXPECTED, now(), now());
+        Mentoring mentoring = new Mentoring(-3L, otherUser, otherSenior, payment, null, "topic", "question", "date", 40, Status.EXPECTED, now(), now());
         mentoringRepository.save(mentoring);
 
         mvc.perform(get("/mentoring/senior/me/{mentoringId}", mentoring.getMentoringId())

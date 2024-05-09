@@ -56,8 +56,8 @@ class SeniorControllerTest extends IntegrationTest {
 
     @BeforeEach
     void setUp() throws IOException {
-        user = new User(-2L, 1L, "mail", "후배1", "011", "profile", 0, Role.SENIOR, true, now(), now(), false);
-        otherUser = new User(-1L, 1234L, "mail", "후배2", "011", "profile", 0, Role.SENIOR, true, now(), now(), false);
+        user = new User(-2L, -2L, "mail", "후배1", "011", "profile", 0, Role.SENIOR, true, now(), now(), false);
+        otherUser = new User(-1L, -1L, "mail", "후배2", "011", "profile", 0, Role.SENIOR, true, now(), now(), false);
         userRepository.save(user);
         userRepository.save(otherUser);
 

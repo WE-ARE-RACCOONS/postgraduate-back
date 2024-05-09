@@ -39,11 +39,11 @@ class AuthControllerTest extends IntegrationTest {
     private static final String AUTHORIZATION = "Authorization";
     private static final String BEARER = "Bearer ";
     private User user;
-    private final Long anonymousUserSocialId = 2L;
+    private final Long anonymousUserSocialId = -5L;
 
     @BeforeEach
     void setUp() {
-        user = new User(0L, 1L, "mail", "후배", "011", "profile", 0, USER, true, now(), now(), false);
+        user = new User(-1L, -1L, "mail", "후배", "011", "profile", 0, USER, true, now(), now(), false);
         userRepository.save(user);
         doNothing().when(slackLogErrorMessage).sendSlackLog(any());
         doNothing().when(slackSignUpMessage).sendSeniorSignUp(any());
@@ -299,7 +299,7 @@ class AuthControllerTest extends IntegrationTest {
     @Test
     @DisplayName("대학생이 대학원생으로 변경한다.")
     void changeSeniorToken() throws Exception {
-        User senior = new User(0L, 2L, "mail", "선배", "011", "profile", 0, SENIOR, true, now(), now(), false);
+        User senior = new User(-3L, -3L, "mail", "선배", "011", "profile", 0, SENIOR, true, now(), now(), false);
         userRepository.save(senior);
 
         String token = jwtUtil.generateAccessToken(senior.getUserId(), USER);

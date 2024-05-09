@@ -35,7 +35,7 @@ class SalaryControllerTest extends IntegrationTest {
 
     @BeforeEach
     void setUp() throws IOException {
-        User user = new User(0L, 1L, "mail", "후배", "011", "profile", 0, Role.SENIOR, true, now(), now(), false);
+        User user = new User(0L, -1L, "mail", "후배", "011", "profile", 0, Role.SENIOR, true, now(), now(), false);
         userRepository.save(user);
 
         Info info = new Info("major", "postgradu", "교수님", "keyword1,keyword2", "랩실", "field", false, false, "field,keyword1,keyword2", "chatLink", 30);

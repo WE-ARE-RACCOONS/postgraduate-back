@@ -32,7 +32,7 @@ class UserControllerTest extends IntegrationTest {
 
     @BeforeEach
     void setUp() throws IOException {
-        User user = new User(0L, 1L, "mail", "후배", "011", "profile", 0, Role.USER, true, now(), now(), false);
+        User user = new User(-1L, -1L, "mail", "후배", "011", "profile", 0, Role.USER, true, now(), now(), false);
         userRepository.save(user);
 
         token = jwtUtil.generateAccessToken(user.getUserId(), Role.USER);
