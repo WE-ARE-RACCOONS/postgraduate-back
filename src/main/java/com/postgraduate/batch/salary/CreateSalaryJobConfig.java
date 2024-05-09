@@ -4,7 +4,6 @@ import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.salary.domain.service.SalaryGetService;
 import com.postgraduate.global.slack.SlackSalaryMessage;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.job.builder.JobBuilder;
@@ -28,7 +27,6 @@ import static com.postgraduate.domain.salary.util.SalaryUtil.getSalaryDate;
 
 @Configuration
 @RequiredArgsConstructor
-@Slf4j
 public class CreateSalaryJobConfig {
     private final JobRepository jobRepository;
     private final PlatformTransactionManager transactionManager;
@@ -54,8 +52,6 @@ public class CreateSalaryJobConfig {
                 .tasklet((contribution, chunkContext) -> {
                     List<Salary> salaries = salaryGetService.findAllLast();
                     slackSalaryMessage.sendSlackSalary(salaries);
-                    log.info("salarySize : {}", salaries.size()); // 임시
-                    salaries.forEach(salary -> log.info("salary : {}", salary.getTotalAmount())); // 임시
                     return RepeatStatus.FINISHED;
                 }, transactionManager)
                 .build();
