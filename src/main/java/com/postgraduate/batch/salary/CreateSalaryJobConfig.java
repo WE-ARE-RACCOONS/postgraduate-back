@@ -35,6 +35,7 @@ public class CreateSalaryJobConfig {
     private final SlackSalaryMessage slackSalaryMessage;
     private final SalaryGetService salaryGetService;
     private final CreateSalaryItemWriter createSalaryItemWriter;
+    private final CreateSalarySkipListener createSalarySkipListener;
     private final DataSource dataSource;
 
     private static final int CHUNK_SIZE = 50;
@@ -69,6 +70,7 @@ public class CreateSalaryJobConfig {
                 .faultTolerant()
                 .skip(Exception.class)
                 .skipLimit(Integer.MAX_VALUE)
+                .listener(createSalarySkipListener)
                 .build();
     }
 

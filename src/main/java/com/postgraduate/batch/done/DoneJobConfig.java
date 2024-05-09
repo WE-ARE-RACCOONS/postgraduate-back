@@ -24,6 +24,7 @@ public class DoneJobConfig {
     private final DataSource dataSource;
     private final DoneMentoringProcessor doneMentoringProcessor;
     private final DoneMentoringWriter doneMentoringWriter;
+    private final DoneMentoringSkipListener doneMentoringSkipListener;
 
     private static final int CHUNK_SIZE = 50;
 
@@ -44,6 +45,7 @@ public class DoneJobConfig {
                 .faultTolerant()
                 .skip(Exception.class)
                 .skipLimit(Integer.MAX_VALUE)
+                .listener(doneMentoringSkipListener)
                 .build();
     }
 

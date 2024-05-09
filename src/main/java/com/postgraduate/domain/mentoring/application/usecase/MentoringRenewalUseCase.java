@@ -34,23 +34,6 @@ public class MentoringRenewalUseCase {
     private final SlackErrorMessage slackErrorMessage;
     private final BizppurioJuniorMessage bizppurioJuniorMessage;
 
-    public void updateCancelWithAuto(Mentoring mentoring) {
-        try {
-            paymentManageUseCase.refundPayByUser(mentoring.getUser(), mentoring.getPayment().getOrderId());
-            Mentoring cancelMentoring = mentoringGetService.byMentoringIdWithLazy(mentoring.getMentoringId());
-            mentoringUpdateService.updateCancel(cancelMentoring);
-            Refuse refuse = mapToRefuse(mentoring);
-            refuseSaveService.save(refuse);
-            log.info("mentoringId : {} 자동 취소", mentoring.getMentoringId());
-            bizppurioJuniorMessage.mentoringRefuse(mentoring.getUser());
-        } catch (Exception ex) {
-            log.error("mentoringId : {} 자동 취소 실패", mentoring.getMentoringId());
-            log.error(ex.getMessage());
-            slackErrorMessage.sendSlackError(mentoring, ex);
-            currentTransactionStatus().setRollbackOnly();
-        }
-    }
-
     public void updateDoneWithAuto(Mentoring mentoring) {
         try {
             Mentoring doneMentoring = mentoringGetService.byMentoringIdWithLazy(mentoring.getMentoringId());
