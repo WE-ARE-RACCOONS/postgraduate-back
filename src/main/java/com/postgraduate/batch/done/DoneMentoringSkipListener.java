@@ -1,4 +1,4 @@
-package com.postgraduate.global.batch.done;
+package com.postgraduate.batch.done;
 
 import com.postgraduate.global.slack.SlackErrorMessage;
 import lombok.RequiredArgsConstructor;

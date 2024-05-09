@@ -1,4 +1,4 @@
-package com.postgraduate.global.batch.cancel;
+package com.postgraduate.batch.cancel;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;

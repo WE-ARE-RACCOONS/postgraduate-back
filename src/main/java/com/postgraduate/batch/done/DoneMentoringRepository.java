@@ -1,4 +1,4 @@
-package com.postgraduate.global.batch.done;
+package com.postgraduate.batch.done;
 
 import com.postgraduate.domain.mentoring.domain.entity.constant.TermUnit;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package com.postgraduate.global.batch.cancel;
+package com.postgraduate.batch.cancel;
 
 import com.postgraduate.domain.payment.application.usecase.PaymentManageUseCase;
 import com.postgraduate.domain.user.domain.entity.User;
@@ -31,9 +31,9 @@ public class CancelMentoringWriter implements ItemWriter<CancelMentoring> {
     public void updateCancelWithAuto(CancelMentoring mentoring) {
         try {
             User user = userGetService.byUserId(mentoring.userId());
-            paymentManageUseCase.refundPayByUser(mentoring.userId(), mentoring.paymentId());
             cancelMentoringRepository.updateAllMentoring(List.of(mentoring));
             cancelMentoringRepository.insertAllRefuse(List.of(mentoring));
+            paymentManageUseCase.refundPayByUser(mentoring.userId(), mentoring.paymentId());
             log.info("mentoringId : {} 자동 취소", mentoring.mentoringId());
             bizppurioJuniorMessage.mentoringRefuse(user);
         } catch (Exception ex) {

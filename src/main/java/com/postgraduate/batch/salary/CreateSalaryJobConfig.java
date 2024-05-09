@@ -1,4 +1,4 @@
-package com.postgraduate.global.batch.salary;
+package com.postgraduate.batch.salary;
 
 import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.salary.domain.service.SalaryGetService;
@@ -7,14 +7,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
-import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.builder.StepBuilder;
-import org.springframework.batch.core.step.tasklet.Tasklet;
-import org.springframework.batch.item.Chunk;
-import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.database.JdbcPagingItemReader;
 import org.springframework.batch.item.database.PagingQueryProvider;
 import org.springframework.batch.item.database.builder.JdbcPagingItemReaderBuilder;
@@ -42,7 +37,7 @@ public class CreateSalaryJobConfig {
     private final CreateSalaryItemWriter createSalaryItemWriter;
     private final DataSource dataSource;
 
-    private static final int CHUNK_SIZE = 10;
+    private static final int CHUNK_SIZE = 50;
 
     @Bean(name = "salaryJob")
     public Job salaryJob() throws Exception {

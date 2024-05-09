@@ -1,4 +1,4 @@
-package com.postgraduate.global.batch.done;
+package com.postgraduate.batch.done;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
@@ -25,7 +25,7 @@ public class DoneJobConfig {
     private final DoneMentoringProcessor doneMentoringProcessor;
     private final DoneMentoringWriter doneMentoringWriter;
 
-    private static final int CHUNK_SIZE = 10;
+    private static final int CHUNK_SIZE = 50;
 
     @Bean(name = "doneJob")
     public Job doneJob() throws Exception {

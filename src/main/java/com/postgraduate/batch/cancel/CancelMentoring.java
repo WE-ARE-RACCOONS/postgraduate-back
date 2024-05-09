@@ -1,4 +1,4 @@
-package com.postgraduate.global.batch.cancel;
+package com.postgraduate.batch.cancel;
 
 public record CancelMentoring(
     Long mentoringId,

@@ -1,4 +1,4 @@
-package com.postgraduate.global.batch.scheduler;
+package com.postgraduate.batch.scheduler;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +28,7 @@ public class JobSchedulerConfig {
     @Qualifier("salaryJob")
     private final Job salaryJob;
 
-//    @Scheduled(fixedDelay = 60000) //todo : 스케줄링 수정
+    @Scheduled(cron = "0 59 23 * * *", zone = "Asia/Seoul")
     public void launchCancelJob() throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
         JobParameters jobParameters = new JobParametersBuilder()
                 .addLocalDateTime("date", LocalDateTime.now())
@@ -36,7 +36,7 @@ public class JobSchedulerConfig {
         jobLauncher.run(cancelJob, jobParameters);
     }
 
-    @Scheduled(fixedDelay = 600000)
+    @Scheduled(cron = "0 59 23 * * *", zone = "Asia/Seoul")
     public void launchDoneJob() throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
         JobParameters jobParameters = new JobParametersBuilder()
                 .addLocalDateTime("date", LocalDateTime.now())
@@ -44,7 +44,7 @@ public class JobSchedulerConfig {
         jobLauncher.run(doneJob, jobParameters);
     }
 
-//    @Scheduled(fixedDelay = 600000)
+    @Scheduled(cron = "0 0 0 * * 4", zone = "Asia/Seoul")
     public void launchSalaryJob() throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
         JobParameters jobParameters = new JobParametersBuilder()
                 .addLocalDateTime("date", LocalDateTime.now())

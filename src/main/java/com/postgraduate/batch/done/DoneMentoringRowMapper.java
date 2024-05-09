@@ -1,4 +1,4 @@
-package com.postgraduate.global.batch.done;
+package com.postgraduate.batch.done;
 
 import org.springframework.jdbc.core.RowMapper;
 

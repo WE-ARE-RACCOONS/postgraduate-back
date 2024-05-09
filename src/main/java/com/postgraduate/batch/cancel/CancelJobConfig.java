@@ -1,4 +1,4 @@
-package com.postgraduate.global.batch.cancel;
+package com.postgraduate.batch.cancel;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +32,7 @@ public class CancelJobConfig {
     private final CancelMentoringWriter cancelMentoringWriter;
     private final DataSource dataSource;
 
-    private static final int CHUNK_SIZE = 10;
+    private static final int CHUNK_SIZE = 50;
 
     @Bean(name = "cancelJob")
     public Job cancelJob() throws Exception {

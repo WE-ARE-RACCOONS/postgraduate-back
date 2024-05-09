@@ -1,4 +1,4 @@
-package com.postgraduate.global.batch.salary;
+package com.postgraduate.batch.salary;
 
 public record CreateSalary(
         Long seniorId,

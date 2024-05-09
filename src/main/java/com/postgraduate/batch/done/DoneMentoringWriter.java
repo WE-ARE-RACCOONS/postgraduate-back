@@ -1,4 +1,4 @@
-package com.postgraduate.global.batch.done;
+package com.postgraduate.batch.done;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

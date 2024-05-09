@@ -1,4 +1,4 @@
-package com.postgraduate.global.batch.salary;
+package com.postgraduate.batch.salary;
 
 import com.postgraduate.global.slack.SlackErrorMessage;
 import lombok.RequiredArgsConstructor;

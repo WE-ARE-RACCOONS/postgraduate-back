@@ -1,4 +1,4 @@
-package com.postgraduate.global.batch.done;
+package com.postgraduate.batch.done;
 
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.stereotype.Component;
