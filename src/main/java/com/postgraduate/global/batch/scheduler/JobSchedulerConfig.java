@@ -36,7 +36,7 @@ public class JobSchedulerConfig {
         jobLauncher.run(cancelJob, jobParameters);
     }
 
-//    @Scheduled(fixedDelay = 600000)
+    @Scheduled(fixedDelay = 600000)
     public void launchDoneJob() throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
         JobParameters jobParameters = new JobParametersBuilder()
                 .addLocalDateTime("date", LocalDateTime.now())
@@ -44,7 +44,7 @@ public class JobSchedulerConfig {
         jobLauncher.run(doneJob, jobParameters);
     }
 
-    @Scheduled(fixedDelay = 600000)
+//    @Scheduled(fixedDelay = 600000)
     public void launchSalaryJob() throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
         JobParameters jobParameters = new JobParametersBuilder()
                 .addLocalDateTime("date", LocalDateTime.now())

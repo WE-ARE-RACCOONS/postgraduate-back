@@ -27,7 +27,7 @@ public class CancelMentoringWriter implements ItemWriter<CancelMentoring> {
         log.info("ChunkSize : {}", chunk.size());
         chunk.forEach(this::updateCancelWithAuto);
     }
-    //todo : User 조회 수정 (비즈뿌리오와 함께)
+
     public void updateCancelWithAuto(CancelMentoring mentoring) {
         try {
             User user = userGetService.byUserId(mentoring.userId());
@@ -39,7 +39,7 @@ public class CancelMentoringWriter implements ItemWriter<CancelMentoring> {
         } catch (Exception ex) {
             log.error("mentoringId : {} 자동 취소 실패", mentoring.mentoringId());
             log.error(ex.getMessage());
-            slackErrorMessage.sendSlackError(mentoring.mentoringId(), ex);
+            slackErrorMessage.sendSlackMentoringError(mentoring.mentoringId(), ex);
             throw ex;
         }
     }
