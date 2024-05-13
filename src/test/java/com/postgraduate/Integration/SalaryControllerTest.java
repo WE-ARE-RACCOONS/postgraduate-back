@@ -1,15 +1,11 @@
 package com.postgraduate.Integration;
 
 import com.postgraduate.domain.salary.domain.entity.Salary;
-import com.postgraduate.domain.salary.domain.entity.SalaryAccount;
-import com.postgraduate.domain.salary.util.SalaryUtil;
-import com.postgraduate.domain.senior.domain.entity.Info;
-import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
-import com.postgraduate.domain.senior.domain.entity.constant.Status;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.entity.constant.Role;
 import com.postgraduate.support.IntegrationTest;
+import com.postgraduate.support.Resource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,7 +15,6 @@ import java.io.IOException;
 import static com.postgraduate.domain.salary.presentation.constant.SalaryResponseCode.SALARY_FIND;
 import static com.postgraduate.domain.salary.presentation.constant.SalaryResponseCode.SALARY_NOT_FOUND;
 import static com.postgraduate.domain.salary.presentation.constant.SalaryResponseMessage.*;
-import static java.time.LocalDateTime.now;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -27,24 +22,27 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class SalaryControllerTest extends IntegrationTest {
+    private Resource resource = new Resource();
     private static final String AUTHORIZATION = "Authorization";
     private static final String BEARER = "Bearer ";
     private String token;
     private Salary salary;
+    private User user;
+    private User otherUser;
+    private User seniorUser;
+    private Senior senior;
+    private Senior otherSenior;
 
 
     @BeforeEach
     void setUp() throws IOException {
-        User user = new User(0L, -1L, "mail", "후배", "011", "profile", 0, Role.SENIOR, true, now(), now(), false);
+        user = resource.getSeniorUser();
         userRepository.save(user);
 
-        Info info = new Info("major", "postgradu", "교수님", "keyword1,keyword2", "랩실", "field", false, false, "field,keyword1,keyword2", "chatLink", 30);
-        Profile profile = new Profile("저는요", "한줄소개", "대상");
-        Senior senior = new Senior(0L, user, "certification", Status.APPROVE, 0, info, profile, now(), now());
+        senior = resource.getSenior();
         seniorRepository.save(senior);
 
-        SalaryAccount salaryAccount = new SalaryAccount("bank", "1234", "holder");
-        salary = new Salary(0L, false, senior, 0, SalaryUtil.getSalaryDate(), null, salaryAccount);
+        salary = resource.getSalary();
         salaryRepository.save(salary);
 
         token = jwtUtil.generateAccessToken(user.getUserId(), Role.SENIOR);

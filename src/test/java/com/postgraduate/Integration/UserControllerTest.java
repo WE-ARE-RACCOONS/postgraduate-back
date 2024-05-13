@@ -5,6 +5,7 @@ import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.entity.constant.Role;
 import com.postgraduate.domain.user.presentation.constant.UserResponseCode;
 import com.postgraduate.support.IntegrationTest;
+import com.postgraduate.support.Resource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,7 +18,6 @@ import java.io.IOException;
 import static com.postgraduate.domain.user.presentation.constant.UserResponseCode.USER_FIND;
 import static com.postgraduate.domain.user.presentation.constant.UserResponseCode.USER_UPDATE;
 import static com.postgraduate.domain.user.presentation.constant.UserResponseMessage.*;
-import static java.time.LocalDateTime.now;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -28,11 +28,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class UserControllerTest extends IntegrationTest {
     private static final String AUTHORIZATION = "Authorization";
     private static final String BEARER = "Bearer ";
+    private Resource resource = new Resource();
     private String token;
 
     @BeforeEach
     void setUp() throws IOException {
-        User user = new User(-1L, -1L, "mail", "후배", "011", "profile", 0, Role.USER, true, now(), now(), false);
+        User user = resource.getUser();
         userRepository.save(user);
 
         token = jwtUtil.generateAccessToken(user.getUserId(), Role.USER);
