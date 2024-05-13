@@ -32,7 +32,7 @@ class AuthControllerTest extends ControllerTest {
 
     @Test
     @WithMockUser
-    @DisplayName("회원이 로그인한다.")
+    @DisplayName("대학생이 로그인한다.")
     void authLoginByUser() throws Exception {
         CodeRequest codeRequest = new CodeRequest("code");
         String request = objectMapper.writeValueAsString(codeRequest);

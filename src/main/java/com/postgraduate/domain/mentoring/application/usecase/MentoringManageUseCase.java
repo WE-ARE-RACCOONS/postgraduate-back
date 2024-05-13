@@ -23,7 +23,6 @@ import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.global.bizppurio.usecase.BizppurioJuniorMessage;
 import com.postgraduate.global.bizppurio.usecase.BizppurioSeniorMessage;
-import com.postgraduate.global.slack.SlackErrorMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -34,8 +33,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static com.postgraduate.domain.mentoring.util.DateUtils.*;
 import static com.postgraduate.domain.mentoring.util.DateUtils.mentoringDateToTime;
+import static com.postgraduate.domain.mentoring.util.DateUtils.stringToLocalDateTime;
 import static com.postgraduate.domain.refuse.application.mapper.RefuseMapper.mapToRefuse;
 import static java.time.LocalDateTime.now;
 
@@ -43,7 +42,6 @@ import static java.time.LocalDateTime.now;
 @Slf4j
 @RequiredArgsConstructor
 public class MentoringManageUseCase {
-    private final MentoringRenewalUseCase mentoringRenewalUseCase;
     private final MentoringUpdateService mentoringUpdateService;
     private final MentoringGetService mentoringGetService;
     private final RefuseSaveService refuseSaveService;
@@ -52,7 +50,6 @@ public class MentoringManageUseCase {
     private final SalaryGetService salaryGetService;
     private final SalaryUpdateService salaryUpdateService;
     private final PaymentManageUseCase paymentManageUseCase;
-    private final SlackErrorMessage slackErrorMessage;
     private final MentoringApplyingUseCase mentoringApplyingUseCase;
     private final BizppurioJuniorMessage bizppurioJuniorMessage;
     private final BizppurioSeniorMessage bizppurioSeniorMessage;
@@ -113,30 +110,6 @@ public class MentoringManageUseCase {
         bizppurioSeniorMessage.mentoringAccept(senior, time);
         bizppurioJuniorMessage.mentoringAccept(mentoring.getUser(), senior, time);
         return account.isPresent();
-    }
-
-    @Scheduled(cron = "0 59 23 * * *", zone = "Asia/Seoul")
-    public void updateAutoCancel() {
-        LocalDateTime now = now()
-                .toLocalDate()
-                .atStartOfDay();
-        List<Mentoring> waitingMentorings = mentoringGetService.byWaitingAndCreatedAt(now);
-        waitingMentorings.forEach(mentoringRenewalUseCase::updateCancelWithAuto);
-    }
-
-    @Scheduled(cron = "0 59 23 * * *", zone = "Asia/Seoul")
-    public void updateAutoDone() {
-        List<Mentoring> expectedMentorings = mentoringGetService.byExpected();
-        expectedMentorings.stream()
-                .filter(mentoring -> {
-                    try {
-                        return mentoring.checkAutoDone();
-                    } catch (Exception ex) {
-                        slackErrorMessage.sendSlackError(mentoring, ex);
-                        return false;
-                    }
-                })
-                .forEach(mentoringRenewalUseCase::updateDoneWithAuto);
     }
 
     @Scheduled(fixedDelay = 1000*60*10)

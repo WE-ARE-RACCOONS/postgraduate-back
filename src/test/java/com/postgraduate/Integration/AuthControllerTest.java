@@ -2,10 +2,11 @@ package com.postgraduate.Integration;
 
 import com.postgraduate.domain.auth.application.dto.req.*;
 import com.postgraduate.domain.auth.application.dto.res.KakaoUserInfoResponse;
+import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.wish.domain.entity.Wish;
-import com.postgraduate.domain.wish.domain.entity.constant.Status;
 import com.postgraduate.support.IntegrationTest;
+import com.postgraduate.support.Resource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,7 +28,6 @@ import static com.postgraduate.domain.user.presentation.constant.UserResponseCod
 import static com.postgraduate.domain.user.presentation.constant.UserResponseMessage.NOT_FOUND_USER;
 import static com.postgraduate.global.constant.ErrorCode.VALID_BLANK;
 import static java.lang.Boolean.FALSE;
-import static java.time.LocalDateTime.now;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
@@ -36,15 +36,25 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class AuthControllerTest extends IntegrationTest {
+    private Resource resource = new Resource();
     private static final String AUTHORIZATION = "Authorization";
     private static final String BEARER = "Bearer ";
     private User user;
-    private final Long anonymousUserSocialId = 2L;
+    private Wish wish;
+    private User seniorUser;
+    private Senior senior;
+    private final Long anonymousUserSocialId = -5L;
 
     @BeforeEach
     void setUp() {
-        user = new User(0L, 1L, "mail", "후배", "011", "profile", 0, USER, true, now(), now(), false);
+        user = resource.getUser();
         userRepository.save(user);
+        wish = resource.getWish();
+        wishRepository.save(wish);
+        seniorUser = resource.getSeniorUser();
+        userRepository.save(seniorUser);
+        senior = resource.getSenior();
+        seniorRepository.save(senior);
         doNothing().when(slackLogErrorMessage).sendSlackLog(any());
         doNothing().when(slackSignUpMessage).sendSeniorSignUp(any());
         doNothing().when(slackSignUpMessage).sendJuniorSignUp(any(), any());
@@ -53,14 +63,11 @@ class AuthControllerTest extends IntegrationTest {
     @Test
     @DisplayName("회원이 로그인한다.")
     void authLoginByUser() throws Exception {
-        Wish wish = new Wish(0L, "major", "field", true, user, Status.MATCHED);
-        wishRepository.save(wish);
-
         CodeRequest codeRequest = new CodeRequest("code");
         String request = objectMapper.writeValueAsString(codeRequest);
 
         when(kakaoAccessTokenUseCase.getAccessToken(codeRequest))
-                .thenReturn(new KakaoUserInfoResponse(1L, any()));
+                .thenReturn(new KakaoUserInfoResponse(user.getSocialId(), any()));
 
         mvc.perform(post("/auth/login/KAKAO")
                         .content(request)
@@ -151,9 +158,6 @@ class AuthControllerTest extends IntegrationTest {
     @Test
     @DisplayName("대학원생이 대학생으로 변경한다.")
     void changeUserToken() throws Exception {
-        Wish wish = new Wish(0L, "major", "field", true, user, Status.MATCHED);
-        wishRepository.save(wish);
-
         String token = jwtUtil.generateAccessToken(user.getUserId(), SENIOR);
 
         mvc.perform(post("/auth/user/token")
@@ -168,7 +172,7 @@ class AuthControllerTest extends IntegrationTest {
     @Test
     @DisplayName("대학생으로 가입하지 않은 경우 대학생으로 변경할 수 없다.")
     void changeUserTokenWithoutWish() throws Exception {
-        String token = jwtUtil.generateAccessToken(user.getUserId(), SENIOR);
+        String token = jwtUtil.generateAccessToken(seniorUser.getUserId(), SENIOR);
 
         mvc.perform(post("/auth/user/token")
                         .header(AUTHORIZATION, BEARER + token))
@@ -180,7 +184,7 @@ class AuthControllerTest extends IntegrationTest {
     @Test
     @DisplayName("선배가 후배로 추가 가입합니다.")
     void changeUser() throws Exception {
-        String seniorAccessToken = jwtUtil.generateAccessToken(user.getUserId(), SENIOR);
+        String seniorAccessToken = jwtUtil.generateAccessToken(seniorUser.getUserId(), SENIOR);
 
         String request = objectMapper.writeValueAsString(
                 new UserChangeRequest("major", "field", true)
@@ -202,7 +206,7 @@ class AuthControllerTest extends IntegrationTest {
     @NullAndEmptySource
     @DisplayName("전공과 분야가 없어도 후배로 추가 가입할 수 있다")
     void changeUser(String empty) throws Exception {
-        String seniorAccessToken = jwtUtil.generateAccessToken(user.getUserId(), SENIOR);
+        String seniorAccessToken = jwtUtil.generateAccessToken(seniorUser.getUserId(), SENIOR);
 
         String request = objectMapper.writeValueAsString(
                 new UserChangeRequest(empty, empty, FALSE)
@@ -299,10 +303,7 @@ class AuthControllerTest extends IntegrationTest {
     @Test
     @DisplayName("대학생이 대학원생으로 변경한다.")
     void changeSeniorToken() throws Exception {
-        User senior = new User(0L, 2L, "mail", "선배", "011", "profile", 0, SENIOR, true, now(), now(), false);
-        userRepository.save(senior);
-
-        String token = jwtUtil.generateAccessToken(senior.getUserId(), USER);
+        String token = jwtUtil.generateAccessToken(seniorUser.getUserId(), USER);
 
         mvc.perform(post("/auth/senior/token")
                         .header(AUTHORIZATION, BEARER + token))
@@ -328,9 +329,6 @@ class AuthControllerTest extends IntegrationTest {
     @Test
     @DisplayName("토큰을 재발급한다.")
     void refresh() throws Exception {
-        Wish wish = new Wish(0L, "major", "field", true, user, Status.MATCHED);
-        wishRepository.save(wish);
-
         String refreshToken = jwtUtil.generateRefreshToken(user.getUserId(), USER);
         when(redisRepository.getValues(any())).thenReturn(Optional.of(refreshToken));
 

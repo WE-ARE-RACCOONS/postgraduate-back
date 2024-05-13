@@ -89,6 +89,12 @@ public class PaymentManageUseCase {
         refundPay(payment);
     }
 
+    public void refundPayByUser(Long userId, Long paymentId) {
+        log.info("환불 진행");
+        Payment payment = paymentGetService.byUserIdAndOrderId(userId, paymentId);
+        refundPay(payment);
+    }
+
     public void refundPayBySenior(Senior senior, String orderId) {
         Payment payment = paymentGetService.bySeniorAndOrderId(senior, orderId);
         refundPay(payment);
