@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -40,10 +39,6 @@ public class SalaryGetService {
         LocalDate salaryDate = SalaryUtil.getSalaryDate();
         return salaryRepository.findBySeniorAndSalaryDate(senior, salaryDate)
                 .orElseThrow(SalaryNotFoundException::new);
-    }
-
-    public Optional<Salary> bySeniorOptional(Senior senior, LocalDate salaryDate) {
-        return salaryRepository.findBySeniorAndSalaryDate(senior, salaryDate);
     }
 
     public List<Salary> allBySeniorAndAccountIsNull(Senior senior) {

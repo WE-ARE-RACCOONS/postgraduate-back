@@ -38,6 +38,44 @@ public class SlackErrorMessage {
         }
     }
 
+    public void sendSlackMentoringError(Long mentoringId, Throwable ex) {
+        try {
+            slackClient.send(logWebHookUrl, Payload.builder()
+                    .text("멘토링 자동 갱신 에러 발생!! 백엔드팀 확인 요망!!")
+                    .attachments(
+                            List.of(generateMentoringErrorSlackAttachment(mentoringId, ex))
+                    )
+                    .build());
+        } catch (IOException e) {
+            log.error("slack 전송 오류");
+        }
+    }
+
+    public void sendSlackSalaryError(Long seniorId, Throwable ex) {
+        try {
+            slackClient.send(logWebHookUrl, Payload.builder()
+                    .text("정산 자동 생성 에러 발생!! 백엔드팀 확인 요망!!")
+                    .attachments(
+                            List.of(generateSalaryErrorSlackAttachment(seniorId, ex))
+                    )
+                    .build());
+        } catch (IOException e) {
+            log.error("slack 전송 오류");
+        }
+    }
+
+    private Attachment generateMentoringErrorSlackAttachment(Long mentoringId, Throwable ex) {
+        String requestTime = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:SS").format(LocalDateTime.now());
+        return Attachment.builder()
+                .color("ff0000")
+                .title(requestTime + "에 발생한 에러 로그")
+                .fields(List.of(
+                        generateSlackField("Error Message", ex.getMessage()),
+                        generateSlackField("Mentoring 번호", String.valueOf(mentoringId))
+                ))
+                .build();
+    }
+
     private Attachment generateErrorSlackAttachment(Mentoring mentoring, Exception ex) {
         String requestTime = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:SS").format(LocalDateTime.now());
         return Attachment.builder()
@@ -46,6 +84,18 @@ public class SlackErrorMessage {
                 .fields(List.of(
                         generateSlackField("Error Message", ex.getMessage()),
                         generateSlackField("Mentoring 번호", String.valueOf(mentoring.getMentoringId()))
+                ))
+                .build();
+    }
+
+    private Attachment generateSalaryErrorSlackAttachment(Long seniorId, Throwable ex) {
+        String requestTime = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:SS").format(LocalDateTime.now());
+        return Attachment.builder()
+                .color("ff0000")
+                .title(requestTime + "에 발생한 에러 로그")
+                .fields(List.of(
+                        generateSlackField("Error Message", ex.getMessage()),
+                        generateSlackField("정산 자동 생성 실패, 선배 번호", String.valueOf(seniorId))
                 ))
                 .build();
     }

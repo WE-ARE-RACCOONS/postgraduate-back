@@ -25,8 +25,8 @@ import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.domain.user.domain.entity.User;
-import com.postgraduate.global.bizppurio.usecase.BizppurioJuniorMessage;
-import com.postgraduate.global.bizppurio.usecase.BizppurioSeniorMessage;
+import com.postgraduate.global.bizppurio.application.usecase.BizppurioJuniorMessage;
+import com.postgraduate.global.bizppurio.application.usecase.BizppurioSeniorMessage;
 import com.postgraduate.global.slack.SlackErrorMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -38,7 +38,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.WAITING;
@@ -51,12 +50,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class MentoringManageUseTypeTest {
-    @Mock
-    private MentoringRenewalUseCase mentoringRenewalUseCase;
     @Mock
     private MentoringUpdateService mentoringUpdateService;
     @Mock
@@ -303,41 +300,5 @@ class MentoringManageUseTypeTest {
                 .willThrow(MentoringNotFoundException.class);
         assertThatThrownBy(() -> mentoringManageUseCase.updateExpected(user, mentoringId, dateRequest))
                 .isInstanceOf(MentoringNotFoundException.class);
-    }
-
-    @Test
-    @DisplayName("자동 취소 테스트")
-    void updateAutoCancel() {
-        List<Mentoring> mentorings = List.of(mock(Mentoring.class), mock(Mentoring.class));
-        LocalDateTime now = LocalDateTime.now()
-                .toLocalDate()
-                .atStartOfDay();
-        given(mentoringGetService.byWaitingAndCreatedAt(now))
-                .willReturn(mentorings);
-        mentoringManageUseCase.updateAutoCancel();
-
-        verify(mentoringRenewalUseCase, times(mentorings.size()))
-                .updateCancelWithAuto(any());
-    }
-
-    @Test
-    @DisplayName("자동 완료 테스트")
-    void updateAutoDone() {
-        Mentoring mentoring1 = mock(Mentoring.class);
-        Mentoring mentoring2 = mock(Mentoring.class);
-        Mentoring mentoring3 = mock(Mentoring.class);
-        List<Mentoring> mentorings = List.of(mentoring1, mentoring2, mentoring3);
-        given(mentoringGetService.byExpected())
-                .willReturn(mentorings);
-        given(mentoring1.checkAutoDone())
-                .willReturn(true);
-        given(mentoring2.checkAutoDone())
-                .willReturn(true);
-        given(mentoring3.checkAutoDone())
-                .willReturn(false);
-        mentoringManageUseCase.updateAutoDone();
-
-        verify(mentoringRenewalUseCase, times(mentorings.size()-1))
-                .updateDoneWithAuto(any());
     }
 }
