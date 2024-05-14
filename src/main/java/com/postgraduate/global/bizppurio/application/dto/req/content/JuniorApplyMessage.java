@@ -1,4 +1,4 @@
-package com.postgraduate.global.bizppurio.dto.req.content;
+package com.postgraduate.global.bizppurio.application.dto.req.content;
 
 public record JuniorApplyMessage(
         String message,

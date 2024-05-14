@@ -1,4 +1,4 @@
-package com.postgraduate.global.bizppurio.dto.req;
+package com.postgraduate.global.bizppurio.application.dto.req;
 
 public record CommonRequest(
         String account,

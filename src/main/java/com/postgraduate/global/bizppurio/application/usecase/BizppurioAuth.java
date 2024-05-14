@@ -1,6 +1,6 @@
-package com.postgraduate.global.bizppurio.usecase;
+package com.postgraduate.global.bizppurio.application.usecase;
 
-import com.postgraduate.global.bizppurio.dto.res.BizppurioTokenResponse;
+import com.postgraduate.global.bizppurio.application.dto.res.BizppurioTokenResponse;
 import com.postgraduate.global.config.redis.RedisRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

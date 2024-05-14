@@ -1,4 +1,4 @@
-package com.postgraduate.global.bizppurio.dto.res;
+package com.postgraduate.global.bizppurio.application.dto.res;
 
 public record MessageResponse(int code, String description, String messagekey, String refkey) {
 }

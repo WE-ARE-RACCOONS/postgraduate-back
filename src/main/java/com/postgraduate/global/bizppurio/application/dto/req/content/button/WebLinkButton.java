@@ -1,4 +1,4 @@
-package com.postgraduate.global.bizppurio.dto.req.content.button;
+package com.postgraduate.global.bizppurio.application.dto.req.content.button;
 
 public record WebLinkButton(
         String name,
