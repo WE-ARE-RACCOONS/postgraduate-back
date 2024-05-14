@@ -1,8 +1,8 @@
-package com.postgraduate.global.bizppurio.usecase;
+package com.postgraduate.global.bizppurio.application.usecase;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.postgraduate.global.bizppurio.dto.req.CommonRequest;
-import com.postgraduate.global.bizppurio.dto.res.MessageResponse;
+import com.postgraduate.global.bizppurio.application.dto.req.CommonRequest;
+import com.postgraduate.global.bizppurio.application.dto.res.MessageResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;

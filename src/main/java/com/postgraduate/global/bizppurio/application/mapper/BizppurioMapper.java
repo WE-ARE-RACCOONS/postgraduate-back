@@ -1,10 +1,13 @@
-package com.postgraduate.global.bizppurio.mapper;
+package com.postgraduate.global.bizppurio.application.mapper;
 
+import com.postgraduate.global.bizppurio.application.dto.req.JuniorMatchingFailRequest;
+import com.postgraduate.global.bizppurio.application.dto.req.JuniorMatchingSuccessRequest;
+import com.postgraduate.global.bizppurio.application.dto.req.JuniorMatchingWaitingRequest;
 import com.postgraduate.domain.user.domain.entity.User;
-import com.postgraduate.global.bizppurio.dto.req.CommonRequest;
-import com.postgraduate.global.bizppurio.dto.req.ContentRequest;
-import com.postgraduate.global.bizppurio.dto.req.content.*;
-import com.postgraduate.global.bizppurio.dto.req.content.button.WebLinkButton;
+import com.postgraduate.global.bizppurio.application.dto.req.CommonRequest;
+import com.postgraduate.global.bizppurio.application.dto.req.ContentRequest;
+import com.postgraduate.global.bizppurio.application.dto.req.content.*;
+import com.postgraduate.global.bizppurio.application.dto.req.content.button.WebLinkButton;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -38,6 +41,12 @@ public class BizppurioMapper {
     private String juniorMentoringApply;
     @Value("${bizppurio.template.senior_signUp}")
     private String seniorSignUp;
+    @Value("${bizppurio.template.junior_matching_fail}")
+    private String juniorMatchingFail;
+    @Value("${bizppurio.template.junior_matching_success}")
+    private String juniorMatchingSucess;
+    @Value("${bizppurio.template.junior_matching_waiting}")
+    private String juniorMatchingWaiting;
     @Value("${bizppurio.url.certification}")
     private String certificationPage;
     @Value("${bizppurio.url.profile}")
@@ -66,7 +75,7 @@ public class BizppurioMapper {
         WebLinkButton profile = new WebLinkButton("프로필 작성하기", "WL", profilePage, profilePage);
         WebLinkButton[] buttons = {certification, profile};
         Message messageBody = new SeniorSingUpMessage(message, senderKey, seniorSignUp, buttons);
-        return createCommonRequest(messageBody, user);
+        return createCommonRequest(messageBody, user.getPhoneNumber());
     }
 
     public CommonRequest mapToSeniorApplyMessage(User user) {
@@ -79,7 +88,7 @@ public class BizppurioMapper {
         WebLinkButton mentoringCheck = new WebLinkButton("멘토링 신청 확인하기", type, seniorMentoringPage, seniorMentoringPage);
         WebLinkButton[] buttons = {mentoringCheck};
         Message messageBody = new SeniorApplyMessage(message, senderKey, seniorMentoringApply, buttons);
-        return createCommonRequest(messageBody, user);
+        return createCommonRequest(messageBody, user.getPhoneNumber());
     }
 
     public CommonRequest mapToSeniorAcceptMessage(User user, String link, String time) {
@@ -92,7 +101,7 @@ public class BizppurioMapper {
                         "멘토링 진행 일시에 선배님께서 줌 또는 구글미트를 활용하여 비대면 대화 링크를 열어주시면 됩니다!"
         );
         Message messageBody = new SeniorAcceptMessage(message, senderKey, seniorMentoringAccept);
-        return createCommonRequest(messageBody, user);
+        return createCommonRequest(messageBody, user.getPhoneNumber());
     }
 
     public CommonRequest mapToCertificationApprove(User user) {
@@ -104,7 +113,7 @@ public class BizppurioMapper {
         WebLinkButton profile = new WebLinkButton("프로필 완성하기", type, profilePage, profilePage);
         WebLinkButton[] buttons = {profile};
         CertificationApproveMessage messageBody = new CertificationApproveMessage(message, senderKey, certificationApprove, buttons);
-        return createCommonRequest(messageBody, user);
+        return createCommonRequest(messageBody, user.getPhoneNumber());
     }
 
     public CommonRequest mapToCertificationDenied(User user) {
@@ -118,7 +127,7 @@ public class BizppurioMapper {
         WebLinkButton certification = new WebLinkButton("대학원 재인증하기", type, certificationPage, certificationPage);
         WebLinkButton[] buttons = {certification};
         CertificationDeniedMessage messageBody = new CertificationDeniedMessage(message, senderKey, certificationDenied, buttons);
-        return createCommonRequest(messageBody, user);
+        return createCommonRequest(messageBody, user.getPhoneNumber());
     }
 
     public CommonRequest mapToSeniorFinish(User user) {
@@ -132,7 +141,7 @@ public class BizppurioMapper {
                         "멘토링 확정은 멘토링이 정상적으로 진행되었는지 확인하기 위함이며, 멘토링 완료 확정이 진행되지 않을시 정산이 지연될 수 있는점 양해 부탁드려요!\uD83D\uDE03"
         );
         SeniorFinishMessage messageBody = new SeniorFinishMessage(message, senderKey, seniorMentoringFinish);
-        return createCommonRequest(messageBody, user);
+        return createCommonRequest(messageBody, user.getPhoneNumber());
     }
 
     public CommonRequest mapToJuniorApplyMessage(User user) {
@@ -144,7 +153,7 @@ public class BizppurioMapper {
                         "선배님이 다음날 오후 11시 59분까지 멘토링을 수락해주시지 않으면 멘토링이 자동 취소 및 환불되니 유의해주세요! \uD83D\uDE42"
         );
         JuniorApplyMessage messageBody = new JuniorApplyMessage(message, senderKey, juniorMentoringApply);
-        return createCommonRequest(messageBody, user);
+        return createCommonRequest(messageBody, user.getPhoneNumber());
     }
 
     public CommonRequest mapToJuniorAcceptMessage(User user, String link, String time) {
@@ -159,7 +168,7 @@ public class BizppurioMapper {
                         "멘토링 시간은 꼭 지켜주세요! \uD83D\uDD05"
         );
         JuniorAcceptMessage messageBody = new JuniorAcceptMessage(message, senderKey, juniorMentoringAccept);
-        return createCommonRequest(messageBody, user);
+        return createCommonRequest(messageBody, user.getPhoneNumber());
     }
 
     public CommonRequest mapToJuniorRefuseMessage(User user) {
@@ -173,7 +182,7 @@ public class BizppurioMapper {
         WebLinkButton otherSenior = new WebLinkButton("다른 선배 보러가기", type, mainPage, mainPage);
         WebLinkButton[] buttons = {otherSenior};
         JuniorRefuseMessage messageBody = new JuniorRefuseMessage(message, senderKey, juniorMentoringRefuse, buttons);
-        return createCommonRequest(messageBody, user);
+        return createCommonRequest(messageBody, user.getPhoneNumber());
     }
 
     public CommonRequest mapToJuniorFinish(User user) {
@@ -191,12 +200,63 @@ public class BizppurioMapper {
         WebLinkButton[] buttons = {mentoringFinish};
 
         JuniorFinishMessage messageBody = new JuniorFinishMessage(message, senderKey, juniorMentoringFinish, buttons);
-        return createCommonRequest(messageBody, user);
+        return createCommonRequest(messageBody, user.getPhoneNumber());
     }
 
-    private CommonRequest createCommonRequest(Message messageBody, User user) {
+    public CommonRequest mapToJuniorMatchingFail(JuniorMatchingFailRequest request) {
+        String message = (
+                "안녕하세요, " + request.name() + "님.\n" +
+                        "\n" +
+                        "오래 기다려주셔서 감사드립니다!\n" +
+                        "\n" +
+                        request.name() + "님께서 신청해주신, " + request.originPostgraduate() + "대학원 " + request.originMajor() + "학과 선배 대신\n" +
+                        "\n" +
+                        request.alterPostgraduate() + "대학원 " + request.alterMajor() + "학과의 선배를 매칭 드리고 싶어요!\n" +
+                        "\n" +
+                        "신청해주신 선배는 찾지 못했지만, 유사학과의 다른 선배와 멘토링을 해보는 건 어때요 ?"
+                );
+        WebLinkButton goMainPage = new WebLinkButton("대학원 김선배 바로가기", type, mainPage, mainPage);
+        WebLinkButton[] buttons = {goMainPage};
+
+        JuniorMatchingFailMessage messageBody = new JuniorMatchingFailMessage(message, senderKey, juniorMatchingFail, buttons);
+        return createCommonRequest(messageBody, request.phoneNumber());
+    }
+
+    public CommonRequest mapToJuniorMatchingSuccess(JuniorMatchingSuccessRequest request) {
+        String message = (
+                "안녕하세요, " + request.name() + "님.\n" +
+                        "\n" +
+                        "오래 기다려주셔서 감사드립니다!\n" +
+                        "\n" +
+                        request.name() + "님께서 신청해주신, " + request.postgraduate() + "대학원 " + request.major() + "학과 선배와 매칭되었어요 \uD83D\uDE42\n" +
+                        "\n" +
+                        "아래 링크를 눌러 멘토링을 진행해보세요 !"
+                );
+        WebLinkButton goMainPage = new WebLinkButton("대학원 김선배 바로가기", type, mainPage, mainPage);
+        WebLinkButton[] buttons = {goMainPage};
+
+        JuniorMatchingSuccessMessage messageBody = new JuniorMatchingSuccessMessage(message, senderKey, juniorMatchingSucess, buttons);
+        return createCommonRequest(messageBody, request.phoneNumber());
+    }
+
+    public CommonRequest mapToJuniorMatchingWaiting(JuniorMatchingWaitingRequest request) {
+        String message = (
+                "안녕하세요, " + request.name() + "님.\n" +
+                        "\n" +
+                        "김선배와 함께 해주셔서 감사드립니다.\n" +
+                        "\n" +
+                        request.name() + "님이 신청한 선배를 저희 김선배에서 찾고 있어요 !\n" +
+                        "\n" +
+                        "신청해주신 선배를 찾는데에는 3~7일 정도 소요되어요 \uD83D\uDE0A"
+                );
+
+        JuniorMatchingWaitingMessage messageBody = new JuniorMatchingWaitingMessage(message, senderKey, juniorMatchingWaiting);
+        return createCommonRequest(messageBody, request.phoneNumber());
+    }
+
+    private CommonRequest createCommonRequest(Message messageBody, String phoneNumber) {
         String refKey = UUID.randomUUID().toString().replace("-", "");
         ContentRequest contentRequest = new ContentRequest(messageBody);
-        return new CommonRequest(id, "at", number , user.getPhoneNumber(), contentRequest, refKey);
+        return new CommonRequest(id, "at", number , phoneNumber, contentRequest, refKey);
     }
 }
