@@ -1,11 +1,10 @@
 package com.postgraduate.global.bizppurio.application.mapper;
 
-import com.postgraduate.global.bizppurio.application.dto.req.JuniorMatchingFailRequest;
-import com.postgraduate.global.bizppurio.application.dto.req.JuniorMatchingSuccessRequest;
-import com.postgraduate.global.bizppurio.application.dto.req.JuniorMatchingWaitingRequest;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.global.bizppurio.application.dto.req.CommonRequest;
 import com.postgraduate.global.bizppurio.application.dto.req.ContentRequest;
+import com.postgraduate.global.bizppurio.application.dto.req.JuniorMatchingFailRequest;
+import com.postgraduate.global.bizppurio.application.dto.req.JuniorMatchingSuccessRequest;
 import com.postgraduate.global.bizppurio.application.dto.req.content.*;
 import com.postgraduate.global.bizppurio.application.dto.req.content.button.WebLinkButton;
 import org.springframework.beans.factory.annotation.Value;
@@ -239,19 +238,19 @@ public class BizppurioMapper {
         return createCommonRequest(messageBody, request.phoneNumber());
     }
 
-    public CommonRequest mapToJuniorMatchingWaiting(JuniorMatchingWaitingRequest request) {
+    public CommonRequest mapToJuniorMatchingWaiting(User user) {
         String message = (
-                "안녕하세요, " + request.name() + "님.\n" +
+                "안녕하세요, " + user.getNickName() + "님.\n" +
                         "\n" +
                         "김선배와 함께 해주셔서 감사드립니다.\n" +
                         "\n" +
-                        request.name() + "님이 신청한 선배를 저희 김선배에서 찾고 있어요 !\n" +
+                        user.getNickName() + "님이 신청한 선배를 저희 김선배에서 찾고 있어요 !\n" +
                         "\n" +
                         "신청해주신 선배를 찾는데에는 3~7일 정도 소요되어요 \uD83D\uDE0A"
-                );
+        );
 
         JuniorMatchingWaitingMessage messageBody = new JuniorMatchingWaitingMessage(message, senderKey, juniorMatchingWaiting);
-        return createCommonRequest(messageBody, request.phoneNumber());
+        return createCommonRequest(messageBody, user.getPhoneNumber());
     }
 
     private CommonRequest createCommonRequest(Message messageBody, String phoneNumber) {
