@@ -19,6 +19,7 @@ import com.postgraduate.domain.user.exception.PhoneNumberException;
 import com.postgraduate.domain.wish.domain.entity.Wish;
 import com.postgraduate.domain.wish.domain.entity.constant.Status;
 import com.postgraduate.domain.wish.domain.service.WishSaveService;
+import com.postgraduate.global.bizppurio.application.usecase.BizppurioJuniorMessage;
 import com.postgraduate.global.bizppurio.application.usecase.BizppurioSeniorMessage;
 import com.postgraduate.global.slack.SlackSignUpMessage;
 import org.junit.jupiter.api.BeforeEach;
@@ -55,6 +56,8 @@ class SignUpUseTypeTest {
     private WishSaveService wishSaveService;
     @Mock
     private BizppurioSeniorMessage bizppurioSeniorMessage;
+    @Mock
+    private BizppurioJuniorMessage bizppurioJuniorMessage;
     @Mock
     private SeniorSaveService seniorSaveService;
     @Mock
