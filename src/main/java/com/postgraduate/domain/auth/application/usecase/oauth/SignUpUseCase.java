@@ -15,6 +15,7 @@ import com.postgraduate.domain.user.domain.service.UserUpdateService;
 import com.postgraduate.domain.wish.application.mapper.WishMapper;
 import com.postgraduate.domain.wish.domain.entity.Wish;
 import com.postgraduate.domain.wish.domain.service.WishSaveService;
+import com.postgraduate.global.bizppurio.application.usecase.BizppurioJuniorMessage;
 import com.postgraduate.global.bizppurio.application.usecase.BizppurioSeniorMessage;
 import com.postgraduate.global.slack.SlackSignUpMessage;
 import lombok.RequiredArgsConstructor;
@@ -43,6 +44,7 @@ public class SignUpUseCase {
     private final UserUtils userUtils;
     private final SeniorUtils seniorUtils;
     private final BizppurioSeniorMessage bizppurioSeniorMessage;
+    private final BizppurioJuniorMessage bizppurioJuniorMessage;
 
     public User userSignUp(SignUpRequest request) {
         userUtils.checkPhoneNumber(request.phoneNumber());
@@ -50,6 +52,8 @@ public class SignUpUseCase {
         Wish wish = WishMapper.mapToWish(user, request);
         wishSaveService.save(wish);
         userSaveService.save(user);
+        if (request.matchingReceive())
+            bizppurioJuniorMessage.matchingWaiting(user);
         slackSignUpMessage.sendJuniorSignUp(user, wish);
         return user;
     }
@@ -72,6 +76,8 @@ public class SignUpUseCase {
     public void changeUser(User user, UserChangeRequest changeRequest) {
         Wish wish = WishMapper.mapToWish(user, changeRequest);
         wishSaveService.save(wish);
+        if (changeRequest.matchingReceive())
+            bizppurioJuniorMessage.matchingWaiting(user);
         slackSignUpMessage.sendJuniorSignUp(user, wish);
     }
 
