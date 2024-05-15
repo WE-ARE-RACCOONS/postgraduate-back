@@ -4,7 +4,6 @@ import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.global.bizppurio.application.dto.req.JuniorMatchingFailRequest;
 import com.postgraduate.global.bizppurio.application.dto.req.JuniorMatchingSuccessRequest;
-import com.postgraduate.global.bizppurio.application.dto.req.JuniorMatchingWaitingRequest;
 import com.postgraduate.global.bizppurio.application.mapper.BizppurioMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,8 +35,8 @@ public class BizppurioJuniorMessage {
         bizppurioSend.sendMessageWithExceptionHandling(() -> mapper.mapToJuniorFinish(user));
     }
 
-    public void matchingWaiting(JuniorMatchingWaitingRequest request) {
-        bizppurioSend.sendMessageWithExceptionHandling(() -> mapper.mapToJuniorMatchingWaiting(request));
+    public void matchingWaiting(User user) {
+        bizppurioSend.sendMessageWithExceptionHandling(() -> mapper.mapToJuniorMatchingWaiting(user));
     }
 
     public void matchingFail(JuniorMatchingFailRequest request) {
