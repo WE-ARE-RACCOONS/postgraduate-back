@@ -1,8 +1,9 @@
-package com.postgraduate.global.logging.aop;
+package com.postgraduate.global.aop.logging;
 
+import com.postgraduate.global.aop.logging.dto.TraceStatus;
 import com.postgraduate.global.exception.ApplicationException;
-import com.postgraduate.global.logging.dto.LogRequest;
-import com.postgraduate.global.logging.service.LogService;
+import com.postgraduate.global.aop.logging.dto.LogRequest;
+import com.postgraduate.global.aop.logging.service.LogService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -11,8 +12,8 @@ import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import static com.postgraduate.global.logging.aop.LogUtils.clearLogId;
-import static com.postgraduate.global.logging.aop.LogUtils.setLogId;
+import static com.postgraduate.global.aop.logging.utils.LogUtils.clearLogId;
+import static com.postgraduate.global.aop.logging.utils.LogUtils.setLogId;
 
 @Aspect
 @Slf4j
@@ -24,13 +25,13 @@ public class LogAspect {
     private final LogTrace logTrace;
     private final LogService logService;
 
-    @Around("com.postgraduate.global.logging.aop.PointCuts.allService()")
+    @Around("com.postgraduate.global.aop.logging.LogPointCuts.allService()")
     public Object serviceLog(ProceedingJoinPoint joinPoint) throws Throwable {
         log.info("serviceLog: {}", joinPoint.getSignature().getName());
         return getObject(joinPoint);
     }
 
-    @Around("com.postgraduate.global.logging.aop.PointCuts.allController()")
+    @Around("com.postgraduate.global.aop.logging.LogPointCuts.allController()")
     public Object controllerLog(ProceedingJoinPoint joinPoint) throws Throwable {
         setLogId();
         log.info("controllerLog: {}", joinPoint.getSignature().getName());

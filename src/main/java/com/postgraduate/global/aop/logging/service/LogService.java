@@ -1,6 +1,6 @@
-package com.postgraduate.global.logging.service;
+package com.postgraduate.global.aop.logging.service;
 
-import com.postgraduate.global.logging.dto.LogRequest;
+import com.postgraduate.global.aop.logging.dto.LogRequest;
 import com.postgraduate.global.slack.SlackLogErrorMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,8 +10,6 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-
-import java.io.IOException;
 
 @Service
 @Slf4j
