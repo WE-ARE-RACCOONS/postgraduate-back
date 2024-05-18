@@ -32,7 +32,7 @@ public class DistributeLockAspect {
         try {
             boolean available = lock.tryLock(5, 5, SECONDS);
             if (!available)
-                throw new IllegalArgumentException();
+                throw new LockException();
             log.info("lock 획득 {}", lockKey);
             return joinPoint.proceed();
         } catch (Exception e) {
