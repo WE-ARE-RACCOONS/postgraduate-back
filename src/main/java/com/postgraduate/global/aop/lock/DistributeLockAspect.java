@@ -17,6 +17,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 @RequiredArgsConstructor
 public class DistributeLockAspect {
     private final RedissonClient redissonClient;
+    private static final String PREFIX = "mentoring";
 
     @Around("com.postgraduate.global.aop.lock.DistributeLockPointCut.allMentoringService()")
     public Object startDistributeLock(ProceedingJoinPoint joinPoint) throws Throwable {
@@ -24,7 +25,7 @@ public class DistributeLockAspect {
         Object[] args = joinPoint.getArgs();
         for (Object arg : args) {
             if (arg instanceof Long) {
-                lockKey = "mentoring" + arg;
+                lockKey = PREFIX + arg;
             }
         }
         RLock lock = redissonClient.getLock(lockKey);
