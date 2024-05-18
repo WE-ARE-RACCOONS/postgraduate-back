@@ -84,10 +84,6 @@ dependencies {
     implementation 'org.redisson:redisson-spring-boot-starter:3.18.0'
 }
 
-compileJava {
-    options.compilerArgs << "-parameters"
-}
-
 tasks.named('test') {
     useJUnitPlatform()
     finalizedBy 'jacocoTestReport'
