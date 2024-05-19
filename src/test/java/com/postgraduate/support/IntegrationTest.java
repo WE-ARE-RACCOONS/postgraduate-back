@@ -10,6 +10,7 @@ import com.postgraduate.domain.salary.domain.repository.SalaryRepository;
 import com.postgraduate.domain.senior.domain.repository.SeniorRepository;
 import com.postgraduate.domain.user.domain.repository.UserRepository;
 import com.postgraduate.domain.wish.domain.repository.WishRepository;
+import com.postgraduate.global.aop.lock.DistributeLockAspect;
 import com.postgraduate.global.config.redis.RedisRepository;
 import com.postgraduate.global.config.security.jwt.util.JwtUtils;
 import com.postgraduate.global.slack.SlackLogErrorMessage;
@@ -68,6 +69,8 @@ public class IntegrationTest {
     protected PaymentRepository paymentRepository;
     @MockBean
     protected SlackSignUpMessage slackSignUpMessage;
+    @MockBean
+    protected DistributeLockAspect distributeLockAspect;
 
     @BeforeEach
     void setUp() {

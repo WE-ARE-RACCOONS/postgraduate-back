@@ -56,8 +56,7 @@ public class RedisConfig {
         Config config = new Config();
         config.useSingleServer()
                 .setAddress(REDISSON_HOST_PREFIX + host + ":" + port)
-                .setPassword(password)
-                .setSslEnableEndpointIdentification(false);
+                .setPassword(password);
 
         return Redisson.create(config);
     }

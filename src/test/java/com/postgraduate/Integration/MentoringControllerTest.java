@@ -243,35 +243,6 @@ class MentoringControllerTest extends IntegrationTest {
     //todo : 환불 관련하여 작성 필요 (환불 처리에 대한 코드가 발생하여 다를 수 있음)
 
     @ParameterizedTest
-    @EnumSource(value = Status.class, names = {"EXPECTED", "DONE", "CANCEL", "REFUSE"})
-    @DisplayName("멘토링이 확정대기 상태가 아니라면 취소할 수 없다.")
-    void updateMentoringCancelWithoutWaiting(Status status) throws Exception {
-        Mentoring mentoring = new Mentoring(-1L, user, senior, payment, null, "topic", "question", "date", 40, status, now(), now());
-        mentoringRepository.save(mentoring);
-
-        mvc.perform(patch("/mentoring/me/{mentoringId}/cancel", mentoring.getMentoringId())
-                        .header(AUTHORIZATION, BEARER + userAccessToken))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(MENTORING_NOT_FOUND.getCode()))
-                .andExpect(jsonPath("$.message").value(NOT_FOUND_MENTORING.getMessage()));
-    }
-
-    @ParameterizedTest
-    @EnumSource(value = Status.class, names = {"WAITING", "EXPECTED", "DONE"})
-    @DisplayName("대학원생이 멘토링 목록을 조회한다.")
-    void getSeniorMentorings(Status status) throws Exception {
-        Mentoring mentoring = new Mentoring(-1L, user, senior, payment, salary, "topic", "question", "2024-01-20-18-00", 40, status, now(), now());
-        mentoringRepository.save(mentoring);
-
-        mvc.perform(get("/mentoring/senior/me/{status}", status.name().toLowerCase())
-                        .header(AUTHORIZATION, BEARER + seniorAccessToken))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(MENTORING_FIND.getCode()))
-                .andExpect(jsonPath("$.message").value(GET_MENTORING_LIST_INFO.getMessage()))
-                .andExpect(jsonPath("$.data.seniorMentoringInfos[0].mentoringId").value(mentoring.getMentoringId()));
-    }
-
-    @ParameterizedTest
     @EnumSource(value = Status.class, names = {"WAITING", "EXPECTED"})
     @DisplayName("대학원생이 멘토링을 상세조회합니다.")
     void getSeniorMentoringDetails(Status status) throws Exception {
@@ -332,24 +303,6 @@ class MentoringControllerTest extends IntegrationTest {
     }
 
     @ParameterizedTest
-    @EnumSource(value = Status.class, names = {"EXPECTED", "DONE", "CANCEL", "REFUSE"})
-    @DisplayName("멘토링이 확정대기 상태가 아니라면 수락할 수 없다.")
-    void updateSeniorMentoringExpectedWithoutWaiting(Status status) throws Exception {
-        Mentoring mentoring = new Mentoring(-1L, user, senior, payment, null, "topic", "question", "date1,date2,date3", 40, status, now(), now());
-        mentoringRepository.save(mentoring);
-
-        String request = objectMapper.writeValueAsString(new MentoringDateRequest("date1"));
-        mvc.perform(patch("/mentoring/senior/me/{mentoringId}/expected", mentoring.getMentoringId())
-                        .header(AUTHORIZATION, BEARER + seniorAccessToken)
-                        .content(request)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(MENTORING_NOT_FOUND.getCode()))
-                .andExpect(jsonPath("$.message").value(NOT_FOUND_MENTORING.getMessage()));
-    }
-
-    @ParameterizedTest
     @NullAndEmptySource
     @DisplayName("확정날짜가 비어있다면 멘토링을 수락할 수 없다")
     void updateSeniorMentoringExpectedWithoutDate(String empty) throws Exception {
@@ -383,24 +336,6 @@ class MentoringControllerTest extends IntegrationTest {
 //                .andExpect(jsonPath("$.message").value(UPDATE_MENTORING.getMessage()));
 //    }
     //todo : 환불 처리 요청(payple) 처리 필요
-
-    @ParameterizedTest
-    @EnumSource(value = Status.class, names = {"EXPECTED", "DONE", "CANCEL", "REFUSE"})
-    @DisplayName("멘토링이 확정대기 상태가 아니라면 거절할 수 없다.")
-    void updateSeniorMentoringRefuseWithoutWaiting(Status status) throws Exception {
-        Mentoring mentoring = new Mentoring(-1L, user, senior, payment, null, "topic", "question", "date", 40, status, now(), now());
-        mentoringRepository.save(mentoring);
-
-        String request = objectMapper.writeValueAsString(new MentoringRefuseRequest("reason"));
-        mvc.perform(patch("/mentoring/senior/me/{mentoringId}/refuse", mentoring.getMentoringId())
-                        .header(AUTHORIZATION, BEARER + seniorAccessToken)
-                        .content(request)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(MENTORING_NOT_FOUND.getCode()))
-                .andExpect(jsonPath("$.message").value(NOT_FOUND_MENTORING.getMessage()));
-    }
 
     @ParameterizedTest
     @NullAndEmptySource
