@@ -19,7 +19,8 @@ import com.postgraduate.domain.senior.presentation.SeniorController;
 import com.postgraduate.domain.user.application.usecase.UserManageUseCase;
 import com.postgraduate.domain.user.application.usecase.UserMyPageUseCase;
 import com.postgraduate.domain.user.presentation.UserController;
-import com.postgraduate.global.logging.service.LogService;
+import com.postgraduate.global.aop.lock.DistributeLockAspect;
+import com.postgraduate.global.aop.logging.service.LogService;
 import com.postgraduate.global.slack.SlackLogErrorMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -74,6 +75,8 @@ public class ControllerTest {
     protected LogService logService;
     @MockBean
     protected SlackLogErrorMessage slackLogErrorMessage;
+    @MockBean
+    protected DistributeLockAspect distributeLockAspect;
     protected Resource resource = new Resource();
 
 }

@@ -1,4 +1,4 @@
-package com.postgraduate.global.logging.aop;
+package com.postgraduate.global.aop.logging.utils;
 
 import java.util.UUID;
 

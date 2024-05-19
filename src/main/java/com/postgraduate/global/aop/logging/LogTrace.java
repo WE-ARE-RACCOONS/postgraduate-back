@@ -1,11 +1,12 @@
-package com.postgraduate.global.logging.aop;
+package com.postgraduate.global.aop.logging;
 
+import com.postgraduate.global.aop.logging.dto.TraceStatus;
 import com.postgraduate.global.exception.ApplicationException;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 
-import static com.postgraduate.global.logging.aop.LogUtils.getLogId;
+import static com.postgraduate.global.aop.logging.utils.LogUtils.getLogId;
 
 @Component
 @Slf4j
