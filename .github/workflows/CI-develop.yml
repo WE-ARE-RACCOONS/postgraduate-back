@@ -20,6 +20,7 @@ jobs:
         options: --requirepass ${{ secrets.REDIS_PASSWORD }}
         ports:
           - 6379:6379
+
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 17
