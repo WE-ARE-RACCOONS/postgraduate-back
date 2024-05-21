@@ -9,8 +9,9 @@ permissions:
 
 jobs:
   build:
+
     runs-on: ubuntu-latest
-    env:
+    env :
       working-directory: ./
       APPLICATION: ${{ secrets.APPLICATION }}
     
