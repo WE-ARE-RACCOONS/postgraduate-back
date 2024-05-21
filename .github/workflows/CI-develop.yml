@@ -9,20 +9,17 @@ permissions:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-    env :
+    env:
       working-directory: ./
       APPLICATION: ${{ secrets.APPLICATION }}
     
     services:
       redis:
         image: redis:latest
-        env:
-          REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
+        options: --requirepass ${{ secrets.REDIS_PASSWORD }}
         ports:
           - 6379:6379
-
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 17
