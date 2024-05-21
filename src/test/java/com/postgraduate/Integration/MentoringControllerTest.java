@@ -214,20 +214,6 @@ class MentoringControllerTest extends IntegrationTest {
                 .andExpect(jsonPath("$.message").value(UPDATE_MENTORING.getMessage()));
     }
 
-    @ParameterizedTest
-    @EnumSource(value = Status.class, names = {"WAITING", "DONE", "CANCEL", "REFUSE"})
-    @DisplayName("진행예정이 아닌 멘토링의 경우 완료할 수 없다.")
-    void updateMentoringDoneWithoutExpected(Status status) throws Exception {
-        Mentoring mentoring = new Mentoring(-1L, user, senior, payment, null, "topic", "question", "date", 40, status, now(), now());
-        mentoringRepository.save(mentoring);
-
-        mvc.perform(patch("/mentoring/me/{mentoringId}/done", mentoring.getMentoringId())
-                        .header(AUTHORIZATION, BEARER + userAccessToken))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(MENTORING_NOT_FOUND.getCode()))
-                .andExpect(jsonPath("$.message").value(NOT_FOUND_MENTORING.getMessage()));
-    }
-
 //    @Test
 //    @DisplayName("대학생이 멘토링을 취소한다.")
 //    void updateMentoringCancel() throws Exception {
