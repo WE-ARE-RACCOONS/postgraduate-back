@@ -11,19 +11,13 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    env :
+    env:
       working-directory: ./
       APPLICATION: ${{ secrets.APPLICATION }}
     
-    services:
-      redis:
-        image: redis:latest
-        options: --requirepass ${{ secrets.REDIS_PASSWORD }}
-        ports:
-          - 6379:6379
-
     steps:
       - uses: actions/checkout@v2
+
       - name: Set up JDK 17
         uses: actions/setup-java@v2
         with:
@@ -40,9 +34,12 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
+      - name: Start Redis
+        run: docker run -d -p 6379:6379 --name redis -e REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }} redis:latest --requirepass ${{ secrets.REDIS_PASSWORD }}
+
       - name: Create application.yml
         run: |
-          echo "${{env.APPLICATION}}" > ./src/main/resources/application.yml
+          echo "${{ env.APPLICATION }}" > ./src/main/resources/application.yml
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -57,3 +54,6 @@ jobs:
         run: |
           rm -f ~/.gradle/caches/modules-2/modules-2.lock
           rm -f ~/.gradle/caches/modules-2/gc.properties
+
+      - name: Stop Redis
+        run: docker stop redis && docker rm redis
