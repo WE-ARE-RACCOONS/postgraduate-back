@@ -13,6 +13,7 @@ import com.postgraduate.domain.wish.domain.repository.WishRepository;
 import com.postgraduate.global.aop.lock.DistributeLockAspect;
 import com.postgraduate.global.config.redis.RedisRepository;
 import com.postgraduate.global.config.security.jwt.util.JwtUtils;
+import com.postgraduate.global.slack.SlackCertificationMessage;
 import com.postgraduate.global.slack.SlackLogErrorMessage;
 import com.postgraduate.global.slack.SlackSignUpMessage;
 import org.junit.jupiter.api.BeforeEach;
@@ -69,6 +70,8 @@ public class IntegrationTest {
     protected PaymentRepository paymentRepository;
     @MockBean
     protected SlackSignUpMessage slackSignUpMessage;
+    @MockBean
+    protected SlackCertificationMessage slackCertificationMessage;
     @MockBean
     protected DistributeLockAspect distributeLockAspect;
 
