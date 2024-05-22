@@ -25,6 +25,7 @@ import com.postgraduate.domain.user.application.utils.UserUtils;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.service.UserUpdateService;
 import com.postgraduate.global.config.security.util.EncryptorUtils;
+import com.postgraduate.global.slack.SlackCertificationMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,10 +56,12 @@ public class SeniorManageUseCase {
     private final EncryptorUtils encryptorUtils;
     private final UserUtils userUtils;
     private final SeniorUtils seniorUtils;
+    private final SlackCertificationMessage slackCertificationMessage;
 
     public void updateCertification(User user, SeniorCertificationRequest certificationRequest) {
         Senior senior = seniorGetService.byUser(user);
         seniorUpdateService.updateCertification(senior, certificationRequest.certification());
+        slackCertificationMessage.sendCertification(senior);
     }
 
     public SeniorProfileUpdateResponse signUpProfile(User user, SeniorProfileRequest profileRequest) {

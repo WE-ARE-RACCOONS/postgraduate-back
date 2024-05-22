@@ -1,4 +1,4 @@
-package com.postgraduate.global.logging.dto;
+package com.postgraduate.global.aop.logging.dto;
 
 public record LogRequest(String env, String logId, Integer executeTime, String methodName, String exceptionMessage) {
     public LogRequest(String env, String logId, Integer executeTime, String methodName) {

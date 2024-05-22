@@ -25,6 +25,7 @@ import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.service.UserUpdateService;
 import com.postgraduate.domain.user.exception.PhoneNumberException;
 import com.postgraduate.global.config.security.util.EncryptorUtils;
+import com.postgraduate.global.slack.SlackCertificationMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -72,6 +73,8 @@ class SeniorManageUseTypeTest {
     private UserUtils userUtils;
     @Mock
     private SeniorUtils seniorUtils;
+    @Mock
+    private SlackCertificationMessage slackCertificationMessage;
     @InjectMocks
     private SeniorManageUseCase seniorManageUseCase;
 

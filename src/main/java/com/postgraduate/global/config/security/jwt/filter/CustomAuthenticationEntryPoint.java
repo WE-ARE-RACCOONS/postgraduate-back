@@ -2,8 +2,8 @@ package com.postgraduate.global.config.security.jwt.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.postgraduate.global.dto.ErrorResponse;
-import com.postgraduate.global.logging.dto.LogRequest;
-import com.postgraduate.global.logging.service.LogService;
+import com.postgraduate.global.aop.logging.dto.LogRequest;
+import com.postgraduate.global.aop.logging.service.LogService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
