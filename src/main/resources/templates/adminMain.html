@@ -41,7 +41,16 @@
             major : $major
         };
 
-        sendApi("POST", url, data);
+        if (confirm(
+            "핸드폰 번호 : " + $phoneNumber + "\n" +
+            "닉네임 : " + $nickName + "\n" +
+            "대학 : " + $postgraduate + "\n" +
+            "학과 : " + $major
+        )) {
+            sendApi("POST", url, data);
+        } else {
+            return false;
+        }
     }
 
     function sendApi(method, url, data) {

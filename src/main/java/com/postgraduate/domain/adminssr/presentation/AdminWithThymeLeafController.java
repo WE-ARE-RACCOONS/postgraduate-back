@@ -162,7 +162,7 @@ public class AdminWithThymeLeafController {
 
     @PostMapping("/message")
     public String sendMessage(@RequestBody SendMessageRequest messageRequest) {
-        log.info("phoneNumber : {}, nickName : {}, postgraduate : {}, major : {}", messageRequest.phoneNumber(), messageRequest.nickName(), messageRequest.postgraduate(), messageRequest.major());
+        adminUserUseCase.sendMatchingMessage(messageRequest);
         return "adminEmpty";
     }
 }
