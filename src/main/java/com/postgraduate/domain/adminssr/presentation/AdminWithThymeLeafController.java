@@ -7,6 +7,7 @@ import com.postgraduate.domain.auth.application.dto.res.JwtTokenResponse;
 import com.postgraduate.domain.auth.application.usecase.jwt.JwtUseCase;
 import com.postgraduate.domain.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +17,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Controller
+@Slf4j
 @RequestMapping("/adminServer")
 public class AdminWithThymeLeafController {
     private final AdminAuthUseCase adminAuthUseCase;
@@ -150,6 +152,17 @@ public class AdminWithThymeLeafController {
     @PostMapping("/payment/refund/{paymentId}")
     public String refundPayment(@AuthenticationPrincipal User user, @PathVariable Long paymentId) {
         adminPaymentUseCase.refundPayment(user, paymentId);
+        return "adminEmpty";
+    }
+
+    @GetMapping("/message")
+    public String messageManage() {
+        return "adminMessage";
+    }
+
+    @PostMapping("/message")
+    public String sendMessage(@RequestBody SendMessageRequest messageRequest) {
+        adminUserUseCase.sendMatchingMessage(messageRequest);
         return "adminEmpty";
     }
 }

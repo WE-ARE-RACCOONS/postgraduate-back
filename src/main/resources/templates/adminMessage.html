@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link th:href="@{/css/bootstrap.min.css}" href="css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .outer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            width: 100%;
+            padding-top: 30px;
+        }
+
+        .inner {
+            text-align: center;
+        }
+
+        label, input {
+            display: block;
+            margin: 0 auto 10px;
+        }
+
+        input {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="outer">
+    <div class="inner">
+        <label>핸드폰 번호</label>
+        <input id="phoneNumber" th:id="phoneNumber" th:type="text" placeholder="핸드폰 번호 입력">
+        <label>닉네임</label>
+        <input id="nickName" th:id="nickName" th:type="text" placeholder="이름 혹은 닉네임">
+        <label>대학교명</label>
+        <input id="postgraduate" th:id="postgraduate" th:type="text" placeholder="대학교명">
+        <label>학과</label>
+        <input id="major" th:id="major" th:type="text" placeholder="학과">
+
+        <button th:onclick="sendMessage('/adminServer/message')">알림톡 전송</button>
+    </div>
+</div>
+</body>
+</html>

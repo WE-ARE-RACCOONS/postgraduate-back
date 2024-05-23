@@ -5,10 +5,15 @@
     <link th:href="@{/css/bootstrap.min.css}"
           href="css/bootstrap.min.css" rel="stylesheet">
     <style>
-        .image {
+        .image-container {
             width: 400px;
-            margin-left:auto;
-            margin-right:auto;
+            margin: 0 auto; /* 가로 중앙 정렬 */
+            text-align: center; /* 이미지를 가운데 정렬하기 위해 추가 */
+        }
+
+        .image {
+            max-width: 100%; /* 이미지의 최대 너비를 부모 요소인 .image-container에 맞춤 */
+            height: auto; /* 이미지의 가로 세로 비율 유지 */
         }
 
         table {
@@ -25,9 +30,6 @@
 </head>
 <body>
 <table id="seniorInfos">
-    <div class="image">
-        <image th:src="${certificationInfo.certification()}"></image>
-    </div>
     <thead>
     <tr>
         <th>닉네임</th>
@@ -42,6 +44,7 @@
     </tr>
     </thead>
     <tbody>
+    <tbody>
     <td th:text="${certificationInfo.nickName()}">id</td>
     <td th:text="${certificationInfo.phoneNumber()}">nickName</td>
     <td th:text="${certificationInfo.createdAt()}">phoneNumber</td>
@@ -51,6 +54,11 @@
     <td th:text="${certificationInfo.lab()}">isUser</td>
     <td th:text="${certificationInfo.professor()}">isUser</td>
     <td th:text="${certificationInfo.keyword()}">isUser</td>
+    <tr>
+        <td colspan="9" class="image-container">
+            <image class="image" th:src="${certificationInfo.certification()}"></image>
+        </td>
+    </tr>
     </tbody>
 </table>
 <table>
