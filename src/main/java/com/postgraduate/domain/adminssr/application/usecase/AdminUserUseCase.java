@@ -1,10 +1,13 @@
 package com.postgraduate.domain.adminssr.application.usecase;
 
+import com.postgraduate.domain.adminssr.application.dto.req.SendMessageRequest;
 import com.postgraduate.domain.adminssr.application.dto.res.*;
 import com.postgraduate.domain.adminssr.application.mapper.AdminSsrMapper;
 import com.postgraduate.domain.wish.domain.entity.Wish;
 import com.postgraduate.domain.wish.domain.service.WishGetService;
 import com.postgraduate.domain.wish.domain.service.WishUpdateService;
+import com.postgraduate.global.bizppurio.application.dto.req.JuniorMatchingSuccessRequest;
+import com.postgraduate.global.bizppurio.application.usecase.BizppurioJuniorMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +22,7 @@ import static com.postgraduate.domain.adminssr.application.mapper.AdminSsrMapper
 public class AdminUserUseCase {
     private final WishGetService wishGetService;
     private final WishUpdateService wishUpdateService;
+    private final BizppurioJuniorMessage bizppurioJuniorMessage;
 
     @Transactional(readOnly = true)
     public List<UserInfo> userInfos() {
@@ -37,5 +41,11 @@ public class AdminUserUseCase {
     public void wishDone(Long wishId) {
         Wish wish = wishGetService.byWishId(wishId);
         wishUpdateService.updateWishDone(wish);
+    }
+
+    public void sendMatchingMessage(SendMessageRequest request) {
+        bizppurioJuniorMessage.matchingSuccess(new JuniorMatchingSuccessRequest(
+                request.phoneNumber(), request.nickName(), request.postgraduate(), request.major())
+        );
     }
 }
