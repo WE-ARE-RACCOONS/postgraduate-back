@@ -29,10 +29,26 @@
         }
     }
 
-    function sendApi(method, url) {
+    function sendMessage(url) {
+        const $phoneNumber = document.getElementById("phoneNumber").value;
+        const $nickName = document.getElementById("nickName").value;
+        const $postgraduate = document.getElementById("postgraduate").value;
+        const $major = document.getElementById("major").value;
+        const data = {
+            phoneNumber : $phoneNumber,
+            nickName : $nickName,
+            postgraduate : $postgraduate,
+            major : $major
+        };
+
+        sendApi("POST", url, data);
+    }
+
+    function sendApi(method, url, data) {
         const xhr = new XMLHttpRequest();
         xhr.open(method, url, true);
         xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+        xhr.setRequestHeader("content-type", "application/json");
         xhr.onreadystatechange = function() {
             if (xhr.readyState === XMLHttpRequest.DONE) {
                 if (xhr.status === 200) {
@@ -42,7 +58,12 @@
                 }
             }
         };
-        xhr.send();
+        if (data == null) {
+            xhr.send();
+        }
+        else {
+            xhr.send(JSON.stringify(data));
+        }
     }
 </script>
 
@@ -83,6 +104,14 @@
             <button class="w-100 btn btn-primary btn-lg"
                     onclick="goToGet('/adminServer/salary/unsettled')"
                     type="button">미정산건 관리</button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <button class="w-100 btn btn-primary btn-lg"
+                    onclick="goToGet('/adminServer/message')"
+                    type="button">알림톡 전송</button>
         </div>
     </div>
 </div>
