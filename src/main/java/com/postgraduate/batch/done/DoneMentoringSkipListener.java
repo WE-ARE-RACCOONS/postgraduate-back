@@ -14,18 +14,18 @@ public class DoneMentoringSkipListener implements SkipListener<DoneMentoring, Do
 
     @Override
     public void onSkipInRead(Throwable t) {
-        log.info("멘토링 자동 완료 ItemReader Skip message : {}", t.getMessage());
+        log.error("멘토링 자동 완료 ItemReader Skip message : {}", t.getMessage());
     }
 
     @Override
     public void onSkipInProcess(DoneMentoring doneMentoring, Throwable t) {
-        log.info("mentoringId : {} 자동 완료 실패, message : {}", doneMentoring.mentoringId(), t.getMessage());
+        log.error("mentoringId : {} 자동 완료 실패, message : {}", doneMentoring.mentoringId(), t.getMessage());
         slackErrorMessage.sendSlackMentoringError(doneMentoring.mentoringId(), t);
     }
 
     @Override
     public void onSkipInWrite(DoneMentoring doneMentoring, Throwable t) {
-        log.info("mentoringId : {} 자동 완료 실패, message : {}", doneMentoring.mentoringId(), t.getMessage());
+        log.error("mentoringId : {} 자동 완료 실패, message : {}", doneMentoring.mentoringId(), t.getMessage());
         slackErrorMessage.sendSlackMentoringError(doneMentoring.mentoringId(), t);
     }
 }
