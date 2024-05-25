@@ -16,7 +16,7 @@ public class CreateSalaryItemWriter implements ItemWriter<CreateSalary> {
     private final CreateSalaryRepository createSalaryRepository;
 
     @Override
-    public void write(Chunk<? extends CreateSalary> chunk) throws Exception {
+    public void write(Chunk<? extends CreateSalary> chunk) {
         List<CreateSalary> createSalaries = new ArrayList<>();
         chunk.forEach(createSalaries::add);
         createSalaryRepository.insertAllSalary(createSalaries);

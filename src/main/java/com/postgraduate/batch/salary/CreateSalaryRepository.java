@@ -1,6 +1,7 @@
 package com.postgraduate.batch.salary;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -14,6 +15,7 @@ import static com.postgraduate.domain.salary.util.SalaryUtil.getSalaryDate;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class CreateSalaryRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private static final String INSERT_SALARY = "insert into salary " +
@@ -32,6 +34,7 @@ public class CreateSalaryRepository {
     }
 
     private Map<String, Object> generateEntityParams(CreateSalary createSalary) {
+        log.info("create salary for seniorId : {}", createSalary.seniorId());
         HashMap<String, Object> parameter = new HashMap<>();
         parameter.put("salaryDate", getSalaryDate().plusDays(7));
         parameter.put("seniorId", createSalary.seniorId());
