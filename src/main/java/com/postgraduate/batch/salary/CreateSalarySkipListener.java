@@ -14,18 +14,18 @@ public class CreateSalarySkipListener implements SkipListener<CreateSalary, Crea
 
     @Override
     public void onSkipInRead(Throwable t) {
-        log.info("정산 자동 생성 ItemReader Skip message : {}", t.getMessage());
+        log.error("정산 자동 생성 ItemReader Skip message : {}", t.getMessage());
     }
 
     @Override
     public void onSkipInProcess(CreateSalary createSalary, Throwable t) {
-        log.info("seniorId : {} 정산 자동 생성, message : {}", createSalary.seniorId(), t.getMessage());
+        log.error("seniorId : {} 정산 자동 생성, message : {}", createSalary.seniorId(), t.getMessage());
         slackErrorMessage.sendSlackSalaryError(createSalary.seniorId(), t);
     }
 
     @Override
     public void onSkipInWrite(CreateSalary createSalary, Throwable t) {
-        log.info("seniorId : {} 정산 자동 생성, message : {}", createSalary.seniorId(), t.getMessage());
+        log.error("seniorId : {} 정산 자동 생성, message : {}", createSalary.seniorId(), t.getMessage());
         slackErrorMessage.sendSlackSalaryError(createSalary.seniorId(), t);
     }
 }
