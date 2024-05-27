@@ -4,6 +4,7 @@ import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.salary.domain.service.SalaryGetService;
 import com.postgraduate.global.slack.SlackSalaryMessage;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.job.builder.JobBuilder;
@@ -19,6 +20,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +28,7 @@ import java.util.Map;
 import static com.postgraduate.domain.salary.util.SalaryUtil.getSalaryDate;
 
 @Configuration
+@Slf4j
 @RequiredArgsConstructor
 public class CreateSalaryJobConfig {
     private final JobRepository jobRepository;
@@ -73,7 +76,9 @@ public class CreateSalaryJobConfig {
     @Bean(name = "salaryReader")
     public JdbcPagingItemReader<CreateSalary> salaryReader() throws Exception {
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("salaryDate", getSalaryDate().plusDays(7));
+        LocalDate salaryDate = getSalaryDate().plusDays(7);
+        parameters.put("salaryDate", salaryDate);
+        log.info("salaryReader salaryDate : {}", salaryDate);
         return new JdbcPagingItemReaderBuilder<CreateSalary>()
                 .pageSize(CHUNK_SIZE)
                 .fetchSize(CHUNK_SIZE)

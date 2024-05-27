@@ -108,6 +108,9 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
     }
 
     private BooleanExpression fieldSpecifier(String fields) {
+        if (fields.contains(ALL))
+            return TRUE;
+
         String[] field = fields.split(",");
         if (fields.contains(ETC))
             return Arrays.stream(field)
