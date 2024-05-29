@@ -3,7 +3,6 @@ package com.postgraduate.admin.application.usecase;
 import com.postgraduate.admin.application.dto.req.SendMessageRequest;
 import com.postgraduate.admin.application.dto.res.UserInfo;
 import com.postgraduate.admin.application.dto.res.WishResponse;
-import com.postgraduate.domain.adminssr.application.dto.res.*;
 import com.postgraduate.admin.application.mapper.AdminMapper;
 import com.postgraduate.domain.wish.domain.entity.Wish;
 import com.postgraduate.domain.wish.domain.service.WishGetService;

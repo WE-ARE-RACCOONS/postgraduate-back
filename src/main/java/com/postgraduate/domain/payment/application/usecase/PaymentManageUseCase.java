@@ -1,7 +1,7 @@
 package com.postgraduate.domain.payment.application.usecase;
 
-import com.postgraduate.domain.admin.application.dto.res.CertificationResponse;
-import com.postgraduate.domain.admin.application.dto.res.RefundResponse;
+import com.postgraduate.domain.payment.application.dto.res.CertificationResponse;
+import com.postgraduate.domain.payment.application.dto.res.RefundResponse;
 import com.postgraduate.domain.payment.application.dto.req.PaymentResultRequest;
 import com.postgraduate.domain.payment.application.mapper.PaymentMapper;
 import com.postgraduate.domain.payment.domain.entity.Payment;

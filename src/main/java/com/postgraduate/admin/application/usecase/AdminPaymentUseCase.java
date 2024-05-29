@@ -2,7 +2,6 @@ package com.postgraduate.admin.application.usecase;
 
 import com.postgraduate.admin.application.dto.res.MentoringWithPaymentResponse;
 import com.postgraduate.admin.application.dto.res.PaymentInfo;
-import com.postgraduate.domain.adminssr.application.dto.res.*;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
 import com.postgraduate.domain.mentoring.domain.service.MentoringUpdateService;

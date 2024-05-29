@@ -1,7 +1,6 @@
 package com.postgraduate.admin.application.mapper;
 
 import com.postgraduate.admin.application.dto.res.*;
-import com.postgraduate.domain.adminssr.application.dto.res.*;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.salary.domain.entity.Salary;
@@ -11,6 +10,8 @@ import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.entity.constant.Role;
 import com.postgraduate.domain.wish.domain.entity.Wish;
+
+import static com.postgraduate.domain.mentoring.domain.entity.constant.TermUnit.SHORT;
 
 public class AdminMapper {
     private AdminMapper() {
@@ -210,7 +211,7 @@ public class AdminMapper {
                 mentoring.getDate(),
                 mentoring.getTerm(),
                 payment.getPay(),
-                4000
+                SHORT.getCharge()
         );
     }
 
