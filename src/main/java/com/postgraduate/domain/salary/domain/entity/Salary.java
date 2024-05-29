@@ -1,6 +1,5 @@
 package com.postgraduate.domain.salary.domain.entity;
 
-import com.postgraduate.domain.admin.presentation.constant.SalaryStatus;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -10,8 +9,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-
-import static com.postgraduate.domain.admin.presentation.constant.SalaryStatus.*;
 
 @Entity
 @Builder
@@ -62,13 +59,5 @@ public class Salary {
 
     public void minusAmount(int amount) {
         this.totalAmount -= amount;
-    }
-
-    public SalaryStatus getSalaryStatus() {
-        if (this.totalAmount == 0)
-            return NONE;
-        if (this.status())
-            return DONE;
-        return YET;
     }
 }
