@@ -38,7 +38,8 @@ public class JobSchedulerConfig {
         jobLauncher.run(cancelJob, jobParameters);
     }
 
-    @Scheduled(cron = "0 59 23 * * *", zone = "Asia/Seoul")
+//    @Scheduled(cron = "0 59 23 * * *", zone = "Asia/Seoul")
+    @Scheduled(fixedDelay = 10000000)
     public void launchDoneJob() throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
         JobParameters jobParameters = new JobParametersBuilder()
                 .addLocalDateTime("date", LocalDateTime.now())
