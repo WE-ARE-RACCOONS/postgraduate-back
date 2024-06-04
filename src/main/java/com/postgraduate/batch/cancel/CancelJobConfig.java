@@ -67,6 +67,7 @@ public class CancelJobConfig {
 
         return new QueryDslNoOffsetPagingItemReader<>(entityManagerFactory, CHUNK_SIZE, options, queryFactory ->
             queryFactory.selectFrom(mentoring)
+                    .distinct()
                     .join(payment)
                     .on(mentoring.payment.eq(payment))
                     .fetchJoin()
