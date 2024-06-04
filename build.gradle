@@ -84,7 +84,7 @@ dependencies {
     // https://mvnrepository.com/artifact/org.redisson/redisson-spring-boot-starter
     implementation 'org.redisson:redisson-spring-boot-starter:3.18.0'
 
-    implementation 'com.github.ywj9811:QueryDslItemReader:v0.0.3'
+    implementation 'com.github.ywj9811:QueryDslItemReader:v1.0.0'
 }
 
 tasks.named('test') {
