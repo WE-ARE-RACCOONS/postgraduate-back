@@ -3,6 +3,10 @@ package com.postgraduate.batch.salary;
 import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.salary.domain.service.SalaryGetService;
 import com.postgraduate.global.slack.SlackSalaryMessage;
+import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.JPAExpressions;
+import com.querydslitemreader.core.pagingitemreader.QueryDslZeroPagingItemReader;
+import jakarta.persistence.EntityManagerFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
@@ -10,22 +14,19 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
-import org.springframework.batch.item.database.JdbcPagingItemReader;
-import org.springframework.batch.item.database.PagingQueryProvider;
-import org.springframework.batch.item.database.builder.JdbcPagingItemReaderBuilder;
-import org.springframework.batch.item.database.support.SqlPagingQueryProviderFactoryBean;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
-import javax.sql.DataSource;
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+import static com.postgraduate.domain.account.domain.entity.QAccount.account;
+import static com.postgraduate.domain.salary.domain.entity.QSalary.salary;
 import static com.postgraduate.domain.salary.util.SalaryUtil.getSalaryDate;
+import static com.postgraduate.domain.senior.domain.entity.QSenior.senior;
+import static com.postgraduate.domain.user.domain.entity.QUser.user;
 
 @Configuration
 @Slf4j
@@ -37,12 +38,12 @@ public class CreateSalaryJobConfig {
     private final SalaryGetService salaryGetService;
     private final CreateSalaryItemWriter createSalaryItemWriter;
     private final CreateSalarySkipListener createSalarySkipListener;
-    private final DataSource dataSource;
+    private final EntityManagerFactory entityManagerFactory;
 
     private static final int CHUNK_SIZE = 50;
 
     @Bean(name = "salaryJob")
-    public Job salaryJob() throws Exception {
+    public Job salaryJob() {
         return new JobBuilder("salaryJob", jobRepository)
                 .start(sendSlackStep())
                 .next(createSalaryStep())
@@ -61,7 +62,7 @@ public class CreateSalaryJobConfig {
     }
 
     @Bean(name = "createSalaryStep")
-    public Step createSalaryStep() throws Exception {
+    public Step createSalaryStep() {
         return new StepBuilder("createSalaryStep", jobRepository)
                 .<CreateSalary, CreateSalary>chunk(CHUNK_SIZE, transactionManager)
                 .reader(salaryReader())
@@ -73,38 +74,30 @@ public class CreateSalaryJobConfig {
                 .build();
     }
 
-    @Bean(name = "salaryReader")
-    public JdbcPagingItemReader<CreateSalary> salaryReader() throws Exception {
-        Map<String, Object> parameters = new HashMap<>();
-        LocalDate salaryDate = getSalaryDate().plusDays(7);
-        parameters.put("salaryDate", salaryDate);
-        log.info("salaryReader salaryDate : {}", salaryDate);
-        return new JdbcPagingItemReaderBuilder<CreateSalary>()
-                .pageSize(CHUNK_SIZE)
-                .fetchSize(CHUNK_SIZE)
-                .dataSource(dataSource)
-                .rowMapper(new CreateSalaryRowMapper())
-                .queryProvider(salaryQueryProvider())
-                .parameterValues(parameters)
-                .name("salaryReader")
-                .build();
-    }
-
-    @Bean(name = "salaryQuery")
-    public PagingQueryProvider salaryQueryProvider() throws Exception {
-        SqlPagingQueryProviderFactoryBean queryProvider = new SqlPagingQueryProviderFactoryBean();
-        queryProvider.setDataSource(dataSource);
-        queryProvider.setSelectClause("SELECT s.senior_id, a.bank, a.account_id, a.account_holder, a.account_number");
-        queryProvider.setFromClause("FROM senior s\n" +
-                "JOIN user u ON s.user_user_id = u.user_id\n" +
-                "LEFT JOIN account a ON s.senior_id = a.senior_senior_id");
-        queryProvider.setWhereClause("WHERE u.is_delete = false\n" +
-                "AND s.senior_id NOT IN (\n" +
-                "SELECT senior_senior_id\n" +
-                "FROM salary\n" +
-                "WHERE salary_date = :salaryDate\n" +
-                ")");
-        queryProvider.setSortKey("senior_id");
-        return queryProvider.getObject();
+    @Bean
+    public QueryDslZeroPagingItemReader<CreateSalary> salaryReader() {
+        LocalDate date = getSalaryDate().plusDays(7);
+        return new QueryDslZeroPagingItemReader<>(entityManagerFactory, CHUNK_SIZE, queryFactory ->
+                queryFactory.select(Projections.constructor(CreateSalary.class,
+                                senior.seniorId,
+                                account.accountId,
+                                account.bank,
+                                account.accountNumber,
+                                account.accountHolder))
+                        .distinct()
+                        .from(senior)
+                        .join(user)
+                        .on(senior.user.eq(user))
+                        .leftJoin(account)
+                        .on(account.senior.eq(senior))
+                        .where(user.isDelete.isFalse()
+                                .and(senior.seniorId.notIn(
+                                        JPAExpressions
+                                                .select(salary.senior.seniorId)
+                                                .from(salary)
+                                                .where(salary.salaryDate.eq(date))
+                                )))
+                        .orderBy(senior.seniorId.desc())
+        );
     }
 }

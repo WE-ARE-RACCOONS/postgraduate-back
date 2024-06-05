@@ -16,8 +16,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 import java.time.LocalDateTime;
 
-import static com.postgraduate.domain.salary.util.SalaryUtil.*;
-
 @Configuration
 @Slf4j
 @RequiredArgsConstructor
@@ -49,7 +47,7 @@ public class JobSchedulerConfig {
     @Scheduled(cron = "0 0 0 * * 4", zone = "Asia/Seoul")
     public void launchSalaryJob() throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
         JobParameters jobParameters = new JobParametersBuilder()
-                .addLocalDateTime("date", LocalDateTime.from(getSalaryDate().plusDays(7)))
+                .addLocalDateTime("date", LocalDateTime.now())
                 .toJobParameters();
         jobLauncher.run(salaryJob, jobParameters);
     }
