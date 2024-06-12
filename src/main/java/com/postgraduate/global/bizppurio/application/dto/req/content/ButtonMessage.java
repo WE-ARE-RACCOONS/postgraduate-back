@@ -1,7 +1,9 @@
 package com.postgraduate.global.bizppurio.application.dto.req.content;
 
-public record JuniorApplyMessage(
+public record ButtonMessage(
         String message,
         String senderkey,
-        String templatecode
-) implements Message {}
+        String templatecode,
+        WebLinkButton[] button
+) implements Message {
+}

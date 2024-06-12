@@ -72,9 +72,11 @@ public class MentoringManageUseCase {
     @Transactional
     public void updateCancel(User user, Long mentoringId) {
         Mentoring mentoring = mentoringGetService.byIdAndUserAndWaiting(mentoringId, user);
+        Senior senior = mentoring.getSenior();
         Payment payment = mentoring.getPayment();
         paymentManageUseCase.refundPayByUser(user, payment.getOrderId());
         mentoringUpdateService.updateCancel(mentoring);
+        bizppurioSeniorMessage.mentoringRefund(senior.getUser());
     }
 
 
