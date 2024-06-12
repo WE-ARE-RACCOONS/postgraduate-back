@@ -4,7 +4,7 @@ import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.entity.constant.Status;
 import com.querydslitemreader.core.pagingitemreader.expression.Expression;
 import com.querydslitemreader.core.pagingitemreader.options.QueryDslNoOffsetNumberOptions;
-import com.querydslitemreader.core.pagingitemreader.options.QueryDslNoOffsetPagingItemReader;
+import com.querydslitemreader.core.pagingitemreader.QueryDslNoOffsetPagingItemReader;
 import jakarta.persistence.EntityManagerFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
