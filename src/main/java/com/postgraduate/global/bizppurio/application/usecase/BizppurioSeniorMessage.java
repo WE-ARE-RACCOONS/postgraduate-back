@@ -22,6 +22,10 @@ public class BizppurioSeniorMessage {
         bizppurioSend.sendMessageWithExceptionHandling(() -> mapper.mapToSeniorApplyMessage(user));
     }
 
+    public void mentoringRefund(User user) {
+        bizppurioSend.sendMessageWithExceptionHandling(() -> mapper.mapToSeniorRefundMessage(user));
+    }
+
     public void mentoringAccept(Senior senior, String time) {
         bizppurioSend.sendMessageWithExceptionHandling(() -> {
             User user = senior.getUser();
