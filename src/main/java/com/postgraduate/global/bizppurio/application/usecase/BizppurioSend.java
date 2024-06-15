@@ -3,6 +3,7 @@ package com.postgraduate.global.bizppurio.application.usecase;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.postgraduate.global.bizppurio.application.dto.req.CommonRequest;
 import com.postgraduate.global.bizppurio.application.dto.res.MessageResponse;
+import com.postgraduate.global.slack.SlackErrorMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +21,7 @@ public class BizppurioSend {
     private final BizppurioAuth bizppurioAuth;
     private final ObjectMapper objectMapper;
     private final WebClient webClient;
+    private final SlackErrorMessage slackErrorMessage;
 
     @Value("${bizppurio.message}")
     private String messageUrl;
@@ -39,13 +41,16 @@ public class BizppurioSend {
                     .subscribe(this::check);
         } catch (Exception ex) {
             log.error("알림톡 전송 예외 발생: {}", ex.getMessage());
+            CommonRequest commonRequest = messageSupplier.get();
+            String phoneNumber = commonRequest.to();
+            slackErrorMessage.sendSlackBizppurioError(phoneNumber);
         }
     }
 
     private void check(MessageResponse response) {
         if (response.code() != 1000) {
             log.error("전송실패 errorCode : {} errorMessage : {}", response.code(), response.description());
-            return;
+            throw new IllegalArgumentException(response.code() + ", " + response.description());
         }
         log.info("알림톡 전송에 성공하였습니다.");
     }
