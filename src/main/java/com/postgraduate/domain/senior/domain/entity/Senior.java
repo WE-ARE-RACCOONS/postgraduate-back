@@ -16,6 +16,14 @@ import java.time.LocalDateTime;
 import static com.postgraduate.domain.senior.domain.entity.constant.Status.WAITING;
 
 @Entity
+@Table(indexes = {
+        @Index(name = "senior_total_info_index", columnList = "totalInfo"),
+        @Index(name = "senior_hit_index", columnList = "hit"),
+        @Index(name = "senior_field_index", columnList = "field"),
+        @Index(name = "senior_etc_field_index", columnList = "etcField"),
+        @Index(name = "senior_postgradu_index", columnList = "postgradu"),
+        @Index(name = "senior_etc_postgradu_index", columnList = "etcPostgradu")
+})
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
