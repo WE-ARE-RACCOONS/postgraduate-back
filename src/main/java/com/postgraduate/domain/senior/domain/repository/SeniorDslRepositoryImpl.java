@@ -1,7 +1,5 @@
 package com.postgraduate.domain.senior.domain.repository;
 
-import com.postgraduate.domain.account.domain.entity.Account;
-import com.postgraduate.domain.salary.application.dto.SeniorAndAccount;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.querydsl.core.Tuple;
@@ -21,7 +19,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static com.postgraduate.domain.account.domain.entity.QAccount.account;
 import static com.postgraduate.domain.senior.domain.entity.QSenior.senior;
 import static com.postgraduate.domain.user.domain.entity.QUser.user;
 import static com.querydsl.core.types.Order.ASC;
@@ -181,31 +178,6 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
                 .where(senior.user.eq(seniorUser))
                 .fetchOne()
         );
-    }
-
-    @Override
-    public List<SeniorAndAccount> findAllSeniorAndAccount() {
-        List<Senior> seniors = queryFactory.selectFrom(senior)
-                .where(senior.user.isDelete.isFalse())
-                .fetch();
-        List<Account> accounts = queryFactory.selectFrom(account)
-                .distinct()
-                .where(account.senior.in(seniors))
-                .leftJoin(account.senior, senior)
-                .fetchJoin()
-                .fetch();
-
-        return seniors.stream()
-                .map(senior -> {
-                    Account account = accounts.stream()
-                            .filter(a -> a.getSenior().getSeniorId()
-                                    .equals(senior.getSeniorId())
-                            )
-                            .findFirst()
-                            .orElse(null);
-                    return new SeniorAndAccount(senior, account);
-                })
-                .toList();
     }
 
     @Override
