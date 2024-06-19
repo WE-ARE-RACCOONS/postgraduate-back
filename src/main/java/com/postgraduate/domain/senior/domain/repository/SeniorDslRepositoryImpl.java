@@ -4,6 +4,7 @@ import com.postgraduate.domain.account.domain.entity.Account;
 import com.postgraduate.domain.salary.application.dto.SeniorAndAccount;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.user.domain.entity.User;
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -13,8 +14,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.StringUtils;
+import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -38,20 +40,35 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
 
     @Override
     public Page<Senior> findAllBySearchSenior(String search, String sort, Pageable pageable) {
-        List<Senior> seniors = queryFactory.selectFrom(senior)
+        List<Tuple> results = queryFactory.select(senior.seniorId, senior.user.nickName, senior.hit)
+                .from(senior)
                 .distinct()
                 .leftJoin(senior.user, user)
-                .fetchJoin()
                 .where(
                         senior.info.totalInfo.like("%" + search + "%")
                                 .or(senior.user.nickName.like("%" + search + "%")),
                         senior.user.isDelete.eq(FALSE)
                 )
                 .orderBy(orderSpecifier(sort))
-                .orderBy(senior.user.nickName.asc()).
-                offset(pageable.getOffset())
+                .orderBy(senior.user.nickName.asc())
+                .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
+
+        if (CollectionUtils.isEmpty(results)) {
+            return new PageImpl<>(new ArrayList<>(), pageable, 0);
+        }
+
+        List<Senior> seniors = queryFactory.selectFrom(senior)
+                .where(senior.seniorId.in(results.stream()
+                        .map(tuple -> tuple.get(senior.seniorId))
+                        .toList()))
+                .leftJoin(senior.user, user)
+                .fetchJoin()
+                .orderBy(orderSpecifier(sort))
+                .orderBy(senior.user.nickName.asc())
+                .fetch();
+
 
         Long total = queryFactory.select(senior.count())
                 .from(senior)
@@ -63,7 +80,6 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
                         senior.user.isDelete.eq(FALSE)
                 )
                 .fetchOne();
-
 
         return new PageImpl<>(seniors, pageable, total);
     }
@@ -78,10 +94,10 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
 
     @Override
     public Page<Senior> findAllByFieldSenior(String field, String postgradu, Pageable pageable) {
-        List<Senior> seniors = queryFactory.selectFrom(senior)
+        List<Tuple> results = queryFactory.select(senior.seniorId, senior.user.nickName, senior.hit)
+                .from(senior)
                 .distinct()
                 .leftJoin(senior.user, user)
-                .fetchJoin()
                 .where(
                         fieldSpecifier(field),
                         postgraduSpecifier(postgradu),
@@ -91,6 +107,20 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
                 .orderBy(senior.user.nickName.asc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
+                .fetch();
+
+        if (CollectionUtils.isEmpty(results)) {
+            return new PageImpl<>(new ArrayList<>(), pageable, 0);
+        }
+
+        List<Senior> seniors = queryFactory.selectFrom(senior)
+                .where(senior.seniorId.in(results.stream()
+                        .map(tuple -> tuple.get(senior.seniorId))
+                        .toList()))
+                .leftJoin(senior.user, user)
+                .fetchJoin()
+                .orderBy(senior.hit.desc())
+                .orderBy(senior.user.nickName.asc())
                 .fetch();
 
         Long total = queryFactory.select(senior.count())
@@ -143,43 +173,6 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
     }
 
     @Override
-    public Page<Senior> findAllBySearchSeniorWithAdmin(String search, Pageable pageable) {
-        List<Senior> seniors = queryFactory.selectFrom(senior)
-                .where(
-                        searchLike(search),
-                        senior.user.isDelete.eq(FALSE)
-                )
-                .distinct()
-                .innerJoin(senior.user, user)
-                .fetchJoin()
-                .orderBy(senior.createdAt.desc())
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
-
-        Long total = queryFactory.select(senior.count())
-                .from(senior)
-                .where(
-                        searchLike(search),
-                        senior.user.isDelete.eq(FALSE)
-                )
-                .distinct()
-                .innerJoin(senior.user, user)
-                .fetchOne();
-
-        return new PageImpl<>(seniors, pageable, total);
-    }
-
-    private BooleanExpression searchLike(String search) {
-        if (StringUtils.hasText(search)) {
-            return senior.user.phoneNumber.contains(search)
-                    .or(senior.user.nickName.contains(search))
-                    .and(senior.profile.isNotNull());
-        }
-        return null;
-    }
-
-    @Override
     public Optional<Senior> findByUserWithAll(User seniorUser) {
         return ofNullable(queryFactory.selectFrom(senior)
                 .distinct()
@@ -206,7 +199,7 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
                 .map(senior -> {
                     Account account = accounts.stream()
                             .filter(a -> a.getSenior().getSeniorId()
-                                            .equals(senior.getSeniorId())
+                                    .equals(senior.getSeniorId())
                             )
                             .findFirst()
                             .orElse(null);
