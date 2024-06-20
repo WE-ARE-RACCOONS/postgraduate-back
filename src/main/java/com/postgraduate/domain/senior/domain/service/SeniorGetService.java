@@ -1,6 +1,5 @@
 package com.postgraduate.domain.senior.domain.service;
 
-import com.postgraduate.domain.salary.application.dto.SeniorAndAccount;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.repository.SeniorRepository;
 import com.postgraduate.domain.senior.exception.NoneSeniorException;
@@ -20,11 +19,6 @@ import static java.lang.Boolean.FALSE;
 public class SeniorGetService {
     private final SeniorRepository seniorRepository;
     private static final int SENIOR_PAGE_SIZE = 10;
-    private static final int ADMIN_PAGE_SIZE = 15;
-
-    public List<SeniorAndAccount> findAllSeniorAndAccount() {
-        return seniorRepository.findAllSeniorAndAccount();
-    }
 
     public Senior byUser(User user) {
         return seniorRepository.findByUser(user).orElseThrow(NoneSeniorException::new);
@@ -38,12 +32,6 @@ public class SeniorGetService {
     public Senior bySeniorNickName(String nickName) {
         return seniorRepository.findByUser_NickNameAndUser_IsDelete(nickName, FALSE)
                 .orElseThrow(NoneSeniorException::new);
-    }
-
-    public Page<Senior> all(Integer page, String search) {
-        page = page == null ? 1 : page;
-        Pageable pageable = PageRequest.of(page - 1, ADMIN_PAGE_SIZE);
-        return seniorRepository.findAllBySearchSeniorWithAdmin(search, pageable);
     }
 
     public List<Senior> allSeniorId() {

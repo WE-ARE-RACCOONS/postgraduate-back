@@ -27,6 +27,7 @@ public class AdminWithThymeLeafController {
     private final AdminMentoringUseCase adminMentoringUseCase;
     private final AdminSalaryUseCase adminSalaryUseCase;
     private final AdminPaymentUseCase adminPaymentUseCase;
+    private final AdminBatchUseCase adminBatchUseCase;
     private final JwtUseCase jwtUseCase;
 
     @GetMapping("/loginForm")
@@ -164,6 +165,29 @@ public class AdminWithThymeLeafController {
     @PostMapping("/message")
     public String sendMessage(@RequestBody SendMessageRequest messageRequest) {
         adminUserUseCase.sendMatchingMessage(messageRequest);
+        return "adminEmpty";
+    }
+
+    @GetMapping("/batch")
+    public String batchManage() {
+        return "adminBatch";
+    }
+
+    @PostMapping("/batch/salary")
+    public String startSalaryBatch() {
+        adminBatchUseCase.startSalaryBatch();
+        return "adminEmpty";
+    }
+
+    @PostMapping("/batch/mentoring/done")
+    public String startMentoringDone() {
+        adminBatchUseCase.startMentoringDoneBatch();
+        return "adminEmpty";
+    }
+
+    @PostMapping("/batch/mentoring/cancel")
+    public String startMentoringCancel() {
+        adminBatchUseCase.startMentoringCancelBatch();
         return "adminEmpty";
     }
 }

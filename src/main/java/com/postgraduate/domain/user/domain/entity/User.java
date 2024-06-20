@@ -2,6 +2,8 @@ package com.postgraduate.domain.user.domain.entity;
 
 import com.postgraduate.domain.user.domain.entity.constant.Role;
 import jakarta.persistence.*;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,6 +13,10 @@ import org.hibernate.annotations.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(indexes = {
+        @Index(name = "user_nick_name_index", columnList = "nickName"),
+        @Index(name = "user_is_delete", columnList = "isDelete")
+})
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
