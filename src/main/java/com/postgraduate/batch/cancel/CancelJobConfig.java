@@ -34,6 +34,7 @@ public class CancelJobConfig {
     private final CancelMentoringProcessor cancelMentoringProcessor;
     private final CancelMentoringWriter cancelMentoringWriter;
     private final EntityManagerFactory entityManagerFactory;
+    private final CancelMentoringSkipListener cancelMentoringSkipListener;
 
     private static final int CHUNK_SIZE = 50;
 
@@ -54,6 +55,7 @@ public class CancelJobConfig {
                 .faultTolerant()
                 .skip(Exception.class)
                 .skipLimit(Integer.MAX_VALUE)
+                .listener(cancelMentoringSkipListener)
                 .build();
     }
 
