@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link th:href="@{/css/bootstrap.min.css}" href="css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .outer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            width: 100%;
+            padding-top: 30px;
+        }
+
+        .inner {
+            text-align: center;
+        }
+
+        label, input {
+            display: block;
+            margin: 0 auto 10px;
+        }
+
+        input {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="outer">
+    <div class="inner">
+        <label><h1>정산 자동 생성 배치 재시도</h1></label>
+        <button th:onclick="goToPost('정산 자동 생성 배치를 재시도 하시겠습니까?', '/adminServer/batch/salary')"><h3>정산 자동 생성</h3></button>
+        <label><h1>멘토링 자동 완료 배치 재시도</h1></label>
+        <button th:onclick="goToPost('정산 자동 생성 배치를 재시도 하시겠습니까?', '/adminServer/batch/mentoring/done')"><h3>멘토링 자동 완료</h3></button>
+        <label><h1>멘토링 자동 취소 배치 재시도</h1></label>
+        <button th:onclick="goToPost('정산 자동 생성 배치를 재시도 하시겠습니까?', '/adminServer/batch/mentoring/cancel')"><h3>멘토링 자동 취소</h3></button>
+    </div>
+</div>
+</body>
+</html>
