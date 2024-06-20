@@ -71,12 +71,14 @@ public class CreateSalaryJobConfig {
                 .skip(Exception.class)
                 .skipLimit(Integer.MAX_VALUE)
                 .listener(createSalarySkipListener)
+                .listener(new CreateSalaryStepListener())
                 .build();
     }
 
     @Bean
     public QueryDslZeroPagingItemReader<CreateSalary> salaryReader() {
         LocalDate date = getSalaryDate().plusDays(7);
+        log.info("not in date : {}", date);
         return new QueryDslZeroPagingItemReader<>(entityManagerFactory, CHUNK_SIZE, queryFactory ->
                 queryFactory.select(Projections.constructor(CreateSalary.class,
                                 senior.seniorId,
