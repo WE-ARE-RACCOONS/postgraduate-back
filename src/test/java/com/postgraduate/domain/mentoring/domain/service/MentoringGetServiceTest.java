@@ -179,11 +179,6 @@ class MentoringGetServiceTest {
         assertThat(mentoringGetService.byIdAndUserAndExpected(mentoringId, user))
                 .isEqualTo(mentoring);
 
-        given(mentoringRepository.findByMentoringIdAndUserAndStatus(mentoringId, user, DONE))
-                .willReturn(Optional.of(mentoring));
-        assertThat(mentoringGetService.byIdAndUserAndDone(mentoringId, user))
-                .isEqualTo(mentoring);
-
         given(mentoringRepository.findByMentoringIdAndUserAndStatus(mentoringId, user, WAITING))
                 .willReturn(Optional.ofNullable(null));
         assertThatThrownBy(() ->mentoringGetService.byIdAndUserAndWaiting(mentoringId, user))
@@ -196,8 +191,6 @@ class MentoringGetServiceTest {
 
         given(mentoringRepository.findByMentoringIdAndUserAndStatus(mentoringId, user, DONE))
                 .willReturn(Optional.ofNullable(null));
-        assertThatThrownBy(() ->mentoringGetService.byIdAndUserAndDone(mentoringId, user))
-                .isInstanceOf(MentoringNotFoundException.class);
     }
 
     @Test
@@ -215,8 +208,6 @@ class MentoringGetServiceTest {
 
         given(mentoringRepository.findByMentoringIdAndSeniorAndStatus(mentoringId, senior, DONE))
                 .willReturn(Optional.of(mentoring));
-        assertThat(mentoringGetService.byIdAndSeniorAndDone(mentoringId, senior))
-                .isEqualTo(mentoring);
 
         given(mentoringRepository.findByMentoringIdAndSeniorAndStatus(mentoringId, senior, WAITING))
                 .willReturn(Optional.ofNullable(null));
@@ -226,11 +217,6 @@ class MentoringGetServiceTest {
         given(mentoringRepository.findByMentoringIdAndSeniorAndStatus(mentoringId, senior, EXPECTED))
                 .willReturn(Optional.ofNullable(null));
         assertThatThrownBy(() ->mentoringGetService.byIdAndSeniorAndExpected(mentoringId, senior))
-                .isInstanceOf(MentoringNotFoundException.class);
-
-        given(mentoringRepository.findByMentoringIdAndSeniorAndStatus(mentoringId, senior, DONE))
-                .willReturn(Optional.ofNullable(null));
-        assertThatThrownBy(() ->mentoringGetService.byIdAndSeniorAndDone(mentoringId, senior))
                 .isInstanceOf(MentoringNotFoundException.class);
     }
 }
