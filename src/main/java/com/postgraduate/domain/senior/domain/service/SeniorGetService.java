@@ -21,7 +21,8 @@ public class SeniorGetService {
     private static final int SENIOR_PAGE_SIZE = 10;
 
     public Senior byUser(User user) {
-        return seniorRepository.findByUser(user).orElseThrow(NoneSeniorException::new);
+        return seniorRepository.findByUserAndUser_IsDeleteIsFalse(user)
+                .orElseThrow(NoneSeniorException::new);
     }
 
     public Senior byUserWithAll(User user) {
