@@ -11,7 +11,7 @@ public class AuthGetService {
     private final UserRepository userRepository;
 
     public User login(String nickName, String phoneNumber) {
-        return userRepository.findByNickNameAndPhoneNumber(nickName, phoneNumber)
+        return userRepository.findByNickNameAndPhoneNumberAndIsDeleteIsFalse(nickName, phoneNumber)
                 .orElseThrow();
     }
 
