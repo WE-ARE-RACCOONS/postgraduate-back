@@ -19,7 +19,7 @@ public class UserGetService {
     }
 
     public User bySocialId(Long socialId) {
-        return userRepository.findBySocialId(socialId).orElseThrow(UserNotFoundException::new);
+        return userRepository.findBySocialIdAndIsDeleteIsFalse(socialId).orElseThrow(UserNotFoundException::new);
     }
 
     public Optional<User> byNickName(String nickName) {
@@ -27,6 +27,6 @@ public class UserGetService {
     }
 
     public List<User> all() {
-        return userRepository.findAll();
+        return userRepository.findAllByIsDeleteIsFalse();
     }
 }
