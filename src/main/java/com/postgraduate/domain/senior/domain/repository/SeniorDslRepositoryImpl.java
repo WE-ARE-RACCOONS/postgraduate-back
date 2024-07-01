@@ -44,7 +44,7 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
                 .where(
                         senior.info.totalInfo.like("%" + search + "%")
                                 .or(senior.user.nickName.like("%" + search + "%")),
-                        senior.user.isDelete.eq(FALSE)
+                        senior.user.isDelete.isFalse()
                 )
                 .orderBy(orderSpecifier(sort))
                 .orderBy(senior.user.nickName.asc())
@@ -74,7 +74,7 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
                 .where(
                         senior.info.totalInfo.like("%" + search + "%")
                                 .or(senior.user.nickName.like("%" + search + "%")),
-                        senior.user.isDelete.eq(FALSE)
+                        senior.user.isDelete.isFalse()
                 )
                 .fetchOne();
 
@@ -98,7 +98,7 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
                 .where(
                         fieldSpecifier(field),
                         postgraduSpecifier(postgradu),
-                        senior.user.isDelete.eq(FALSE)
+                        senior.user.isDelete.isFalse()
                 )
                 .orderBy(senior.hit.desc())
                 .orderBy(senior.user.nickName.asc())
@@ -127,7 +127,7 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
                 .where(
                         fieldSpecifier(field),
                         postgraduSpecifier(postgradu),
-                        senior.user.isDelete.eq(FALSE)
+                        senior.user.isDelete.isFalse()
                 )
                 .fetchOne();
 
@@ -175,7 +175,10 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
                 .distinct()
                 .join(senior.user, user)
                 .fetchJoin()
-                .where(senior.user.eq(seniorUser))
+                .where(
+                        senior.user.eq(seniorUser),
+                        senior.user.isDelete.isFalse()
+                )
                 .fetchOne()
         );
     }
@@ -186,7 +189,7 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
                 .distinct()
                 .leftJoin(senior.user, user)
                 .fetchJoin()
-                .where(senior.user.isDelete.eq(FALSE))
+                .where(senior.user.isDelete.isFalse())
                 .orderBy(senior.createdAt.desc())
                 .fetch();
     }
