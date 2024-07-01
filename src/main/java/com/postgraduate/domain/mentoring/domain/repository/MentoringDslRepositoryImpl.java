@@ -5,16 +5,10 @@ import com.postgraduate.domain.mentoring.domain.entity.constant.Status;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.user.domain.entity.QUser;
 import com.postgraduate.domain.user.domain.entity.User;
-import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.StringUtils;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,7 +19,6 @@ import static com.postgraduate.domain.payment.domain.entity.QPayment.payment;
 import static com.postgraduate.domain.salary.domain.entity.QSalary.salary;
 import static com.postgraduate.domain.senior.domain.entity.QSenior.senior;
 import static com.postgraduate.domain.user.domain.entity.QUser.user;
-import static com.querydsl.core.types.dsl.Expressions.FALSE;
 
 @RequiredArgsConstructor
 @Repository
@@ -110,68 +103,6 @@ public class MentoringDslRepositoryImpl implements MentoringDslRepository {
                 .leftJoin(mentoring.user, user)
                 .fetchJoin()
                 .orderBy(mentoring.salary.salaryDate.desc(), mentoring.updatedAt.desc())
-                .fetch();
-    }
-
-    @Override
-    public Page<Mentoring> findAllBySearchPayment(String search, Pageable pageable) {
-        List<Mentoring> mentorings = queryFactory.selectFrom(mentoring)
-                .distinct()
-                .where(
-                        searchLike(search),
-                        mentoring.user.isDelete.eq(FALSE)
-                )
-                .leftJoin(mentoring.user, user)
-                .fetchJoin()
-                .leftJoin(mentoring.payment, payment)
-                .fetchJoin()
-                .orderBy(mentoring.payment.paidAt.desc())
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
-
-        Long total = queryFactory.select(mentoring.count())
-                .distinct()
-                .from(mentoring)
-                .where(
-                        searchLike(search),
-                        mentoring.user.isDelete.eq(FALSE)
-                )
-                .fetchOne();
-
-        return new PageImpl<>(mentorings, pageable, total);
-    }
-
-
-    private BooleanExpression searchLike(String search) {
-        if (StringUtils.hasText(search)) {
-            return mentoring.user.nickName.contains(search)
-                    .or(mentoring.user.phoneNumber.contains(search));
-        }
-        return null;
-    }
-
-    @Override
-    public List<Mentoring> findAllByStatusAndCreatedAtIsBefore(Status status, LocalDateTime now) {
-        return queryFactory.selectFrom(mentoring)
-                .distinct()
-                .leftJoin(mentoring.user, user)
-                .fetchJoin()
-                .leftJoin(mentoring.payment, payment)
-                .fetchJoin()
-                .where(mentoring.status.eq(status), mentoring.createdAt.before(now))
-                .fetch();
-    }
-
-    @Override
-    public List<Mentoring> findAllByStatus(Status status) {
-        return queryFactory.selectFrom(mentoring)
-                .distinct()
-                .leftJoin(mentoring.senior, senior)
-                .fetchJoin()
-                .leftJoin(mentoring.salary, salary)
-                .fetchJoin()
-                .where(mentoring.status.eq(status))
                 .fetch();
     }
 
