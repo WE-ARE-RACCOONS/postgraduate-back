@@ -8,5 +8,5 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 public interface SalaryRepository extends JpaRepository<Salary, Long>, SalaryDslRepository {
-    Optional<Salary> findBySeniorAndSalaryDate(Senior senior, LocalDate salaryDate);
+    Optional<Salary> findBySeniorAndSalaryDateAndSenior_User_IsDeleteIsFalse(Senior senior, LocalDate salaryDate);
 }

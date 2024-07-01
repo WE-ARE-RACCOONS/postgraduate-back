@@ -1,6 +1,5 @@
 package com.postgraduate.domain.salary.domain.service;
 
-import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.salary.domain.repository.SalaryRepository;
 import com.postgraduate.domain.salary.exception.SalaryNotFoundException;
@@ -17,8 +16,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.Optional.of;
-import static java.util.Optional.ofNullable;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -71,7 +68,7 @@ class SalaryGetServiceTest {
     @DisplayName("SeniorId 통한 Salary 조회 테스트")
     void bySeniorId() {
         LocalDate salaryDate = SalaryUtil.getSalaryDate();
-        given(salaryRepository.findBySeniorAndSalaryDate(senior, salaryDate))
+        given(salaryRepository.findBySeniorAndSalaryDateAndSenior_User_IsDeleteIsFalse(senior, salaryDate))
                 .willReturn(Optional.of(salary));
 
         assertThat(salaryGetService.bySenior(senior))
@@ -82,7 +79,7 @@ class SalaryGetServiceTest {
     @DisplayName("SeniorId 통한 Salary 조회 예외 테스트")
     void bySeniorIdFail() {
         LocalDate salaryDate = SalaryUtil.getSalaryDate();
-        given(salaryRepository.findBySeniorAndSalaryDate(senior, salaryDate))
+        given(salaryRepository.findBySeniorAndSalaryDateAndSenior_User_IsDeleteIsFalse(senior, salaryDate))
                 .willThrow(SalaryNotFoundException.class);
 
         assertThatThrownBy(() -> salaryGetService.bySenior(senior))
