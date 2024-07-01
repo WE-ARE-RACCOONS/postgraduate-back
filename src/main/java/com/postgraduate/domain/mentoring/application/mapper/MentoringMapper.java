@@ -9,12 +9,16 @@ import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Senior;
+import com.postgraduate.domain.user.application.utils.UserUtils;
 import com.postgraduate.domain.user.domain.entity.User;
+import jakarta.validation.constraints.NotNull;
 
 public class MentoringMapper {
     private MentoringMapper() {
         throw new IllegalArgumentException();
     }
+
+    private static UserUtils userUtils = new UserUtils();
 
     public static ExpectedMentoringInfo mapToExpectedInfo(Mentoring mentoring) {
         Senior senior = mentoring.getSenior();
@@ -35,7 +39,15 @@ public class MentoringMapper {
     }
 
     public static DoneMentoringInfo mapToDoneInfo(Mentoring mentoring) {
+        if (mentoring.getSenior() == null || mentoring.getSenior().getUser().isDelete()) {
+            return getDoneMentoringInfo(mentoring, userUtils.getArchiveSenior());
+        }
         Senior senior = mentoring.getSenior();
+        return getDoneMentoringInfo(mentoring, senior);
+    }
+
+    @NotNull
+    private static DoneMentoringInfo getDoneMentoringInfo(Mentoring mentoring, Senior senior) {
         User user = senior.getUser();
         Info info = senior.getInfo();
         return new DoneMentoringInfo(
@@ -108,8 +120,16 @@ public class MentoringMapper {
     }
 
     public static DoneSeniorMentoringInfo mapToSeniorDoneInfo(Mentoring mentoring) {
-        Salary salary = mentoring.getSalary();
+        if (mentoring.getUser() == null || mentoring.getUser().isDelete()) {
+            return getDoneSeniorMentoringInfo(mentoring, userUtils.getArchiveUser());
+        }
         User user = mentoring.getUser();
+        return getDoneSeniorMentoringInfo(mentoring, user);
+    }
+
+    @NotNull
+    private static DoneSeniorMentoringInfo getDoneSeniorMentoringInfo(Mentoring mentoring, User user) {
+        Salary salary = mentoring.getSalary();
         return new DoneSeniorMentoringInfo(mentoring.getMentoringId(),
                 user.getProfile(), user.getNickName(),
                 mentoring.getTerm(),

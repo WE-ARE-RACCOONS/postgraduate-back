@@ -7,9 +7,11 @@ import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.salary.domain.entity.SalaryAccount;
 import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Senior;
+import com.postgraduate.domain.user.application.utils.UserUtils;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.entity.constant.Role;
 import com.postgraduate.domain.wish.domain.entity.Wish;
+import jakarta.validation.constraints.NotNull;
 
 import static com.postgraduate.domain.mentoring.domain.entity.constant.TermUnit.SHORT;
 
@@ -17,6 +19,8 @@ public class AdminMapper {
     private AdminMapper() {
         throw new IllegalStateException();
     }
+
+    private static UserUtils userUtils = new UserUtils();
 
     public static CertificationDetailsResponse mapToCertificationInfo(Senior senior) {
         User user = senior.getUser();
@@ -65,8 +69,24 @@ public class AdminMapper {
         );
     }
 
+    public static MentoringInfo mapToMentoringInfoWithUser(Mentoring mentoring) {
+        if (mentoring.getSenior() == null || mentoring.getSenior().getUser().isDelete()) {
+            return getMentoringInfo(mentoring, userUtils.getArchiveUser());
+        }
+        Senior senior = mentoring.getSenior();
+        return getMentoringInfo(mentoring, senior.getUser());
+    }
+
     public static MentoringInfo mapToMentoringInfoWithSenior(Mentoring mentoring) {
+        if (mentoring.getUser() == null || mentoring.getUser().isDelete()) {
+            getMentoringInfo(mentoring, userUtils.getArchiveUser());
+        }
         User user = mentoring.getUser();
+        return getMentoringInfo(mentoring, user);
+    }
+
+    @NotNull
+    private static MentoringInfo getMentoringInfo(Mentoring mentoring, User user) {
         return new MentoringInfo(
                 mentoring.getMentoringId(),
                 mentoring.getStatus(),
@@ -77,18 +97,6 @@ public class AdminMapper {
         );
     }
 
-    public static MentoringInfo mapToMentoringInfoWithUser(Mentoring mentoring) {
-        Senior senior = mentoring.getSenior();
-        User user = senior.getUser();
-        return new MentoringInfo(
-                mentoring.getMentoringId(),
-                mentoring.getStatus(),
-                user.getNickName(),
-                user.getPhoneNumber(),
-                mentoring.getCreatedAt(),
-                mentoring.getDate()
-        );
-    }
 
     public static UserMentoringInfo mapToUserMentoringInfo(User user) {
         return new UserMentoringInfo(
