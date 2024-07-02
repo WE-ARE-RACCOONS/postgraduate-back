@@ -20,6 +20,7 @@ import com.postgraduate.domain.salary.domain.service.SalaryGetService;
 import com.postgraduate.domain.salary.domain.service.SalaryUpdateService;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
+import com.postgraduate.domain.senior.domain.service.SeniorUpdateService;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.global.bizppurio.application.usecase.BizppurioJuniorMessage;
 import com.postgraduate.global.bizppurio.application.usecase.BizppurioSeniorMessage;
@@ -47,6 +48,7 @@ public class MentoringManageUseCase {
     private final RefuseSaveService refuseSaveService;
     private final AccountGetService accountGetService;
     private final SeniorGetService seniorGetService;
+    private final SeniorUpdateService seniorUpdateService;
     private final SalaryGetService salaryGetService;
     private final SalaryUpdateService salaryUpdateService;
     private final PaymentManageUseCase paymentManageUseCase;
@@ -76,6 +78,7 @@ public class MentoringManageUseCase {
         Payment payment = mentoring.getPayment();
         paymentManageUseCase.refundPayByUser(user, payment.getOrderId());
         mentoringUpdateService.updateCancel(mentoring);
+        seniorUpdateService.minusMentoring(senior);
         bizppurioSeniorMessage.mentoringRefund(senior.getUser());
     }
 
@@ -98,6 +101,7 @@ public class MentoringManageUseCase {
         Payment payment = mentoring.getPayment();
         paymentManageUseCase.refundPayBySenior(senior, payment.getOrderId());
         mentoringUpdateService.updateRefuse(mentoring);
+        seniorUpdateService.minusMentoring(senior);
         bizppurioJuniorMessage.mentoringRefuse(mentoring.getUser());
     }
 
