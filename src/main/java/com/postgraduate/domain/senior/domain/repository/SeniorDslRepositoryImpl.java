@@ -37,7 +37,7 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
 
     @Override
     public Page<Senior> findAllBySearchSenior(String search, String sort, Pageable pageable) {
-        List<Tuple> results = queryFactory.select(senior.seniorId, senior.user.nickName, senior.hit)
+        List<Tuple> results = queryFactory.select(senior.seniorId, senior.user.nickName, senior.hit, senior.mentoringHit)
                 .from(senior)
                 .distinct()
                 .leftJoin(senior.user, user)
@@ -46,7 +46,8 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
                                 .or(senior.user.nickName.like("%" + search + "%")),
                         senior.user.isDelete.isFalse()
                 )
-                .orderBy(orderSpecifier(sort))
+                .orderBy(mentoringOrderSpecifier(sort))
+                .orderBy(hitOrderSpecifier(sort))
                 .orderBy(senior.user.nickName.asc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -62,7 +63,8 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
                         .toList()))
                 .leftJoin(senior.user, user)
                 .fetchJoin()
-                .orderBy(orderSpecifier(sort))
+                .orderBy(mentoringOrderSpecifier(sort))
+                .orderBy(hitOrderSpecifier(sort))
                 .orderBy(senior.user.nickName.asc())
                 .fetch();
 
@@ -81,7 +83,7 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
         return new PageImpl<>(seniors, pageable, total);
     }
 
-    private OrderSpecifier<?> orderSpecifier(String sort) {
+    private OrderSpecifier<?> hitOrderSpecifier(String sort) {
         if (sort == null)
             return new OrderSpecifier<>(DESC, senior.hit);
         if (sort.equals("low"))
@@ -89,9 +91,18 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
         return new OrderSpecifier<>(DESC, senior.hit);
     }
 
+    private OrderSpecifier<?> mentoringOrderSpecifier(String sort) {
+        if (sort == null)
+            return new OrderSpecifier<>(DESC, senior.mentoringHit);
+        if (sort.equals("low"))
+            return new OrderSpecifier<>(ASC, senior.mentoringHit);
+        return new OrderSpecifier<>(DESC, senior.mentoringHit);
+    }
+
+
     @Override
     public Page<Senior> findAllByFieldSenior(String field, String postgradu, Pageable pageable) {
-        List<Tuple> results = queryFactory.select(senior.seniorId, senior.user.nickName, senior.hit)
+        List<Tuple> results = queryFactory.select(senior.seniorId, senior.user.nickName, senior.hit, senior.mentoringHit)
                 .from(senior)
                 .distinct()
                 .leftJoin(senior.user, user)
@@ -100,6 +111,7 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
                         postgraduSpecifier(postgradu),
                         senior.user.isDelete.isFalse()
                 )
+                .orderBy(senior.mentoringHit.desc())
                 .orderBy(senior.hit.desc())
                 .orderBy(senior.user.nickName.asc())
                 .offset(pageable.getOffset())
@@ -116,6 +128,7 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
                         .toList()))
                 .leftJoin(senior.user, user)
                 .fetchJoin()
+                .orderBy(senior.mentoringHit.desc())
                 .orderBy(senior.hit.desc())
                 .orderBy(senior.user.nickName.asc())
                 .fetch();
