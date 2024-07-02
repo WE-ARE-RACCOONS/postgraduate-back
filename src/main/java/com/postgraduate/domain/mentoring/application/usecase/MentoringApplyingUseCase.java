@@ -12,6 +12,7 @@ import com.postgraduate.domain.mentoring.exception.MentoringDateException;
 import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.payment.domain.service.PaymentGetService;
 import com.postgraduate.domain.senior.domain.entity.Senior;
+import com.postgraduate.domain.senior.domain.service.SeniorUpdateService;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.global.bizppurio.application.usecase.BizppurioJuniorMessage;
 import com.postgraduate.global.bizppurio.application.usecase.BizppurioSeniorMessage;
@@ -26,6 +27,7 @@ import java.util.Optional;
 @Transactional
 public class MentoringApplyingUseCase {
     private final PaymentGetService paymentGetService;
+    private final SeniorUpdateService seniorUpdateService;
     private final MentoringGetService mentoringGetService;
     private final MentoringSaveService mentoringSaveService;
     private final AccountGetService accountGetService;
@@ -41,9 +43,14 @@ public class MentoringApplyingUseCase {
         Senior senior = payment.getSenior();
         Mentoring mentoring = MentoringMapper.mapToMentoring(user, senior, payment, request);
         mentoringSaveService.save(mentoring);
+        seniorUpdateService.plusMentoring(senior);
         Optional<Account> account = accountGetService.bySenior(senior);
+        sendMessage(user, senior);
+        return new ApplyingResponse(account.isPresent());
+    }
+
+    private void sendMessage(User user, Senior senior) {
         bizppurioJuniorMessage.mentoringApply(user);
         bizppurioSeniorMessage.mentoringApply(senior.getUser());
-        return new ApplyingResponse(account.isPresent());
     }
 }
