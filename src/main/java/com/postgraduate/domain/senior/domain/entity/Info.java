@@ -39,7 +39,7 @@ public class Info {
     @Builder.Default
     private Boolean etcPostgradu = false;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @Column(nullable = false, length = 500)
     private String totalInfo; // 모든 Info정보 String으로 가지는 컬럼 - 검색시 사용
 
     @Column(columnDefinition = "TEXT")
