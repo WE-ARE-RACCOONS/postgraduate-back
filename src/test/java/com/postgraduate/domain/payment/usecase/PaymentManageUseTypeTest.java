@@ -68,7 +68,7 @@ class PaymentManageUseTypeTest {
                 "a", "123", "a",
                 0, USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE);
         senior = new Senior(-1L, user, "a",
-                APPROVE, 1, info, profile,
+                APPROVE, 1,1, info, profile,
                 LocalDateTime.now(), LocalDateTime.now());
     }
 

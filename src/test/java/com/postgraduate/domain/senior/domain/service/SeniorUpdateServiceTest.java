@@ -33,7 +33,7 @@ class SeniorUpdateServiceTest {
     private Senior senior;
     @BeforeEach
     void setting() {
-        senior = new Senior(1L, user, "a", Status.WAITING, 100, new Info(), new Profile(), now(), now());
+        senior = new Senior(1L, user, "a", Status.WAITING, 1, 100, new Info(), new Profile(), now(), now());
     }
 
     @Test

@@ -69,14 +69,14 @@ class SeniorMyPageUseTypeTest {
                 "a", "123", "a",
                 1, USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE);
         senior = new Senior(1L, user, "a",
-                APPROVE, 1, info, profile,
+                APPROVE, 1, 1, info, profile,
                 LocalDateTime.now(), LocalDateTime.now());
     }
 
     @Test
     @DisplayName("Profile Null 선배 자신의 정보 조회")
     void getSeniorInfoWithNullProfile() {
-        senior = new Senior(1L, user, "a", WAITING, 1, info, null, LocalDateTime.now(), LocalDateTime.now());
+        senior = new Senior(1L, user, "a", WAITING, 1, 1, info, null, LocalDateTime.now(), LocalDateTime.now());
 
         given(seniorGetService.byUser(user))
                 .willReturn(senior);
@@ -121,7 +121,7 @@ class SeniorMyPageUseTypeTest {
     @Test
     @DisplayName("선배 자신의 마이페이지 프로필 작성 이전 Info조회 테스트")
     void getSeniorMyPageProfileWithNull() {
-        Senior nullSenior = new Senior(-2L, user, "asd", APPROVE, 1, info, null, LocalDateTime.now(), null);
+        Senior nullSenior = new Senior(-2L, user, "asd", APPROVE, 1, 1, info, null, LocalDateTime.now(), null);
         given(seniorGetService.byUser(user))
                 .willReturn(nullSenior);
 

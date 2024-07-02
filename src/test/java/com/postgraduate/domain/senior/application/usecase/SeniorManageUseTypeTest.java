@@ -91,7 +91,7 @@ class SeniorManageUseTypeTest {
                 "a", "123", "a",
                 1, SENIOR, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE);
         senior = new Senior(1L, user, "a",
-                APPROVE, 1, info, profile,
+                APPROVE, 1, 1, info, profile,
                 LocalDateTime.now(), LocalDateTime.now());
     }
 
