@@ -25,6 +25,14 @@ public class SeniorUpdateService {
         senior.updateInfo(info);
     }
 
+    public void plusMentoring(Senior senior) {
+        senior.plusMentoringHit();
+    }
+
+    public void minusMentoring(Senior senior) {
+        senior.minusMentoringHit();
+    }
+
     public void updateHit(Senior senior) {
         senior.updateHit();
     }

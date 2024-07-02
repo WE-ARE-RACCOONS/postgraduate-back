@@ -32,8 +32,8 @@ public class Resource {
     private User userOfSenior = new User(-2L, -2L, "mail", "선배", "012", "profile", 0, SENIOR, true, now(), now(), false);
     private Info info = new Info("major", "서울대학교", "교수님", "키워드1,키워드2", "랩실", "인공지능", false, false, "인공지능,키워드1,키워드2", "chatLink", 30);
     private Profile profile = new Profile("저는요", "한줄소개", "대상");
-    private Senior senior = new Senior(-1L, userOfSenior, "certification", com.postgraduate.domain.senior.domain.entity.constant.Status.WAITING, 0, info, profile, now(), now());
-    private Senior otherSenior = new Senior(-3L, otherUser, "certification", com.postgraduate.domain.senior.domain.entity.constant.Status.WAITING, 0, info, null, now(), now());
+    private Senior senior = new Senior(-1L, userOfSenior, "certification", com.postgraduate.domain.senior.domain.entity.constant.Status.WAITING, 0, 0, info, profile, now(), now());
+    private Senior otherSenior = new Senior(-3L, otherUser, "certification", com.postgraduate.domain.senior.domain.entity.constant.Status.WAITING, 0, 0, info, null, now(), now());
     private SalaryAccount salaryAccount = new SalaryAccount("bank", "1234", "holder");
     private Salary salary = new Salary(-1L, false, senior, 20000, getSalaryDate(), LocalDateTime.now(), salaryAccount);
     private Payment payment = new Payment(-1L, user, senior, 20000, "1", "123", "123", LocalDateTime.now(), LocalDateTime.now(), DONE);

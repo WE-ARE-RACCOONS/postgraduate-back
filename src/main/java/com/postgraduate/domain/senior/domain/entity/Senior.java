@@ -22,7 +22,8 @@ import static com.postgraduate.domain.senior.domain.entity.constant.Status.WAITI
         @Index(name = "senior_field_index", columnList = "field"),
         @Index(name = "senior_etc_field_index", columnList = "etcField"),
         @Index(name = "senior_postgradu_index", columnList = "postgradu"),
-        @Index(name = "senior_etc_postgradu_index", columnList = "etcPostgradu")
+        @Index(name = "senior_etc_postgradu_index", columnList = "etcPostgradu"),
+        @Index(name = "senior_mentoring_hit_index", columnList = "mentoringHit")
 })
 @Builder
 @AllArgsConstructor
@@ -47,6 +48,9 @@ public class Senior {
 
     @Column(nullable = false)
     private int hit;
+
+    @Column(nullable = false)
+    private int mentoringHit;
 
     @Embedded
     private Info info;
@@ -79,5 +83,13 @@ public class Senior {
 
     public void updateHit() {
         this.hit++;
+    }
+
+    public void plusMentoringHit() {
+        this.mentoringHit++;
+    }
+
+    public void minusMentoringHit() {
+        this.mentoringHit--;
     }
 }
