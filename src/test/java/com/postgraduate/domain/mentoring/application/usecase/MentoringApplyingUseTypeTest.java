@@ -16,6 +16,7 @@ import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
+import com.postgraduate.domain.senior.domain.service.SeniorUpdateService;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.global.bizppurio.application.usecase.BizppurioJuniorMessage;
 import com.postgraduate.global.bizppurio.application.usecase.BizppurioSeniorMessage;
@@ -54,6 +55,8 @@ class MentoringApplyingUseTypeTest {
     @Mock
     private AccountGetService accountGetService;
     @Mock
+    private SeniorUpdateService seniorUpdateService;
+    @Mock
     private BizppurioSeniorMessage bizppurioSeniorMessage;
     @Mock
     private BizppurioJuniorMessage bizppurioJuniorMessage;
@@ -80,7 +83,7 @@ class MentoringApplyingUseTypeTest {
                 "a", "123", "a",
                 0, USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE);
         senior = new Senior(-1L, user, "a",
-                APPROVE, 1, info, profile,
+                APPROVE,1, 1, info, profile,
                 LocalDateTime.now(), LocalDateTime.now());
         salary = new Salary(-1L, FALSE, senior, 10000, LocalDate.now(), LocalDateTime.now(), null);
         account = new Account(-1L, "1", "은행", "유저", senior);

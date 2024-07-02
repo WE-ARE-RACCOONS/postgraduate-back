@@ -68,7 +68,7 @@ class MentoringSeniorInfoUseTypeTest {
                 "a", "123", "a",
                 0, USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE);
         senior = new Senior(-1L, user, "a",
-                APPROVE, 1, info, profile,
+                APPROVE, 1, 1, info, profile,
                 LocalDateTime.now(), LocalDateTime.now());
         salary = new Salary(-1L, FALSE, senior, 10000, LocalDate.now(), LocalDateTime.now(), null);
         payment = new Payment(-1L, mentoringUser, senior, 20000, "a", "a", "a", LocalDateTime.now(), null, Status.DONE);

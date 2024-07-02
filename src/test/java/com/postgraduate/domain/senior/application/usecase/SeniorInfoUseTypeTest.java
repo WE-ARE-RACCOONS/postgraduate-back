@@ -62,7 +62,7 @@ class SeniorInfoUseTypeTest {
                 "a", "12345", "a",
                 1, USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE);
         senior = new Senior(1L, user, "a",
-                APPROVE, 1, info, profile,
+                APPROVE, 1, 1, info, profile,
                 LocalDateTime.now(), LocalDateTime.now());
     }
 
@@ -92,7 +92,7 @@ class SeniorInfoUseTypeTest {
     @DisplayName("검색어 기본 페이지 조회")
     void getSearchSeniorWithNull() {
         Senior otherSenior = new Senior(-2L, user, "a",
-                APPROVE, 1, info, profile,
+                APPROVE, 1, 1, info, profile,
                 LocalDateTime.now(), LocalDateTime.now());
         List<Senior> seniors = List.of(senior, otherSenior);
         Page<Senior> seniorPage = new PageImpl<>(seniors);
@@ -110,7 +110,7 @@ class SeniorInfoUseTypeTest {
     @DisplayName("검색어 페이지 조회")
     void getSearchSeniorWithPage() {
         Senior senior1 = new Senior(1L, user, "a",
-                APPROVE, 1, info, profile,
+                APPROVE, 1, 1, info, profile,
                 LocalDateTime.now(), LocalDateTime.now());
         List<Senior> seniors = List.of(senior, senior1);
         Page<Senior> seniorPage = new PageImpl<>(seniors);
@@ -128,7 +128,7 @@ class SeniorInfoUseTypeTest {
     @DisplayName("필터 기본 페이지 조회")
     void getFieldSeniorWithNull() {
         Senior senior1 = new Senior(1L, user, "a",
-                APPROVE, 1, info, profile,
+                APPROVE, 1, 1,info, profile,
                 LocalDateTime.now(), LocalDateTime.now());
         List<Senior> seniors = List.of(senior, senior1);
         Page<Senior> seniorPage = new PageImpl<>(seniors);
@@ -146,7 +146,7 @@ class SeniorInfoUseTypeTest {
     @DisplayName("필터 페이지 조회")
     void getFieldSeniorWithPage() {
         Senior senior1 = new Senior(1L, user, "a",
-                APPROVE, 1, info, profile,
+                APPROVE, 1, 1, info, profile,
                 LocalDateTime.now(), LocalDateTime.now());
         List<Senior> seniors = List.of(senior, senior1);
         Page<Senior> seniorPage = new PageImpl<>(seniors);
