@@ -86,7 +86,7 @@ class SignUpUseTypeTest {
                 1, USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), FALSE);
         wish = new Wish(1L, "major", "field", TRUE, user, Status.WAITING);
         senior = new Senior(1L, user, "a",
-                APPROVE, 1, info, profile,
+                APPROVE,1, 1, info, profile,
                 LocalDateTime.now(), LocalDateTime.now());
     }
 
