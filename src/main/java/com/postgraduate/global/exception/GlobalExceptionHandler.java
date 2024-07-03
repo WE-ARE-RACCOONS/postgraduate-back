@@ -33,4 +33,9 @@ public class GlobalExceptionHandler {
         log.error(LOG_FORMAT, "@Valid Error", "MethodArgumentNotValidException");
         return ResponseDto.create(ErrorCode.VALID_BLANK.getCode(), ex.getBindingResult().getAllErrors().get(0).getDefaultMessage());
     }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseDto<ErrorResponse> handleInternalServerException(Exception ex) {
+        return ResponseDto.create(ex.getMessage(), "문제가 발생하였습니다.");
+    }
 }
