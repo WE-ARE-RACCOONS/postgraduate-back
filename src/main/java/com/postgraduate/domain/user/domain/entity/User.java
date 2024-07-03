@@ -8,9 +8,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.*;
 
 import java.time.LocalDateTime;
+
+import static java.time.LocalDate.now;
 
 @Entity
 @Table(indexes = {
@@ -21,6 +24,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Slf4j
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -76,8 +80,23 @@ public class User {
         this.isDelete = true;
     }
 
+    public void restoreDelete() {
+        this.isDelete = false;
+    }
+
     public boolean isDelete() {
         return this.isDelete;
+    }
+
+    public boolean isRealDelete() {
+        return (
+                this.isDelete
+                        &&
+                        this.updatedAt.isBefore(
+                                now().minusDays(15)
+                                        .atStartOfDay()
+                        )
+        );
     }
 
     public boolean isDefaultProfile(String defaultProfile) {

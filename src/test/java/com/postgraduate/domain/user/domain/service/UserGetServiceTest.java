@@ -60,7 +60,7 @@ class UserGetServiceTest {
     @Test
     @DisplayName("socialId 조회 예외 테스트")
     void bySocialIdFail() {
-        given(userRepository.findBySocialIdAndIsDeleteIsFalse(user.getSocialId()))
+        given(userRepository.findBySocialId(user.getSocialId()))
                 .willReturn(Optional.ofNullable(null));
 
         assertThatThrownBy(() -> userGetService.bySocialId(user.getSocialId()))
@@ -70,7 +70,7 @@ class UserGetServiceTest {
     @Test
     @DisplayName("socialId 조회 테스트")
     void bySocialId() {
-        given(userRepository.findBySocialIdAndIsDeleteIsFalse(user.getSocialId()))
+        given(userRepository.findBySocialId(user.getSocialId()))
                 .willReturn(Optional.of(user));
 
         User result = userGetService.bySocialId(user.getSocialId());
