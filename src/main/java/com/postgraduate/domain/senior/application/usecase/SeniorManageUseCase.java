@@ -8,6 +8,7 @@ import com.postgraduate.domain.available.application.dto.req.AvailableCreateRequ
 import com.postgraduate.domain.available.domain.entity.Available;
 import com.postgraduate.domain.available.domain.service.AvailableDeleteService;
 import com.postgraduate.domain.available.domain.service.AvailableSaveService;
+import com.postgraduate.domain.salary.application.mapper.SalaryMapper;
 import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.salary.domain.entity.SalaryAccount;
 import com.postgraduate.domain.salary.domain.service.SalaryGetService;
@@ -35,7 +36,6 @@ import java.util.Optional;
 
 import static com.postgraduate.domain.account.application.mapper.AccountMapper.mapToAccount;
 import static com.postgraduate.domain.available.application.util.AvailableUtil.sortAvailable;
-import static com.postgraduate.domain.salary.application.mapper.SalaryMapper.mapToSalaryAccount;
 import static com.postgraduate.domain.senior.application.mapper.SeniorMapper.mapToInfo;
 import static com.postgraduate.domain.senior.application.mapper.SeniorMapper.mapToProfile;
 
@@ -53,6 +53,7 @@ public class SeniorManageUseCase {
     private final AccountUpdateService accountUpdateService;
     private final SalaryGetService salaryGetService;
     private final SalaryUpdateService salaryUpdateService;
+    private final SalaryMapper salaryMapper;
     private final EncryptorUtils encryptorUtils;
     private final UserUtils userUtils;
     private final SeniorUtils seniorUtils;
@@ -127,7 +128,7 @@ public class SeniorManageUseCase {
 
     private void updateSalaryAccount(Senior senior, Account account) {
         List<Salary> salaries = salaryGetService.allBySeniorAndAccountIsNull(senior);
-        SalaryAccount salaryAccount = mapToSalaryAccount(account);
+        SalaryAccount salaryAccount = salaryMapper.mapToSalaryAccount(account);
         salaries.forEach(salary -> salaryUpdateService.updateAccount(salary, salaryAccount));
     }
 }
