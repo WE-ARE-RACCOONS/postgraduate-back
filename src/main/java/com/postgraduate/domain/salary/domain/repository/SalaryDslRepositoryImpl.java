@@ -156,5 +156,16 @@ public class SalaryDslRepositoryImpl implements SalaryDslRepository {
         }
         return nowSalaries;
     }
+
+    @Override
+    public boolean existIncompleteSalary(Senior senior) {
+        Integer fetchFirst = queryFactory.selectOne()
+                .from(salary)
+                .where(salary.senior.eq(senior),
+                        salary.status.isFalse(),
+                        salary.totalAmount.gt(0))
+                .fetchFirst();
+        return fetchFirst != null;
+    }
 }
 

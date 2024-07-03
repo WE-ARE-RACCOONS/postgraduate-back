@@ -152,4 +152,28 @@ public class MentoringDslRepositoryImpl implements MentoringDslRepository {
                 .where(mentoring.status.eq(EXPECTED))
                 .fetch();
     }
+
+    @Override
+    public boolean existSeniorMentoring(Senior senior) {
+        Integer fetchFirst = queryFactory.selectOne()
+                .from(mentoring)
+                .where(mentoring.senior.eq(senior)
+                        .and(
+                                mentoring.status.eq(WAITING).or(mentoring.status.eq(EXPECTED))
+                        ))
+                .fetchFirst();
+        return fetchFirst != null;
+    }
+
+    @Override
+    public boolean existUserMentoring(User user) {
+        Integer fetchFirst = queryFactory.selectOne()
+                .from(mentoring)
+                .where(mentoring.user.eq(user)
+                        .and(
+                                mentoring.status.eq(WAITING).or(mentoring.status.eq(EXPECTED))
+                        ))
+                .fetchFirst();
+        return fetchFirst != null;
+    }
 }
