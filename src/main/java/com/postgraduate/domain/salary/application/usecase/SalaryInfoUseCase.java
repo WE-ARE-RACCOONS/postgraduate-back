@@ -23,6 +23,7 @@ import java.util.List;
 public class SalaryInfoUseCase {
     private final SeniorGetService seniorGetService;
     private final SalaryGetService salaryGetService;
+    private final SalaryMapper salaryMapper;
     private final MentoringGetService mentoringGetService;
 
     public SalaryInfoResponse getSalary(User user) {
@@ -38,7 +39,7 @@ public class SalaryInfoUseCase {
                         mentoringGetService.bySeniorAndSalaryTrue(senior) :
                         mentoringGetService.bySeniorAndSalaryFalse(senior);
         List<SalaryDetails> salaryDetails = mentorings.stream()
-                .map(SalaryMapper::mapToSalaryDetail)
+                .map(salary -> salaryMapper.mapToSalaryDetail(salary))
                 .toList();
         return new SalaryDetailsResponse(salaryDetails);
     }

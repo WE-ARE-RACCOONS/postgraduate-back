@@ -31,6 +31,7 @@ public class MentoringApplyingUseCase {
     private final MentoringGetService mentoringGetService;
     private final MentoringSaveService mentoringSaveService;
     private final AccountGetService accountGetService;
+    private final MentoringMapper mentoringMapper;
     private final BizppurioSeniorMessage bizppurioSeniorMessage;
     private final BizppurioJuniorMessage bizppurioJuniorMessage;
 
@@ -41,7 +42,7 @@ public class MentoringApplyingUseCase {
         if (dates.length != 3)
             throw new MentoringDateException();
         Senior senior = payment.getSenior();
-        Mentoring mentoring = MentoringMapper.mapToMentoring(user, senior, payment, request);
+        Mentoring mentoring = mentoringMapper.mapToMentoring(user, senior, payment, request);
         mentoringSaveService.save(mentoring);
         seniorUpdateService.plusMentoring(senior);
         Optional<Account> account = accountGetService.bySenior(senior);

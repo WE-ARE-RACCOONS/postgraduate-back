@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.postgraduate.domain.mentoring.application.mapper.MentoringMapper.mapToAppliedDetailInfo;
 import static com.postgraduate.domain.mentoring.util.DateUtils.stringToLocalDateTime;
 
 @Service
@@ -25,16 +24,17 @@ import static com.postgraduate.domain.mentoring.util.DateUtils.stringToLocalDate
 @RequiredArgsConstructor
 public class MentoringUserInfoUseCase {
     private final MentoringGetService mentoringGetService;
+    private final MentoringMapper mentoringMapper;
 
     public AppliedMentoringDetailResponse getMentoringDetail(User user, Long mentoringId) {
         Mentoring mentoring = mentoringGetService.byIdAndUserForDetails(mentoringId, user);
-        return mapToAppliedDetailInfo(mentoring);
+        return mentoringMapper.mapToAppliedDetailInfo(mentoring);
     }
 
     public WaitingMentoringResponse getWaiting(User user) {
         List<Mentoring> mentorings = mentoringGetService.byUserWaiting(user);
         List<WaitingMentoringInfo> waitingMentoringInfos = mentorings.stream()
-                .map(MentoringMapper::mapToWaitingInfo)
+                .map(mentoring -> mentoringMapper.mapToWaitingInfo(mentoring))
                 .toList();
         return new WaitingMentoringResponse(waitingMentoringInfos);
     }
@@ -42,7 +42,7 @@ public class MentoringUserInfoUseCase {
     public ExpectedMentoringResponse getExpected(User user) {
         List<Mentoring> mentorings = mentoringGetService.byUserExpected(user);
         List<ExpectedMentoringInfo> expectedMentoringInfos = mentorings.stream()
-                .map(MentoringMapper::mapToExpectedInfo)
+                .map(mentoring -> mentoringMapper.mapToExpectedInfo(mentoring))
                 .toList();
         return new ExpectedMentoringResponse(expectedMentoringInfos);
     }
@@ -50,7 +50,7 @@ public class MentoringUserInfoUseCase {
     public DoneMentoringResponse getDone(User user) {
         List<Mentoring> mentorings = mentoringGetService.byUserDone(user);
         List<DoneMentoringInfo> doneMentoringInfos = mentorings.stream()
-                .map(MentoringMapper::mapToDoneInfo)
+                .map(mentoring -> mentoringMapper.mapToDoneInfo(mentoring))
                 .sorted((o1, o2) -> {
                     if (stringToLocalDateTime(o1.date())
                             .isAfter(stringToLocalDateTime(o2.date())))
