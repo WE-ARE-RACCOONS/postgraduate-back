@@ -38,4 +38,8 @@ public class UserUpdateService {
                 myPageUserAccountRequest.phoneNumber()
         );
     }
+
+    public void updateRestore(User user) {
+        user.restoreDelete();
+    }
 }

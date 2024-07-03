@@ -13,6 +13,8 @@ import org.hibernate.annotations.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static java.time.LocalDate.now;
+
 @Entity
 @Table(indexes = {
         @Index(name = "user_nick_name_index", columnList = "nickName"),
@@ -81,11 +83,26 @@ public class User {
         this.isDelete = true;
     }
 
+    public void restoreDelete() {
+        this.isDelete = false;
+    }
+
     public boolean isDelete() {
         return this.isDelete;
     }
 
     public boolean isDefaultProfile(List<String> defaultProfile) {
         return defaultProfile.contains(profile);
+    }
+
+    public boolean isRealDelete() {
+        return (
+                this.isDelete
+                        &&
+                        this.updatedAt.isBefore(
+                                now().minusDays(15)
+                                        .atStartOfDay()
+                        )
+        );
     }
 }
