@@ -5,11 +5,11 @@ import com.postgraduate.domain.auth.application.dto.res.AuthResponse;
 import com.postgraduate.domain.auth.application.dto.res.AuthUserResponse;
 import com.postgraduate.domain.auth.application.dto.res.JwtTokenResponse;
 import com.postgraduate.domain.auth.application.usecase.oauth.SelectOauth;
-import com.postgraduate.domain.auth.application.usecase.oauth.SignOutUseCase;
 import com.postgraduate.domain.auth.application.usecase.oauth.SignUpUseCase;
 import com.postgraduate.domain.auth.application.usecase.jwt.JwtUseCase;
 import com.postgraduate.domain.auth.application.usecase.oauth.SignInUseCase;
 import com.postgraduate.domain.auth.presentation.constant.Provider;
+import com.postgraduate.domain.user.application.usecase.UserManageUseCase;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.global.dto.ResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,6 +34,7 @@ import static com.postgraduate.global.dto.ResponseDto.create;
 public class AuthController {
     private final SelectOauth selectOauth;
     private final SignUpUseCase signUpUseCase;
+    private final UserManageUseCase userManageUseCase;
     private final JwtUseCase jwtUseCase;
 
     @PostMapping("/login/{provider}")
@@ -63,14 +64,6 @@ public class AuthController {
     public ResponseEntity<ResponseDto<Void>> logout(@AuthenticationPrincipal User user) {
         jwtUseCase.logout(user);
         return ResponseEntity.ok(create(AUTH_DELETE.getCode(), LOGOUT_USER.getMessage()));
-    }
-
-    @PostMapping("/signout/{provider}/{userId}")
-    @Operation(summary = "회원 탈퇴 | 관리자 토큰 필요", description = "회원 탈퇴 진행")
-    public ResponseEntity<ResponseDto<Void>> signOut(@PathVariable Provider provider, @PathVariable Long userId) {
-        SignOutUseCase signOutUseCase = selectOauth.selectSignOut(provider);
-        signOutUseCase.signOut(userId);
-        return ResponseEntity.ok(create(AUTH_DELETE.getCode(), SIGNOUT_USER.getMessage()));
     }
 
     @PostMapping("/user/signup")
@@ -127,4 +120,12 @@ public class AuthController {
         JwtTokenResponse jwtToken = jwtUseCase.regenerateToken(user, request);
         return ResponseEntity.ok(create(AUTH_UPDATE.getCode(), SUCCESS_REGENERATE_TOKEN.getMessage(), jwtToken));
     }
+
+    @PostMapping("/signout")
+    @Operation(summary = "회원 탈퇴", description = "회원 탈퇴 진행")
+    public ResponseEntity<ResponseDto<Void>> signOut(@AuthenticationPrincipal User user, @RequestBody SignOutRequest signOutRequest) {
+        userManageUseCase.updateDelete(user, signOutRequest);
+        return ResponseEntity.ok(create(AUTH_DELETE.getCode(), SIGNOUT_USER.getMessage()));
+    }
+
 }

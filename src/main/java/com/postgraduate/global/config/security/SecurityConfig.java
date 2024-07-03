@@ -91,6 +91,7 @@ public class SecurityConfig {
                         .requestMatchers("/auth/senior/change").hasAuthority(Role.USER.name())
                         .requestMatchers("/auth/refresh").authenticated()
                         .requestMatchers("/auth/logout").authenticated()
+                        .requestMatchers("/signout/**").authenticated()
 
                         .anyRequest().permitAll()
                 )
