@@ -17,6 +17,7 @@ public interface MentoringDslRepository {
     List<Mentoring> findAllBySeniorAndSalaryStatus(Senior senior, Boolean status);
     Optional<Mentoring> findByMentoringIdAndUserForDetails(Long mentoringId, User user);
     Optional<Mentoring> findByMentoringIdAndSeniorForDetails(Long mentoringId, Senior senior);
-
     List<Mentoring> findAllForMessage();
+    boolean existSeniorMentoring(Senior senior);
+    boolean existUserMentoring(User user);
 }
