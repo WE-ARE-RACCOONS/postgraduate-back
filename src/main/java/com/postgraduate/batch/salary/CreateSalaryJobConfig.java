@@ -92,13 +92,12 @@ public class CreateSalaryJobConfig {
                         .on(senior.user.eq(user))
                         .leftJoin(account)
                         .on(account.senior.eq(senior))
-                        .where(user.isDelete.isFalse()
-                                .and(senior.seniorId.notIn(
+                        .where(senior.seniorId.notIn(
                                         JPAExpressions
                                                 .select(salary.senior.seniorId)
                                                 .from(salary)
                                                 .where(salary.salaryDate.eq(date))
-                                )))
+                                ))
                         .orderBy(senior.seniorId.desc())
         );
     }
