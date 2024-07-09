@@ -96,7 +96,7 @@ public class SignUpUseCase {
     private User changeSeniorFin(Senior senior, User user) {
         seniorSaveService.saveSenior(senior);
         user = userGetService.byUserId(user.getUserId());
-        userUpdateService.userToSeniorRole(user);
+        userUpdateService.userToSeniorRole(user, rd.nextInt(5));
         Salary salary = SalaryMapper.mapToSalary(senior, getSalaryDate());
         Salary nextSalary = SalaryMapper.mapToSalary(senior, getSalaryDate().plusDays(7));
         salarySaveService.save(salary);

@@ -73,6 +73,10 @@ public class User {
         this.phoneNumber = phoneNumber;
     }
 
+    public void updateProfile(String profile) {
+        this.profile = profile;
+    }
+
     public void updateDelete() {
         this.isDelete = true;
     }

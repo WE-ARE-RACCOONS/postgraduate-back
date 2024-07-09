@@ -1,5 +1,6 @@
 package com.postgraduate.domain.user.domain.service;
 
+import com.postgraduate.domain.auth.util.ProfileUtils;
 import com.postgraduate.domain.senior.application.dto.req.SeniorMyPageUserAccountRequest;
 import com.postgraduate.domain.user.application.dto.req.UserInfoRequest;
 import com.postgraduate.domain.user.domain.entity.User;
@@ -8,6 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static com.postgraduate.domain.user.domain.entity.constant.Role.*;
@@ -18,6 +20,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
 class UserUpdateServiceTest {
+    @Mock
+    ProfileUtils profileUtils;
+
     @InjectMocks
     private UserUpdateService userUpdateService;
 
@@ -43,7 +48,7 @@ class UserUpdateServiceTest {
     @Test
     @DisplayName("SENIOR 변경 테스트")
     void updateRoleWithSenior() {
-        userUpdateService.userToSeniorRole(user);
+        userUpdateService.userToSeniorRole(user, 1);
 
         assertThat(user.getRole())
                 .isEqualTo(SENIOR);
