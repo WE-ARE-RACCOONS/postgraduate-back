@@ -3,6 +3,7 @@ package com.postgraduate.domain.auth.application.usecase.oauth;
 import com.postgraduate.domain.auth.application.dto.req.SeniorChangeRequest;
 import com.postgraduate.domain.auth.application.dto.req.SeniorSignUpRequest;
 import com.postgraduate.domain.auth.application.dto.req.SignUpRequest;
+import com.postgraduate.domain.auth.util.ProfileUtils;
 import com.postgraduate.domain.salary.domain.service.SalarySaveService;
 import com.postgraduate.domain.senior.application.utils.SeniorUtils;
 import com.postgraduate.domain.senior.domain.entity.Info;
@@ -68,6 +69,8 @@ class SignUpUseTypeTest {
     private SeniorUtils seniorUtils;
     @Mock
     private SlackSignUpMessage slackSignUpMessage;
+    @Mock
+    private ProfileUtils profileUtils;
     @InjectMocks
     private SignUpUseCase signUpUseCase;
 
