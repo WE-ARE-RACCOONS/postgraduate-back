@@ -168,7 +168,7 @@ class SignUpUseTypeTest {
         verify(seniorSaveService, times(1))
                 .saveSenior(any(Senior.class));
         verify(userUpdateService, times(1))
-                .userToSeniorRole(any());
+                .userToSeniorRole(any(), anyInt());
 
     }
 }
