@@ -244,9 +244,12 @@ public class BizppurioMapper {
                         "\n" +
                         "오래 기다려주셔서 감사드립니다!\n" +
                         "\n" +
-                        request.name() + "님께서 신청해주신, " + request.postgraduate() + "대학원 " + request.major() + "랩실 선배와 매칭되었어요 \uD83D\uDE42\n" +
+                        request.name() + "님께서 신청해주신, 원하는 선배가 가입을 하셨습니다! \uD83D\uDE42\n" +
                         "\n" +
-                        "아래 링크를 눌러 멘토링을 진행해보세요 !"
+                        "아래 링크를 눌러 사이트로 이동 후 \n" +
+                        request.postgraduate() + "대학원 " + request.lab() + "랩실 선배에게 멘토링을 신청해보세요!\n" +
+                        "\n" +
+                        "( 해당 선배를 찾을 수 없는 경우 카카오톡 채널로 문의주시길 바랍니다. )"
         );
         WebLinkButton goMainPage = new WebLinkButton("대학원 김선배 바로가기", type, mainPage, mainPage);
         WebLinkButton[] buttons = {goMainPage};
