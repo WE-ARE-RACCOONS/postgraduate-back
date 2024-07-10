@@ -1,5 +1,6 @@
 package com.postgraduate.domain.image.application.usecase;
 
+import com.postgraduate.domain.auth.util.ProfileUtils;
 import com.postgraduate.domain.image.application.dto.res.ImageUrlResponse;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.global.config.s3.S3UploadService;
@@ -23,6 +24,8 @@ import static org.mockito.BDDMockito.*;
 class ImageUploadUseTypeTest {
     @Mock
     private S3UploadService s3UploadService;
+    @Mock
+    private ProfileUtils profileUtils;
 
     @InjectMocks
     private ImageUploadUseCase imageUploadUseCase;

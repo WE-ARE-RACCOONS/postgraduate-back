@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(indexes = {
@@ -72,6 +73,10 @@ public class User {
         this.phoneNumber = phoneNumber;
     }
 
+    public void updateProfile(String profile) {
+        this.profile = profile;
+    }
+
     public void updateDelete() {
         this.isDelete = true;
     }
@@ -80,7 +85,7 @@ public class User {
         return this.isDelete;
     }
 
-    public boolean isDefaultProfile(String defaultProfile) {
-        return this.profile.equals(defaultProfile);
+    public boolean isDefaultProfile(List<String> defaultProfile) {
+        return defaultProfile.contains(profile);
     }
 }

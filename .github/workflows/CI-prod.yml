@@ -16,10 +16,14 @@ jobs:
       APPLICATION: ${{ secrets.APPLICATION_PROD }}
 
     steps:
-      # GET GitHub IP
-      - name: get Github IP
+      # Get Public IP using curl
+      - name: Get Public IP
         id: ip
-        uses: haythem/public-ip@v1.2
+        run: echo "::set-output name=ipv4::$(curl -s https://checkip.amazonaws.com)"
+
+      # Display GitHub IP
+      - name: Display GitHub IP
+        run: echo "GitHub IP is ${{ steps.ip.outputs.ipv4 }}"
 
       # Configure AWS Credentials
       - name: Configure AWS Credentials

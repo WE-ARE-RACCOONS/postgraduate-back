@@ -177,7 +177,7 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
         }
 
         return Arrays.stream(postgradus)
-                .map(postgraduName -> senior.info.postgradu.like("%"+postgraduName+"%"))
+                .map(senior.info.postgradu::eq)
                 .reduce(BooleanExpression::or)
                 .orElse(FALSE);
     }

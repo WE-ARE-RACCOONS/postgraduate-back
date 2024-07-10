@@ -1,6 +1,7 @@
 package com.postgraduate.domain.auth.application.usecase.oauth;
 
 import com.postgraduate.domain.auth.application.dto.req.*;
+import com.postgraduate.domain.auth.util.ProfileUtils;
 import com.postgraduate.domain.salary.application.mapper.SalaryMapper;
 import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.salary.domain.service.SalarySaveService;
@@ -19,9 +20,10 @@ import com.postgraduate.global.bizppurio.application.usecase.BizppurioJuniorMess
 import com.postgraduate.global.bizppurio.application.usecase.BizppurioSeniorMessage;
 import com.postgraduate.global.slack.SlackSignUpMessage;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Random;
 
 import static com.postgraduate.domain.salary.util.SalaryUtil.getSalaryDate;
 import static com.postgraduate.domain.senior.application.mapper.SeniorMapper.mapToSenior;
@@ -31,9 +33,7 @@ import static com.postgraduate.domain.user.application.mapper.UserMapper.mapToUs
 @Service
 @RequiredArgsConstructor
 public class SignUpUseCase {
-    @Value("${profile.default}")
-    private String profile;
-
+    private final ProfileUtils profileUtils;
     private final SalarySaveService salarySaveService;
     private final UserSaveService userSaveService;
     private final UserUpdateService userUpdateService;
@@ -45,10 +45,11 @@ public class SignUpUseCase {
     private final SeniorUtils seniorUtils;
     private final BizppurioSeniorMessage bizppurioSeniorMessage;
     private final BizppurioJuniorMessage bizppurioJuniorMessage;
+    private Random rd = new Random();
 
     public User userSignUp(SignUpRequest request) {
         userUtils.checkPhoneNumber(request.phoneNumber());
-        User user = mapToUser(request, profile);
+        User user = mapToUser(request, profileUtils.juniorProfile(rd.nextInt(5)));
         Wish wish = WishMapper.mapToWish(user, request);
         wishSaveService.save(wish);
         userSaveService.save(user);
@@ -61,7 +62,7 @@ public class SignUpUseCase {
     public User seniorSignUp(SeniorSignUpRequest request) {
         seniorUtils.checkKeyword(request.keyword());
         userUtils.checkPhoneNumber(request.phoneNumber());
-        User user = mapToUser(request, profile);
+        User user = mapToUser(request, profileUtils.seniorProfile(rd.nextInt(5)));
         userSaveService.save(user);
         Senior senior = mapToSenior(user, request);
         return seniorSignUpFin(senior);
@@ -95,7 +96,7 @@ public class SignUpUseCase {
     private User changeSeniorFin(Senior senior, User user) {
         seniorSaveService.saveSenior(senior);
         user = userGetService.byUserId(user.getUserId());
-        userUpdateService.userToSeniorRole(user);
+        userUpdateService.userToSeniorRole(user, rd.nextInt(5));
         Salary salary = SalaryMapper.mapToSalary(senior, getSalaryDate());
         Salary nextSalary = SalaryMapper.mapToSalary(senior, getSalaryDate().plusDays(7));
         salarySaveService.save(salary);
