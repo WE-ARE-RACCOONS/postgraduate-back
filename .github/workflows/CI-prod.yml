@@ -19,7 +19,10 @@ jobs:
       # GET GitHub IP
       - name: get Github IP
         id: ip
-        uses: haythem/public-ip@v1.2
+        uses: haythem/public-ip@v1.3
+
+      - name: Display GitHub IP
+        run: echo "GitHub IP is ${{ steps.ip.outputs.ipv4 }}"
 
       # Configure AWS Credentials
       - name: Configure AWS Credentials
