@@ -1,6 +1,5 @@
 package com.postgraduate.domain.user.application.utils;
 
-import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.exception.PhoneNumberException;
 import jakarta.annotation.PostConstruct;
@@ -9,9 +8,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class UserUtils {
-    @Value("${profile.default}")
+    @Value("${profile.senior.default1}")
     private String profile;
-
     private User archiveUser;
 
     @PostConstruct
