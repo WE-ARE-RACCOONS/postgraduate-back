@@ -43,9 +43,4 @@ public class GlobalExceptionHandler {
         log.error(LOG_FORMAT, "500", ex.getStackTrace());
         return ResponseEntity.internalServerError().build();
     }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseDto<ErrorResponse> handleInternalServerException(Exception ex) {
-        return ResponseDto.create(ex.getMessage(), "문제가 발생하였습니다.");
-    }
 }
