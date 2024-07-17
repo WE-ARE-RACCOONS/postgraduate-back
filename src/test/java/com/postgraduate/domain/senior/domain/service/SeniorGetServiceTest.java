@@ -34,7 +34,7 @@ class SeniorGetServiceTest {
     @Test
     @DisplayName("User 기반 Senior 조회 예외 테스트")
     void byUserFail() {
-        given(seniorRepository.findByUser(user))
+        given(seniorRepository.findByUserAndUser_IsDeleteIsFalse(user))
                 .willReturn(ofNullable(null));
 
         assertThatThrownBy(() -> seniorGetService.byUser(user))
@@ -44,7 +44,7 @@ class SeniorGetServiceTest {
     @Test
     @DisplayName("User 기반 Senior 조회 테스트")
     void byUser() {
-        given(seniorRepository.findByUser(user))
+        given(seniorRepository.findByUserAndUser_IsDeleteIsFalse(user))
                 .willReturn(of(senior));
 
         assertThat(seniorGetService.byUser(user))

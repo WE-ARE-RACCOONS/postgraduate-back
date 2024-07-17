@@ -54,7 +54,7 @@ public class SalaryDslRepositoryImpl implements SalaryDslRepository {
                 .from(salary)
                 .where(
                         searchLike(search),
-                        salary.senior.user.isDelete.eq(FALSE)
+                        salary.senior.user.isDelete.isFalse()
                 )
                 .fetchOne();
 
@@ -86,7 +86,10 @@ public class SalaryDslRepositoryImpl implements SalaryDslRepository {
     public List<Salary> findAllLastSalary(LocalDate salaryDate) {
         return queryFactory.selectFrom(salary)
                 .distinct()
-                .where(salary.salaryDate.eq(salaryDate))
+                .where(
+                        salary.salaryDate.eq(salaryDate),
+                        salary.senior.user.isDelete.isFalse()
+                )
                 .leftJoin(salary.senior, senior)
                 .fetchJoin()
                 .leftJoin(salary.senior.user, user)
@@ -101,7 +104,8 @@ public class SalaryDslRepositoryImpl implements SalaryDslRepository {
                 .where(
                         salary.status.isFalse(),
                         salary.salaryDate.lt(salaryDate),
-                        salary.totalAmount.gt(0)
+                        salary.totalAmount.gt(0),
+                        salary.senior.user.isDelete.isFalse()
                 )
                 .leftJoin(salary.senior, senior)
                 .fetchJoin()
@@ -115,12 +119,15 @@ public class SalaryDslRepositoryImpl implements SalaryDslRepository {
     public List<Salary> findAllByDone() {
         return queryFactory.selectFrom(salary)
                 .distinct()
-                .where(salary.status.isTrue())
+                .where(
+                        salary.status.isTrue(),
+                        salary.totalAmount.gt(0),
+                        salary.senior.user.isDelete.isFalse()
+                )
                 .leftJoin(salary.senior, senior)
                 .fetchJoin()
                 .leftJoin(senior.user, user)
                 .fetchJoin()
-                .where(salary.totalAmount.gt(0))
                 .orderBy(salary.salaryDoneDate.desc())
                 .fetch();
     }
@@ -130,7 +137,8 @@ public class SalaryDslRepositoryImpl implements SalaryDslRepository {
         List<Salary> nowSalaries = queryFactory.selectFrom(salary)
                 .where(
                         salary.senior.eq(searchSenior),
-                        salary.salaryDate.eq(salaryDate)
+                        salary.salaryDate.eq(salaryDate),
+                        salary.senior.user.isDelete.isFalse()
                                 .or(salary.salaryDate.goe(salaryDate))
                 )
                 .fetch();
@@ -138,14 +146,26 @@ public class SalaryDslRepositoryImpl implements SalaryDslRepository {
             return queryFactory.selectFrom(salary)
                     .distinct()
                     .where(
-                            salary.senior.eq(searchSenior)
-                                    .and(salary.account.isNull())
+                            salary.senior.eq(searchSenior),
+                            salary.account.isNull(),
+                            salary.senior.user.isDelete.isFalse()
                     )
                     .leftJoin(salary.senior, senior)
                     .fetchJoin()
                     .fetch();
         }
         return nowSalaries;
+    }
+
+    @Override
+    public boolean existIncompleteSalary(Senior senior) {
+        Integer fetchFirst = queryFactory.selectOne()
+                .from(salary)
+                .where(salary.senior.eq(senior),
+                        salary.status.isFalse(),
+                        salary.totalAmount.gt(0))
+                .fetchFirst();
+        return fetchFirst != null;
     }
 }
 

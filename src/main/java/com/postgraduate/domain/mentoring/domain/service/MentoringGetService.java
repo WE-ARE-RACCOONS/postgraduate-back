@@ -8,12 +8,8 @@ import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.*;
@@ -23,7 +19,6 @@ import static java.lang.Boolean.TRUE;
 @Service
 @RequiredArgsConstructor
 public class MentoringGetService {
-    private static final int ADMIN_PAGE_SIZE = 15;
 
     private final MentoringRepository mentoringRepository;
 
@@ -93,11 +88,6 @@ public class MentoringGetService {
                 .orElseThrow(MentoringNotFoundException::new);
     }
 
-    public Mentoring byIdAndUserAndDone(Long mentoringId, User user) {
-        return mentoringRepository.findByMentoringIdAndUserAndStatus(mentoringId, user, DONE)
-                .orElseThrow(MentoringNotFoundException::new);
-    }
-
     public Mentoring byIdAndSeniorAndWaiting(Long mentoringId, Senior senior) {
         return mentoringRepository.findByMentoringIdAndSeniorAndStatus(mentoringId, senior, WAITING)
                 .orElseThrow(MentoringNotFoundException::new);
@@ -106,24 +96,6 @@ public class MentoringGetService {
     public Mentoring byIdAndSeniorAndExpected(Long mentoringId, Senior senior) {
         return mentoringRepository.findByMentoringIdAndSeniorAndStatus(mentoringId, senior, EXPECTED)
                 .orElseThrow(MentoringNotFoundException::new);
-    }
-
-    public Mentoring byIdAndSeniorAndDone(Long mentoringId, Senior senior) {
-        return mentoringRepository.findByMentoringIdAndSeniorAndStatus(mentoringId, senior, DONE)
-                .orElseThrow(MentoringNotFoundException::new);
-    }
-
-    public Mentoring byMentoringIdWithLazy(Long mentoringId) {
-        return mentoringRepository.findById(mentoringId)
-                .orElseThrow(MentoringNotFoundException::new);
-    }
-
-    public List<Mentoring> byWaitingAndCreatedAt(LocalDateTime now) {
-        return mentoringRepository.findAllByStatusAndCreatedAtIsBefore(WAITING, now);
-    }
-
-    public List<Mentoring> byExpected() {
-        return mentoringRepository.findAllByStatus(EXPECTED);
     }
 
     public List<Mentoring> byUserId(Long userId) {
@@ -140,12 +112,6 @@ public class MentoringGetService {
 
     public List<Mentoring> bySeniorAndSalaryFalse(Senior senior) {
         return mentoringRepository.findAllBySeniorAndSalaryStatus(senior, FALSE);
-    }
-
-    public Page<Mentoring> all(Integer page, String search) {
-        page = page == null ? 1 : page;
-        Pageable pageable = PageRequest.of(page - 1, ADMIN_PAGE_SIZE);
-        return mentoringRepository.findAllBySearchPayment(search, pageable);
     }
 
     public List<Mentoring> byForMessage() {

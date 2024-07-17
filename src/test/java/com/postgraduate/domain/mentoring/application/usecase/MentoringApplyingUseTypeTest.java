@@ -4,6 +4,7 @@ import com.postgraduate.domain.account.domain.entity.Account;
 import com.postgraduate.domain.account.domain.service.AccountGetService;
 import com.postgraduate.domain.mentoring.application.dto.req.MentoringApplyRequest;
 import com.postgraduate.domain.mentoring.application.dto.res.ApplyingResponse;
+import com.postgraduate.domain.mentoring.application.mapper.MentoringMapper;
 import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
 import com.postgraduate.domain.mentoring.domain.service.MentoringSaveService;
 import com.postgraduate.domain.mentoring.exception.MentoringDateException;
@@ -52,6 +53,8 @@ class MentoringApplyingUseTypeTest {
     private MentoringGetService mentoringGetService;
     @Mock
     private MentoringSaveService mentoringSaveService;
+    @Mock
+    private MentoringMapper mentoringMapper;
     @Mock
     private AccountGetService accountGetService;
     @Mock

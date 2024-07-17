@@ -6,6 +6,7 @@ import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.payment.domain.entity.constant.Status;
 import com.postgraduate.domain.salary.application.dto.res.SalaryDetailsResponse;
 import com.postgraduate.domain.salary.application.dto.res.SalaryInfoResponse;
+import com.postgraduate.domain.salary.application.mapper.SalaryMapper;
 import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.salary.domain.entity.SalaryAccount;
 import com.postgraduate.domain.salary.domain.service.SalaryGetService;
@@ -40,6 +41,8 @@ class CreateSalaryUseTypeTest {
     private SalaryGetService salaryGetService;
     @Mock
     private MentoringGetService mentoringGetService;
+    @Mock
+    private SalaryMapper salaryMapper;
     @InjectMocks
     private SalaryInfoUseCase salaryInfoUseCase;
 

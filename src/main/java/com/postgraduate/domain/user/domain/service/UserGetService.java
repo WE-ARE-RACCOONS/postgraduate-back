@@ -27,6 +27,6 @@ public class UserGetService {
     }
 
     public List<User> all() {
-        return userRepository.findAll();
+        return userRepository.findAllByIsDeleteIsFalse();
     }
 }
