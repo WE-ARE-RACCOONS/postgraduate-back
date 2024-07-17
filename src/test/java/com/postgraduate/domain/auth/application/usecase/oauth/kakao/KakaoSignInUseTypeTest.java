@@ -5,6 +5,7 @@ import com.postgraduate.domain.auth.application.dto.res.AuthUserResponse;
 import com.postgraduate.domain.auth.application.dto.res.KakaoUserInfoResponse;
 import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.user.domain.service.UserGetService;
+import com.postgraduate.domain.user.domain.service.UserUpdateService;
 import com.postgraduate.domain.user.exception.UserNotFoundException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,6 +29,8 @@ class KakaoSignInUseTypeTest {
     private KakaoAccessTokenUseCase kakaoAccessTokenUseCase;
     @Mock
     private UserGetService userGetService;
+    @Mock
+    private UserUpdateService userUpdateService;
     @InjectMocks
     private KakaoSignInUseCase kakaoSignInUseCase;
 

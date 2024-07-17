@@ -1,8 +1,11 @@
 package com.postgraduate.domain.mentoring.application.usecase;
 
+import com.postgraduate.domain.mentoring.application.dto.DoneMentoringInfo;
+import com.postgraduate.domain.mentoring.application.dto.res.AppliedMentoringDetailResponse;
 import com.postgraduate.domain.mentoring.application.dto.res.DoneMentoringResponse;
 import com.postgraduate.domain.mentoring.application.dto.res.ExpectedMentoringResponse;
 import com.postgraduate.domain.mentoring.application.dto.res.WaitingMentoringResponse;
+import com.postgraduate.domain.mentoring.application.mapper.MentoringMapper;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
 import com.postgraduate.domain.mentoring.exception.MentoringNotFoundException;
@@ -33,12 +36,16 @@ import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
 class MentoringUserInfoUseTypeTest {
     @Mock
     private MentoringGetService mentoringGetService;
+    @Mock
+    private MentoringMapper mentoringMapper;
 
     @InjectMocks
     private MentoringUserInfoUseCase mentoringUserInfoUseCase;
@@ -76,6 +83,8 @@ class MentoringUserInfoUseTypeTest {
     void getMentoringDetail() {
         given(mentoringGetService.byIdAndUserForDetails(mentoringId, user))
                 .willReturn(mentoring);
+        given(mentoringMapper.mapToAppliedDetailInfo(mentoring))
+                .willReturn(mock(AppliedMentoringDetailResponse.class));
 
         assertThat(mentoringUserInfoUseCase.getMentoringDetail(user, mentoringId))
                 .isNotNull();
@@ -162,7 +171,12 @@ class MentoringUserInfoUseTypeTest {
 
         given(mentoringGetService.byUserDone(user))
                 .willReturn(mentorings);
-
+        given(mentoringMapper.mapToDoneInfo(mentoring1))
+                .willReturn(new DoneMentoringInfo(mentoring1.getMentoringId(), 1L, "a", "a", "a", "a", "a", mentoring1.getDate(), 30));
+        given(mentoringMapper.mapToDoneInfo(mentoring2))
+                .willReturn(new DoneMentoringInfo(mentoring2.getMentoringId(), 1L, "a", "a", "a", "a", "a", mentoring2.getDate(), 30));
+        given(mentoringMapper.mapToDoneInfo(mentoring3))
+                .willReturn(new DoneMentoringInfo(mentoring3.getMentoringId(), 1L, "a", "a", "a", "a", "a", mentoring3.getDate(), 30));
         DoneMentoringResponse done = mentoringUserInfoUseCase.getDone(user);
 
         assertThat(done.mentoringInfos())

@@ -8,6 +8,7 @@ import com.postgraduate.domain.available.application.dto.req.AvailableCreateRequ
 import com.postgraduate.domain.available.domain.entity.Available;
 import com.postgraduate.domain.available.domain.service.AvailableDeleteService;
 import com.postgraduate.domain.available.domain.service.AvailableSaveService;
+import com.postgraduate.domain.salary.application.mapper.SalaryMapper;
 import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.salary.domain.service.SalaryGetService;
 import com.postgraduate.domain.salary.domain.service.SalaryUpdateService;
@@ -67,6 +68,8 @@ class SeniorManageUseTypeTest {
     private SalaryGetService salaryGetService;
     @Mock
     private SalaryUpdateService salaryUpdateService;
+    @Mock
+    private SalaryMapper salaryMapper;
     @Mock
     private EncryptorUtils encryptorUtils;
     @Mock

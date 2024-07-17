@@ -31,7 +31,7 @@ class WishGetServiceTest {
     @DisplayName("Wish 조회 예외 테스트")
     void byWishIdFail() {
         long wishId = 1L;
-        given(wishRepository.findByWishIdAndMatchingReceiveIsTrue(wishId))
+        given(wishRepository.findByWishIdAndMatchingReceiveIsTrueAndUser_IsDeleteIsFalse(wishId))
                 .willReturn(ofNullable(null));
 
         assertThatThrownBy(() -> wishGetService.byWishId(wishId))
@@ -43,7 +43,7 @@ class WishGetServiceTest {
     void byWishId() {
         long wishId = 1L;
         Wish wish = mock(Wish.class);
-        given(wishRepository.findByWishIdAndMatchingReceiveIsTrue(wishId))
+        given(wishRepository.findByWishIdAndMatchingReceiveIsTrueAndUser_IsDeleteIsFalse(wishId))
                 .willReturn(Optional.of(wish));
 
         assertThat(wishGetService.byWishId(wishId))
@@ -56,7 +56,7 @@ class WishGetServiceTest {
         long userId = -1l;
         Wish wish = mock(Wish.class);
 
-        given(wishRepository.findByMatchingReceiveIsTrueAndUser_UserId(userId))
+        given(wishRepository.findByMatchingReceiveIsTrueAndUser_UserIdAndUser_IsDeleteIsFalse(userId))
                 .willReturn(Optional.of(wish));
 
         assertThat(wishGetService.byUserId(userId))
@@ -68,7 +68,7 @@ class WishGetServiceTest {
     void byUserIdFail() {
         long userId = -1l;
 
-        given(wishRepository.findByMatchingReceiveIsTrueAndUser_UserId(userId))
+        given(wishRepository.findByMatchingReceiveIsTrueAndUser_UserIdAndUser_IsDeleteIsFalse(userId))
                 .willReturn(Optional.ofNullable(null));
 
         assertThatThrownBy(() -> wishGetService.byUserId(userId))
