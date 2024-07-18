@@ -100,7 +100,7 @@ public class User {
                 this.isDelete
                         &&
                         this.updatedAt.isBefore(
-                                now().minusDays(15)
+                                now().minusDays(90)
                                         .atStartOfDay()
                         )
         );
