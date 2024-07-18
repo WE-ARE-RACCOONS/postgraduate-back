@@ -14,15 +14,14 @@ import com.postgraduate.domain.salary.domain.service.SalaryGetService;
 import com.postgraduate.domain.salary.domain.service.SalaryUpdateService;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
-import com.postgraduate.domain.user.domain.entity.User;
-import com.postgraduate.domain.user.domain.service.UserGetService;
+import com.postgraduate.domain.user.user.domain.entity.User;
+import com.postgraduate.domain.user.user.domain.service.UserGetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.postgraduate.admin.application.mapper.AdminMapper.*;
 import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.DONE;
 
 @Service
@@ -36,15 +35,16 @@ public class AdminMentoringUseCase {
     private final PaymentManageUseCase paymentManageUseCase;
     private final SalaryGetService salaryGetService;
     private final SalaryUpdateService salaryUpdateService;
+    private final AdminMapper adminMapper;
 
     @Transactional(readOnly = true)
     public MentoringManageResponse seniorMentorings(Long seniorId) {
         Senior senior = seniorGetService.bySeniorId(seniorId);
         List<Mentoring> mentorings = mentoringGetService.bySeniorId(seniorId);
         List<MentoringInfo> mentoringInfos = mentorings.stream()
-                .map(AdminMapper::mapToMentoringInfoWithSenior)
+                .map(adminMapper::mapToMentoringInfoWithSenior)
                 .toList();
-        UserMentoringInfo seniorInfo = mapToUserMentoringInfo(senior);
+        UserMentoringInfo seniorInfo = adminMapper.mapToUserMentoringInfo(senior);
         return new MentoringManageResponse(mentoringInfos, seniorInfo);
     }
 
@@ -53,9 +53,9 @@ public class AdminMentoringUseCase {
         User user = userGetService.byUserId(userId);
         List<Mentoring> mentorings = mentoringGetService.byUserId(userId);
         List<MentoringInfo> mentoringInfos = mentorings.stream()
-                .map(AdminMapper::mapToMentoringInfoWithUser)
+                .map(adminMapper::mapToMentoringInfoWithUser)
                 .toList();
-        UserMentoringInfo userInfo = mapToUserMentoringInfo(user);
+        UserMentoringInfo userInfo = adminMapper.mapToUserMentoringInfo(user);
         return new MentoringManageResponse(mentoringInfos, userInfo);
     }
 

@@ -2,6 +2,7 @@ package com.postgraduate.admin.application.usecase;
 
 import com.postgraduate.admin.application.dto.res.SalaryInfoWithOutId;
 import com.postgraduate.admin.application.dto.res.UnSettledSalaryInfo;
+import com.postgraduate.admin.application.mapper.AdminMapper;
 import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.salary.domain.entity.SalaryAccount;
 import com.postgraduate.domain.salary.domain.service.SalaryGetService;
@@ -15,9 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.postgraduate.admin.application.mapper.AdminMapper.mapToSalaryResponse;
-import static com.postgraduate.admin.application.mapper.AdminMapper.mapToUnSettledSalaryResponse;
-
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -26,6 +24,7 @@ public class AdminSalaryUseCase {
     private final SalaryGetService salaryGetService;
     private final SalaryUpdateService salaryUpdateService;
     private final EncryptorUtils encryptorUtils;
+    private final AdminMapper adminMapper;
 
     @Transactional(readOnly = true)
     public List<SalaryInfoWithOutId> salaryInfos() {
@@ -34,9 +33,9 @@ public class AdminSalaryUseCase {
                 .map(salary -> {
                     SalaryAccount account = salary.getAccount();
                     if (account == null)
-                        return mapToSalaryResponse(salary.getSenior(), salary);
+                        return adminMapper.mapToSalaryResponse(salary.getSenior(), salary);
                     String accountNumber = encryptorUtils.decryptData(account.getAccountNumber());
-                    return mapToSalaryResponse(salary.getSenior(), accountNumber, salary);
+                    return adminMapper.mapToSalaryResponse(salary.getSenior(), accountNumber, salary);
                 })
                 .toList();
     }
@@ -47,9 +46,9 @@ public class AdminSalaryUseCase {
         Salary salary = salaryGetService.bySenior(senior);
         SalaryAccount account = salary.getAccount();
         if (account == null)
-            return mapToSalaryResponse(senior, salary);
+            return adminMapper.mapToSalaryResponse(senior, salary);
         String accountNumber = encryptorUtils.decryptData(account.getAccountNumber());
-        return mapToSalaryResponse(senior, accountNumber, salary);
+        return adminMapper.mapToSalaryResponse(senior, accountNumber, salary);
     }
 
     public void salaryDone(Long salaryId) {
@@ -64,9 +63,9 @@ public class AdminSalaryUseCase {
                 .map(salary -> {
                     SalaryAccount account = salary.getAccount();
                     if (account == null)
-                        return mapToUnSettledSalaryResponse(salary);
+                        return adminMapper.mapToUnSettledSalaryResponse(salary);
                     String accountNumber = encryptorUtils.decryptData(account.getAccountNumber());
-                    return mapToUnSettledSalaryResponse(salary, accountNumber);
+                    return adminMapper.mapToUnSettledSalaryResponse(salary, accountNumber);
                 })
                 .toList();
     }
