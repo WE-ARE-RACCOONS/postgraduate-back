@@ -1,8 +1,6 @@
 package com.postgraduate.domain.wish.domain.service;
 
-import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.domain.wish.domain.entity.Wish;
-import com.postgraduate.domain.wish.domain.entity.constant.Status;
 import com.postgraduate.domain.wish.domain.repository.WishRepository;
 import com.postgraduate.domain.wish.exception.WishNotFoundException;
 import org.junit.jupiter.api.DisplayName;

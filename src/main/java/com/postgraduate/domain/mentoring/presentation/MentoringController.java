@@ -7,7 +7,7 @@ import com.postgraduate.domain.mentoring.application.usecase.MentoringManageUseC
 import com.postgraduate.domain.mentoring.application.usecase.MentoringSeniorInfoUseCase;
 import com.postgraduate.domain.mentoring.application.usecase.MentoringUserInfoUseCase;
 import com.postgraduate.domain.refuse.application.dto.req.MentoringRefuseRequest;
-import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.user.user.domain.entity.User;
 import com.postgraduate.global.dto.ResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

@@ -2,7 +2,7 @@ package com.postgraduate.admin.application.usecase;
 
 import com.postgraduate.admin.application.dto.req.Login;
 import com.postgraduate.admin.domain.service.AuthGetService;
-import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.user.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

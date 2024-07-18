@@ -1,6 +1,6 @@
 package com.postgraduate.global.config.security;
 
-import com.postgraduate.domain.user.domain.entity.constant.Role;
+import com.postgraduate.domain.user.user.domain.entity.constant.Role;
 import com.postgraduate.global.config.security.jwt.filter.CustomAccessDeniedHandler;
 import com.postgraduate.global.config.security.jwt.filter.CustomAuthenticationEntryPoint;
 import com.postgraduate.global.config.security.jwt.filter.JwtFilter;

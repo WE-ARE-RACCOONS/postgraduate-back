@@ -1,7 +1,7 @@
 package com.postgraduate.domain.senior.domain.repository;
 
 import com.postgraduate.domain.senior.domain.entity.Senior;
-import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.user.user.domain.entity.User;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.postgraduate.domain.senior.domain.entity.QSenior.senior;
-import static com.postgraduate.domain.user.domain.entity.QUser.user;
+import static com.postgraduate.domain.user.user.domain.entity.QUser.user;
 import static com.querydsl.core.types.Order.ASC;
 import static com.querydsl.core.types.Order.DESC;
 import static com.querydsl.core.types.dsl.Expressions.FALSE;

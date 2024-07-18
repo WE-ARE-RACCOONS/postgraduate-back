@@ -9,8 +9,8 @@ import com.postgraduate.domain.auth.application.usecase.oauth.SignUpUseCase;
 import com.postgraduate.domain.auth.application.usecase.jwt.JwtUseCase;
 import com.postgraduate.domain.auth.application.usecase.oauth.SignInUseCase;
 import com.postgraduate.domain.auth.presentation.constant.Provider;
-import com.postgraduate.domain.user.application.usecase.UserManageUseCase;
-import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.user.quit.application.usecase.QuitManageUseCase;
+import com.postgraduate.domain.user.user.domain.entity.User;
 import com.postgraduate.global.dto.ResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -34,7 +34,7 @@ import static com.postgraduate.global.dto.ResponseDto.create;
 public class AuthController {
     private final SelectOauth selectOauth;
     private final SignUpUseCase signUpUseCase;
-    private final UserManageUseCase userManageUseCase;
+    private final QuitManageUseCase quitManageUseCase;
     private final JwtUseCase jwtUseCase;
 
     @PostMapping("/login/{provider}")
@@ -124,7 +124,7 @@ public class AuthController {
     @PostMapping("/signout")
     @Operation(summary = "회원 탈퇴", description = "회원 탈퇴 진행")
     public ResponseEntity<ResponseDto<Void>> signOut(@AuthenticationPrincipal User user, @RequestBody SignOutRequest signOutRequest) {
-        userManageUseCase.updateDelete(user, signOutRequest);
+        quitManageUseCase.updateDelete(user, signOutRequest);
         return ResponseEntity.ok(create(AUTH_DELETE.getCode(), SIGNOUT_USER.getMessage()));
     }
 
