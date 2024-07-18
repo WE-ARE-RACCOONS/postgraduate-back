@@ -60,4 +60,7 @@ public class Salary {
     public void minusAmount(int amount) {
         this.totalAmount -= amount;
     }
+    public void updateSeniorDelete() {
+        this.senior = null;
+    }
 }

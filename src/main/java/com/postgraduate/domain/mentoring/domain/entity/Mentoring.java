@@ -82,8 +82,11 @@ public class Mentoring {
     }
 
     public void updateUserDelete() {
-        log.info("mentoring user null : {}", mentoringId);
         this.user = null;
+    }
+
+    public void updateSeniorDelete() {
+        this.senior = null;
     }
 
     public boolean checkAutoDone() {

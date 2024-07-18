@@ -11,4 +11,5 @@ public interface SeniorRepository extends JpaRepository<Senior, Long>, SeniorDsl
     Optional<Senior> findByUserAndUser_IsDeleteIsFalse(User user);
     Optional<Senior> findByUser_NickNameAndUser_IsDelete(String nickName, Boolean isDelete);
     List<Senior> findAllByUser_IsDelete(Boolean isDelete);
+    Optional<Senior> findByUserAndUser_IsDelete(User user, Boolean isDelete);
 }

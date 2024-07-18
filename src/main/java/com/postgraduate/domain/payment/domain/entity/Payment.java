@@ -56,4 +56,7 @@ public class Payment {
     public void updateUserDelete() {
         this.user = null;
     }
+    public void updateSeniorDelete() {
+        this.senior = null;
+    }
 }
