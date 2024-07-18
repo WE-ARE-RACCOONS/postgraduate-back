@@ -17,6 +17,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 
+import static com.postgraduate.domain.user.user.presentation.constant.UserResponseCode.USER_FIND;
+import static com.postgraduate.domain.user.user.presentation.constant.UserResponseCode.USER_UPDATE;
+import static com.postgraduate.domain.user.user.presentation.constant.UserResponseMessage.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.*;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;

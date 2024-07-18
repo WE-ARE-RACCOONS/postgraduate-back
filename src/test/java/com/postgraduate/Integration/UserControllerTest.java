@@ -17,6 +17,7 @@ import java.io.IOException;
 
 import static com.postgraduate.domain.user.user.presentation.constant.UserResponseCode.USER_FIND;
 import static com.postgraduate.domain.user.user.presentation.constant.UserResponseCode.USER_UPDATE;
+import static com.postgraduate.domain.user.user.presentation.constant.UserResponseMessage.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
