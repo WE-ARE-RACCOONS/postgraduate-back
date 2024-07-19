@@ -16,6 +16,7 @@ import com.postgraduate.domain.senior.application.usecase.SeniorInfoUseCase;
 import com.postgraduate.domain.senior.application.usecase.SeniorManageUseCase;
 import com.postgraduate.domain.senior.application.usecase.SeniorMyPageUseCase;
 import com.postgraduate.domain.senior.presentation.SeniorController;
+import com.postgraduate.domain.user.quit.application.usecase.QuitManageUseCase;
 import com.postgraduate.domain.user.user.application.usecase.UserManageUseCase;
 import com.postgraduate.domain.user.user.application.usecase.UserMyPageUseCase;
 import com.postgraduate.domain.user.user.presentation.UserController;
@@ -70,6 +71,8 @@ public class ControllerTest {
     protected SignUpUseCase signUpUseCase;
     @MockBean
     protected JwtUseCase jwtUseCase;
+    @MockBean
+    protected QuitManageUseCase quitManageUseCase;
     @MockBean
     protected SlackLogErrorMessage slackLogErrorMessage;
     @MockBean
