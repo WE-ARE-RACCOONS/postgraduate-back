@@ -121,8 +121,7 @@ public class SalaryDslRepositoryImpl implements SalaryDslRepository {
                 .distinct()
                 .where(
                         salary.status.isTrue(),
-                        salary.totalAmount.gt(0),
-                        salary.senior.user.isDelete.isFalse()
+                        salary.totalAmount.gt(0)
                 )
                 .leftJoin(salary.senior, senior)
                 .fetchJoin()

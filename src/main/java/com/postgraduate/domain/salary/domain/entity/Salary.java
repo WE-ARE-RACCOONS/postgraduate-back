@@ -62,5 +62,6 @@ public class Salary {
     }
     public void updateSeniorDelete() {
         this.senior = null;
+        this.account = null;
     }
 }

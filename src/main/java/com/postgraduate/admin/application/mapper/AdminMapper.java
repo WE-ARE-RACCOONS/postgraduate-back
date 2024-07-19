@@ -165,6 +165,17 @@ public class AdminMapper {
         );
     }
 
+    public SalaryInfoWithOutId mapToSalaryResponse(Salary salary) {
+        User user = userUtils.getArchiveUser();
+        return new SalaryInfoWithOutId (
+                user.getNickName(),
+                user.getPhoneNumber(),
+                salary.getTotalAmount(),
+                salary.getSalaryDoneDate()
+        );
+    }
+
+
     public UnSettledSalaryInfo mapToUnSettledSalaryResponse(Salary salary) {
         Senior senior = salary.getSenior();
         User user = senior.getUser();
