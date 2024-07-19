@@ -1,5 +1,6 @@
 package com.postgraduate.domain.salary.util;
 
+import com.postgraduate.domain.salary.domain.entity.SalaryAccount;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.DayOfWeek;
@@ -21,5 +22,9 @@ public class SalaryUtil {
         return dayOfWeek.getValue() == SALARY_END_DATE
                 ? now.plusDays(ONE_WEEK + SALARY_DATE)
                 : now.plusDays(ONE_WEEK + (SALARY_DATE - dayOfWeek.getValue()));
+    }
+
+    public static SalaryAccount archiveSalary() {
+        return new SalaryAccount("탈퇴한 회원","탈퇴한 회원","탈퇴한 회원");
     }
 }

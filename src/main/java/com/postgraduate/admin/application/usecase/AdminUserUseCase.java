@@ -15,8 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.postgraduate.admin.application.mapper.AdminMapper.mapToWishResponse;
-
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -24,19 +22,20 @@ public class AdminUserUseCase {
     private final WishGetService wishGetService;
     private final WishUpdateService wishUpdateService;
     private final BizppurioJuniorMessage bizppurioJuniorMessage;
+    private final AdminMapper adminMapper;
 
     @Transactional(readOnly = true)
     public List<UserInfo> userInfos() {
         List<Wish> all = wishGetService.all();
         return all.stream()
-                .map(AdminMapper::mapToUserInfo)
+                .map(adminMapper::mapToUserInfo)
                 .toList();
     }
 
     @Transactional(readOnly = true)
     public WishResponse wishInfo(Long userId) {
         Wish wish = wishGetService.byUserId(userId);
-        return mapToWishResponse(wish);
+        return adminMapper.mapToWishResponse(wish);
     }
 
     public void wishDone(Long wishId) {

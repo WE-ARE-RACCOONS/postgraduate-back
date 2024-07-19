@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static com.postgraduate.domain.user.domain.entity.QUser.user;
+import static com.postgraduate.domain.user.user.domain.entity.QUser.user;
 import static com.postgraduate.domain.wish.domain.entity.QWish.wish;
 
 @Repository

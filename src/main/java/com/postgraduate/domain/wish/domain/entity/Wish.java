@@ -1,6 +1,6 @@
 package com.postgraduate.domain.wish.domain.entity;
 
-import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.user.user.domain.entity.User;
 import com.postgraduate.domain.wish.domain.entity.constant.Status;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

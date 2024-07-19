@@ -19,7 +19,7 @@ import java.util.List;
 import static com.postgraduate.domain.account.domain.entity.QAccount.account;
 import static com.postgraduate.domain.salary.domain.entity.QSalary.salary;
 import static com.postgraduate.domain.senior.domain.entity.QSenior.senior;
-import static com.postgraduate.domain.user.domain.entity.QUser.user;
+import static com.postgraduate.domain.user.user.domain.entity.QUser.user;
 import static com.querydsl.core.types.Projections.constructor;
 import static java.lang.Boolean.FALSE;
 
@@ -121,8 +121,7 @@ public class SalaryDslRepositoryImpl implements SalaryDslRepository {
                 .distinct()
                 .where(
                         salary.status.isTrue(),
-                        salary.totalAmount.gt(0),
-                        salary.senior.user.isDelete.isFalse()
+                        salary.totalAmount.gt(0)
                 )
                 .leftJoin(salary.senior, senior)
                 .fetchJoin()

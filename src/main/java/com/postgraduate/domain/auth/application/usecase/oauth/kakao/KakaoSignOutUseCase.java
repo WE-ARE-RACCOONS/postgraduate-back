@@ -2,9 +2,9 @@ package com.postgraduate.domain.auth.application.usecase.oauth.kakao;
 
 import com.postgraduate.domain.auth.application.usecase.oauth.SignOutUseCase;
 import com.postgraduate.domain.auth.exception.KakaoException;
-import com.postgraduate.domain.user.domain.entity.User;
-import com.postgraduate.domain.user.domain.service.UserGetService;
-import com.postgraduate.domain.user.domain.service.UserUpdateService;
+import com.postgraduate.domain.user.user.domain.entity.User;
+import com.postgraduate.domain.user.user.domain.service.UserGetService;
+import com.postgraduate.domain.user.user.domain.service.UserUpdateService;
 import com.postgraduate.global.config.security.jwt.util.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

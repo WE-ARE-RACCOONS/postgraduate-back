@@ -1,6 +1,6 @@
 package com.postgraduate.domain.wish.domain.service;
 
-import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.user.user.domain.entity.User;
 import com.postgraduate.domain.wish.domain.entity.Wish;
 import com.postgraduate.domain.wish.domain.repository.WishRepository;
 import com.postgraduate.domain.wish.exception.WishNotFoundException;

@@ -6,7 +6,7 @@ import com.postgraduate.domain.senior.application.dto.res.*;
 import com.postgraduate.domain.senior.application.usecase.SeniorInfoUseCase;
 import com.postgraduate.domain.senior.application.usecase.SeniorManageUseCase;
 import com.postgraduate.domain.senior.application.usecase.SeniorMyPageUseCase;
-import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.user.user.domain.entity.User;
 import com.postgraduate.global.dto.ResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

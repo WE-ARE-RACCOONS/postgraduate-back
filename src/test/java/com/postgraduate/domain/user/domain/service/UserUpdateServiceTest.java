@@ -2,8 +2,9 @@ package com.postgraduate.domain.user.domain.service;
 
 import com.postgraduate.domain.auth.util.ProfileUtils;
 import com.postgraduate.domain.senior.application.dto.req.SeniorMyPageUserAccountRequest;
-import com.postgraduate.domain.user.application.dto.req.UserInfoRequest;
-import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.user.user.application.dto.req.UserInfoRequest;
+import com.postgraduate.domain.user.user.domain.entity.User;
+import com.postgraduate.domain.user.user.domain.service.UserUpdateService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,7 +13,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static com.postgraduate.domain.user.domain.entity.constant.Role.*;
+import static com.postgraduate.domain.user.user.domain.entity.constant.Role.SENIOR;
+import static com.postgraduate.domain.user.user.domain.entity.constant.Role.USER;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.time.LocalDateTime.now;
