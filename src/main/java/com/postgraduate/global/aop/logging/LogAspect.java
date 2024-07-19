@@ -2,8 +2,6 @@ package com.postgraduate.global.aop.logging;
 
 import com.postgraduate.global.aop.logging.dto.TraceStatus;
 import com.postgraduate.global.exception.ApplicationException;
-import com.postgraduate.global.aop.logging.dto.LogRequest;
-import com.postgraduate.global.aop.logging.service.LogService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -23,7 +21,6 @@ public class LogAspect {
     @Value("${log.Type}")
     private String env;
     private final LogTrace logTrace;
-    private final LogService logService;
 
     @Around("com.postgraduate.global.aop.logging.LogPointCuts.allService()")
     public Object serviceLog(ProceedingJoinPoint joinPoint) throws Throwable {
@@ -47,20 +44,17 @@ public class LogAspect {
             Object result = joinPoint.proceed();
             Integer executionTime = logTrace.end(traceStatus);
             log.info("ExecutionTime : {}", executionTime);
-            logService.save(new LogRequest(env, traceStatus.threadId(), executionTime, traceStatus.methodName()));
             return result;
         }catch (ApplicationException e) {
             if (traceStatus != null) {
                 log.error("ErrorCode {} errorMessage {}",e.getCode(), e.getMessage());
                 log.error("{}", e.getStackTrace());
-                logService.save(new LogRequest(env, traceStatus.threadId(), traceStatus.methodName(), e.getMessage()));
             }
             throw e;
         }catch (Exception e) {
             if (traceStatus != null) {
                 log.error("500 ERROR {}", e.getMessage());
                 log.error("{}", e.getStackTrace());
-                logService.save(new LogRequest(env, traceStatus.threadId(), traceStatus.methodName(), e.getMessage()));
             }
             throw e;
         }

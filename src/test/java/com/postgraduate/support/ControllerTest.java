@@ -20,7 +20,6 @@ import com.postgraduate.domain.user.user.application.usecase.UserManageUseCase;
 import com.postgraduate.domain.user.user.application.usecase.UserMyPageUseCase;
 import com.postgraduate.domain.user.user.presentation.UserController;
 import com.postgraduate.global.aop.lock.DistributeLockAspect;
-import com.postgraduate.global.aop.logging.service.LogService;
 import com.postgraduate.global.slack.SlackLogErrorMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -71,8 +70,6 @@ public class ControllerTest {
     protected SignUpUseCase signUpUseCase;
     @MockBean
     protected JwtUseCase jwtUseCase;
-    @MockBean
-    protected LogService logService;
     @MockBean
     protected SlackLogErrorMessage slackLogErrorMessage;
     @MockBean

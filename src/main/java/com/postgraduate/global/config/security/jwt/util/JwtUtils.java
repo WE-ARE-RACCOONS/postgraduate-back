@@ -1,23 +1,23 @@
 package com.postgraduate.global.config.security.jwt.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.postgraduate.domain.user.user.exception.UserNotFoundException;
 import com.postgraduate.domain.user.user.domain.entity.User;
 import com.postgraduate.domain.user.user.domain.entity.constant.Role;
+import com.postgraduate.domain.user.user.exception.UserNotFoundException;
+import com.postgraduate.global.config.redis.RedisRepository;
 import com.postgraduate.global.config.security.jwt.auth.AuthDetails;
 import com.postgraduate.global.config.security.jwt.auth.AuthDetailsService;
 import com.postgraduate.global.config.security.jwt.constant.Type;
 import com.postgraduate.global.config.security.jwt.exception.InvalidRefreshTokenException;
 import com.postgraduate.global.config.security.jwt.exception.InvalidTokenException;
-import com.postgraduate.global.config.redis.RedisRepository;
-import com.postgraduate.global.config.security.jwt.filter.JwtFilter;
-import com.postgraduate.global.dto.ResponseDto;
-import com.postgraduate.global.exception.ApplicationException;
 import com.postgraduate.global.config.security.jwt.exception.NoneRefreshTokenException;
 import com.postgraduate.global.config.security.jwt.exception.TokenExpiredException;
-import com.postgraduate.global.aop.logging.dto.LogRequest;
-import com.postgraduate.global.aop.logging.service.LogService;
-import io.jsonwebtoken.*;
+import com.postgraduate.global.dto.ResponseDto;
+import com.postgraduate.global.exception.ApplicationException;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
@@ -42,7 +42,8 @@ import java.util.Date;
 import java.util.List;
 
 import static com.postgraduate.global.config.security.jwt.constant.Type.*;
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.OK;
 
 @Component
 @RequiredArgsConstructor
@@ -50,7 +51,6 @@ import static org.springframework.http.HttpStatus.*;
 public class JwtUtils {
     private final AuthDetailsService authDetailsService;
     private final RedisRepository redisRepository;
-    private final LogService logService;
 
     @Value("${jwt.secret-key}")
     private String secret;
@@ -58,8 +58,6 @@ public class JwtUtils {
     private int refreshExpiration;
     @Value("${jwt.accessExpiration}")
     private int accessExpiration;
-    @Value("${log.Type}")
-    private String env;
 
     private static final String ROLE = "role";
     private static final String TYPE = "type";
@@ -185,7 +183,6 @@ public class JwtUtils {
         response.setCharacterEncoding(CHARACTER_ENCODING);
         log.error("errorCode {}, errorMessage {}", ex.getCode(), ex.getMessage());
         try {
-            logService.save(new LogRequest(env, JwtFilter.class.getSimpleName(), ex.getMessage()));
             String json = new ObjectMapper().writeValueAsString(ResponseDto.create(ex.getCode(), ex.getMessage()));
             response.getWriter().write(json);
         } catch (Exception e) {
