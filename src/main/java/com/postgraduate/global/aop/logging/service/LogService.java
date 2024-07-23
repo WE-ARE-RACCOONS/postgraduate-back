@@ -22,25 +22,25 @@ public class LogService {
     private String logUri;
 
     public void save(LogRequest logRequest) {
-        webClient.post()
-                .uri(logUri)
-                .accept(MediaType.APPLICATION_JSON)
-                .bodyValue(logRequest)
-                .retrieve()
-                .onStatus(HttpStatusCode::is4xxClientError, clientResponse -> {
-                    log.error("클라이언트 에러 발생: " + clientResponse.statusCode());
-                    return Mono.error(new RuntimeException("클라이언트 에러"));
-                })
-                .onStatus(HttpStatusCode::is5xxServerError, clientResponse -> {
-                    log.error("서버 에러 발생: " + clientResponse.statusCode());
-                    return Mono.error(new RuntimeException("서버 에러"));
-                })
-                .bodyToMono(Void.class)
-                .doOnError(ex -> {
-                    log.error("예상치 못한 에러 발생: " + ex.getMessage());
-                    slackLogErrorMessage.sendSlackLog(new IllegalArgumentException("로그 서버 예외 발생"));
-                })
-                .subscribe();
+        // webClient.post()
+        //         .uri(logUri)
+        //         .accept(MediaType.APPLICATION_JSON)
+        //         .bodyValue(logRequest)
+        //         .retrieve()
+        //         .onStatus(HttpStatusCode::is4xxClientError, clientResponse -> {
+        //             log.error("클라이언트 에러 발생: " + clientResponse.statusCode());
+        //             return Mono.error(new RuntimeException("클라이언트 에러"));
+        //         })
+        //         .onStatus(HttpStatusCode::is5xxServerError, clientResponse -> {
+        //             log.error("서버 에러 발생: " + clientResponse.statusCode());
+        //             return Mono.error(new RuntimeException("서버 에러"));
+        //         })
+        //         .bodyToMono(Void.class)
+        //         .doOnError(ex -> {
+        //             log.error("예상치 못한 에러 발생: " + ex.getMessage());
+        //             slackLogErrorMessage.sendSlackLog(new IllegalArgumentException("로그 서버 예외 발생"));
+        //         })
+        //         .subscribe();
 
     }
 }
