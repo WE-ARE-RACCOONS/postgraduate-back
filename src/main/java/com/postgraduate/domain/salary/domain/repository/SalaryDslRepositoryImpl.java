@@ -29,60 +29,6 @@ public class SalaryDslRepositoryImpl implements SalaryDslRepository {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Page<SeniorSalary> findDistinctBySearchSenior(String search, Pageable pageable) {
-        List<SeniorSalary> seniorSalaries = queryFactory
-                .select(
-                        constructor(
-                                SeniorSalary.class,
-                                salary.senior,
-                                salary.salaryDate
-                        )
-                )
-                .from(salary)
-                .distinct()
-                .where(
-                        searchLike(search),
-                        salary.senior.user.isDelete.eq(FALSE)
-                )
-                .orderBy(salary.salaryDate.desc())
-                .groupBy(salary.senior.seniorId, salary.salaryDate)
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
-
-        Long total = queryFactory.select(salary.count())
-                .from(salary)
-                .where(
-                        searchLike(search),
-                        salary.senior.user.isDelete.isFalse()
-                )
-                .fetchOne();
-
-        return new PageImpl<>(seniorSalaries, pageable, total);
-    }
-
-    private BooleanExpression searchLike(String search) {
-        JPAQuery<Long> accountQuery = queryFactory.select(account.senior.seniorId)
-                .from(account)
-                .where(searchAccount(search));
-
-        if (StringUtils.hasText(search)) {
-            return salary.senior.user.nickName.contains(search)
-                    .or(salary.senior.user.phoneNumber.contains(search))
-                    .or(salary.senior.seniorId.in(accountQuery));
-        }
-        return null;
-    }
-
-    private BooleanExpression searchAccount(String search) {
-        if (StringUtils.hasText(search)) {
-            return account.accountHolder.contains(search);
-        }
-        return null;
-    }
-
-
-    @Override
     public List<Salary> findAllLastSalary(LocalDate salaryDate) {
         return queryFactory.selectFrom(salary)
                 .distinct()
@@ -94,40 +40,6 @@ public class SalaryDslRepositoryImpl implements SalaryDslRepository {
                 .fetchJoin()
                 .leftJoin(salary.senior.user, user)
                 .fetchJoin()
-                .fetch();
-    }
-
-    @Override
-    public List<Salary> findAllByNotDoneFromLast(LocalDate salaryDate) {
-        return queryFactory.selectFrom(salary)
-                .distinct()
-                .where(
-                        salary.status.isFalse(),
-                        salary.salaryDate.lt(salaryDate),
-                        salary.totalAmount.gt(0),
-                        salary.senior.user.isDelete.isFalse()
-                )
-                .leftJoin(salary.senior, senior)
-                .fetchJoin()
-                .leftJoin(senior.user, user)
-                .fetchJoin()
-                .orderBy(salary.salaryDate.asc())
-                .fetch();
-    }
-
-    @Override
-    public List<Salary> findAllByDone() {
-        return queryFactory.selectFrom(salary)
-                .distinct()
-                .where(
-                        salary.status.isTrue(),
-                        salary.totalAmount.gt(0)
-                )
-                .leftJoin(salary.senior, senior)
-                .fetchJoin()
-                .leftJoin(senior.user, user)
-                .fetchJoin()
-                .orderBy(salary.salaryDoneDate.desc())
                 .fetch();
     }
 

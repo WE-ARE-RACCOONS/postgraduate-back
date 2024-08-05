@@ -19,12 +19,6 @@ public class SalaryGetService {
 
     private final SalaryRepository salaryRepository;
 
-    public List<Salary> allByNotDone() {
-        LocalDate salaryDate = SalaryUtil.getSalaryDate();
-        log.info("salaryDate : {}", salaryDate);
-        return salaryRepository.findAllByNotDoneFromLast(salaryDate);
-    }
-
     public Salary bySalaryId(Long salaryId) {
         return salaryRepository.findById(salaryId)
                 .orElseThrow(SalaryNotFoundException::new);
@@ -47,9 +41,5 @@ public class SalaryGetService {
                 .minusDays(7);
         log.info("salaryDate : {}", salaryDate);
         return salaryRepository.findAllLastSalary(salaryDate);
-    }
-
-    public List<Salary> findAll() {
-        return salaryRepository.findAllByDone();
     }
 }

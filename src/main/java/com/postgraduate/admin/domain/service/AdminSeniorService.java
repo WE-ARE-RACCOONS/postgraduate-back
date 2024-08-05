@@ -7,7 +7,6 @@ import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.exception.NoneSeniorException;
 import com.postgraduate.domain.senior.exception.SeniorCertificationException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -17,7 +16,6 @@ import static com.postgraduate.domain.senior.domain.entity.constant.Status.*;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class AdminSeniorService {
     private final AdminSeniorRepository adminSeniorRepository;
 
