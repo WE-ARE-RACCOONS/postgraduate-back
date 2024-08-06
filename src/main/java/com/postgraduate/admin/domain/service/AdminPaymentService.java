@@ -23,16 +23,4 @@ public class AdminPaymentService {
     public List<PaymentWithMentoringQuery> allPayments() {
         return adminPaymentRepository.findAllPayment();
     }
-
-    public Mentoring findByPaymentId(Long paymentId) {
-        return adminPaymentRepository.findByPaymentId(paymentId)
-                .orElseThrow(MentoringNotFoundException::new);
-    }
-
-    public Mentoring refundPayment(Long paymentId) {
-        Mentoring mentoring = adminPaymentRepository.findByPaymentId(paymentId)
-                .orElseThrow(MentoringNotFoundException::new);
-        mentoring.updateStatus(CANCEL);
-        return mentoring;
-    }
 }
