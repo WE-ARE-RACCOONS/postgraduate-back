@@ -16,7 +16,7 @@ import java.util.Map;
 public class DoneMentoringRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private static final int CHARGE = TermUnit.SHORT.getCharge();
-    private static final String UPDATE_MENTORING = "update mentoring set status = 'DONE', salary_id = :salaryId where mentoring_id = :mentoringId";
+    private static final String UPDATE_MENTORING = "update mentoring set status = 'DONE', salary_salary_id = :salaryId where mentoring_id = :mentoringId";
     private static final String UPDATE_SALARY = "update salary set total_amount = total_amount + :amount where salary_id = :salaryId";
 
     public void updateAllSalary(List<DoneMentoring> mentorings) {
