@@ -93,15 +93,4 @@ class PaymentGetServiceTest {
         assertThatThrownBy(() -> paymentGetService.bySeniorAndOrderId(senior, orderId))
                 .isInstanceOf(PaymentNotFoundException.class);
     }
-
-    @Test
-    @DisplayName("전체 조회 테스트")
-    void all() {
-        List<Payment> payments = List.of(mock(Payment.class), mock(Payment.class), mock(Payment.class));
-        given(paymentRepository.findAllPayment())
-                .willReturn(payments);
-
-        assertThat(paymentGetService.all())
-                .hasSameSizeAs(payments);
-    }
 }
