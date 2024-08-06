@@ -19,7 +19,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 import static com.postgraduate.domain.mentoring.domain.entity.QMentoring.mentoring;
 import static com.postgraduate.domain.payment.domain.entity.QPayment.payment;
-import static com.postgraduate.domain.salary.domain.entity.QSalary.salary;
 import static com.postgraduate.domain.senior.domain.entity.QSenior.senior;
 
 @Configuration
@@ -69,9 +68,6 @@ public class DoneJobConfig {
                         .fetchJoin()
                         .join(senior)
                         .on(mentoring.senior.eq(senior))
-                        .fetchJoin()
-                        .join(salary)
-                        .on(mentoring.salary.eq(salary))
                         .fetchJoin()
                         .where(mentoring.status.eq(Status.EXPECTED))
         );
