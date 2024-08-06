@@ -54,9 +54,10 @@ public class AdminMentoringRepository {
 
     public Optional<Mentoring> findByPaymentId(Long paymentId) {
         return ofNullable(queryFactory.selectFrom(mentoring)
-                .where(mentoring.payment.paymentId.eq(paymentId))
+                .distinct()
                 .join(mentoring.payment, payment)
                 .fetchJoin()
+                .where(mentoring.payment.paymentId.eq(paymentId))
                 .fetchOne());
     }
 }

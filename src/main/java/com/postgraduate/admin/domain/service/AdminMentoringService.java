@@ -4,6 +4,7 @@ import com.postgraduate.admin.domain.repository.AdminMentoringRepository;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.exception.MentoringNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,6 +13,7 @@ import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.CA
 
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class AdminMentoringService {
     private final AdminMentoringRepository adminMentoringRepository;
 

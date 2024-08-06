@@ -71,7 +71,7 @@
 <div class="container">
     <div class="col">
         <button class="w-100 btn btn-primary btn-lg"
-                th:mentoringId="${mentoringInfo.mentoringId()}" th:onclick="goToGet('/adminServer/payment/mentoring/' + this.getAttribute('mentoringId'))">환불 및 취소</button>
+                th:mentoringId="${mentoringInfo.mentoringId()}" th:onclick="goToPost('정말 환불하겠습니까??', '/adminServer/mentoring/refund/' + this.getAttribute('mentoringId'))">환불 및 취소</button>
     </div>
 </div>
 </body>

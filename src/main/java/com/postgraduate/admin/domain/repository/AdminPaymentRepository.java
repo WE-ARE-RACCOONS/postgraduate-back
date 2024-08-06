@@ -20,10 +20,12 @@ public class AdminPaymentRepository {
 
     public List<PaymentWithMentoringQuery> findAllPayment() {
         List<Tuple> fetch = queryFactory.select(payment, mentoring)
+                .from(payment)
                 .distinct()
                 .leftJoin(payment.user, user)
                 .fetchJoin()
-                .leftJoin(mentoring.payment, payment)
+                .leftJoin(mentoring)
+                .on(mentoring.payment.eq(payment))
                 .fetchJoin()
                 .fetch();
 
