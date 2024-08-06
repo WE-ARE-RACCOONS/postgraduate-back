@@ -2,6 +2,7 @@ package com.postgraduate.admin.application.usecase;
 
 import com.postgraduate.admin.application.dto.res.CertificationDetailsResponse;
 import com.postgraduate.admin.application.dto.res.SeniorInfo;
+import com.postgraduate.admin.application.mapper.AdminMapper;
 import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.salary.domain.service.SalaryGetService;
 import com.postgraduate.domain.senior.domain.entity.Senior;
@@ -18,8 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-import static com.postgraduate.admin.application.mapper.AdminMapper.mapToCertificationInfo;
-import static com.postgraduate.admin.application.mapper.AdminMapper.mapToSeniorInfo;
 import static com.postgraduate.domain.senior.domain.entity.constant.Status.APPROVE;
 
 @Service
@@ -31,6 +30,7 @@ public class AdminSeniorUseCase {
     private final SalaryGetService salaryGetService;
     private final WishGetService wishGetService;
     private final BizppurioSeniorMessage bizppurioSeniorMessage;
+    private final AdminMapper adminMapper;
 
     @Transactional(readOnly = true)
     public List<SeniorInfo> allSenior() {
@@ -39,7 +39,7 @@ public class AdminSeniorUseCase {
                 .map(senior -> {
                     Salary salary = salaryGetService.bySenior(senior);
                     Optional<Wish> wish = wishGetService.byUser(senior.getUser());
-                    return mapToSeniorInfo(senior, salary.getTotalAmount(), wish.isPresent());
+                    return adminMapper.mapToSeniorInfo(senior, salary.getTotalAmount(), wish.isPresent());
                 })
                 .toList();
     }
@@ -49,7 +49,7 @@ public class AdminSeniorUseCase {
         Senior senior = seniorGetService.bySeniorId(seniorId);
         if (senior.getStatus() == APPROVE)
             throw new SeniorCertificationException();
-        return mapToCertificationInfo(senior);
+        return adminMapper.mapToCertificationInfo(senior);
     }
 
 

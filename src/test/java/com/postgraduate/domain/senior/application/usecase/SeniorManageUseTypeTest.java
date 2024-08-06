@@ -8,6 +8,7 @@ import com.postgraduate.domain.available.application.dto.req.AvailableCreateRequ
 import com.postgraduate.domain.available.domain.entity.Available;
 import com.postgraduate.domain.available.domain.service.AvailableDeleteService;
 import com.postgraduate.domain.available.domain.service.AvailableSaveService;
+import com.postgraduate.domain.salary.application.mapper.SalaryMapper;
 import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.salary.domain.service.SalaryGetService;
 import com.postgraduate.domain.salary.domain.service.SalaryUpdateService;
@@ -20,10 +21,10 @@ import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.domain.senior.domain.service.SeniorUpdateService;
 import com.postgraduate.domain.senior.exception.KeywordException;
-import com.postgraduate.domain.user.application.utils.UserUtils;
-import com.postgraduate.domain.user.domain.entity.User;
-import com.postgraduate.domain.user.domain.service.UserUpdateService;
-import com.postgraduate.domain.user.exception.PhoneNumberException;
+import com.postgraduate.domain.user.user.application.utils.UserUtils;
+import com.postgraduate.domain.user.user.domain.entity.User;
+import com.postgraduate.domain.user.user.domain.service.UserUpdateService;
+import com.postgraduate.domain.user.user.exception.PhoneNumberException;
 import com.postgraduate.global.config.security.util.EncryptorUtils;
 import com.postgraduate.global.slack.SlackCertificationMessage;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,7 +40,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.postgraduate.domain.senior.domain.entity.constant.Status.APPROVE;
-import static com.postgraduate.domain.user.domain.entity.constant.Role.SENIOR;
+import static com.postgraduate.domain.user.user.domain.entity.constant.Role.SENIOR;
 import static java.lang.Boolean.TRUE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -67,6 +68,8 @@ class SeniorManageUseTypeTest {
     private SalaryGetService salaryGetService;
     @Mock
     private SalaryUpdateService salaryUpdateService;
+    @Mock
+    private SalaryMapper salaryMapper;
     @Mock
     private EncryptorUtils encryptorUtils;
     @Mock

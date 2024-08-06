@@ -3,7 +3,7 @@ package com.postgraduate.domain.payment.application.mapper;
 import com.postgraduate.domain.payment.application.dto.req.PaymentResultRequest;
 import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.senior.domain.entity.Senior;
-import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.user.user.domain.entity.User;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

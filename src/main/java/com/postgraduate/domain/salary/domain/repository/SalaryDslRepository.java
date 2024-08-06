@@ -15,4 +15,5 @@ public interface SalaryDslRepository {
     List<Salary> findAllByNotDoneFromLast(LocalDate salaryDate);
     List<Salary> findAllByDone();
     List<Salary> findAllBySalaryNoneAccount(LocalDate salaryDate, Senior senior);
+    boolean existIncompleteSalary(Senior senior);
 }

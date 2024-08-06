@@ -12,8 +12,7 @@ import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
-import com.postgraduate.domain.senior.exception.NoneProfileException;
-import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.user.user.domain.entity.User;
 import com.postgraduate.domain.wish.domain.entity.Wish;
 import com.postgraduate.domain.wish.domain.service.WishGetService;
 import com.postgraduate.global.config.security.util.EncryptorUtils;
@@ -31,7 +30,7 @@ import java.util.Optional;
 
 import static com.postgraduate.domain.senior.domain.entity.constant.Status.APPROVE;
 import static com.postgraduate.domain.senior.domain.entity.constant.Status.WAITING;
-import static com.postgraduate.domain.user.domain.entity.constant.Role.USER;
+import static com.postgraduate.domain.user.user.domain.entity.constant.Role.USER;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.time.LocalDate.now;

@@ -2,7 +2,7 @@ package com.postgraduate.domain.image.application.usecase;
 
 import com.postgraduate.domain.auth.util.ProfileUtils;
 import com.postgraduate.domain.image.application.dto.res.ImageUrlResponse;
-import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.user.user.domain.entity.User;
 import com.postgraduate.global.config.s3.S3UploadService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -15,7 +15,7 @@ import org.springframework.mock.web.MockMultipartFile;
 
 import java.time.LocalDateTime;
 
-import static com.postgraduate.domain.user.domain.entity.constant.Role.USER;
+import static com.postgraduate.domain.user.user.domain.entity.constant.Role.USER;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static org.mockito.BDDMockito.*;

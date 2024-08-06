@@ -3,7 +3,7 @@ package com.postgraduate.domain.salary.presentation;
 import com.postgraduate.domain.salary.application.dto.res.SalaryDetailsResponse;
 import com.postgraduate.domain.salary.application.dto.res.SalaryInfoResponse;
 import com.postgraduate.domain.salary.application.usecase.SalaryInfoUseCase;
-import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.user.user.domain.entity.User;
 import com.postgraduate.global.dto.ResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

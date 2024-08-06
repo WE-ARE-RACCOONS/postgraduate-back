@@ -5,6 +5,7 @@ import com.postgraduate.domain.auth.application.dto.res.KakaoTokenInfoResponse;
 import com.postgraduate.domain.auth.application.dto.res.KakaoUserInfoResponse;
 import com.postgraduate.domain.auth.exception.KakaoCodeException;
 import com.postgraduate.domain.auth.exception.KakaoException;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,8 +25,6 @@ public class KakaoAccessTokenUseCase {
     private String appId;
     @Value("${kakao.redirect-uri}")
     private String redirectUrl;
-    @Value("${kakao.redirect-uri-b}")
-    private String redirectUrlB;
     @Value("${kakao.dev-redirect-uri}")
     private String devRedirectUrl;
     @Value("${kakao.authorization-grant-type}")
@@ -37,23 +36,33 @@ public class KakaoAccessTokenUseCase {
 
     public KakaoUserInfoResponse getAccessToken (CodeRequest codeRequest) {
         MultiValueMap<String, String> requestBody = getRequestBody(codeRequest.code());
-        try {
-            KakaoTokenInfoResponse tokenInfoResponse = webClient.post()
-                    .uri(KAKAO_TOKEN_URI)
-                    .headers(h -> h.setContentType(MediaType.APPLICATION_FORM_URLENCODED))
-                    .bodyValue(requestBody)
-                    .retrieve()
-                    .bodyToMono(KakaoTokenInfoResponse.class)
-                    .block();
-            return getUserInfo(tokenInfoResponse.access_token());
-        } catch (WebClientResponseException ex) {
-            log.error("errorMessage : {}", ex.getMessage());
-            throw new KakaoCodeException();
-        }
+        return getKakaoUserInfoResponse(requestBody);
     }
 
     public KakaoUserInfoResponse getDevAccessToken (CodeRequest codeRequest) {
         MultiValueMap<String, String> requestBody = getDevRequestBody(codeRequest.code());
+        return getKakaoUserInfoResponse(requestBody);
+    }
+
+    private MultiValueMap<String, String> getRequestBody(String code) {
+        return getMultiValueMap(redirectUrl, code);
+    }
+
+    private MultiValueMap<String, String> getDevRequestBody(String code) {
+        return getMultiValueMap(devRedirectUrl, code);
+    }
+
+    @NotNull
+    private MultiValueMap<String, String> getMultiValueMap(String devRedirectUrl, String code) {
+        MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
+        requestBody.add("grant_type", authorizationGrantType);
+        requestBody.add("client_id", appId);
+        requestBody.add("redirect_uri", devRedirectUrl);
+        requestBody.add("code", code);
+        return requestBody;
+    }
+
+    private KakaoUserInfoResponse getKakaoUserInfoResponse(MultiValueMap<String, String> requestBody) {
         try {
             KakaoTokenInfoResponse tokenInfoResponse = webClient.post()
                     .uri(KAKAO_TOKEN_URI)
@@ -67,15 +76,6 @@ public class KakaoAccessTokenUseCase {
             log.error("errorMessage : {}", ex.getMessage());
             throw new KakaoCodeException();
         }
-    }
-
-    private MultiValueMap<String, String> getRequestBody(String code) {
-        MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
-        requestBody.add("grant_type", authorizationGrantType);
-        requestBody.add("client_id", appId);
-        requestBody.add("redirect_uri", redirectUrl);
-        requestBody.add("code", code);
-        return requestBody;
     }
 
     private KakaoUserInfoResponse getUserInfo(String accessToken) {
@@ -90,44 +90,5 @@ public class KakaoAccessTokenUseCase {
             log.error("errorMessage : {}", ex.getMessage());
             throw new KakaoException();
         }
-    }
-
-    private MultiValueMap<String, String> getDevRequestBody(String code) {
-        MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
-        requestBody.add("grant_type", authorizationGrantType);
-        requestBody.add("client_id", appId);
-        requestBody.add("redirect_uri", devRedirectUrl);
-        requestBody.add("code", code);
-        return requestBody;
-    }
-
-    /**
-     * case B
-     */
-
-    public KakaoUserInfoResponse getAccessTokenB (CodeRequest codeRequest) {
-        MultiValueMap<String, String> requestBody = getRequestBodyB(codeRequest.code());
-        try {
-            KakaoTokenInfoResponse tokenInfoResponse = webClient.post()
-                    .uri(KAKAO_TOKEN_URI)
-                    .headers(h -> h.setContentType(MediaType.APPLICATION_FORM_URLENCODED))
-                    .bodyValue(requestBody)
-                    .retrieve()
-                    .bodyToMono(KakaoTokenInfoResponse.class)
-                    .block();
-            return getUserInfo(tokenInfoResponse.access_token());
-        } catch (WebClientResponseException ex) {
-            log.error("errorMessage : {}", ex.getMessage());
-            throw new KakaoCodeException();
-        }
-    }
-
-    private MultiValueMap<String, String> getRequestBodyB(String code) {
-        MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
-        requestBody.add("grant_type", authorizationGrantType);
-        requestBody.add("client_id", appId);
-        requestBody.add("redirect_uri", redirectUrlB);
-        requestBody.add("code", code);
-        return requestBody;
     }
 }

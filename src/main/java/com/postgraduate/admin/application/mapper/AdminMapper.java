@@ -7,18 +7,24 @@ import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.salary.domain.entity.SalaryAccount;
 import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Senior;
-import com.postgraduate.domain.user.domain.entity.User;
-import com.postgraduate.domain.user.domain.entity.constant.Role;
+import com.postgraduate.domain.user.user.application.utils.UserUtils;
+import com.postgraduate.domain.user.user.domain.entity.User;
+import com.postgraduate.domain.user.user.domain.entity.constant.Role;
 import com.postgraduate.domain.wish.domain.entity.Wish;
+import jakarta.validation.constraints.NotNull;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 import static com.postgraduate.domain.mentoring.domain.entity.constant.TermUnit.SHORT;
 
+@RequiredArgsConstructor
+@Component
+@Slf4j
 public class AdminMapper {
-    private AdminMapper() {
-        throw new IllegalStateException();
-    }
+    private final UserUtils userUtils;
 
-    public static CertificationDetailsResponse mapToCertificationInfo(Senior senior) {
+    public CertificationDetailsResponse mapToCertificationInfo(Senior senior) {
         User user = senior.getUser();
         Info info = senior.getInfo();
         return new CertificationDetailsResponse(
@@ -36,7 +42,7 @@ public class AdminMapper {
         );
     }
 
-    public static UserInfo mapToUserInfo(Wish wish) {
+    public UserInfo mapToUserInfo(Wish wish) {
         User user = wish.getUser();
         Boolean isSenior = user.getRole() == Role.SENIOR;
         return new UserInfo(
@@ -52,7 +58,7 @@ public class AdminMapper {
         );
     }
 
-    public static SeniorInfo mapToSeniorInfo(Senior senior, int totalAmount, Boolean isUser) {
+    public SeniorInfo mapToSeniorInfo(Senior senior, int totalAmount, Boolean isUser) {
         User user = senior.getUser();
         return new SeniorInfo(
                 senior.getSeniorId(),
@@ -65,21 +71,24 @@ public class AdminMapper {
         );
     }
 
-    public static MentoringInfo mapToMentoringInfoWithSenior(Mentoring mentoring) {
-        User user = mentoring.getUser();
-        return new MentoringInfo(
-                mentoring.getMentoringId(),
-                mentoring.getStatus(),
-                user.getNickName(),
-                user.getPhoneNumber(),
-                mentoring.getCreatedAt(),
-                mentoring.getDate()
-        );
-    }
-
-    public static MentoringInfo mapToMentoringInfoWithUser(Mentoring mentoring) {
+    public MentoringInfo mapToMentoringInfoWithUser(Mentoring mentoring) {
+        if (mentoring.getSenior() == null || mentoring.getSenior().getUser().isDelete()) {
+            return getMentoringInfo(mentoring, userUtils.getArchiveUser());
+        }
         Senior senior = mentoring.getSenior();
-        User user = senior.getUser();
+        return getMentoringInfo(mentoring, senior.getUser());
+    }
+
+    public MentoringInfo mapToMentoringInfoWithSenior(Mentoring mentoring) {
+        if (mentoring.getUser() == null || mentoring.getUser().isDelete()) {
+            return getMentoringInfo(mentoring, userUtils.getArchiveUser());
+        }
+        User user = mentoring.getUser();
+        return getMentoringInfo(mentoring, user);
+    }
+
+    @NotNull
+    private MentoringInfo getMentoringInfo(Mentoring mentoring, User user) {
         return new MentoringInfo(
                 mentoring.getMentoringId(),
                 mentoring.getStatus(),
@@ -90,14 +99,15 @@ public class AdminMapper {
         );
     }
 
-    public static UserMentoringInfo mapToUserMentoringInfo(User user) {
+
+    public UserMentoringInfo mapToUserMentoringInfo(User user) {
         return new UserMentoringInfo(
                 user.getNickName(),
                 user.getPhoneNumber()
         );
     }
 
-    public static UserMentoringInfo mapToUserMentoringInfo(Senior senior) {
+    public UserMentoringInfo mapToUserMentoringInfo(Senior senior) {
         User user = senior.getUser();
         return new UserMentoringInfo(
                 user.getNickName(),
@@ -105,25 +115,19 @@ public class AdminMapper {
         );
     }
 
-    public static PaymentInfo mapToPaymentInfo(Mentoring mentoring) {
-        Payment payment = mentoring.getPayment();
-        User user = mentoring.getUser();
-        return new PaymentInfo(
-                payment.getPaymentId(),
-                mentoring.getMentoringId(),
-                user.getNickName(),
-                user.getPhoneNumber(),
-                payment.getPaidAt(),
-                payment.getPay(),
-                payment.getStatus()
-        );
-    }
-
-    public static PaymentInfo mapToPaymentInfo(Payment payment, Mentoring mentoring) {
+    public PaymentInfo mapToPaymentInfo(Payment payment, Mentoring mentoring) {
+        if (payment.getUser() == null) {
+            return getPaymentInfo(payment, mentoring.getMentoringId(), userUtils.getArchiveUser());
+        }
         User user = payment.getUser();
+        return getPaymentInfo(payment, mentoring.getMentoringId(), user);
+    }
+
+    @NotNull
+    private PaymentInfo getPaymentInfo(Payment payment, Long mentoring, User user) {
         return new PaymentInfo(
                 payment.getPaymentId(),
-                mentoring.getMentoringId(),
+                mentoring,
                 user.getNickName(),
                 user.getPhoneNumber(),
                 payment.getPaidAt(),
@@ -132,20 +136,12 @@ public class AdminMapper {
         );
     }
 
-    public static PaymentInfo mapToPaymentInfo(Payment payment) {
+    public PaymentInfo mapToPaymentInfo(Payment payment) {
         User user = payment.getUser();
-        return new PaymentInfo(
-                payment.getPaymentId(),
-                null,
-                user.getNickName(),
-                user.getPhoneNumber(),
-                payment.getPaidAt(),
-                payment.getPay(),
-                payment.getStatus()
-        );
+        return getPaymentInfo(payment, null, user);
     }
 
-    public static SalaryInfoWithOutId mapToSalaryResponse(Senior senior, String accountNumber, Salary salary) {
+    public SalaryInfoWithOutId mapToSalaryResponse(Senior senior, String accountNumber, Salary salary) {
         User user = senior.getUser();
         SalaryAccount account = salary.getAccount();
         return new SalaryInfoWithOutId(
@@ -159,7 +155,7 @@ public class AdminMapper {
         );
     }
 
-    public static SalaryInfoWithOutId mapToSalaryResponse(Senior senior, Salary salary) {
+    public SalaryInfoWithOutId mapToSalaryResponse(Senior senior, Salary salary) {
         User user = senior.getUser();
         return new SalaryInfoWithOutId (
                 user.getNickName(),
@@ -169,7 +165,18 @@ public class AdminMapper {
         );
     }
 
-    public static UnSettledSalaryInfo mapToUnSettledSalaryResponse(Salary salary) {
+    public SalaryInfoWithOutId mapToSalaryResponse(Salary salary) {
+        User user = userUtils.getArchiveUser();
+        return new SalaryInfoWithOutId (
+                user.getNickName(),
+                user.getPhoneNumber(),
+                salary.getTotalAmount(),
+                salary.getSalaryDoneDate()
+        );
+    }
+
+
+    public UnSettledSalaryInfo mapToUnSettledSalaryResponse(Salary salary) {
         Senior senior = salary.getSenior();
         User user = senior.getUser();
         return new UnSettledSalaryInfo(
@@ -181,7 +188,7 @@ public class AdminMapper {
         );
     }
 
-    public static UnSettledSalaryInfo mapToUnSettledSalaryResponse(Salary salary, String accountNumber) {
+    public UnSettledSalaryInfo mapToUnSettledSalaryResponse(Salary salary, String accountNumber) {
         Senior senior = salary.getSenior();
         User user = senior.getUser();
         SalaryAccount account = salary.getAccount();
@@ -197,17 +204,36 @@ public class AdminMapper {
         );
     }
 
-    public static MentoringWithPaymentResponse mapToMentoringWithPaymentResponse(Mentoring mentoring) {
-        User user = mentoring.getUser();
-        Senior senior = mentoring.getSenior();
+    public MentoringWithPaymentResponse mapToMentoringWithPaymentResponse(Mentoring mentoring) {
+        User user;
+        User senior;
+        if (mentoring.getUser() == null || mentoring.getUser().isDelete()) {
+            log.info("user is Null");
+            user = userUtils.getArchiveUser();
+        }
+        else {
+            user = mentoring.getUser();
+        }
+        if (mentoring.getSenior().getUser() == null || mentoring.getSenior().getUser().isDelete()) {
+            log.info("senior is Null");
+            senior = userUtils.getArchiveUser();
+        }
+        else {
+            senior = mentoring.getSenior().getUser();
+        }
         Payment payment = mentoring.getPayment();
+        return getMentoringWithPaymentResponse(mentoring, user, senior, payment);
+    }
+
+    @NotNull
+    private static MentoringWithPaymentResponse getMentoringWithPaymentResponse(Mentoring mentoring, User user, User senior, Payment payment) {
         return new MentoringWithPaymentResponse(
                 mentoring.getMentoringId(),
                 payment.getPaymentId(),
                 user.getNickName(),
                 user.getPhoneNumber(),
-                senior.getUser().getNickName(),
-                senior.getUser().getPhoneNumber(),
+                senior.getNickName(),
+                senior.getPhoneNumber(),
                 mentoring.getDate(),
                 mentoring.getTerm(),
                 payment.getPay(),
@@ -215,7 +241,7 @@ public class AdminMapper {
         );
     }
 
-    public static WishResponse mapToWishResponse(Wish wish) {
+    public WishResponse mapToWishResponse(Wish wish) {
         User user = wish.getUser();
         return new WishResponse(
                 wish.getWishId(),

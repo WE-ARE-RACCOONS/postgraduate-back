@@ -10,7 +10,7 @@ import com.postgraduate.domain.senior.application.dto.res.*;
 import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
-import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.user.user.domain.entity.User;
 import com.postgraduate.domain.wish.domain.entity.Wish;
 import com.postgraduate.domain.wish.domain.service.WishGetService;
 import com.postgraduate.global.config.security.util.EncryptorUtils;

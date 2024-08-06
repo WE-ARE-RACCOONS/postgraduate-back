@@ -9,7 +9,7 @@ import com.postgraduate.domain.senior.application.dto.res.*;
 import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
-import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.user.user.domain.entity.User;
 import com.postgraduate.support.ControllerTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,11 +18,9 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.servlet.ResultMatcher;
 
 import java.util.List;
 
-import static com.postgraduate.domain.senior.domain.entity.constant.Status.APPROVE;
 import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseCode.*;
 import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseMessage.*;
 import static org.mockito.ArgumentMatchers.any;

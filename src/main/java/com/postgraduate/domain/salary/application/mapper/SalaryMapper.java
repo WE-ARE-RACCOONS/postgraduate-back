@@ -6,36 +6,38 @@ import com.postgraduate.domain.salary.application.dto.SalaryDetails;
 import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.salary.domain.entity.SalaryAccount;
 import com.postgraduate.domain.senior.domain.entity.Senior;
-import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.user.user.application.utils.UserUtils;
+import com.postgraduate.domain.user.user.domain.entity.User;
+import jakarta.validation.constraints.NotNull;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 
+@RequiredArgsConstructor
+@Component
 public class SalaryMapper {
-    private SalaryMapper() {
-        throw new IllegalArgumentException();
-    }
+    private final UserUtils userUtils;
 
-    public static Salary mapToSalary(Senior senior, LocalDate salaryDate) {
+    public Salary mapToSalary(Senior senior, LocalDate salaryDate) {
         return Salary.builder()
                 .senior(senior)
                 .salaryDate(salaryDate)
                 .build();
     }
 
-    public static Salary mapToSalary(Senior senior, LocalDate salaryDate, Account account) {
-        if (account == null)
-            return mapToSalary(senior, salaryDate);
-        SalaryAccount salaryAccount = mapToSalaryAccount(account);
-        return Salary.builder()
-                .senior(senior)
-                .salaryDate(salaryDate)
-                .account(salaryAccount)
-                .build();
-    }
-
-    public static SalaryDetails mapToSalaryDetail(Mentoring mentoring) {
+    public SalaryDetails mapToSalaryDetail(Mentoring mentoring) {
         Salary salary = mentoring.getSalary();
+        if (mentoring.getUser() == null || mentoring.getUser().isDelete()){
+            User user = userUtils.getArchiveUser();
+            return getSalaryDetails(mentoring, salary, user);
+        }
         User user = mentoring.getUser();
+        return getSalaryDetails(mentoring, salary, user);
+    }
+
+    @NotNull
+    private SalaryDetails getSalaryDetails(Mentoring mentoring, Salary salary, User user) {
         return new SalaryDetails(
                 user.getProfile(),
                 user.getNickName(),
@@ -46,7 +48,7 @@ public class SalaryMapper {
         );
     }
 
-    public static SalaryAccount mapToSalaryAccount(Account account) {
+    public SalaryAccount mapToSalaryAccount(Account account) {
         return new SalaryAccount(
                 account.getBank(),
                 account.getAccountNumber(),

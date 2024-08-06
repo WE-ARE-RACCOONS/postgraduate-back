@@ -26,7 +26,7 @@ import static com.postgraduate.domain.account.domain.entity.QAccount.account;
 import static com.postgraduate.domain.salary.domain.entity.QSalary.salary;
 import static com.postgraduate.domain.salary.util.SalaryUtil.getSalaryDate;
 import static com.postgraduate.domain.senior.domain.entity.QSenior.senior;
-import static com.postgraduate.domain.user.domain.entity.QUser.user;
+import static com.postgraduate.domain.user.user.domain.entity.QUser.user;
 
 @Configuration
 @Slf4j
@@ -92,13 +92,12 @@ public class CreateSalaryJobConfig {
                         .on(senior.user.eq(user))
                         .leftJoin(account)
                         .on(account.senior.eq(senior))
-                        .where(user.isDelete.isFalse()
-                                .and(senior.seniorId.notIn(
+                        .where(senior.seniorId.notIn(
                                         JPAExpressions
                                                 .select(salary.senior.seniorId)
                                                 .from(salary)
                                                 .where(salary.salaryDate.eq(date))
-                                )))
+                                ))
                         .orderBy(senior.seniorId.desc())
         );
     }

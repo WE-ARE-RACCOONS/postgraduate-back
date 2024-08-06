@@ -10,9 +10,8 @@ import com.postgraduate.domain.salary.domain.entity.SalaryAccount;
 import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
-import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.user.user.domain.entity.User;
 import com.postgraduate.domain.wish.domain.entity.Wish;
-import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,8 +20,8 @@ import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.EX
 import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.WAITING;
 import static com.postgraduate.domain.payment.domain.entity.constant.Status.DONE;
 import static com.postgraduate.domain.salary.util.SalaryUtil.getSalaryDate;
-import static com.postgraduate.domain.user.domain.entity.constant.Role.SENIOR;
-import static com.postgraduate.domain.user.domain.entity.constant.Role.USER;
+import static com.postgraduate.domain.user.user.domain.entity.constant.Role.SENIOR;
+import static com.postgraduate.domain.user.user.domain.entity.constant.Role.USER;
 import static java.time.LocalDateTime.now;
 
 public class Resource {

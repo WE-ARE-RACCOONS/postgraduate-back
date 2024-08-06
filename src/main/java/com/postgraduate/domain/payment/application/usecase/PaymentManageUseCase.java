@@ -12,8 +12,8 @@ import com.postgraduate.domain.payment.exception.CertificationFailException;
 import com.postgraduate.domain.payment.exception.RefundFailException;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
-import com.postgraduate.domain.user.domain.entity.User;
-import com.postgraduate.domain.user.domain.service.UserGetService;
+import com.postgraduate.domain.user.user.domain.entity.User;
+import com.postgraduate.domain.user.user.domain.service.UserGetService;
 import com.postgraduate.global.slack.SlackPaymentMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +30,7 @@ import java.util.Optional;
 
 import static com.postgraduate.domain.payment.application.usecase.constant.PaymentParameter.*;
 import static com.postgraduate.domain.payment.presentation.constant.PaymentResponseMessage.FAIL_PAYMENT;
-import static com.postgraduate.domain.user.domain.entity.constant.Role.ADMIN;
+import static com.postgraduate.domain.user.user.domain.entity.constant.Role.ADMIN;
 import static org.springframework.http.CacheControl.noCache;
 
 @Service

@@ -6,9 +6,8 @@ import com.postgraduate.admin.application.dto.res.*;
 import com.postgraduate.admin.application.usecase.*;
 import com.postgraduate.domain.auth.application.dto.res.JwtTokenResponse;
 import com.postgraduate.domain.auth.application.usecase.jwt.JwtUseCase;
-import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.user.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,7 +17,6 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Controller
-@Slf4j
 @RequestMapping("/adminServer")
 public class AdminWithThymeLeafController {
     private final AdminAuthUseCase adminAuthUseCase;

@@ -1,6 +1,6 @@
 package com.postgraduate.global.config.security;
 
-import com.postgraduate.domain.user.domain.entity.constant.Role;
+import com.postgraduate.domain.user.user.domain.entity.constant.Role;
 import com.postgraduate.global.config.security.jwt.filter.CustomAccessDeniedHandler;
 import com.postgraduate.global.config.security.jwt.filter.CustomAuthenticationEntryPoint;
 import com.postgraduate.global.config.security.jwt.filter.JwtFilter;
@@ -91,6 +91,7 @@ public class SecurityConfig {
                         .requestMatchers("/auth/senior/change").hasAuthority(Role.USER.name())
                         .requestMatchers("/auth/refresh").authenticated()
                         .requestMatchers("/auth/logout").authenticated()
+                        .requestMatchers("/signout/**").authenticated()
 
                         .anyRequest().permitAll()
                 )

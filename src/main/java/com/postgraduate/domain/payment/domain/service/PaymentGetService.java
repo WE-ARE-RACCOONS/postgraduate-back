@@ -4,7 +4,7 @@ import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.payment.domain.repository.PaymentRepository;
 import com.postgraduate.domain.payment.exception.PaymentNotFoundException;
 import com.postgraduate.domain.senior.domain.entity.Senior;
-import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.user.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

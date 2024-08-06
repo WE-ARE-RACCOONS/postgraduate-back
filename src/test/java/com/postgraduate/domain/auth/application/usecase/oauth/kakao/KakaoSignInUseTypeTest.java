@@ -3,9 +3,10 @@ package com.postgraduate.domain.auth.application.usecase.oauth.kakao;
 import com.postgraduate.domain.auth.application.dto.req.CodeRequest;
 import com.postgraduate.domain.auth.application.dto.res.AuthUserResponse;
 import com.postgraduate.domain.auth.application.dto.res.KakaoUserInfoResponse;
-import com.postgraduate.domain.user.domain.entity.User;
-import com.postgraduate.domain.user.domain.service.UserGetService;
-import com.postgraduate.domain.user.exception.UserNotFoundException;
+import com.postgraduate.domain.user.user.domain.entity.User;
+import com.postgraduate.domain.user.user.domain.service.UserGetService;
+import com.postgraduate.domain.user.user.domain.service.UserUpdateService;
+import com.postgraduate.domain.user.user.exception.UserNotFoundException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,7 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDateTime;
 
 import static com.postgraduate.domain.auth.application.dto.res.KakaoUserInfoResponse.KakaoAccount;
-import static com.postgraduate.domain.user.domain.entity.constant.Role.USER;
+import static com.postgraduate.domain.user.user.domain.entity.constant.Role.USER;
 import static java.lang.Boolean.TRUE;
 import static org.mockito.BDDMockito.given;
 
@@ -28,6 +29,8 @@ class KakaoSignInUseTypeTest {
     private KakaoAccessTokenUseCase kakaoAccessTokenUseCase;
     @Mock
     private UserGetService userGetService;
+    @Mock
+    private UserUpdateService userUpdateService;
     @InjectMocks
     private KakaoSignInUseCase kakaoSignInUseCase;
 

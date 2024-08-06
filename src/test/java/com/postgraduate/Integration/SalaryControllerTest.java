@@ -2,8 +2,8 @@ package com.postgraduate.Integration;
 
 import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.senior.domain.entity.Senior;
-import com.postgraduate.domain.user.domain.entity.User;
-import com.postgraduate.domain.user.domain.entity.constant.Role;
+import com.postgraduate.domain.user.user.domain.entity.User;
+import com.postgraduate.domain.user.user.domain.entity.constant.Role;
 import com.postgraduate.support.IntegrationTest;
 import com.postgraduate.support.Resource;
 import org.junit.jupiter.api.BeforeEach;

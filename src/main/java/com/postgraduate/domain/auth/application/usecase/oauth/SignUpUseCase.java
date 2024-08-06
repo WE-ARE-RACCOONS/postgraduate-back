@@ -8,11 +8,11 @@ import com.postgraduate.domain.salary.domain.service.SalarySaveService;
 import com.postgraduate.domain.senior.application.utils.SeniorUtils;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorSaveService;
-import com.postgraduate.domain.user.application.utils.UserUtils;
-import com.postgraduate.domain.user.domain.entity.User;
-import com.postgraduate.domain.user.domain.service.UserGetService;
-import com.postgraduate.domain.user.domain.service.UserSaveService;
-import com.postgraduate.domain.user.domain.service.UserUpdateService;
+import com.postgraduate.domain.user.user.application.utils.UserUtils;
+import com.postgraduate.domain.user.user.domain.entity.User;
+import com.postgraduate.domain.user.user.domain.service.UserGetService;
+import com.postgraduate.domain.user.user.domain.service.UserSaveService;
+import com.postgraduate.domain.user.user.domain.service.UserUpdateService;
 import com.postgraduate.domain.wish.application.mapper.WishMapper;
 import com.postgraduate.domain.wish.domain.entity.Wish;
 import com.postgraduate.domain.wish.domain.service.WishSaveService;
@@ -27,7 +27,7 @@ import java.util.Random;
 
 import static com.postgraduate.domain.salary.util.SalaryUtil.getSalaryDate;
 import static com.postgraduate.domain.senior.application.mapper.SeniorMapper.mapToSenior;
-import static com.postgraduate.domain.user.application.mapper.UserMapper.mapToUser;
+import static com.postgraduate.domain.user.user.application.mapper.UserMapper.mapToUser;
 
 @Transactional
 @Service
@@ -40,6 +40,7 @@ public class SignUpUseCase {
     private final UserGetService userGetService;
     private final WishSaveService wishSaveService;
     private final SeniorSaveService seniorSaveService;
+    private final SalaryMapper salaryMapper;
     private final SlackSignUpMessage slackSignUpMessage;
     private final UserUtils userUtils;
     private final SeniorUtils seniorUtils;
@@ -84,8 +85,8 @@ public class SignUpUseCase {
 
     private User seniorSignUpFin(Senior senior) {
         seniorSaveService.saveSenior(senior);
-        Salary salary = SalaryMapper.mapToSalary(senior, getSalaryDate());
-        Salary nextSalary = SalaryMapper.mapToSalary(senior, getSalaryDate().plusDays(7));
+        Salary salary = salaryMapper.mapToSalary(senior, getSalaryDate());
+        Salary nextSalary = salaryMapper.mapToSalary(senior, getSalaryDate().plusDays(7));
         salarySaveService.save(salary);
         salarySaveService.save(nextSalary);
         slackSignUpMessage.sendSeniorSignUp(senior);
@@ -97,8 +98,8 @@ public class SignUpUseCase {
         seniorSaveService.saveSenior(senior);
         user = userGetService.byUserId(user.getUserId());
         userUpdateService.userToSeniorRole(user, rd.nextInt(5));
-        Salary salary = SalaryMapper.mapToSalary(senior, getSalaryDate());
-        Salary nextSalary = SalaryMapper.mapToSalary(senior, getSalaryDate().plusDays(7));
+        Salary salary = salaryMapper.mapToSalary(senior, getSalaryDate());
+        Salary nextSalary = salaryMapper.mapToSalary(senior, getSalaryDate().plusDays(7));
         salarySaveService.save(salary);
         salarySaveService.save(nextSalary);
         slackSignUpMessage.sendSeniorSignUp(senior);

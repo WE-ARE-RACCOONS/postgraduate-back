@@ -4,6 +4,7 @@ import com.postgraduate.domain.account.domain.entity.Account;
 import com.postgraduate.domain.account.domain.service.AccountGetService;
 import com.postgraduate.domain.mentoring.application.dto.req.MentoringApplyRequest;
 import com.postgraduate.domain.mentoring.application.dto.res.ApplyingResponse;
+import com.postgraduate.domain.mentoring.application.mapper.MentoringMapper;
 import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
 import com.postgraduate.domain.mentoring.domain.service.MentoringSaveService;
 import com.postgraduate.domain.mentoring.exception.MentoringDateException;
@@ -17,7 +18,7 @@ import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorUpdateService;
-import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.user.user.domain.entity.User;
 import com.postgraduate.global.bizppurio.application.usecase.BizppurioJuniorMessage;
 import com.postgraduate.global.bizppurio.application.usecase.BizppurioSeniorMessage;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,8 +34,8 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static com.postgraduate.domain.senior.domain.entity.constant.Status.APPROVE;
-import static com.postgraduate.domain.user.domain.entity.constant.Role.SENIOR;
-import static com.postgraduate.domain.user.domain.entity.constant.Role.USER;
+import static com.postgraduate.domain.user.user.domain.entity.constant.Role.SENIOR;
+import static com.postgraduate.domain.user.user.domain.entity.constant.Role.USER;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -52,6 +53,8 @@ class MentoringApplyingUseTypeTest {
     private MentoringGetService mentoringGetService;
     @Mock
     private MentoringSaveService mentoringSaveService;
+    @Mock
+    private MentoringMapper mentoringMapper;
     @Mock
     private AccountGetService accountGetService;
     @Mock

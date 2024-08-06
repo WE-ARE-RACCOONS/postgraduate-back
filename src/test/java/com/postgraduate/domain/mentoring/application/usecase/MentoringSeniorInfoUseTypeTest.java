@@ -3,7 +3,9 @@ package com.postgraduate.domain.mentoring.application.usecase;
 import com.postgraduate.domain.mentoring.application.dto.DoneSeniorMentoringInfo;
 import com.postgraduate.domain.mentoring.application.dto.res.DoneSeniorMentoringResponse;
 import com.postgraduate.domain.mentoring.application.dto.res.ExpectedSeniorMentoringResponse;
+import com.postgraduate.domain.mentoring.application.dto.res.SeniorMentoringDetailResponse;
 import com.postgraduate.domain.mentoring.application.dto.res.WaitingSeniorMentoringResponse;
+import com.postgraduate.domain.mentoring.application.mapper.MentoringMapper;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
 import com.postgraduate.domain.mentoring.exception.MentoringNotFoundException;
@@ -14,7 +16,7 @@ import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
-import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.user.user.domain.entity.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,8 +31,8 @@ import java.util.List;
 
 import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.WAITING;
 import static com.postgraduate.domain.senior.domain.entity.constant.Status.APPROVE;
-import static com.postgraduate.domain.user.domain.entity.constant.Role.SENIOR;
-import static com.postgraduate.domain.user.domain.entity.constant.Role.USER;
+import static com.postgraduate.domain.user.user.domain.entity.constant.Role.SENIOR;
+import static com.postgraduate.domain.user.user.domain.entity.constant.Role.USER;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -44,6 +46,8 @@ class MentoringSeniorInfoUseTypeTest {
     private MentoringGetService mentoringGetService;
     @Mock
     private SeniorGetService seniorGetService;
+    @Mock
+    private MentoringMapper mentoringMapper;
     @InjectMocks
     private MentoringSeniorInfoUseCase mentoringSeniorInfoUseCase;
 
@@ -82,6 +86,8 @@ class MentoringSeniorInfoUseTypeTest {
                 .willReturn(senior);
         given(mentoringGetService.byIdAndSeniorForDetails(mentoringId, senior))
                 .willReturn(mentoring);
+        given(mentoringMapper.mapToSeniorMentoringDetail(mentoring))
+                .willReturn(mock(SeniorMentoringDetailResponse.class));
 
         assertThat(mentoringSeniorInfoUseCase.getSeniorMentoringDetail(user, mentoringId))
                 .isNotNull();
@@ -165,6 +171,12 @@ class MentoringSeniorInfoUseTypeTest {
                 .willReturn(senior);
         given(mentoringGetService.bySeniorDone(senior))
                 .willReturn(mentorings);
+        given(mentoringMapper.mapToSeniorDoneInfo(mentoring1))
+                .willReturn(new DoneSeniorMentoringInfo(mentoring1.getMentoringId(), "a", "a", 30, mentoring1.getDate(), LocalDate.now(), true));
+        given(mentoringMapper.mapToSeniorDoneInfo(mentoring2))
+                .willReturn(new DoneSeniorMentoringInfo(mentoring2.getMentoringId(), "a", "a", 30, mentoring2.getDate(), LocalDate.now(), true));
+        given(mentoringMapper.mapToSeniorDoneInfo(mentoring3))
+                .willReturn(new DoneSeniorMentoringInfo(mentoring3.getMentoringId(), "a", "a", 30, mentoring3.getDate(), LocalDate.now(), true));
 
         DoneSeniorMentoringResponse seniorDone = mentoringSeniorInfoUseCase.getSeniorDone(user);
         List<DoneSeniorMentoringInfo> doneSeniorMentoringInfos = seniorDone.seniorMentoringInfos();

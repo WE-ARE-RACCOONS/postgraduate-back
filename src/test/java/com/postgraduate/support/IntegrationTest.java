@@ -8,7 +8,7 @@ import com.postgraduate.domain.mentoring.domain.repository.MentoringRepository;
 import com.postgraduate.domain.payment.domain.repository.PaymentRepository;
 import com.postgraduate.domain.salary.domain.repository.SalaryRepository;
 import com.postgraduate.domain.senior.domain.repository.SeniorRepository;
-import com.postgraduate.domain.user.domain.repository.UserRepository;
+import com.postgraduate.domain.user.user.domain.repository.UserRepository;
 import com.postgraduate.domain.wish.domain.repository.WishRepository;
 import com.postgraduate.global.aop.lock.DistributeLockAspect;
 import com.postgraduate.global.config.redis.RedisRepository;

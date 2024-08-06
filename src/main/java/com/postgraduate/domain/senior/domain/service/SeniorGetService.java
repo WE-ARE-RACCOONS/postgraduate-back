@@ -3,7 +3,7 @@ package com.postgraduate.domain.senior.domain.service;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.repository.SeniorRepository;
 import com.postgraduate.domain.senior.exception.NoneSeniorException;
-import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.user.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,7 +21,8 @@ public class SeniorGetService {
     private static final int SENIOR_PAGE_SIZE = 10;
 
     public Senior byUser(User user) {
-        return seniorRepository.findByUser(user).orElseThrow(NoneSeniorException::new);
+        return seniorRepository.findByUserAndUser_IsDeleteIsFalse(user)
+                .orElseThrow(NoneSeniorException::new);
     }
 
     public Senior byUserWithAll(User user) {

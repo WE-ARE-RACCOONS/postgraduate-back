@@ -4,6 +4,7 @@ import com.postgraduate.domain.auth.application.dto.req.SeniorChangeRequest;
 import com.postgraduate.domain.auth.application.dto.req.SeniorSignUpRequest;
 import com.postgraduate.domain.auth.application.dto.req.SignUpRequest;
 import com.postgraduate.domain.auth.util.ProfileUtils;
+import com.postgraduate.domain.salary.application.mapper.SalaryMapper;
 import com.postgraduate.domain.salary.domain.service.SalarySaveService;
 import com.postgraduate.domain.senior.application.utils.SeniorUtils;
 import com.postgraduate.domain.senior.domain.entity.Info;
@@ -11,12 +12,12 @@ import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorSaveService;
 import com.postgraduate.domain.senior.exception.KeywordException;
-import com.postgraduate.domain.user.application.utils.UserUtils;
-import com.postgraduate.domain.user.domain.entity.User;
-import com.postgraduate.domain.user.domain.service.UserGetService;
-import com.postgraduate.domain.user.domain.service.UserSaveService;
-import com.postgraduate.domain.user.domain.service.UserUpdateService;
-import com.postgraduate.domain.user.exception.PhoneNumberException;
+import com.postgraduate.domain.user.user.application.utils.UserUtils;
+import com.postgraduate.domain.user.user.domain.entity.User;
+import com.postgraduate.domain.user.user.domain.service.UserGetService;
+import com.postgraduate.domain.user.user.domain.service.UserSaveService;
+import com.postgraduate.domain.user.user.domain.service.UserUpdateService;
+import com.postgraduate.domain.user.user.exception.PhoneNumberException;
 import com.postgraduate.domain.wish.domain.entity.Wish;
 import com.postgraduate.domain.wish.domain.entity.constant.Status;
 import com.postgraduate.domain.wish.domain.service.WishSaveService;
@@ -34,8 +35,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDateTime;
 
 import static com.postgraduate.domain.senior.domain.entity.constant.Status.APPROVE;
-import static com.postgraduate.domain.user.domain.entity.constant.Role.SENIOR;
-import static com.postgraduate.domain.user.domain.entity.constant.Role.USER;
+import static com.postgraduate.domain.user.user.domain.entity.constant.Role.SENIOR;
+import static com.postgraduate.domain.user.user.domain.entity.constant.Role.USER;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -63,6 +64,8 @@ class SignUpUseTypeTest {
     private SeniorSaveService seniorSaveService;
     @Mock
     private SalarySaveService salarySaveService;
+    @Mock
+    private SalaryMapper salaryMapper;
     @Mock
     private UserUtils userUtils;
     @Mock

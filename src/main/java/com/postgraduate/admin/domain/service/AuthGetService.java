@@ -1,7 +1,7 @@
 package com.postgraduate.admin.domain.service;
 
-import com.postgraduate.domain.user.domain.entity.User;
-import com.postgraduate.domain.user.domain.repository.UserRepository;
+import com.postgraduate.domain.user.user.domain.entity.User;
+import com.postgraduate.domain.user.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

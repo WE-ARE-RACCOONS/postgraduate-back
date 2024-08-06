@@ -10,7 +10,7 @@ import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
 import com.postgraduate.domain.mentoring.util.DateUtils;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
-import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.user.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.postgraduate.domain.mentoring.application.mapper.MentoringMapper.*;
 import static com.postgraduate.domain.mentoring.util.DateUtils.stringToLocalDateTime;
 import static java.time.Duration.between;
 
@@ -27,12 +26,13 @@ import static java.time.Duration.between;
 @RequiredArgsConstructor
 public class MentoringSeniorInfoUseCase {
     private final MentoringGetService mentoringGetService;
+    private final MentoringMapper mentoringMapper;
     private final SeniorGetService seniorGetService;
 
     public SeniorMentoringDetailResponse getSeniorMentoringDetail(User user, Long mentoringId) {
         Senior senior = seniorGetService.byUser(user);
         Mentoring mentoring = mentoringGetService.byIdAndSeniorForDetails(mentoringId, senior);
-        return mapToSeniorMentoringDetail(mentoring);
+        return mentoringMapper.mapToSeniorMentoringDetail(mentoring);
     }
 
     public WaitingSeniorMentoringResponse getSeniorWaiting(User user) {
@@ -46,7 +46,7 @@ public class MentoringSeniorInfoUseCase {
                             .atStartOfDay();
                     LocalDateTime now = LocalDateTime.now();
                     String remain = DateUtils.remainTime(between(now, expiredAt));
-                    return mapToSeniorWaitingInfo(mentoring, remain);
+                    return mentoringMapper.mapToSeniorWaitingInfo(mentoring, remain);
                 })
                 .toList();
         return new WaitingSeniorMentoringResponse(waitingMentoringInfos);
@@ -60,7 +60,7 @@ public class MentoringSeniorInfoUseCase {
                     LocalDateTime date = DateUtils.stringToLocalDateTime(mentoring.getDate());
                     LocalDateTime now = LocalDateTime.now();
                     long dDay = between(now, date).toDays();
-                    return mapToSeniorExpectedInfo(mentoring, dDay);
+                    return mentoringMapper.mapToSeniorExpectedInfo(mentoring, dDay);
                 })
                 .toList();
         return new ExpectedSeniorMentoringResponse(expectedMentoringInfos);
@@ -70,7 +70,7 @@ public class MentoringSeniorInfoUseCase {
         Senior senior = seniorGetService.byUser(user);
         List<Mentoring> mentorings = mentoringGetService.bySeniorDone(senior);
         List<DoneSeniorMentoringInfo> doneSeniorMentoringInfos = mentorings.stream()
-                .map(MentoringMapper::mapToSeniorDoneInfo)
+                .map(mentoring -> mentoringMapper.mapToSeniorDoneInfo(mentoring))
                 .sorted((o1, o2) -> {
                     if (stringToLocalDateTime(o1.date())
                             .isAfter(stringToLocalDateTime(o2.date())))

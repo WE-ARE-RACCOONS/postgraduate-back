@@ -10,7 +10,7 @@ import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.salary.domain.service.SalaryGetService;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
-import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.user.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +23,7 @@ import java.util.List;
 public class SalaryInfoUseCase {
     private final SeniorGetService seniorGetService;
     private final SalaryGetService salaryGetService;
+    private final SalaryMapper salaryMapper;
     private final MentoringGetService mentoringGetService;
 
     public SalaryInfoResponse getSalary(User user) {
@@ -38,7 +39,7 @@ public class SalaryInfoUseCase {
                         mentoringGetService.bySeniorAndSalaryTrue(senior) :
                         mentoringGetService.bySeniorAndSalaryFalse(senior);
         List<SalaryDetails> salaryDetails = mentorings.stream()
-                .map(SalaryMapper::mapToSalaryDetail)
+                .map(salary -> salaryMapper.mapToSalaryDetail(salary))
                 .toList();
         return new SalaryDetailsResponse(salaryDetails);
     }

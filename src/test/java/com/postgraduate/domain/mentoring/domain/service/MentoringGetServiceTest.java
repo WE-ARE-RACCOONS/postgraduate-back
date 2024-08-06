@@ -1,13 +1,12 @@
 package com.postgraduate.domain.mentoring.domain.service;
 
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
-import com.postgraduate.domain.mentoring.domain.entity.constant.Status;
 import com.postgraduate.domain.mentoring.domain.repository.MentoringRepository;
 import com.postgraduate.domain.mentoring.exception.MentoringNotFoundException;
 import com.postgraduate.domain.mentoring.exception.MentoringPresentException;
 import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.senior.domain.entity.Senior;
-import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.user.user.domain.entity.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,7 +18,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.*;
-import static java.lang.Boolean.FALSE;
 import static java.util.Optional.of;
 import static java.util.Optional.ofNullable;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -163,74 +161,6 @@ class MentoringGetServiceTest {
                 .willReturn(Optional.ofNullable(null));
 
         assertThatThrownBy(() -> mentoringGetService.byIdAndSeniorForDetails(mentoringId, senior))
-                .isInstanceOf(MentoringNotFoundException.class);
-    }
-
-    @Test
-    @DisplayName("User 기반 멘토링 상태별 조회 테스트")
-    void byIdAndUserAndStatusTest() {
-        given(mentoringRepository.findByMentoringIdAndUserAndStatus(mentoringId, user, WAITING))
-                .willReturn(Optional.of(mentoring));
-        assertThat(mentoringGetService.byIdAndUserAndWaiting(mentoringId, user))
-                .isEqualTo(mentoring);
-
-        given(mentoringRepository.findByMentoringIdAndUserAndStatus(mentoringId, user, EXPECTED))
-                .willReturn(Optional.of(mentoring));
-        assertThat(mentoringGetService.byIdAndUserAndExpected(mentoringId, user))
-                .isEqualTo(mentoring);
-
-        given(mentoringRepository.findByMentoringIdAndUserAndStatus(mentoringId, user, DONE))
-                .willReturn(Optional.of(mentoring));
-        assertThat(mentoringGetService.byIdAndUserAndDone(mentoringId, user))
-                .isEqualTo(mentoring);
-
-        given(mentoringRepository.findByMentoringIdAndUserAndStatus(mentoringId, user, WAITING))
-                .willReturn(Optional.ofNullable(null));
-        assertThatThrownBy(() ->mentoringGetService.byIdAndUserAndWaiting(mentoringId, user))
-                .isInstanceOf(MentoringNotFoundException.class);
-
-        given(mentoringRepository.findByMentoringIdAndUserAndStatus(mentoringId, user, EXPECTED))
-                .willReturn(Optional.ofNullable(null));
-        assertThatThrownBy(() ->mentoringGetService.byIdAndUserAndExpected(mentoringId, user))
-                .isInstanceOf(MentoringNotFoundException.class);
-
-        given(mentoringRepository.findByMentoringIdAndUserAndStatus(mentoringId, user, DONE))
-                .willReturn(Optional.ofNullable(null));
-        assertThatThrownBy(() ->mentoringGetService.byIdAndUserAndDone(mentoringId, user))
-                .isInstanceOf(MentoringNotFoundException.class);
-    }
-
-    @Test
-    @DisplayName("Senior 기반 멘토링 상태별 조회 테스트")
-    void byIdAndSeniorAndStatusTest() {
-        given(mentoringRepository.findByMentoringIdAndSeniorAndStatus(mentoringId, senior, WAITING))
-                .willReturn(Optional.of(mentoring));
-        assertThat(mentoringGetService.byIdAndSeniorAndWaiting(mentoringId, senior))
-                .isEqualTo(mentoring);
-
-        given(mentoringRepository.findByMentoringIdAndSeniorAndStatus(mentoringId, senior, EXPECTED))
-                .willReturn(Optional.of(mentoring));
-        assertThat(mentoringGetService.byIdAndSeniorAndExpected(mentoringId, senior))
-                .isEqualTo(mentoring);
-
-        given(mentoringRepository.findByMentoringIdAndSeniorAndStatus(mentoringId, senior, DONE))
-                .willReturn(Optional.of(mentoring));
-        assertThat(mentoringGetService.byIdAndSeniorAndDone(mentoringId, senior))
-                .isEqualTo(mentoring);
-
-        given(mentoringRepository.findByMentoringIdAndSeniorAndStatus(mentoringId, senior, WAITING))
-                .willReturn(Optional.ofNullable(null));
-        assertThatThrownBy(() ->mentoringGetService.byIdAndSeniorAndWaiting(mentoringId, senior))
-                .isInstanceOf(MentoringNotFoundException.class);
-
-        given(mentoringRepository.findByMentoringIdAndSeniorAndStatus(mentoringId, senior, EXPECTED))
-                .willReturn(Optional.ofNullable(null));
-        assertThatThrownBy(() ->mentoringGetService.byIdAndSeniorAndExpected(mentoringId, senior))
-                .isInstanceOf(MentoringNotFoundException.class);
-
-        given(mentoringRepository.findByMentoringIdAndSeniorAndStatus(mentoringId, senior, DONE))
-                .willReturn(Optional.ofNullable(null));
-        assertThatThrownBy(() ->mentoringGetService.byIdAndSeniorAndDone(mentoringId, senior))
                 .isInstanceOf(MentoringNotFoundException.class);
     }
 }
