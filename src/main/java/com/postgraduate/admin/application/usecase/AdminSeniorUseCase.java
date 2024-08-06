@@ -6,12 +6,15 @@ import com.postgraduate.admin.application.dto.res.SeniorInfoQuery;
 import com.postgraduate.admin.application.mapper.AdminMapper;
 import com.postgraduate.admin.domain.service.AdminSeniorService;
 import com.postgraduate.domain.senior.domain.entity.Senior;
+import com.postgraduate.domain.senior.exception.SeniorCertificationException;
 import com.postgraduate.global.bizppurio.application.usecase.BizppurioSeniorMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
+import static com.postgraduate.domain.senior.domain.entity.constant.Status.WAITING;
 
 @Service
 @Transactional
@@ -31,7 +34,9 @@ public class AdminSeniorUseCase {
 
     @Transactional(readOnly = true)
     public CertificationDetailsResponse getCertification(Long seniorId) {
-        Senior senior = adminSeniorService.seniorInfo(seniorId);
+        Senior senior = adminSeniorService.bySeniorId(seniorId);
+        if (!senior.getStatus().equals(WAITING))
+            throw new SeniorCertificationException();
         return adminMapper.mapToCertificationInfo(senior);
     }
 

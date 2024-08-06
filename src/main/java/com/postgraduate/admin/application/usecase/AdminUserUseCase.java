@@ -1,10 +1,12 @@
 package com.postgraduate.admin.application.usecase;
 
+import com.postgraduate.admin.application.dto.req.Login;
 import com.postgraduate.admin.application.dto.req.SendMessageRequest;
 import com.postgraduate.admin.application.dto.res.UserInfo;
 import com.postgraduate.admin.application.dto.res.WishResponse;
 import com.postgraduate.admin.application.mapper.AdminMapper;
 import com.postgraduate.admin.domain.service.AdminUserService;
+import com.postgraduate.domain.user.user.domain.entity.User;
 import com.postgraduate.domain.wish.domain.entity.Wish;
 import com.postgraduate.global.bizppurio.application.dto.req.JuniorMatchingSuccessRequest;
 import com.postgraduate.global.bizppurio.application.usecase.BizppurioJuniorMessage;
@@ -23,6 +25,11 @@ public class AdminUserUseCase {
     private final AdminMapper adminMapper;
 
     @Transactional(readOnly = true)
+    public User login(Login loginForm) {
+        return adminUserService.login(loginForm.nickName(), loginForm.phoneNumber());
+    }
+
+    @Transactional(readOnly = true)
     public List<UserInfo> userInfos() {
         List<Wish> all = adminUserService.allJunior();
         return all.stream()
@@ -32,7 +39,7 @@ public class AdminUserUseCase {
 
     @Transactional(readOnly = true)
     public WishResponse wishInfo(Long userId) {
-        Wish wish = adminUserService.byUserId(userId);
+        Wish wish = adminUserService.wishByUserId(userId);
         return adminMapper.mapToWishResponse(wish);
     }
 

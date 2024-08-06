@@ -1,5 +1,6 @@
 package com.postgraduate.admin.domain.repository;
 
+import com.postgraduate.domain.user.user.domain.entity.User;
 import com.postgraduate.domain.wish.domain.entity.Wish;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,7 @@ public class AdminUserRepository {
                 .fetch();
     }
 
-    public Optional<Wish> findByUserId(Long userId) {
+    public Optional<Wish> findWishByUserId(Long userId) {
         return Optional.ofNullable(queryFactory.selectFrom(wish)
                 .where(
                         wish.matchingReceive.isTrue(),
@@ -35,9 +36,22 @@ public class AdminUserRepository {
                 .fetchOne());
     }
 
-    public Optional<Wish> findByWishId(Long wishId) {
+    public Optional<Wish> findWishByWishId(Long wishId) {
         return Optional.ofNullable(queryFactory.selectFrom(wish)
                 .where(wish.wishId.eq(wishId))
+                .fetchOne());
+    }
+
+    public Optional<User> findUserByUserId(Long userId) {
+        return Optional.ofNullable(queryFactory.selectFrom(user)
+                .where(user.userId.eq(userId))
+                .fetchOne());
+    }
+
+    public Optional<User> login(String id, String pw) {
+        return Optional.ofNullable(queryFactory.selectFrom(user)
+                .where(user.nickName.eq(id),
+                        user.phoneNumber.eq(pw))
                 .fetchOne());
     }
 }

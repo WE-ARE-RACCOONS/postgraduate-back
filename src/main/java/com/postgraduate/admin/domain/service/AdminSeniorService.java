@@ -24,11 +24,8 @@ public class AdminSeniorService {
         return adminSeniorRepository.allSeniorInfo(salaryDate);
     }
 
-    public Senior seniorInfo(Long seniorId) {
-        Senior senior = getSenior(seniorId);
-        if (!senior.getStatus().equals(WAITING))
-            throw new SeniorCertificationException();
-        return senior;
+    public Senior bySeniorId(Long seniorId) {
+        return getSenior(seniorId);
     }
 
     public Senior certificationUpdateApprove(Long seniorId) {
