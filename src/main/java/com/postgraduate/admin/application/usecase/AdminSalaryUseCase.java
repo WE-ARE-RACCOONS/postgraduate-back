@@ -26,7 +26,7 @@ public class AdminSalaryUseCase {
         List<Salary> all = adminSalaryService.findAllDoneSalary();
         return all.stream()
                 .map(salary -> {
-                    if (salary.getSenior() == null)
+                    if (salary.getAccount() == null)
                         return adminMapper.mapToSalaryResponse(salary);
                     SalaryAccount account = salary.getAccount();
                     String accountNumber = encryptorUtils.decryptData(account.getAccountNumber());
