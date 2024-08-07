@@ -8,20 +8,12 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class SalaryUpdateService {
-    public void updateDone(Salary salary) {
-        salary.updateStatus(true);
-    }
-
     public void updateNot(Salary salary) {
         salary.updateStatus(false);
     }
 
     public void plusTotalAmount(Salary salary, int amount) {
         salary.plusAmount(amount);
-    }
-
-    public void minusTotalAmount(Salary salary, int amount) {
-        salary.minusAmount(amount);
     }
 
     public void updateAccount(Salary salary, SalaryAccount account) {

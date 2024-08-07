@@ -117,22 +117,6 @@ class MentoringGetServiceTest {
                 .isEqualTo(List.of(mentoring));
     }
     @Test
-    @DisplayName("mentoringId를 통해 조회 테스트")
-    void byMentoringId() {
-        given(mentoringRepository.findByMentoringId(mentoringId))
-                .willReturn(ofNullable(null));
-
-        assertThatThrownBy(() -> mentoringGetService.byMentoringId(mentoringId))
-                .isInstanceOf(MentoringNotFoundException.class);
-
-        given(mentoringRepository.findByMentoringId(mentoringId))
-                .willReturn(of(mentoring));
-
-        assertThat(mentoringGetService.byMentoringId(mentoringId))
-                .isEqualTo(mentoring);
-    }
-
-    @Test
     @DisplayName("User 멘토링 상세 조회 테스트")
     void byIdAndUserForDetails() {
         given(mentoringRepository.findByMentoringIdAndUserForDetails(mentoringId, user))

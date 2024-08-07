@@ -104,13 +104,4 @@ class SeniorUpdateServiceTest {
         assertThat(senior.getHit())
                 .isEqualTo(++originHit);
     }
-
-    @Test
-    @DisplayName("상태 변경")
-    void updateStatus() {
-        seniorUpdateService.certificationUpdateApprove(senior);
-
-        assertThat(senior.getStatus())
-                .isEqualTo(APPROVE);
-    }
 }

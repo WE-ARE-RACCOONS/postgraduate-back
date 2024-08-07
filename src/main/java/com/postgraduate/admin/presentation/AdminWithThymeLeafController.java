@@ -19,7 +19,6 @@ import java.util.List;
 @Controller
 @RequestMapping("/adminServer")
 public class AdminWithThymeLeafController {
-    private final AdminAuthUseCase adminAuthUseCase;
     private final AdminSeniorUseCase adminSeniorUseCase;
     private final AdminUserUseCase adminUserUseCase;
     private final AdminMentoringUseCase adminMentoringUseCase;
@@ -36,7 +35,7 @@ public class AdminWithThymeLeafController {
 
     @PostMapping("/login")
     public String login(@ModelAttribute Login loginForm, Model model) {
-        User user = adminAuthUseCase.login(loginForm);
+        User user = adminUserUseCase.login(loginForm);
         JwtTokenResponse jwtTokenResponse = jwtUseCase.signIn(user);
         model.addAttribute("tokenResponse", jwtTokenResponse);
         return "adminMain";

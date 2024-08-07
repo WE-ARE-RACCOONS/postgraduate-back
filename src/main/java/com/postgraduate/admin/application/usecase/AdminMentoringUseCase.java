@@ -4,6 +4,7 @@ import com.postgraduate.admin.application.dto.res.MentoringManageResponse;
 import com.postgraduate.admin.application.dto.res.UserMentoringInfo;
 import com.postgraduate.admin.application.dto.res.MentoringInfo;
 import com.postgraduate.admin.application.mapper.AdminMapper;
+import com.postgraduate.admin.domain.service.*;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
 import com.postgraduate.domain.mentoring.domain.service.MentoringUpdateService;
@@ -28,19 +29,17 @@ import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.DO
 @Transactional
 @RequiredArgsConstructor
 public class AdminMentoringUseCase {
-    private final MentoringGetService mentoringGetService;
-    private final MentoringUpdateService mentoringUpdateService;
-    private final SeniorGetService seniorGetService;
-    private final UserGetService userGetService;
     private final PaymentManageUseCase paymentManageUseCase;
-    private final SalaryGetService salaryGetService;
-    private final SalaryUpdateService salaryUpdateService;
+    private final AdminSeniorService adminSeniorService;
+    private final AdminMentoringService adminMentoringService;
+    private final AdminUserService adminUserService;
+    private final AdminSalaryService adminSalaryService;
     private final AdminMapper adminMapper;
 
     @Transactional(readOnly = true)
     public MentoringManageResponse seniorMentorings(Long seniorId) {
-        Senior senior = seniorGetService.bySeniorId(seniorId);
-        List<Mentoring> mentorings = mentoringGetService.bySeniorId(seniorId);
+        Senior senior = adminSeniorService.bySeniorId(seniorId);
+        List<Mentoring> mentorings = adminMentoringService.allBySeniorId(seniorId);
         List<MentoringInfo> mentoringInfos = mentorings.stream()
                 .map(adminMapper::mapToMentoringInfoWithSenior)
                 .toList();
@@ -50,8 +49,8 @@ public class AdminMentoringUseCase {
 
     @Transactional(readOnly = true)
     public MentoringManageResponse userMentoringInfos(Long userId) {
-        User user = userGetService.byUserId(userId);
-        List<Mentoring> mentorings = mentoringGetService.byUserId(userId);
+        User user = adminUserService.userByUserId(userId);
+        List<Mentoring> mentorings = adminMentoringService.allByUserId(userId);
         List<MentoringInfo> mentoringInfos = mentorings.stream()
                 .map(adminMapper::mapToMentoringInfoWithUser)
                 .toList();
@@ -60,14 +59,10 @@ public class AdminMentoringUseCase {
     }
 
     public void refundMentoring(User user, Long mentoringId) {
-        Mentoring mentoring = mentoringGetService.byMentoringId(mentoringId);
+        Mentoring mentoring = adminMentoringService.updateCancelWithMentoringId(mentoringId);
         Payment payment = mentoring.getPayment();
         paymentManageUseCase.refundPayByAdmin(user, payment.getPaymentId());
-        if (mentoring.getStatus() == DONE) {
-            Senior senior = mentoring.getSenior();
-            Salary salary = salaryGetService.bySenior(senior);
-            salaryUpdateService.minusTotalAmount(salary, mentoring.calculateForSenior());
-        }
-        mentoringUpdateService.updateCancel(mentoring);
+        if (mentoring.getStatus() == DONE)
+            adminSalaryService.minusTotalAmount(mentoring);
     }
 }

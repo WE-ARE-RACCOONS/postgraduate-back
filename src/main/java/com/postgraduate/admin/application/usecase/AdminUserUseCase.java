@@ -1,12 +1,13 @@
 package com.postgraduate.admin.application.usecase;
 
+import com.postgraduate.admin.application.dto.req.Login;
 import com.postgraduate.admin.application.dto.req.SendMessageRequest;
 import com.postgraduate.admin.application.dto.res.UserInfo;
 import com.postgraduate.admin.application.dto.res.WishResponse;
 import com.postgraduate.admin.application.mapper.AdminMapper;
+import com.postgraduate.admin.domain.service.AdminUserService;
+import com.postgraduate.domain.user.user.domain.entity.User;
 import com.postgraduate.domain.wish.domain.entity.Wish;
-import com.postgraduate.domain.wish.domain.service.WishGetService;
-import com.postgraduate.domain.wish.domain.service.WishUpdateService;
 import com.postgraduate.global.bizppurio.application.dto.req.JuniorMatchingSuccessRequest;
 import com.postgraduate.global.bizppurio.application.usecase.BizppurioJuniorMessage;
 import lombok.RequiredArgsConstructor;
@@ -19,14 +20,18 @@ import java.util.List;
 @Transactional
 @RequiredArgsConstructor
 public class AdminUserUseCase {
-    private final WishGetService wishGetService;
-    private final WishUpdateService wishUpdateService;
     private final BizppurioJuniorMessage bizppurioJuniorMessage;
+    private final AdminUserService adminUserService;
     private final AdminMapper adminMapper;
 
     @Transactional(readOnly = true)
+    public User login(Login loginForm) {
+        return adminUserService.login(loginForm.nickName(), loginForm.phoneNumber());
+    }
+
+    @Transactional(readOnly = true)
     public List<UserInfo> userInfos() {
-        List<Wish> all = wishGetService.all();
+        List<Wish> all = adminUserService.allJunior();
         return all.stream()
                 .map(adminMapper::mapToUserInfo)
                 .toList();
@@ -34,13 +39,12 @@ public class AdminUserUseCase {
 
     @Transactional(readOnly = true)
     public WishResponse wishInfo(Long userId) {
-        Wish wish = wishGetService.byUserId(userId);
+        Wish wish = adminUserService.wishByUserId(userId);
         return adminMapper.mapToWishResponse(wish);
     }
 
     public void wishDone(Long wishId) {
-        Wish wish = wishGetService.byWishId(wishId);
-        wishUpdateService.updateWishDone(wish);
+        adminUserService.updateWishDone(wishId);
     }
 
     public void sendMatchingMessage(SendMessageRequest request) {

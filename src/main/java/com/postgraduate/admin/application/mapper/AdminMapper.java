@@ -16,6 +16,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 import static com.postgraduate.domain.mentoring.domain.entity.constant.TermUnit.SHORT;
 
 @RequiredArgsConstructor
@@ -57,17 +59,21 @@ public class AdminMapper {
                 isSenior
         );
     }
+    
 
-    public SeniorInfo mapToSeniorInfo(Senior senior, int totalAmount, Boolean isUser) {
+    public SeniorInfo mapToSeniorInfo(SeniorInfoQuery query) {
+        Salary salary = query.salary();
+        Optional<Wish> wish = query.wish();
+        Senior senior = salary.getSenior();
         User user = senior.getUser();
         return new SeniorInfo(
                 senior.getSeniorId(),
                 user.getNickName(),
                 user.getPhoneNumber(),
                 senior.getStatus(),
-                totalAmount,
+                salary.getTotalAmount(),
                 user.getMarketingReceive(),
-                isUser
+                wish.isPresent()
         );
     }
 

@@ -33,18 +33,6 @@ class SalaryGetServiceTest {
     private Senior senior = mock(Senior.class);
 
     @Test
-    @DisplayName("미정산건 조회 테스트")
-    void allByNotDone() {
-        LocalDate salaryDate = SalaryUtil.getSalaryDate();
-        List<Salary> salaries = List.of(mock(Salary.class),mock(Salary.class),mock(Salary.class));
-        given(salaryRepository.findAllByNotDoneFromLast(salaryDate))
-                .willReturn(salaries);
-
-        assertThat(salaryGetService.allByNotDone())
-                .hasSameSizeAs(salaries);
-    }
-
-    @Test
     @DisplayName("salaryId를 통한 Salary 조회 테스트")
     void bySalaryId() {
         given(salaryRepository.findById(any()))
