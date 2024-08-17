@@ -37,6 +37,17 @@ public class AuthController {
     private final QuitManageUseCase quitManageUseCase;
     private final JwtUseCase jwtUseCase;
 
+    @PostMapping("/login/token/{provider}")
+    @Operation(summary = "소셜 로그인", description = "회원인 경우 JWT를, 회원이 아닌 경우 socialId를 반환합니다(회원가입은 진행하지 않습니다).")
+    public ResponseEntity<ResponseDto<AuthResponse>> authLoginWithToken(@RequestBody @Valid TokenRequest request, @PathVariable Provider provider) {
+        SignInUseCase signInUseCase = selectOauth.selectSignIn(provider);
+        AuthUserResponse authUser = signInUseCase.getUserWithToken(request);
+        if (authUser.user() == null)
+            return ResponseEntity.ok(create(AUTH_NONE.getCode(), NOT_REGISTERED_USER.getMessage(), authUser));
+        JwtTokenResponse jwtToken = jwtUseCase.signIn(authUser.user());
+        return ResponseEntity.ok(create(AUTH_ALREADY.getCode(), SUCCESS_AUTH.getMessage(), jwtToken));
+    }
+
     @PostMapping("/login/{provider}")
     @Operation(summary = "소셜 로그인", description = "회원인 경우 JWT를, 회원이 아닌 경우 socialId를 반환합니다(회원가입은 진행하지 않습니다).")
     public ResponseEntity<ResponseDto<AuthResponse>> authLogin(@RequestBody @Valid CodeRequest request, @PathVariable Provider provider) {

@@ -1,6 +1,7 @@
 package com.postgraduate.domain.auth.application.usecase.oauth.kakao;
 
 import com.postgraduate.domain.auth.application.dto.req.CodeRequest;
+import com.postgraduate.domain.auth.application.dto.req.TokenRequest;
 import com.postgraduate.domain.auth.application.dto.res.AuthUserResponse;
 import com.postgraduate.domain.auth.application.dto.res.KakaoUserInfoResponse;
 import com.postgraduate.domain.auth.application.mapper.AuthMapper;
@@ -12,12 +13,14 @@ import com.postgraduate.domain.user.user.exception.DeletedUserException;
 import com.postgraduate.domain.user.user.exception.UserNotFoundException;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class KakaoSignInUseCase implements SignInUseCase {
     private final KakaoAccessTokenUseCase kakaoTokenUseCase;
     private final UserGetService userGetService;
@@ -35,11 +38,19 @@ public class KakaoSignInUseCase implements SignInUseCase {
         return getAuthUserResponse(userInfo);
     }
 
+    @Override
+    public AuthUserResponse getUserWithToken(TokenRequest request) {
+        KakaoUserInfoResponse userInfo = kakaoTokenUseCase.getUserInfo(request.accessToken());
+        log.info("user : {}", userInfo.id());
+        return getAuthUserResponse(userInfo);
+    }
+
     @NotNull
     private AuthUserResponse getAuthUserResponse(KakaoUserInfoResponse userInfo) {
         Long socialId = userInfo.id();
         try {
             User user = userGetService.bySocialId(socialId);
+            log.info("check user {} ", user.getUserId());
             checkDelete(user);
             return AuthMapper.mapToAuthUser(user, socialId);
         } catch (UserNotFoundException e) {
@@ -50,7 +61,7 @@ public class KakaoSignInUseCase implements SignInUseCase {
     private void checkDelete(User user) {
         if (user.isDelete()) {
             if (user.isRealDelete())
-                throw new DeletedUserException();
+                throw new DeletedUserException(); //todo : 다시 탈퇴 처리 필요 (카카오 계정과 끊기)
             userUpdateService.updateRestore(user);
         }
     }
