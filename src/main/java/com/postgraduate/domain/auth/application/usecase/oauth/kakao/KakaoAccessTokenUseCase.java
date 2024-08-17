@@ -78,7 +78,7 @@ public class KakaoAccessTokenUseCase {
         }
     }
 
-    private KakaoUserInfoResponse getUserInfo(String accessToken) {
+    public KakaoUserInfoResponse getUserInfo(String accessToken) {
         try {
             return webClient.get()
                     .uri(USER_INFO_URI)

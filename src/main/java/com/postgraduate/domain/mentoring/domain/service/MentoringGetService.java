@@ -63,11 +63,6 @@ public class MentoringGetService {
         return mentoringRepository.findAllBySeniorAndStatus(senior, DONE);
     }
 
-    public Mentoring byMentoringId(Long mentoringId) {
-        return mentoringRepository.findByMentoringId(mentoringId)
-                .orElseThrow(MentoringNotFoundException::new);
-    }
-
     public Mentoring byIdAndUserForDetails(Long mentoringId, User user) {
         return mentoringRepository.findByMentoringIdAndUserForDetails(mentoringId, user)
                 .orElseThrow(MentoringNotFoundException::new);
@@ -96,14 +91,6 @@ public class MentoringGetService {
     public Mentoring byIdAndSeniorAndExpected(Long mentoringId, Senior senior) {
         return mentoringRepository.findByMentoringIdAndSeniorAndStatus(mentoringId, senior, EXPECTED)
                 .orElseThrow(MentoringNotFoundException::new);
-    }
-
-    public List<Mentoring> byUserId(Long userId) {
-        return mentoringRepository.findAllByUserId(userId);
-    }
-
-    public List<Mentoring> bySeniorId(Long seniorId) {
-        return mentoringRepository.findAllBySeniorId(seniorId);
     }
 
     public List<Mentoring> bySeniorAndSalaryTrue(Senior senior) {

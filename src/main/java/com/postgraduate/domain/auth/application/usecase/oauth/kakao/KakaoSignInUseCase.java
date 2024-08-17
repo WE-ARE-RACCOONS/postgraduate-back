@@ -1,6 +1,7 @@
 package com.postgraduate.domain.auth.application.usecase.oauth.kakao;
 
 import com.postgraduate.domain.auth.application.dto.req.CodeRequest;
+import com.postgraduate.domain.auth.application.dto.req.TokenRequest;
 import com.postgraduate.domain.auth.application.dto.res.AuthUserResponse;
 import com.postgraduate.domain.auth.application.dto.res.KakaoUserInfoResponse;
 import com.postgraduate.domain.auth.application.mapper.AuthMapper;
@@ -35,6 +36,12 @@ public class KakaoSignInUseCase implements SignInUseCase {
         return getAuthUserResponse(userInfo);
     }
 
+    @Override
+    public AuthUserResponse getUserWithToken(TokenRequest request) {
+        KakaoUserInfoResponse userInfo = kakaoTokenUseCase.getUserInfo(request.accessToken());
+        return getAuthUserResponse(userInfo);
+    }
+
     @NotNull
     private AuthUserResponse getAuthUserResponse(KakaoUserInfoResponse userInfo) {
         Long socialId = userInfo.id();
@@ -50,7 +57,7 @@ public class KakaoSignInUseCase implements SignInUseCase {
     private void checkDelete(User user) {
         if (user.isDelete()) {
             if (user.isRealDelete())
-                throw new DeletedUserException();
+                throw new DeletedUserException(); //todo : 다시 탈퇴 처리 필요 (카카오 계정과 끊기)
             userUpdateService.updateRestore(user);
         }
     }

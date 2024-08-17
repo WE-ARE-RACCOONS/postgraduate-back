@@ -35,7 +35,7 @@ public class Resource {
     private Senior otherSenior = new Senior(-3L, otherUser, "certification", com.postgraduate.domain.senior.domain.entity.constant.Status.WAITING, 0, 0, info, null, now(), now());
     private SalaryAccount salaryAccount = new SalaryAccount("bank", "1234", "holder");
     private Salary salary = new Salary(-1L, false, senior, 20000, getSalaryDate(), LocalDateTime.now(), salaryAccount);
-    private Payment payment = new Payment(-1L, user, senior, 20000, "1", "123", "123", LocalDateTime.now(), LocalDateTime.now(), DONE);
+    private Payment payment = new Payment(-1L, user, senior, 20000, "-1", "123", "123", LocalDateTime.now(), LocalDateTime.now(), DONE);
     private Mentoring waitingMentoring = new Mentoring(-1L, user, senior, payment, salary, "topic", "question", "date1,date2,date3", 30, WAITING, now(), now());
     private Mentoring expectedMentoring = new Mentoring(-2L, user, senior, payment, salary, "topic", "question", "date", 30, EXPECTED, now(), now());
     private Mentoring doneMentoring = new Mentoring(-3L, user, senior, payment, salary, "topic", "question", "2024-02-03-18-12", 30, Status.DONE, now(), now());

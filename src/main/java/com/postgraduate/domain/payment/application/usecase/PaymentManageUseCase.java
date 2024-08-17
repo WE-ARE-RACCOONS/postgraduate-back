@@ -104,6 +104,7 @@ public class PaymentManageUseCase {
         if (user.getRole() != ADMIN)
             throw new RefundFailException("NOT ADMIN");
         Payment payment = paymentGetService.byId(paymentId);
+        log.info("환불 진행 paymentId : {}", paymentId);
         refundPay(payment);
     }
 

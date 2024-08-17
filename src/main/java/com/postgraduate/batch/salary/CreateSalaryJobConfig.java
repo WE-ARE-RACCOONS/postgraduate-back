@@ -50,6 +50,13 @@ public class CreateSalaryJobConfig {
                 .build();
     }
 
+    @Bean(name = "salaryJobWithAdmin")
+    public Job salaryJobWithAdmin() {
+        return new JobBuilder("salaryJobWithAdmin", jobRepository)
+                .start(createSalaryStep())
+                .build();
+    }
+
     @Bean(name = "sendSlackStep")
     public Step sendSlackStep() {
         return new StepBuilder("sendSlackStep", jobRepository)

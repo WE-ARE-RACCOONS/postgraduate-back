@@ -26,38 +26,12 @@ public class MentoringDslRepositoryImpl implements MentoringDslRepository {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<Mentoring> findAllBySeniorId(Long seniorId) {
-        return queryFactory.selectFrom(mentoring)
-                .distinct()
-                .leftJoin(mentoring.senior, senior)
-                .fetchJoin()
-                .leftJoin(mentoring.user, user)
-                .fetchJoin()
-                .where(mentoring.senior.seniorId.eq(seniorId))
-                .orderBy(mentoring.createdAt.desc())
-                .fetch();
-    }
-
-    @Override
     public List<Mentoring> findAllBySeniorAndStatus(Senior inputSenior, Status status) {
         return queryFactory.selectFrom(mentoring)
                 .distinct()
                 .leftJoin(mentoring.user, user)
                 .fetchJoin()
                 .where(mentoring.senior.eq(inputSenior), mentoring.status.eq(status))
-                .orderBy(mentoring.createdAt.desc())
-                .fetch();
-    }
-
-    @Override
-    public List<Mentoring> findAllByUserId(Long userId) {
-        return queryFactory.selectFrom(mentoring)
-                .distinct()
-                .leftJoin(mentoring.senior, senior)
-                .fetchJoin()
-                .leftJoin(mentoring.senior.user, user)
-                .fetchJoin()
-                .where(mentoring.user.userId.eq(userId))
                 .orderBy(mentoring.createdAt.desc())
                 .fetch();
     }
@@ -73,18 +47,6 @@ public class MentoringDslRepositoryImpl implements MentoringDslRepository {
                 .where(mentoring.user.eq(inputUser), mentoring.status.eq(status))
                 .orderBy(mentoring.createdAt.desc())
                 .fetch();
-    }
-
-    @Override
-    public Optional<Mentoring> findByMentoringId(Long mentoringId) {
-        return Optional.ofNullable(queryFactory.selectFrom(mentoring)
-                .distinct()
-                .leftJoin(mentoring.senior, senior)
-                .fetchJoin()
-                .leftJoin(mentoring.user, user)
-                .fetchJoin()
-                .where(mentoring.mentoringId.eq(mentoringId))
-                .fetchOne());
     }
 
     @Override

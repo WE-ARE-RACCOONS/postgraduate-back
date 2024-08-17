@@ -36,12 +36,4 @@ public class SeniorUpdateService {
     public void updateHit(Senior senior) {
         senior.updateHit();
     }
-
-    public void certificationUpdateApprove(Senior senior) {
-        senior.updateStatus(APPROVE);
-    }
-
-    public void certificationUpdateNotApprove(Senior senior) {
-        senior.updateStatus(NOT_APPROVE);
-    }
 }

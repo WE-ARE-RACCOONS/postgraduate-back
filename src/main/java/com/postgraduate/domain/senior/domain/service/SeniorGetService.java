@@ -39,10 +39,6 @@ public class SeniorGetService {
         return seniorRepository.findAllByUser_IsDelete(FALSE);
     }
 
-    public List<Senior> allSenior() {
-        return seniorRepository.findAllSenior();
-    }
-
     public Senior bySeniorId(Long seniorId) {
         return seniorRepository.findBySeniorId(seniorId)
                 .orElseThrow(NoneSeniorException::new);

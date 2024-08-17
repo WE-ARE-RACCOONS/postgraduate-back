@@ -13,7 +13,7 @@ public class AdminBatchUseCase {
 
     public void startSalaryBatch() {
         try {
-            jobSchedulerConfig.launchSalaryJob();
+            jobSchedulerConfig.launchSalaryJobWithAdmin();
         } catch (Exception e) {
             log.error("Create Salary Batch Exception : {}", e.getStackTrace());
         }

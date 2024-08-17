@@ -7,7 +7,6 @@ import com.postgraduate.domain.wish.exception.WishNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -22,14 +21,5 @@ public class WishGetService {
 
     public Optional<Wish> byUser(User user) {
         return wishRepository.findByUserAndUser_IsDeleteIsFalse(user);
-    }
-
-    public Wish byUserId(Long userId) {
-        return wishRepository.findByMatchingReceiveIsTrueAndUser_UserIdAndUser_IsDeleteIsFalse(userId)
-                .orElseThrow(WishNotFoundException::new);
-    }
-
-    public List<Wish> all() {
-        return wishRepository.findAllWish();
     }
 }

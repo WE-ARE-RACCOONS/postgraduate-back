@@ -43,6 +43,8 @@ dependencies {
     testImplementation 'org.springframework.security:spring-security-test'
     testCompileOnly 'org.springframework.security:spring-security-test'
     testAnnotationProcessor 'org.springframework.security:spring-security-test'
+    //test
+    testRuntimeOnly 'com.h2database:h2'
 
     // https://mvnrepository.com/artifact/com.slack.api/slack-api-client
     // 슬랙 api 추가
