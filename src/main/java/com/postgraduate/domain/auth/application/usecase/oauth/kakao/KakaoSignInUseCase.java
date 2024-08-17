@@ -13,14 +13,12 @@ import com.postgraduate.domain.user.user.exception.DeletedUserException;
 import com.postgraduate.domain.user.user.exception.UserNotFoundException;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
-@Slf4j
 public class KakaoSignInUseCase implements SignInUseCase {
     private final KakaoAccessTokenUseCase kakaoTokenUseCase;
     private final UserGetService userGetService;
@@ -41,7 +39,6 @@ public class KakaoSignInUseCase implements SignInUseCase {
     @Override
     public AuthUserResponse getUserWithToken(TokenRequest request) {
         KakaoUserInfoResponse userInfo = kakaoTokenUseCase.getUserInfo(request.accessToken());
-        log.info("user : {}", userInfo.id());
         return getAuthUserResponse(userInfo);
     }
 
@@ -50,7 +47,6 @@ public class KakaoSignInUseCase implements SignInUseCase {
         Long socialId = userInfo.id();
         try {
             User user = userGetService.bySocialId(socialId);
-            log.info("check user {} ", user.getUserId());
             checkDelete(user);
             return AuthMapper.mapToAuthUser(user, socialId);
         } catch (UserNotFoundException e) {
