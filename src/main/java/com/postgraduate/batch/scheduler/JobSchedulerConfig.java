@@ -27,6 +27,8 @@ public class JobSchedulerConfig {
     private final Job doneJob;
     @Qualifier("salaryJob")
     private final Job salaryJob;
+    @Qualifier("salaryJobWithAdmin")
+    private final Job salaryJobWithAdmin;
 
     @Scheduled(cron = "0 59 23 * * *", zone = "Asia/Seoul")
     public void launchCancelJob() throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
@@ -36,7 +38,7 @@ public class JobSchedulerConfig {
         jobLauncher.run(cancelJob, jobParameters);
     }
 
-    @Scheduled(cron = "0 59 23 * * *", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 58 23 * * *", zone = "Asia/Seoul")
     public void launchDoneJob() throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
         JobParameters jobParameters = new JobParametersBuilder()
                 .addLocalDateTime("date", LocalDateTime.now())
@@ -44,11 +46,18 @@ public class JobSchedulerConfig {
         jobLauncher.run(doneJob, jobParameters);
     }
 
-    @Scheduled(cron = "0 0 0 * * 4", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 10 0 * * 4", zone = "Asia/Seoul")
     public void launchSalaryJob() throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
         JobParameters jobParameters = new JobParametersBuilder()
                 .addLocalDateTime("date", LocalDateTime.now())
                 .toJobParameters();
         jobLauncher.run(salaryJob, jobParameters);
+    }
+
+    public void launchSalaryJobWithAdmin() throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
+        JobParameters jobParameters = new JobParametersBuilder()
+                .addLocalDateTime("date", LocalDateTime.now())
+                .toJobParameters();
+        jobLauncher.run(salaryJobWithAdmin, jobParameters);
     }
 }
