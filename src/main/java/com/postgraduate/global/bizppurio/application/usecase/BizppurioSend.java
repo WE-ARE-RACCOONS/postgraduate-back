@@ -22,11 +22,16 @@ public class BizppurioSend {
     private final ObjectMapper objectMapper;
     private final WebClient webClient;
     private final SlackErrorMessage slackErrorMessage;
+    private static final String DEV = "DEV";
 
     @Value("${bizppurio.message}")
     private String messageUrl;
+    @Value("${bizppurio.status}")
+    private String status;
 
     protected void sendMessageWithExceptionHandling(Supplier<CommonRequest> messageSupplier) {
+        if (status.equals(DEV))
+            return;
         try {
             CommonRequest commonRequest = messageSupplier.get();
             String accessToken = bizppurioAuth.getAuth();
