@@ -3,4 +3,4 @@ package com.postgraduate.domain.auth.application.dto.res;
 import com.postgraduate.domain.user.user.domain.entity.constant.Role;
 
 public record JwtTokenResponse(String accessToken, int accessExpiration,
-                               String refreshToken, int refreshExpiration, Role role) implements AuthResponse{}
+                               String refreshToken, int refreshExpiration, Role role, boolean isTutorial) implements AuthResponse{}
