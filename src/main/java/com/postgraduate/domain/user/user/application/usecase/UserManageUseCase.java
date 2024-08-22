@@ -24,6 +24,7 @@ public class UserManageUseCase {
     }
 
     public void tutorialFin(User user) {
+        user = userGetService.byUserId(user.getUserId());
         userUpdateService.tutorialFin(user);
     }
 
