@@ -67,10 +67,10 @@ class MentoringSeniorInfoUseTypeTest {
         profile = new Profile("a", "a", "a");
         user = new User(-1L, 1234L, "a",
                 "a", "123", "a",
-                0, SENIOR, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE);
+                0, SENIOR, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE, TRUE);
         mentoringUser = new User(-2L, 12345L, "a",
                 "a", "123", "a",
-                0, USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE);
+                0, USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE, TRUE);
         senior = new Senior(-1L, user, "a",
                 APPROVE, 1, 1, info, profile,
                 LocalDateTime.now(), LocalDateTime.now());

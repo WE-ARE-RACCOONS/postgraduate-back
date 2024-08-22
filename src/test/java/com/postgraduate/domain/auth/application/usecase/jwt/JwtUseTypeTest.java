@@ -46,7 +46,7 @@ class JwtUseTypeTest {
     void setting() {
         user = new User(1L, 1L, "a",
                 "a", "123", "a",
-                1, USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), FALSE);
+                1, USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), FALSE, FALSE);
     }
 
     @Test
@@ -74,7 +74,7 @@ class JwtUseTypeTest {
     void signInWithSenior() {
         user = new User(1L, 1L, "a",
                 "a", "123", "a",
-                1, SENIOR, TRUE, LocalDateTime.now(), LocalDateTime.now(), FALSE);
+                1, SENIOR, TRUE, LocalDateTime.now(), LocalDateTime.now(), FALSE, FALSE);
         given(jwtUtils.generateAccessToken(user.getUserId(), user.getRole()))
                 .willReturn("accessToken");
         given(jwtUtils.generateRefreshToken(user.getUserId(), user.getRole()))
@@ -104,7 +104,7 @@ class JwtUseTypeTest {
     void signInWithUserDelete() {
         user = new User(1L, 1L, "a",
                 "a", "123", "a",
-                1, USER, TRUE, LocalDateTime.now(), LocalDateTime.now().minusDays(20), TRUE);
+                1, USER, TRUE, LocalDateTime.now(), LocalDateTime.now().minusDays(20), TRUE, TRUE);
 
         assertThatThrownBy(() -> jwtUseCase.signIn(user))
                 .isInstanceOf(UserNotFoundException.class);
@@ -115,7 +115,7 @@ class JwtUseTypeTest {
     void signInWithSeniorDelete() {
         user = new User(1L, 1L, "a",
                 "a", "123", "a",
-                1, SENIOR, TRUE, LocalDateTime.now(), LocalDateTime.now().minusDays(20), TRUE);
+                1, SENIOR, TRUE, LocalDateTime.now(), LocalDateTime.now().minusDays(20), TRUE, TRUE);
 
         assertThatThrownBy(() -> jwtUseCase.signIn(user))
                 .isInstanceOf(DeletedUserException.class);

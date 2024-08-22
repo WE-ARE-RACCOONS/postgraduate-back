@@ -40,7 +40,7 @@ class KakaoSignInUseTypeTest {
     void setting() {
         user = new User(1L, 1L, "a",
                 "a", "123", "a",
-                1, USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE);
+                1, USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE, TRUE);
     }
     @Test
     @DisplayName("기존 회원 테스트")

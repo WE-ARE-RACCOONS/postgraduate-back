@@ -35,7 +35,7 @@ class UserUpdateServiceTest {
         user = new User(1L, 2L, "a",
                 "b", "c", "d",
                 0, USER, FALSE,
-                now(), now(), TRUE);
+                now(), now(), TRUE, TRUE);
     }
 
     @Test
