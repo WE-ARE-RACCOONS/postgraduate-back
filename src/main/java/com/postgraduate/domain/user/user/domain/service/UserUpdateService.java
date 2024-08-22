@@ -42,4 +42,8 @@ public class UserUpdateService {
     public void updateRestore(User user) {
         user.restoreDelete();
     }
+
+    public void tutorialFin(User user) {
+        user.tutorialFin();
+    }
 }

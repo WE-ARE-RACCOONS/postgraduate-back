@@ -99,6 +99,10 @@ public class User {
         return this.isTutorial;
     }
 
+    public void tutorialFin() {
+        this.isTutorial = true;
+    }
+
     public boolean isDefaultProfile(List<String> defaultProfile) {
         return defaultProfile.contains(profile);
     }
