@@ -78,7 +78,7 @@ public class JwtUseCase {
         checkDelete(user);
         String accessToken = jwtUtils.generateAccessToken(user.getUserId(), role);
         String refreshToken = jwtUtils.generateRefreshToken(user.getUserId(), role);
-        return new JwtTokenResponse(accessToken, accessExpiration, refreshToken, refreshExpiration, role);
+        return new JwtTokenResponse(accessToken, accessExpiration, refreshToken, refreshExpiration, role, user.isTutorial());
     }
 
     private void checkDelete(User user) {

@@ -87,6 +87,10 @@ dependencies {
     implementation 'org.redisson:redisson-spring-boot-starter:3.18.0'
 
     implementation 'com.github.ywj9811:querydsl-itemreader:v1.0.1'
+
+    // flyway 추가
+    implementation 'org.flywaydb:flyway-mysql'
+    implementation 'org.flywaydb:flyway-core'
 }
 
 tasks.named('test') {

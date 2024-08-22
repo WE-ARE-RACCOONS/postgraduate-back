@@ -28,6 +28,13 @@ public class UserController {
     private final UserMyPageUseCase myPageUseCase;
     private final UserManageUseCase manageUseCase;
 
+    @PatchMapping("/me/tutorial")
+    @Operation(summary = "튜토리얼 완료시 상태 업데이트")
+    public ResponseEntity<ResponseDto<Void>> updateTutorialFin(@AuthenticationPrincipal User user) {
+        manageUseCase.tutorialFin(user);
+        return ResponseEntity.ok(create(UserResponseCode.USER_UPDATE.getCode(), UserResponseMessage.UPDATE_USER_INFO.getMessage()));
+    }
+
     @GetMapping("/me")
     @Operation(summary = "사용자 마이페이지 정보 조회 | 토큰 필요", description = "닉네임, 프로필")
     public ResponseEntity<ResponseDto<UserMyPageResponse>> getUserInfo(@AuthenticationPrincipal User user) {

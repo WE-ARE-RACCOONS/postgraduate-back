@@ -89,7 +89,7 @@ class SignUpUseTypeTest {
         profile = new Profile("a", "a", "a");
         user = new User(1L, 1234L, "a",
                 "a", "123", "a",
-                1, USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), FALSE);
+                1, USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), FALSE, TRUE);
         wish = new Wish(1L, "major", "field", TRUE, user, Status.WAITING);
         senior = new Senior(1L, user, "a",
                 APPROVE,1, 1, info, profile,

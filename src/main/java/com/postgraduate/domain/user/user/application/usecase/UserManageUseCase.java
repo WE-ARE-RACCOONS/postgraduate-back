@@ -23,6 +23,11 @@ public class UserManageUseCase {
         userUpdateService.updateInfo(user, userInfoRequest);
     }
 
+    public void tutorialFin(User user) {
+        user = userGetService.byUserId(user.getUserId());
+        userUpdateService.tutorialFin(user);
+    }
+
     @Transactional(readOnly = true)
     public Boolean duplicatedNickName(String nickName) {
         return userGetService.byNickName(nickName).isEmpty();

@@ -25,10 +25,10 @@ import static com.postgraduate.domain.user.user.domain.entity.constant.Role.USER
 import static java.time.LocalDateTime.now;
 
 public class Resource {
-    private User user = new User(-1L, -1L, "mail", "후배", "011", "profile", 0, USER, true, now(), now(), false);
+    private User user = new User(-1L, -1L, "mail", "후배", "011", "profile", 0, USER, true, now(), now(), false, false);
     private Wish wish = new Wish(-1L, "major", "field", true, user, com.postgraduate.domain.wish.domain.entity.constant.Status.WAITING);
-    private User otherUser = new User(-3L, -3L, "mail", "다른후배", "011", "profile", 0, USER, true, now(), now(), false);
-    private User userOfSenior = new User(-2L, -2L, "mail", "선배", "012", "profile", 0, SENIOR, true, now(), now(), false);
+    private User otherUser = new User(-3L, -3L, "mail", "다른후배", "011", "profile", 0, USER, true, now(), now(), false, false);
+    private User userOfSenior = new User(-2L, -2L, "mail", "선배", "012", "profile", 0, SENIOR, true, now(), now(), false, false);
     private Info info = new Info("major", "서울대학교", "교수님", "키워드1,키워드2", "랩실", "인공지능", false, false, "인공지능,키워드1,키워드2", "chatLink", 30);
     private Profile profile = new Profile("저는요", "한줄소개", "대상");
     private Senior senior = new Senior(-1L, userOfSenior, "certification", com.postgraduate.domain.senior.domain.entity.constant.Status.WAITING, 0, 0, info, profile, now(), now());
