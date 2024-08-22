@@ -21,6 +21,6 @@ public class QuitMapper {
     private static QuitBuilder getBuilder(User user, SignOutRequest request) {
         return Quit.builder()
                 .role(user.getRole())
-                .reason(request.reason());
+                .reason(request.reason().getReason());
     }
 }
