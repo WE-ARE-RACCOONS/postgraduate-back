@@ -26,12 +26,8 @@ public class BizppurioSend {
 
     @Value("${bizppurio.message}")
     private String messageUrl;
-    @Value("${bizppurio.status}")
-    private String status;
 
     protected void sendMessageWithExceptionHandling(Supplier<CommonRequest> messageSupplier) {
-        if (status.equals(DEV))
-            return;
         try {
             CommonRequest commonRequest = messageSupplier.get();
             String accessToken = bizppurioAuth.getAuth();

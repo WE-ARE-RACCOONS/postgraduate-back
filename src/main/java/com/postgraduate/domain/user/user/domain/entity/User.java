@@ -63,6 +63,10 @@ public class User {
 
     @Column(nullable = false)
     @Builder.Default
+    private boolean isTutorial = false;
+
+    @Column(nullable = false)
+    @Builder.Default
     private boolean isDelete = false;
 
     public void updateRole(Role role) {
@@ -89,6 +93,10 @@ public class User {
 
     public boolean isDelete() {
         return this.isDelete;
+    }
+
+    public boolean isTutorial() {
+        return this.isTutorial;
     }
 
     public boolean isDefaultProfile(List<String> defaultProfile) {
