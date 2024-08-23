@@ -11,6 +11,10 @@ public class AuthMapper {
         return new AuthUserResponse(user, socialId);
     }
 
+    public static AuthUserResponse mapToAuthUser(Long socialId, boolean isDelete) {
+        return new AuthUserResponse(socialId, isDelete);
+    }
+
     public static AuthUserResponse mapToAuthUser(Long socialId) {
         return new AuthUserResponse(socialId);
     }
