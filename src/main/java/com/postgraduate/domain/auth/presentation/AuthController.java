@@ -39,7 +39,7 @@ public class AuthController {
     private final UserManageUseCase userManageUseCase;
 
     @PostMapping("/login/token/{provider}")
-    @Operation(summary = "소셜 로그인", description = "회원인 경우 JWT를, 회원이 아닌 경우 socialId를 반환합니다(회원가입은 진행하지 않습니다).")
+    @Operation(summary = "소셜 로그인", description = "회원인 경우 JWT를, 회원이 아닌 경우 socialId를 반환합니다(회원가입은 진행하지 않습니다). 탈퇴 회원인 경우 isDelete = true 가 응답됩니다")
     public ResponseEntity<ResponseDto<AuthResponse>> authLoginWithToken(@RequestBody @Valid TokenRequest request, @PathVariable Provider provider) {
         SignInUseCase signInUseCase = selectOauth.selectSignIn(provider);
         AuthUserResponse authUser = signInUseCase.getUserWithToken(request);
@@ -50,7 +50,7 @@ public class AuthController {
     }
 
     @PostMapping("/login/{provider}")
-    @Operation(summary = "소셜 로그인", description = "회원인 경우 JWT를, 회원이 아닌 경우 socialId를 반환합니다(회원가입은 진행하지 않습니다).")
+    @Operation(summary = "소셜 로그인", description = "회원인 경우 JWT를, 회원이 아닌 경우 socialId를 반환합니다(회원가입은 진행하지 않습니다). 탈퇴 회원인 경우 isDelete = true 가 응답됩니다")
     public ResponseEntity<ResponseDto<AuthResponse>> authLogin(@RequestBody @Valid CodeRequest request, @PathVariable Provider provider) {
         SignInUseCase signInUseCase = selectOauth.selectSignIn(provider);
         AuthUserResponse authUser = signInUseCase.getUser(request);
@@ -61,7 +61,7 @@ public class AuthController {
     }
 
     @PostMapping("/dev/login/{provider}")
-    @Operation(summary = "개발용 소셜 로그인", description = "회원인 경우 JWT를, 회원이 아닌 경우 socialId를 반환합니다(회원가입은 진행하지 않습니다).")
+    @Operation(summary = "개발용 소셜 로그인", description = "회원인 경우 JWT를, 회원이 아닌 경우 socialId를 반환합니다(회원가입은 진행하지 않습니다). 탈퇴 회원인 경우 isDelete = true 가 응답됩니다")
     public ResponseEntity<ResponseDto<AuthResponse>> authDevLogin(@RequestBody @Valid CodeRequest request, @PathVariable Provider provider) {
         SignInUseCase signInUseCase = selectOauth.selectSignIn(provider);
         AuthUserResponse authUser = signInUseCase.getDevUser(request);
@@ -72,7 +72,7 @@ public class AuthController {
     }
 
     @PatchMapping("/rejoin/{provider}")
-    @Operation(summary = "탈퇴 사용자 재가입", description = "회원인 경우 JWT를, 회원이 아닌 경우 socialId를 반환합니다(회원가입은 진행하지 않습니다).")
+    @Operation(summary = "탈퇴 사용자 재가입", description = "복구를 희망하는 경우 rejoin = true 희망하지 않는 경우 false 를 넣어주세요. 복구시 기존 로그인과 동일한 응답")
     public ResponseEntity<ResponseDto<AuthResponse>> reJoin(@PathVariable Provider provider, @RequestBody RejoinRequest request) {
         User user = userManageUseCase.updateRejoin(provider, request);
         JwtTokenResponse jwtToken = jwtUseCase.signIn(user);
