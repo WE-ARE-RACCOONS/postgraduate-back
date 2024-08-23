@@ -10,6 +10,7 @@ import com.postgraduate.domain.auth.application.usecase.oauth.SignUpUseCase;
 import com.postgraduate.domain.auth.application.usecase.jwt.JwtUseCase;
 import com.postgraduate.domain.auth.application.usecase.oauth.SignInUseCase;
 import com.postgraduate.domain.auth.presentation.constant.Provider;
+import com.postgraduate.domain.user.user.application.usecase.UserManageUseCase;
 import com.postgraduate.domain.user.user.domain.entity.User;
 import com.postgraduate.global.dto.ResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -35,6 +36,7 @@ public class AuthController {
     private final SelectOauth selectOauth;
     private final SignUpUseCase signUpUseCase;
     private final JwtUseCase jwtUseCase;
+    private final UserManageUseCase userManageUseCase;
 
     @PostMapping("/login/token/{provider}")
     @Operation(summary = "소셜 로그인", description = "회원인 경우 JWT를, 회원이 아닌 경우 socialId를 반환합니다(회원가입은 진행하지 않습니다).")
@@ -66,6 +68,14 @@ public class AuthController {
         if (authUser.user() == null)
             return ResponseEntity.ok(create(AUTH_NONE.getCode(), NOT_REGISTERED_USER.getMessage(), authUser));
         JwtTokenResponse jwtToken = jwtUseCase.signIn(authUser.user());
+        return ResponseEntity.ok(create(AUTH_ALREADY.getCode(), SUCCESS_AUTH.getMessage(), jwtToken));
+    }
+
+    @PatchMapping("/rejoin/{provider}")
+    @Operation(summary = "탈퇴 사용자 재가입", description = "회원인 경우 JWT를, 회원이 아닌 경우 socialId를 반환합니다(회원가입은 진행하지 않습니다).")
+    public ResponseEntity<ResponseDto<AuthResponse>> reJoin(@PathVariable Provider provider, @RequestBody RejoinRequest request) {
+        User user = userManageUseCase.updateRejoin(provider, request);
+        JwtTokenResponse jwtToken = jwtUseCase.signIn(user);
         return ResponseEntity.ok(create(AUTH_ALREADY.getCode(), SUCCESS_AUTH.getMessage(), jwtToken));
     }
 

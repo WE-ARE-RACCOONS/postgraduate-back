@@ -5,4 +5,6 @@ import com.postgraduate.domain.user.user.domain.entity.User;
 
 public interface SignOutUseCase {
     void signOut(User user, SignOutRequest signOutRequest);
+
+    void reSignOut(Long socialId);
 }

@@ -62,6 +62,23 @@ public class KakaoSignOutUseCase implements SignOutUseCase {
         }
     }
 
+    @Override
+    public void reSignOut(Long socialId) {
+        try {
+            MultiValueMap<String, String> requestBody = getRequestBody(socialId);
+            webClient.post()
+                    .uri(KAKAO_UNLINK_URI)
+                    .headers(h -> h.setContentType(MediaType.APPLICATION_FORM_URLENCODED))
+                    .headers(h -> h.set(HttpHeaders.AUTHORIZATION, AUTHORIZATION + ADMIN_ID))
+                    .bodyValue(requestBody)
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .block();
+        } catch (WebClientResponseException ex) {
+            throw new KakaoException();
+        }
+    }
+
     private void updateDelete(User user, SignOutRequest signOutRequest) {
         user = userGetService.byUserId(user.getUserId());
         checkDeleteCondition(user);
