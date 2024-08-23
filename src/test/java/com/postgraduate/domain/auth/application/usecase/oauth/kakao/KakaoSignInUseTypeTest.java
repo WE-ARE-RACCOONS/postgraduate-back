@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 
 import static com.postgraduate.domain.auth.application.dto.res.KakaoUserInfoResponse.KakaoAccount;
 import static com.postgraduate.domain.user.user.domain.entity.constant.Role.USER;
+import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static org.mockito.BDDMockito.given;
 
@@ -31,6 +32,8 @@ class KakaoSignInUseTypeTest {
     private UserGetService userGetService;
     @Mock
     private UserUpdateService userUpdateService;
+    @Mock
+    private KakaoSignOutUseCase kakaoSignOutUseCase;
     @InjectMocks
     private KakaoSignInUseCase kakaoSignInUseCase;
 
@@ -40,7 +43,7 @@ class KakaoSignInUseTypeTest {
     void setting() {
         user = new User(1L, 1L, "a",
                 "a", "123", "a",
-                1, USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE, TRUE);
+                1, USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE, FALSE);
     }
     @Test
     @DisplayName("기존 회원 테스트")

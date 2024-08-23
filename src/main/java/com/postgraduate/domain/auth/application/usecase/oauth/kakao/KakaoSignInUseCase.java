@@ -8,7 +8,6 @@ import com.postgraduate.domain.auth.application.mapper.AuthMapper;
 import com.postgraduate.domain.auth.application.usecase.oauth.SignInUseCase;
 import com.postgraduate.domain.user.user.domain.entity.User;
 import com.postgraduate.domain.user.user.domain.service.UserGetService;
-import com.postgraduate.domain.user.user.domain.service.UserUpdateService;
 import com.postgraduate.domain.user.user.exception.DeletedUserException;
 import com.postgraduate.domain.user.user.exception.UserNotFoundException;
 import jakarta.validation.constraints.NotNull;
@@ -22,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class KakaoSignInUseCase implements SignInUseCase {
     private final KakaoAccessTokenUseCase kakaoTokenUseCase;
     private final UserGetService userGetService;
-    private final UserUpdateService userUpdateService;
+    private final KakaoSignOutUseCase kakaoSignOutUseCase;
 
     @Override
     public AuthUserResponse getUser(CodeRequest codeRequest) {
@@ -47,18 +46,22 @@ public class KakaoSignInUseCase implements SignInUseCase {
         Long socialId = userInfo.id();
         try {
             User user = userGetService.bySocialId(socialId);
-            checkDelete(user);
+            if (checkDelete(user))
+                return AuthMapper.mapToAuthUser(socialId, true);
             return AuthMapper.mapToAuthUser(user, socialId);
         } catch (UserNotFoundException e) {
             return AuthMapper.mapToAuthUser(socialId);
         }
     }
 
-    private void checkDelete(User user) {
+    private boolean checkDelete(User user) {
         if (user.isDelete()) {
-            if (user.isRealDelete())
-                throw new DeletedUserException(); //todo : 다시 탈퇴 처리 필요 (카카오 계정과 끊기)
-            userUpdateService.updateRestore(user);
+            if (user.isRealDelete()) {
+                kakaoSignOutUseCase.reSignOut(user.getSocialId());
+                throw new DeletedUserException();
+            }
+            return true;
         }
+        return false;
     }
 }

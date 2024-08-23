@@ -1,6 +1,5 @@
 package com.postgraduate.domain.user.quit.domain.entity;
 
-import com.postgraduate.domain.user.quit.domain.entity.constant.QuitReason;
 import com.postgraduate.domain.user.user.domain.entity.constant.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -18,8 +17,7 @@ public class Quit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long quitId;
 
-    @Enumerated(EnumType.STRING)
-    private QuitReason reason;
+    private String reason;
 
     private String etc;
 
