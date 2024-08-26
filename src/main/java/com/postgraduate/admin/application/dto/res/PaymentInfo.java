@@ -1,6 +1,6 @@
 package com.postgraduate.admin.application.dto.res;
 
-import com.postgraduate.domain.payment.domain.entity.constant.Status;
+import com.postgraduate.domain.payment.domain.entity.constant.PaymentStatus;
 
 import java.time.LocalDateTime;
 
@@ -11,5 +11,5 @@ public record PaymentInfo(
         String phoneNumber,
         LocalDateTime createdAt,
         Integer pay,
-        Status status
+        PaymentStatus paymentStatus
 ) { }

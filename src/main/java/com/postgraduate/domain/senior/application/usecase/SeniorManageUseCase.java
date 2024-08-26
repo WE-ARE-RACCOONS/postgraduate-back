@@ -1,18 +1,18 @@
 package com.postgraduate.domain.senior.application.usecase;
 
-import com.postgraduate.domain.account.domain.entity.Account;
-import com.postgraduate.domain.account.domain.service.AccountGetService;
-import com.postgraduate.domain.account.domain.service.AccountSaveService;
-import com.postgraduate.domain.account.domain.service.AccountUpdateService;
-import com.postgraduate.domain.available.application.dto.req.AvailableCreateRequest;
-import com.postgraduate.domain.available.domain.entity.Available;
-import com.postgraduate.domain.available.domain.service.AvailableDeleteService;
-import com.postgraduate.domain.available.domain.service.AvailableSaveService;
-import com.postgraduate.domain.salary.application.mapper.SalaryMapper;
-import com.postgraduate.domain.salary.domain.entity.Salary;
-import com.postgraduate.domain.salary.domain.entity.SalaryAccount;
-import com.postgraduate.domain.salary.domain.service.SalaryGetService;
-import com.postgraduate.domain.salary.domain.service.SalaryUpdateService;
+import com.postgraduate.domain.senior.account.domain.entity.Account;
+import com.postgraduate.domain.senior.account.domain.service.AccountGetService;
+import com.postgraduate.domain.senior.account.domain.service.AccountSaveService;
+import com.postgraduate.domain.senior.account.domain.service.AccountUpdateService;
+import com.postgraduate.domain.senior.available.application.dto.req.AvailableCreateRequest;
+import com.postgraduate.domain.senior.available.domain.entity.Available;
+import com.postgraduate.domain.senior.available.domain.service.AvailableDeleteService;
+import com.postgraduate.domain.senior.available.domain.service.AvailableSaveService;
+import com.postgraduate.domain.senior.salary.application.mapper.SalaryMapper;
+import com.postgraduate.domain.senior.salary.domain.entity.Salary;
+import com.postgraduate.domain.senior.salary.domain.entity.SalaryAccount;
+import com.postgraduate.domain.senior.salary.domain.service.SalaryGetService;
+import com.postgraduate.domain.senior.salary.domain.service.SalaryUpdateService;
 import com.postgraduate.domain.senior.application.dto.req.*;
 import com.postgraduate.domain.senior.application.dto.res.SeniorProfileUpdateResponse;
 import com.postgraduate.domain.senior.application.utils.SeniorUtils;
@@ -34,8 +34,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-import static com.postgraduate.domain.account.application.mapper.AccountMapper.mapToAccount;
-import static com.postgraduate.domain.available.application.util.AvailableUtil.sortAvailable;
+import static com.postgraduate.domain.senior.account.application.mapper.AccountMapper.mapToAccount;
+import static com.postgraduate.domain.senior.available.application.util.AvailableUtil.sortAvailable;
 import static com.postgraduate.domain.senior.application.mapper.SeniorMapper.mapToInfo;
 import static com.postgraduate.domain.senior.application.mapper.SeniorMapper.mapToProfile;
 

@@ -2,10 +2,9 @@ package com.postgraduate.admin.domain.service;
 
 import com.postgraduate.admin.application.dto.res.SeniorInfoQuery;
 import com.postgraduate.admin.domain.repository.AdminSeniorRepository;
-import com.postgraduate.domain.salary.util.SalaryUtil;
+import com.postgraduate.domain.senior.salary.util.SalaryUtil;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.exception.NoneSeniorException;
-import com.postgraduate.domain.senior.exception.SeniorCertificationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

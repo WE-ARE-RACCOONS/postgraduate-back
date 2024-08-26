@@ -1,7 +1,7 @@
 package com.postgraduate.domain.senior.application.dto.res;
 
 
-import com.postgraduate.domain.available.application.dto.res.AvailableTimeResponse;
+import com.postgraduate.domain.senior.available.application.dto.res.AvailableTimeResponse;
 
 import java.util.List;
 

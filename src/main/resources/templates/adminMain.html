@@ -60,7 +60,7 @@
         xhr.setRequestHeader("content-type", "application/json");
         xhr.onreadystatechange = function() {
             if (xhr.readyState === XMLHttpRequest.DONE) {
-                if (xhr.status === 200) {
+                if (xhr.mentoringStatus === 200) {
                     document.getElementById("output").innerHTML = xhr.responseText;
                 } else {
                     localStorage.removeItem("accessToken");

@@ -6,7 +6,7 @@ import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.payment.domain.repository.PaymentRepository;
 import com.postgraduate.domain.user.user.domain.entity.User;
 import com.postgraduate.domain.user.user.domain.repository.UserRepository;
-import com.postgraduate.domain.wish.domain.repository.WishRepository;
+import com.postgraduate.domain.user.wish.domain.repository.WishRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

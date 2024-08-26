@@ -1,9 +1,9 @@
 package com.postgraduate.domain.senior.application.mapper;
 
-import com.postgraduate.domain.account.domain.entity.Account;
-import com.postgraduate.domain.auth.application.dto.req.SeniorChangeRequest;
-import com.postgraduate.domain.auth.application.dto.req.SeniorSignUpRequest;
-import com.postgraduate.domain.available.application.dto.res.AvailableTimeResponse;
+import com.postgraduate.domain.senior.account.domain.entity.Account;
+import com.postgraduate.global.auth.login.application.dto.req.SeniorChangeRequest;
+import com.postgraduate.global.auth.login.application.dto.req.SeniorSignUpRequest;
+import com.postgraduate.domain.senior.available.application.dto.res.AvailableTimeResponse;
 import com.postgraduate.domain.senior.application.dto.req.SeniorMyPageProfileRequest;
 import com.postgraduate.domain.senior.application.dto.req.SeniorProfileRequest;
 import com.postgraduate.domain.senior.application.dto.res.*;

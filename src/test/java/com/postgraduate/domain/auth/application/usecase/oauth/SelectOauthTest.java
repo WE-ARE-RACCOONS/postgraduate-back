@@ -1,9 +1,10 @@
 package com.postgraduate.domain.auth.application.usecase.oauth;
 
-import com.postgraduate.domain.auth.application.usecase.oauth.kakao.KakaoSignInUseCase;
-import com.postgraduate.domain.auth.application.usecase.oauth.kakao.KakaoSignOutUseCase;
-import com.postgraduate.domain.auth.exception.OauthException;
-import com.postgraduate.domain.auth.presentation.constant.Provider;
+import com.postgraduate.global.auth.login.application.usecase.oauth.SelectOauth;
+import com.postgraduate.global.auth.login.application.usecase.oauth.kakao.KakaoSignInUseCase;
+import com.postgraduate.global.auth.login.application.usecase.oauth.kakao.KakaoSignOutUseCase;
+import com.postgraduate.global.auth.login.exception.OauthException;
+import com.postgraduate.global.auth.login.presentation.constant.Provider;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,7 +13,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static com.postgraduate.domain.auth.presentation.constant.Provider.KAKAO;
+import static com.postgraduate.global.auth.login.presentation.constant.Provider.KAKAO;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 

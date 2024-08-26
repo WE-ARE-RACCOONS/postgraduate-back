@@ -1,7 +1,7 @@
 package com.postgraduate.admin.domain.repository;
 
 import com.postgraduate.domain.user.user.domain.entity.User;
-import com.postgraduate.domain.wish.domain.entity.Wish;
+import com.postgraduate.domain.user.wish.domain.entity.Wish;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

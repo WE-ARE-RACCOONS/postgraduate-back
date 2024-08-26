@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.CANCEL;
+import static com.postgraduate.domain.mentoring.domain.entity.constant.MentoringStatus.CANCEL;
 
 @RequiredArgsConstructor
 @Service

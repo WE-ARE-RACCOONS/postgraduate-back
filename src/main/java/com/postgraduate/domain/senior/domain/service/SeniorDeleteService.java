@@ -1,13 +1,13 @@
 package com.postgraduate.domain.senior.domain.service;
 
-import com.postgraduate.domain.account.domain.repository.AccountRepository;
-import com.postgraduate.domain.available.domain.repository.AvailableRepository;
+import com.postgraduate.domain.senior.account.domain.repository.AccountRepository;
+import com.postgraduate.domain.senior.available.domain.repository.AvailableRepository;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.repository.MentoringRepository;
 import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.payment.domain.repository.PaymentRepository;
-import com.postgraduate.domain.salary.domain.entity.Salary;
-import com.postgraduate.domain.salary.domain.repository.SalaryRepository;
+import com.postgraduate.domain.senior.salary.domain.entity.Salary;
+import com.postgraduate.domain.senior.salary.domain.repository.SalaryRepository;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.repository.SeniorRepository;
 import com.postgraduate.domain.user.user.domain.entity.User;

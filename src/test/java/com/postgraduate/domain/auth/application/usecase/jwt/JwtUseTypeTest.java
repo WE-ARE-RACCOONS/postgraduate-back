@@ -1,11 +1,12 @@
 package com.postgraduate.domain.auth.application.usecase.jwt;
 
-import com.postgraduate.domain.auth.application.dto.res.JwtTokenResponse;
+import com.postgraduate.global.auth.login.application.dto.res.JwtTokenResponse;
+import com.postgraduate.global.auth.login.application.usecase.jwt.JwtUseCase;
 import com.postgraduate.domain.user.user.domain.entity.User;
 import com.postgraduate.domain.user.user.exception.DeletedUserException;
 import com.postgraduate.domain.user.user.exception.UserNotFoundException;
-import com.postgraduate.domain.wish.domain.entity.Wish;
-import com.postgraduate.domain.wish.domain.service.WishGetService;
+import com.postgraduate.domain.user.wish.domain.entity.Wish;
+import com.postgraduate.domain.user.wish.domain.service.WishGetService;
 import com.postgraduate.global.config.security.jwt.exception.InvalidRefreshTokenException;
 import com.postgraduate.global.config.security.jwt.exception.NoneRefreshTokenException;
 import com.postgraduate.global.config.security.jwt.util.JwtUtils;

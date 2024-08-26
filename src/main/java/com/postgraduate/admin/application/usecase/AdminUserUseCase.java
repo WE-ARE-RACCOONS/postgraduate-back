@@ -7,7 +7,7 @@ import com.postgraduate.admin.application.dto.res.WishResponse;
 import com.postgraduate.admin.application.mapper.AdminMapper;
 import com.postgraduate.admin.domain.service.AdminUserService;
 import com.postgraduate.domain.user.user.domain.entity.User;
-import com.postgraduate.domain.wish.domain.entity.Wish;
+import com.postgraduate.domain.user.wish.domain.entity.Wish;
 import com.postgraduate.global.bizppurio.application.dto.req.JuniorMatchingSuccessRequest;
 import com.postgraduate.global.bizppurio.application.usecase.BizppurioJuniorMessage;
 import lombok.RequiredArgsConstructor;

@@ -3,8 +3,8 @@ package com.postgraduate.global.slack;
 import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.user.user.domain.entity.User;
-import com.postgraduate.domain.wish.domain.entity.Wish;
-import com.postgraduate.domain.wish.domain.entity.constant.Status;
+import com.postgraduate.domain.user.wish.domain.entity.Wish;
+import com.postgraduate.domain.user.wish.domain.entity.constant.Status;
 import com.slack.api.Slack;
 import com.slack.api.model.Attachment;
 import com.slack.api.webhook.Payload;
@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.postgraduate.domain.wish.domain.entity.constant.Status.REJECTED;
+import static com.postgraduate.domain.user.wish.domain.entity.constant.Status.REJECTED;
 import static com.postgraduate.global.slack.SlackUtils.generateSlackField;
 
 @Component

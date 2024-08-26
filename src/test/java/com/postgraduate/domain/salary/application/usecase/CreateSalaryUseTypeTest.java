@@ -3,13 +3,14 @@ package com.postgraduate.domain.salary.application.usecase;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
 import com.postgraduate.domain.payment.domain.entity.Payment;
-import com.postgraduate.domain.payment.domain.entity.constant.Status;
-import com.postgraduate.domain.salary.application.dto.res.SalaryDetailsResponse;
-import com.postgraduate.domain.salary.application.dto.res.SalaryInfoResponse;
-import com.postgraduate.domain.salary.application.mapper.SalaryMapper;
-import com.postgraduate.domain.salary.domain.entity.Salary;
-import com.postgraduate.domain.salary.domain.entity.SalaryAccount;
-import com.postgraduate.domain.salary.domain.service.SalaryGetService;
+import com.postgraduate.domain.payment.domain.entity.constant.PaymentStatus;
+import com.postgraduate.domain.senior.salary.application.dto.res.SalaryDetailsResponse;
+import com.postgraduate.domain.senior.salary.application.dto.res.SalaryInfoResponse;
+import com.postgraduate.domain.senior.salary.application.mapper.SalaryMapper;
+import com.postgraduate.domain.senior.salary.application.usecase.SalaryInfoUseCase;
+import com.postgraduate.domain.senior.salary.domain.entity.Salary;
+import com.postgraduate.domain.senior.salary.domain.entity.SalaryAccount;
+import com.postgraduate.domain.senior.salary.domain.service.SalaryGetService;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.domain.user.user.domain.entity.User;
@@ -25,8 +26,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.DONE;
-import static com.postgraduate.domain.salary.util.SalaryUtil.getSalaryDate;
+import static com.postgraduate.domain.mentoring.domain.entity.constant.MentoringStatus.DONE;
+import static com.postgraduate.domain.senior.salary.util.SalaryUtil.getSalaryDate;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -81,9 +82,9 @@ class CreateSalaryUseTypeTest {
     void getNotDoneSalaryDetail() {
         Salary salary = mock(Salary.class);
 
-        Payment payment1 = new Payment(1L, user, senior, 1000, "a", "a", "a", LocalDateTime.now(), LocalDateTime.now(), Status.DONE);
-        Payment payment2 = new Payment(2L, user, senior, 1000, "a", "a", "a", LocalDateTime.now(), LocalDateTime.now(), Status.DONE);
-        Payment payment3 = new Payment(3L, user, senior, 1000, "a", "a", "a", LocalDateTime.now(), LocalDateTime.now(), Status.DONE);
+        Payment payment1 = new Payment(1L, user, senior, 1000, "a", "a", "a", LocalDateTime.now(), LocalDateTime.now(), PaymentStatus.DONE);
+        Payment payment2 = new Payment(2L, user, senior, 1000, "a", "a", "a", LocalDateTime.now(), LocalDateTime.now(), PaymentStatus.DONE);
+        Payment payment3 = new Payment(3L, user, senior, 1000, "a", "a", "a", LocalDateTime.now(), LocalDateTime.now(), PaymentStatus.DONE);
 
         Mentoring mentoring1 = new Mentoring(1L, user, senior, payment1, salary
                 , "a", "b", "c"
@@ -115,9 +116,9 @@ class CreateSalaryUseTypeTest {
     void getDoneSalaryDetail() {
         Salary salary = mock(Salary.class);
 
-        Payment payment1 = new Payment(1L, user, senior, 1000, "a", "a", "a", LocalDateTime.now(), LocalDateTime.now(), Status.DONE);
-        Payment payment2 = new Payment(2L, user, senior, 1000, "a", "a", "a", LocalDateTime.now(), LocalDateTime.now(), Status.DONE);
-        Payment payment3 = new Payment(3L, user, senior, 1000, "a", "a", "a", LocalDateTime.now(), LocalDateTime.now(), Status.DONE);
+        Payment payment1 = new Payment(1L, user, senior, 1000, "a", "a", "a", LocalDateTime.now(), LocalDateTime.now(), PaymentStatus.DONE);
+        Payment payment2 = new Payment(2L, user, senior, 1000, "a", "a", "a", LocalDateTime.now(), LocalDateTime.now(), PaymentStatus.DONE);
+        Payment payment3 = new Payment(3L, user, senior, 1000, "a", "a", "a", LocalDateTime.now(), LocalDateTime.now(), PaymentStatus.DONE);
 
         Mentoring mentoring1 = new Mentoring(1L, user, senior, payment1, salary
                 , "a", "b", "c"

@@ -1,8 +1,11 @@
 package com.postgraduate.domain.auth.application.usecase.oauth.kakao;
 
-import com.postgraduate.domain.auth.application.dto.req.CodeRequest;
-import com.postgraduate.domain.auth.application.dto.res.AuthUserResponse;
-import com.postgraduate.domain.auth.application.dto.res.KakaoUserInfoResponse;
+import com.postgraduate.global.auth.login.application.dto.req.CodeRequest;
+import com.postgraduate.global.auth.login.application.dto.res.AuthUserResponse;
+import com.postgraduate.global.auth.login.application.dto.res.KakaoUserInfoResponse;
+import com.postgraduate.global.auth.login.application.usecase.oauth.kakao.KakaoAccessTokenUseCase;
+import com.postgraduate.global.auth.login.application.usecase.oauth.kakao.KakaoSignInUseCase;
+import com.postgraduate.global.auth.login.application.usecase.oauth.kakao.KakaoSignOutUseCase;
 import com.postgraduate.domain.user.user.domain.entity.User;
 import com.postgraduate.domain.user.user.domain.service.UserGetService;
 import com.postgraduate.domain.user.user.domain.service.UserUpdateService;
@@ -18,7 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 
-import static com.postgraduate.domain.auth.application.dto.res.KakaoUserInfoResponse.KakaoAccount;
+import static com.postgraduate.global.auth.login.application.dto.res.KakaoUserInfoResponse.KakaoAccount;
 import static com.postgraduate.domain.user.user.domain.entity.constant.Role.USER;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;

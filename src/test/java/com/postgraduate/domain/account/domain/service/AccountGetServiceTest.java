@@ -1,7 +1,8 @@
 package com.postgraduate.domain.account.domain.service;
 
-import com.postgraduate.domain.account.domain.entity.Account;
-import com.postgraduate.domain.account.domain.repository.AccountRepository;
+import com.postgraduate.domain.senior.account.domain.entity.Account;
+import com.postgraduate.domain.senior.account.domain.repository.AccountRepository;
+import com.postgraduate.domain.senior.account.domain.service.AccountGetService;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;

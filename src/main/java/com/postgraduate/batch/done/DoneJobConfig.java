@@ -1,7 +1,7 @@
 package com.postgraduate.batch.done;
 
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
-import com.postgraduate.domain.mentoring.domain.entity.constant.Status;
+import com.postgraduate.domain.mentoring.domain.entity.constant.MentoringStatus;
 import com.querydslitemreader.core.pagingitemreader.expression.Expression;
 import com.querydslitemreader.core.pagingitemreader.options.QueryDslNoOffsetNumberOptions;
 import com.querydslitemreader.core.pagingitemreader.QueryDslNoOffsetPagingItemReader;
@@ -69,7 +69,7 @@ public class DoneJobConfig {
                         .join(senior)
                         .on(mentoring.senior.eq(senior))
                         .fetchJoin()
-                        .where(mentoring.status.eq(Status.EXPECTED))
+                        .where(mentoring.status.eq(MentoringStatus.EXPECTED))
         );
     }
 }

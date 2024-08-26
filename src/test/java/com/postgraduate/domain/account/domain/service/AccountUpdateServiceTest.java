@@ -1,14 +1,13 @@
 package com.postgraduate.domain.account.domain.service;
 
-import com.postgraduate.domain.account.domain.entity.Account;
-import com.postgraduate.domain.account.domain.repository.AccountRepository;
+import com.postgraduate.domain.senior.account.domain.entity.Account;
+import com.postgraduate.domain.senior.account.domain.service.AccountUpdateService;
 import com.postgraduate.domain.senior.application.dto.req.SeniorMyPageUserAccountRequest;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;

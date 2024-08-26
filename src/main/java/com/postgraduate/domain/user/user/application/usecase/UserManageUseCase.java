@@ -1,9 +1,9 @@
 package com.postgraduate.domain.user.user.application.usecase;
 
-import com.postgraduate.domain.auth.application.dto.req.RejoinRequest;
-import com.postgraduate.domain.auth.application.usecase.oauth.SelectOauth;
-import com.postgraduate.domain.auth.application.usecase.oauth.SignOutUseCase;
-import com.postgraduate.domain.auth.presentation.constant.Provider;
+import com.postgraduate.global.auth.login.application.dto.req.RejoinRequest;
+import com.postgraduate.global.auth.login.application.usecase.oauth.SelectOauth;
+import com.postgraduate.global.auth.login.application.usecase.oauth.SignOutUseCase;
+import com.postgraduate.global.auth.login.presentation.constant.Provider;
 import com.postgraduate.domain.user.user.application.dto.req.UserInfoRequest;
 import com.postgraduate.domain.user.user.application.utils.UserUtils;
 import com.postgraduate.domain.user.user.domain.entity.User;

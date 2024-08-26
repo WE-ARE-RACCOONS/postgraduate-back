@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.postgraduate.domain.salary.util.SalaryUtil.getSalaryDate;
+import static com.postgraduate.domain.senior.salary.util.SalaryUtil.getSalaryDate;
 
 @Component
 @RequiredArgsConstructor

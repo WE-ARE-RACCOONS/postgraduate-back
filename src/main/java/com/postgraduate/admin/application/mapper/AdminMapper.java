@@ -3,14 +3,14 @@ package com.postgraduate.admin.application.mapper;
 import com.postgraduate.admin.application.dto.res.*;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.payment.domain.entity.Payment;
-import com.postgraduate.domain.salary.domain.entity.Salary;
-import com.postgraduate.domain.salary.domain.entity.SalaryAccount;
+import com.postgraduate.domain.senior.salary.domain.entity.Salary;
+import com.postgraduate.domain.senior.salary.domain.entity.SalaryAccount;
 import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.user.user.application.utils.UserUtils;
 import com.postgraduate.domain.user.user.domain.entity.User;
 import com.postgraduate.domain.user.user.domain.entity.constant.Role;
-import com.postgraduate.domain.wish.domain.entity.Wish;
+import com.postgraduate.domain.user.wish.domain.entity.Wish;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -97,7 +97,7 @@ public class AdminMapper {
     private MentoringInfo getMentoringInfo(Mentoring mentoring, User user) {
         return new MentoringInfo(
                 mentoring.getMentoringId(),
-                mentoring.getStatus(),
+                mentoring.getMentoringStatus(),
                 user.getNickName(),
                 user.getPhoneNumber(),
                 mentoring.getCreatedAt(),
@@ -138,7 +138,7 @@ public class AdminMapper {
                 user.getPhoneNumber(),
                 payment.getPaidAt(),
                 payment.getPay(),
-                payment.getStatus()
+                payment.getPaymentStatus()
         );
     }
 

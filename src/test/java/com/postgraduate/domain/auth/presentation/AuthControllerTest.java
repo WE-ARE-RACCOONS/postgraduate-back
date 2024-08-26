@@ -1,9 +1,9 @@
 package com.postgraduate.domain.auth.presentation;
 
-import com.postgraduate.domain.auth.application.dto.req.*;
-import com.postgraduate.domain.auth.application.dto.res.AuthUserResponse;
-import com.postgraduate.domain.auth.application.dto.res.JwtTokenResponse;
-import com.postgraduate.domain.auth.presentation.constant.Provider;
+import com.postgraduate.global.auth.login.application.dto.req.*;
+import com.postgraduate.global.auth.login.application.dto.res.AuthUserResponse;
+import com.postgraduate.global.auth.login.application.dto.res.JwtTokenResponse;
+import com.postgraduate.global.auth.login.presentation.constant.Provider;
 import com.postgraduate.domain.user.user.domain.entity.User;
 import com.postgraduate.support.ControllerTest;
 import org.junit.jupiter.api.DisplayName;
@@ -12,10 +12,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 
-import static com.postgraduate.domain.auth.presentation.constant.AuthResponseCode.*;
-import static com.postgraduate.domain.auth.presentation.constant.AuthResponseMessage.*;
-import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseCode.SENIOR_CREATE;
-import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseMessage.CREATE_SENIOR;
+import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseCode.*;
+import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseMessage.*;
 import static com.postgraduate.domain.user.user.domain.entity.constant.Role.USER;
 import static java.lang.Boolean.TRUE;
 import static org.mockito.ArgumentMatchers.any;

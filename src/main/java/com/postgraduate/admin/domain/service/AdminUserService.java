@@ -3,8 +3,8 @@ package com.postgraduate.admin.domain.service;
 import com.postgraduate.admin.domain.repository.AdminUserRepository;
 import com.postgraduate.domain.user.user.domain.entity.User;
 import com.postgraduate.domain.user.user.exception.UserNotFoundException;
-import com.postgraduate.domain.wish.domain.entity.Wish;
-import com.postgraduate.domain.wish.exception.WishNotFoundException;
+import com.postgraduate.domain.user.wish.domain.entity.Wish;
+import com.postgraduate.domain.user.wish.exception.WishNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

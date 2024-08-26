@@ -1,6 +1,6 @@
 package com.postgraduate.domain.senior.presentation;
 
-import com.postgraduate.domain.available.application.dto.res.AvailableTimesResponse;
+import com.postgraduate.domain.senior.available.application.dto.res.AvailableTimesResponse;
 import com.postgraduate.domain.senior.application.dto.req.*;
 import com.postgraduate.domain.senior.application.dto.res.*;
 import com.postgraduate.domain.senior.application.usecase.SeniorInfoUseCase;

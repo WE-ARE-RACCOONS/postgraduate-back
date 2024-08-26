@@ -1,9 +1,9 @@
 package com.postgraduate.Integration;
 
-import com.postgraduate.domain.account.domain.entity.Account;
-import com.postgraduate.domain.available.application.dto.req.AvailableCreateRequest;
-import com.postgraduate.domain.available.domain.entity.Available;
-import com.postgraduate.domain.salary.domain.entity.Salary;
+import com.postgraduate.domain.senior.account.domain.entity.Account;
+import com.postgraduate.domain.senior.available.application.dto.req.AvailableCreateRequest;
+import com.postgraduate.domain.senior.available.domain.entity.Available;
+import com.postgraduate.domain.senior.salary.domain.entity.Salary;
 import com.postgraduate.domain.senior.application.dto.req.*;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.presentation.constant.SeniorResponseCode;

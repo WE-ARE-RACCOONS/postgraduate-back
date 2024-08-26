@@ -1,9 +1,10 @@
 package com.postgraduate.domain.image.application.usecase;
 
-import com.postgraduate.domain.auth.util.ProfileUtils;
-import com.postgraduate.domain.image.application.dto.res.ImageUrlResponse;
+import com.postgraduate.global.auth.login.util.ProfileUtils;
+import com.postgraduate.global.image.application.dto.res.ImageUrlResponse;
 import com.postgraduate.domain.user.user.domain.entity.User;
 import com.postgraduate.global.config.s3.S3UploadService;
+import com.postgraduate.global.image.application.usecase.ImageUploadUseCase;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

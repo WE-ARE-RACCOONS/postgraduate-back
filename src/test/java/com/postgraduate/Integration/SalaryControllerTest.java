@@ -1,6 +1,6 @@
 package com.postgraduate.Integration;
 
-import com.postgraduate.domain.salary.domain.entity.Salary;
+import com.postgraduate.domain.senior.salary.domain.entity.Salary;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.user.user.domain.entity.User;
 import com.postgraduate.domain.user.user.domain.entity.constant.Role;
@@ -12,9 +12,8 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-import static com.postgraduate.domain.salary.presentation.constant.SalaryResponseCode.SALARY_FIND;
-import static com.postgraduate.domain.salary.presentation.constant.SalaryResponseCode.SALARY_NOT_FOUND;
-import static com.postgraduate.domain.salary.presentation.constant.SalaryResponseMessage.*;
+import static com.postgraduate.domain.senior.salary.presentation.constant.SalaryResponseCode.SALARY_FIND;
+import static com.postgraduate.domain.senior.salary.presentation.constant.SalaryResponseCode.SALARY_NOT_FOUND;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;

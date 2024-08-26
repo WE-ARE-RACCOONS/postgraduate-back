@@ -1,6 +1,6 @@
 package com.postgraduate.domain.senior.domain.service;
 
-import com.postgraduate.domain.available.application.dto.req.AvailableCreateRequest;
+import com.postgraduate.domain.senior.available.application.dto.req.AvailableCreateRequest;
 import com.postgraduate.domain.senior.application.dto.req.SeniorMyPageProfileRequest;
 import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Profile;
@@ -16,7 +16,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static com.postgraduate.domain.senior.application.mapper.SeniorMapper.mapToInfo;
 import static com.postgraduate.domain.senior.application.mapper.SeniorMapper.mapToProfile;
-import static com.postgraduate.domain.senior.domain.entity.constant.Status.APPROVE;
 import static com.postgraduate.domain.user.user.domain.entity.constant.Role.SENIOR;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;

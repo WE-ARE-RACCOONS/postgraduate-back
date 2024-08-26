@@ -1,6 +1,6 @@
 package com.postgraduate.domain.payment.domain.entity;
 
-import com.postgraduate.domain.payment.domain.entity.constant.Status;
+import com.postgraduate.domain.payment.domain.entity.constant.PaymentStatus;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.user.user.domain.entity.User;
 import jakarta.persistence.*;
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-import static com.postgraduate.domain.payment.domain.entity.constant.Status.DONE;
+import static com.postgraduate.domain.payment.domain.entity.constant.PaymentStatus.DONE;
 
 @Entity
 @Builder
@@ -46,10 +46,10 @@ public class Payment {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     @Builder.Default
-    private Status status = DONE;
+    private PaymentStatus paymentStatus = DONE;
 
-    public void updateStatus(Status status) {
-        this.status = status;
+    public void updateStatus(PaymentStatus paymentStatus) {
+        this.paymentStatus = paymentStatus;
         this.deletedAt = LocalDateTime.now();
     }
 

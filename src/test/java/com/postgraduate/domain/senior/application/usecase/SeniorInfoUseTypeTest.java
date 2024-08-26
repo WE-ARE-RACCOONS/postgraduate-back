@@ -1,8 +1,8 @@
 package com.postgraduate.domain.senior.application.usecase;
 
-import com.postgraduate.domain.available.application.dto.res.AvailableTimesResponse;
-import com.postgraduate.domain.available.domain.entity.Available;
-import com.postgraduate.domain.available.domain.service.AvailableGetService;
+import com.postgraduate.domain.senior.available.application.dto.res.AvailableTimesResponse;
+import com.postgraduate.domain.senior.available.domain.entity.Available;
+import com.postgraduate.domain.senior.available.domain.service.AvailableGetService;
 import com.postgraduate.domain.senior.application.dto.res.AllSeniorSearchResponse;
 import com.postgraduate.domain.senior.application.dto.res.SeniorDetailResponse;
 import com.postgraduate.domain.senior.application.dto.res.SeniorProfileResponse;

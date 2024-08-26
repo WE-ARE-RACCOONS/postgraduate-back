@@ -19,7 +19,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import java.time.LocalDateTime;
 
 import static com.postgraduate.domain.mentoring.domain.entity.QMentoring.mentoring;
-import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.WAITING;
+import static com.postgraduate.domain.mentoring.domain.entity.constant.MentoringStatus.WAITING;
 import static com.postgraduate.domain.payment.domain.entity.QPayment.payment;
 import static com.postgraduate.domain.senior.domain.entity.QSenior.senior;
 import static com.postgraduate.domain.user.user.domain.entity.QUser.user;

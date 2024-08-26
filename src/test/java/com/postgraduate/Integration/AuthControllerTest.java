@@ -1,10 +1,10 @@
 package com.postgraduate.Integration;
 
-import com.postgraduate.domain.auth.application.dto.req.*;
-import com.postgraduate.domain.auth.application.dto.res.KakaoUserInfoResponse;
+import com.postgraduate.global.auth.login.application.dto.req.*;
+import com.postgraduate.global.auth.login.application.dto.res.KakaoUserInfoResponse;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.user.user.domain.entity.User;
-import com.postgraduate.domain.wish.domain.entity.Wish;
+import com.postgraduate.domain.user.wish.domain.entity.Wish;
 import com.postgraduate.support.IntegrationTest;
 import com.postgraduate.support.Resource;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,12 +16,8 @@ import org.springframework.http.MediaType;
 
 import java.util.Optional;
 
-import static com.postgraduate.domain.auth.presentation.constant.AuthResponseCode.*;
-import static com.postgraduate.domain.auth.presentation.constant.AuthResponseMessage.*;
-import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseCode.SENIOR_CREATE;
-import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseCode.SENIOR_NOT_FOUND;
-import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseMessage.CREATE_SENIOR;
-import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseMessage.NOT_FOUND_SENIOR;
+import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseCode.*;
+import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseMessage.*;
 import static com.postgraduate.domain.user.user.domain.entity.constant.Role.SENIOR;
 import static com.postgraduate.domain.user.user.domain.entity.constant.Role.USER;
 import static com.postgraduate.domain.user.user.presentation.constant.UserResponseCode.USER_NOT_FOUND;

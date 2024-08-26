@@ -2,8 +2,8 @@ package com.postgraduate.batch.done;
 
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.payment.domain.entity.Payment;
-import com.postgraduate.domain.salary.domain.entity.Salary;
-import com.postgraduate.domain.salary.domain.service.SalaryGetService;
+import com.postgraduate.domain.senior.salary.domain.entity.Salary;
+import com.postgraduate.domain.senior.salary.domain.service.SalaryGetService;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.item.ItemProcessor;

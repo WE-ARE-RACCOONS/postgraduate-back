@@ -1,6 +1,6 @@
 package com.postgraduate.admin.application.dto.res;
 
-import com.postgraduate.domain.wish.domain.entity.constant.Status;
+import com.postgraduate.domain.user.wish.domain.entity.constant.Status;
 
 import java.time.LocalDateTime;
 

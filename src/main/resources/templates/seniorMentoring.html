@@ -43,7 +43,7 @@
     </thead>
     <tbody>
     <tr th:each="mentoringInfo : ${mentoringInfos.mentoringInfo()}">
-        <td th:text="${mentoringInfo.status()}">certification</td>
+        <td th:text="${mentoringInfo.mentoringStatus()}">certification</td>
         <td th:text="${mentoringInfo.nickName()}">marketing</td>
         <td th:text="${mentoringInfo.phoneNumber()}">isUser</td>
         <td th:text="${mentoringInfo.createdAt()}">isUser</td>

@@ -1,9 +1,9 @@
 package com.postgraduate.domain.senior.application.usecase;
 
-import com.postgraduate.domain.account.domain.entity.Account;
-import com.postgraduate.domain.account.domain.service.AccountGetService;
-import com.postgraduate.domain.available.domain.entity.Available;
-import com.postgraduate.domain.available.domain.service.AvailableGetService;
+import com.postgraduate.domain.senior.account.domain.entity.Account;
+import com.postgraduate.domain.senior.account.domain.service.AccountGetService;
+import com.postgraduate.domain.senior.available.domain.entity.Available;
+import com.postgraduate.domain.senior.available.domain.service.AvailableGetService;
 import com.postgraduate.domain.senior.application.dto.res.SeniorMyPageProfileResponse;
 import com.postgraduate.domain.senior.application.dto.res.SeniorMyPageResponse;
 import com.postgraduate.domain.senior.application.dto.res.SeniorMyPageUserAccountResponse;
@@ -13,8 +13,8 @@ import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.domain.user.user.domain.entity.User;
-import com.postgraduate.domain.wish.domain.entity.Wish;
-import com.postgraduate.domain.wish.domain.service.WishGetService;
+import com.postgraduate.domain.user.wish.domain.entity.Wish;
+import com.postgraduate.domain.user.wish.domain.service.WishGetService;
 import com.postgraduate.global.config.security.util.EncryptorUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

@@ -1,6 +1,6 @@
 package com.postgraduate.domain.user.user.domain.service;
 
-import com.postgraduate.domain.auth.util.ProfileUtils;
+import com.postgraduate.global.auth.login.util.ProfileUtils;
 import com.postgraduate.domain.senior.application.dto.req.SeniorMyPageUserAccountRequest;
 import com.postgraduate.domain.user.user.application.dto.req.UserInfoRequest;
 import com.postgraduate.domain.user.user.domain.entity.User;
