@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.*;
+import static com.postgraduate.domain.mentoring.domain.entity.constant.MentoringStatus.*;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 

@@ -2,10 +2,10 @@ package com.postgraduate.Integration;
 
 import com.postgraduate.domain.mentoring.application.dto.req.MentoringDateRequest;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
-import com.postgraduate.domain.mentoring.domain.entity.constant.Status;
+import com.postgraduate.domain.mentoring.domain.entity.constant.MentoringStatus;
 import com.postgraduate.domain.payment.domain.entity.Payment;
-import com.postgraduate.domain.refuse.application.dto.req.MentoringRefuseRequest;
-import com.postgraduate.domain.salary.domain.entity.Salary;
+import com.postgraduate.domain.mentoring.application.dto.req.MentoringRefuseRequest;
+import com.postgraduate.domain.senior.salary.domain.entity.Salary;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.user.user.domain.entity.User;
 import com.postgraduate.domain.user.user.domain.entity.constant.Role;
@@ -22,8 +22,8 @@ import org.springframework.http.MediaType;
 
 import java.io.IOException;
 
-import static com.postgraduate.domain.auth.presentation.constant.AuthResponseCode.AUTH_DENIED;
-import static com.postgraduate.domain.auth.presentation.constant.AuthResponseMessage.PERMISSION_DENIED;
+import static com.postgraduate.global.auth.login.presentation.constant.AuthResponseCode.AUTH_DENIED;
+import static com.postgraduate.global.auth.login.presentation.constant.AuthResponseMessage.PERMISSION_DENIED;
 import static com.postgraduate.domain.mentoring.presentation.constant.MentoringResponseCode.*;
 import static com.postgraduate.domain.mentoring.presentation.constant.MentoringResponseMessage.*;
 import static java.time.LocalDateTime.now;
@@ -78,13 +78,13 @@ class MentoringControllerTest extends IntegrationTest {
     }
 
     @ParameterizedTest
-    @EnumSource(value = Status.class, names = {"WAITING", "DONE"})
+    @EnumSource(value = MentoringStatus.class, names = {"WAITING", "DONE"})
     @DisplayName("대학생이 확정대기 및 완료 상태의 멘토링 목록을 조회한다")
-    void getWaitingMentorings(Status status) throws Exception {
-        Mentoring mentoring = new Mentoring(-1L, user, senior, payment, salary, "topic", "question", "date", 40, status, now(), now());
+    void getWaitingMentorings(MentoringStatus mentoringStatus) throws Exception {
+        Mentoring mentoring = new Mentoring(-1L, user, senior, payment, salary, "topic", "question", "date", 40, mentoringStatus, now(), now());
         mentoringRepository.save(mentoring);
 
-        mvc.perform(get("/mentoring/me/{status}", status.name().toLowerCase())
+        mvc.perform(get("/mentoring/me/{status}", mentoringStatus.name().toLowerCase())
                         .header(AUTHORIZATION, BEARER + userAccessToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(MENTORING_FIND.getCode()))
@@ -96,7 +96,7 @@ class MentoringControllerTest extends IntegrationTest {
     @Test
     @DisplayName("대학생이 예정된 멘토링 목록을 조회한다")
     void getExpectedMentorings() throws Exception {
-        Mentoring mentoring = new Mentoring(-1L, user, senior, payment, null, "topic", "question", "date", 40, Status.EXPECTED, now(), now());
+        Mentoring mentoring = new Mentoring(-1L, user, senior, payment, null, "topic", "question", "date", 40, MentoringStatus.EXPECTED, now(), now());
         mentoringRepository.save(mentoring);
 
         mvc.perform(get("/mentoring/me/expected")
@@ -108,10 +108,10 @@ class MentoringControllerTest extends IntegrationTest {
     }
 
     @ParameterizedTest
-    @EnumSource(value = Status.class, names = {"WAITING", "EXPECTED"})
+    @EnumSource(value = MentoringStatus.class, names = {"WAITING", "EXPECTED"})
     @DisplayName("대학생이 멘토링을 상세조회한다.")
-    void getMentoringDetail(Status status) throws Exception {
-        Mentoring mentoring = new Mentoring(-1L, user, senior, payment, null, "topic", "question", "date", 40, status, now(), now());
+    void getMentoringDetail(MentoringStatus mentoringStatus) throws Exception {
+        Mentoring mentoring = new Mentoring(-1L, user, senior, payment, null, "topic", "question", "date", 40, mentoringStatus, now(), now());
         mentoringRepository.save(mentoring);
 
         mvc.perform(get("/mentoring/me/{mentoringId}", mentoring.getMentoringId())
@@ -125,7 +125,7 @@ class MentoringControllerTest extends IntegrationTest {
     @Test
     @DisplayName("자신이 신청한 멘토링이 아니라면 상세조회되지 않는다")
     void getOtherMentoringDetail() throws Exception {
-        Mentoring mentoring = new Mentoring(-1L, otherUser, senior, payment, null, "topic", "question", "date", 40, Status.EXPECTED, now(), now());
+        Mentoring mentoring = new Mentoring(-1L, otherUser, senior, payment, null, "topic", "question", "date", 40, MentoringStatus.EXPECTED, now(), now());
         mentoringRepository.save(mentoring);
 
         mvc.perform(get("/mentoring/me/{mentoringId}", mentoring.getMentoringId())
@@ -137,10 +137,10 @@ class MentoringControllerTest extends IntegrationTest {
 
 
     @ParameterizedTest
-    @EnumSource(value = Status.class, names = {"DONE", "CANCEL", "REFUSE"})
+    @EnumSource(value = MentoringStatus.class, names = {"DONE", "CANCEL", "REFUSE"})
     @DisplayName("대학생의 완료, 취소, 거절 상태의 멘토링은 상세조회되지 않는다.")
-    void getDoneMentoringDetail(Status status) throws Exception {
-        Mentoring mentoring = new Mentoring(-1L, user, senior, payment, null, "topic", "question", "date", 40, status, now(), now());
+    void getDoneMentoringDetail(MentoringStatus mentoringStatus) throws Exception {
+        Mentoring mentoring = new Mentoring(-1L, user, senior, payment, null, "topic", "question", "date", 40, mentoringStatus, now(), now());
         mentoringRepository.save(mentoring);
 
         mvc.perform(get("/mentoring/me/{mentoringId}", mentoring.getMentoringId())
@@ -202,7 +202,7 @@ class MentoringControllerTest extends IntegrationTest {
     @Test
     @DisplayName("대학생이 멘토링을 완료한다.")
     void updateMentoringDone() throws Exception {
-        Mentoring mentoring = new Mentoring(-1L, user, senior, payment, null, "topic", "question", "date", 40, Status.EXPECTED, now(), now());
+        Mentoring mentoring = new Mentoring(-1L, user, senior, payment, null, "topic", "question", "date", 40, MentoringStatus.EXPECTED, now(), now());
         mentoringRepository.save(mentoring);
 
         mvc.perform(patch("/mentoring/me/{mentoringId}/done", mentoring.getMentoringId())
@@ -227,10 +227,10 @@ class MentoringControllerTest extends IntegrationTest {
     //todo : 환불 관련하여 작성 필요 (환불 처리에 대한 코드가 발생하여 다를 수 있음)
 
     @ParameterizedTest
-    @EnumSource(value = Status.class, names = {"WAITING", "EXPECTED"})
+    @EnumSource(value = MentoringStatus.class, names = {"WAITING", "EXPECTED"})
     @DisplayName("대학원생이 멘토링을 상세조회합니다.")
-    void getSeniorMentoringDetails(Status status) throws Exception {
-        Mentoring mentoring = new Mentoring(-1L, user, senior, payment, null, "topic", "question", "date", 40, status, now(), now());
+    void getSeniorMentoringDetails(MentoringStatus mentoringStatus) throws Exception {
+        Mentoring mentoring = new Mentoring(-1L, user, senior, payment, null, "topic", "question", "date", 40, mentoringStatus, now(), now());
         mentoringRepository.save(mentoring);
 
         mvc.perform(get("/mentoring/senior/me/{mentoringId}", mentoring.getMentoringId())
@@ -245,7 +245,7 @@ class MentoringControllerTest extends IntegrationTest {
     @Test
     @DisplayName("자신이 신청받은 멘토링이 아니라면 상세조회되지 않는다")
     void getOtherSeniorMentoringDetail() throws Exception {
-        Mentoring mentoring = new Mentoring(-1L, otherUser, otherSenior, payment, null, "topic", "question", "date", 40, Status.EXPECTED, now(), now());
+        Mentoring mentoring = new Mentoring(-1L, otherUser, otherSenior, payment, null, "topic", "question", "date", 40, MentoringStatus.EXPECTED, now(), now());
         mentoringRepository.save(mentoring);
 
         mvc.perform(get("/mentoring/senior/me/{mentoringId}", mentoring.getMentoringId())
@@ -256,10 +256,10 @@ class MentoringControllerTest extends IntegrationTest {
     }
 
     @ParameterizedTest
-    @EnumSource(value = Status.class, names = {"DONE", "CANCEL", "REFUSE"})
+    @EnumSource(value = MentoringStatus.class, names = {"DONE", "CANCEL", "REFUSE"})
     @DisplayName("대학원생의 완료, 취소, 거절 상태의 멘토링은 상세조회되지 않는다.")
-    void doNotGetMentoringDetails(Status status) throws Exception {
-        Mentoring mentoring = new Mentoring(-1L, user, senior, payment, null, "topic", "question", "date", 40, status, now(), now());
+    void doNotGetMentoringDetails(MentoringStatus mentoringStatus) throws Exception {
+        Mentoring mentoring = new Mentoring(-1L, user, senior, payment, null, "topic", "question", "date", 40, mentoringStatus, now(), now());
         mentoringRepository.save(mentoring);
 
         mvc.perform(get("/mentoring/senior/me/{mentoringId}", mentoring.getMentoringId())
@@ -272,7 +272,7 @@ class MentoringControllerTest extends IntegrationTest {
     @Test
     @DisplayName("대학원생이 멘토링을 수락한다.")
     void updateSeniorMentoringExpected() throws Exception {
-        Mentoring mentoring = new Mentoring(-1L, user, senior, payment, null, "topic", "question", "2024-04-18-18-00,2024-04-18-18-00,2024-04-18-18-00", 40, Status.WAITING, now(), now());
+        Mentoring mentoring = new Mentoring(-1L, user, senior, payment, null, "topic", "question", "2024-04-18-18-00,2024-04-18-18-00,2024-04-18-18-00", 40, MentoringStatus.WAITING, now(), now());
         mentoringRepository.save(mentoring);
 
         String request = objectMapper.writeValueAsString(new MentoringDateRequest("2024-04-18-18-00"));
@@ -290,7 +290,7 @@ class MentoringControllerTest extends IntegrationTest {
     @NullAndEmptySource
     @DisplayName("확정날짜가 비어있다면 멘토링을 수락할 수 없다")
     void updateSeniorMentoringExpectedWithoutDate(String empty) throws Exception {
-        Mentoring mentoring = new Mentoring(-1L, user, senior, payment, null, "topic", "question", "date1,date2,date3", 40, Status.WAITING, now(), now());
+        Mentoring mentoring = new Mentoring(-1L, user, senior, payment, null, "topic", "question", "date1,date2,date3", 40, MentoringStatus.WAITING, now(), now());
         mentoringRepository.save(mentoring);
 
         String request = objectMapper.writeValueAsString(new MentoringDateRequest(empty));
@@ -325,7 +325,7 @@ class MentoringControllerTest extends IntegrationTest {
     @NullAndEmptySource
     @DisplayName("사유가 비어있다면 멘토링을 거절할 수 없다")
     void updateSeniorMentoringExpectedWithoutRefuse(String empty) throws Exception {
-        Mentoring mentoring = new Mentoring(-1L, user, senior, payment, null, "topic", "question", "date1,date2,date3", 40, Status.WAITING, now(), now());
+        Mentoring mentoring = new Mentoring(-1L, user, senior, payment, null, "topic", "question", "date1,date2,date3", 40, MentoringStatus.WAITING, now(), now());
         mentoringRepository.save(mentoring);
 
         String request = objectMapper.writeValueAsString(new MentoringRefuseRequest(empty));

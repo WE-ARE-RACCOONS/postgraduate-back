@@ -1,4 +1,4 @@
-package com.postgraduate.domain.refuse.application.dto.req;
+package com.postgraduate.domain.mentoring.application.dto.req;
 
 import jakarta.validation.constraints.NotBlank;
 

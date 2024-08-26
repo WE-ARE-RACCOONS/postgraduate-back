@@ -1,8 +1,8 @@
 package com.postgraduate.domain.mentoring.domain.entity;
 
-import com.postgraduate.domain.mentoring.domain.entity.constant.Status;
+import com.postgraduate.domain.mentoring.domain.entity.constant.MentoringStatus;
 import com.postgraduate.domain.payment.domain.entity.Payment;
-import com.postgraduate.domain.salary.domain.entity.Salary;
+import com.postgraduate.domain.senior.salary.domain.entity.Salary;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.user.user.domain.entity.User;
 import jakarta.persistence.*;
@@ -17,7 +17,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.WAITING;
+import static com.postgraduate.domain.mentoring.domain.entity.constant.MentoringStatus.WAITING;
 import static com.postgraduate.domain.mentoring.domain.entity.constant.TermUnit.SHORT;
 import static java.time.LocalDateTime.now;
 import static java.time.LocalDateTime.parse;
@@ -61,7 +61,7 @@ public class Mentoring {
 
     @Enumerated(EnumType.STRING)
     @Builder.Default
-    private Status status = WAITING;
+    private MentoringStatus mentoringStatus = WAITING;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -69,8 +69,8 @@ public class Mentoring {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    public void updateStatus(Status status) {
-        this.status = status;
+    public void updateStatus(MentoringStatus mentoringStatus) {
+        this.mentoringStatus = mentoringStatus;
     }
 
     public void updateSalary(Salary salary) {

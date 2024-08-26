@@ -1,7 +1,7 @@
 package com.postgraduate.domain.mentoring.application.usecase;
 
-import com.postgraduate.domain.account.domain.entity.Account;
-import com.postgraduate.domain.account.domain.service.AccountGetService;
+import com.postgraduate.domain.senior.account.domain.entity.Account;
+import com.postgraduate.domain.senior.account.domain.service.AccountGetService;
 import com.postgraduate.domain.mentoring.application.dto.req.MentoringApplyRequest;
 import com.postgraduate.domain.mentoring.application.dto.res.ApplyingResponse;
 import com.postgraduate.domain.mentoring.application.mapper.MentoringMapper;
@@ -43,7 +43,7 @@ public class MentoringApplyingUseCase {
             throw new MentoringDateException();
         Senior senior = payment.getSenior();
         Mentoring mentoring = mentoringMapper.mapToMentoring(user, senior, payment, request);
-        mentoringSaveService.save(mentoring);
+        mentoringSaveService.saveMentoring(mentoring);
         seniorUpdateService.plusMentoring(senior);
         Optional<Account> account = accountGetService.bySenior(senior);
         sendMessage(user, senior);

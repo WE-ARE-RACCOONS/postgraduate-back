@@ -1,7 +1,9 @@
 package com.postgraduate.domain.mentoring.application.usecase;
 
-import com.postgraduate.domain.account.domain.entity.Account;
-import com.postgraduate.domain.account.domain.service.AccountGetService;
+import com.postgraduate.domain.mentoring.domain.service.MentoringSaveService;
+import com.postgraduate.domain.payment.domain.entity.constant.PaymentStatus;
+import com.postgraduate.domain.senior.account.domain.entity.Account;
+import com.postgraduate.domain.senior.account.domain.service.AccountGetService;
 import com.postgraduate.domain.mentoring.application.dto.req.MentoringApplyRequest;
 import com.postgraduate.domain.mentoring.application.dto.req.MentoringDateRequest;
 import com.postgraduate.domain.mentoring.application.dto.res.ApplyingResponse;
@@ -13,13 +15,11 @@ import com.postgraduate.domain.mentoring.exception.MentoringNotFoundException;
 import com.postgraduate.domain.mentoring.exception.MentoringPresentException;
 import com.postgraduate.domain.payment.application.usecase.PaymentManageUseCase;
 import com.postgraduate.domain.payment.domain.entity.Payment;
-import com.postgraduate.domain.payment.domain.entity.constant.Status;
 import com.postgraduate.domain.payment.exception.PaymentNotFoundException;
-import com.postgraduate.domain.refuse.application.dto.req.MentoringRefuseRequest;
-import com.postgraduate.domain.refuse.domain.service.RefuseSaveService;
-import com.postgraduate.domain.salary.domain.entity.Salary;
-import com.postgraduate.domain.salary.domain.service.SalaryGetService;
-import com.postgraduate.domain.salary.domain.service.SalaryUpdateService;
+import com.postgraduate.domain.mentoring.application.dto.req.MentoringRefuseRequest;
+import com.postgraduate.domain.senior.salary.domain.entity.Salary;
+import com.postgraduate.domain.senior.salary.domain.service.SalaryGetService;
+import com.postgraduate.domain.senior.salary.domain.service.SalaryUpdateService;
 import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
@@ -41,7 +41,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.WAITING;
+import static com.postgraduate.domain.mentoring.domain.entity.constant.MentoringStatus.WAITING;
 import static com.postgraduate.domain.senior.domain.entity.constant.Status.APPROVE;
 import static com.postgraduate.domain.user.user.domain.entity.constant.Role.SENIOR;
 import static com.postgraduate.domain.user.user.domain.entity.constant.Role.USER;
@@ -60,7 +60,7 @@ class MentoringManageUseTypeTest {
     @Mock
     private MentoringGetService mentoringGetService;
     @Mock
-    private RefuseSaveService refuseSaveService;
+    private MentoringSaveService mentoringSaveService;
     @Mock
     private AccountGetService accountGetService;
     @Mock
@@ -110,7 +110,7 @@ class MentoringManageUseTypeTest {
                 LocalDateTime.now(), LocalDateTime.now());
         salary = new Salary(-1L, FALSE, senior, 10000, LocalDate.now(), LocalDateTime.now(), null);
         account = new Account(-1L, "1", "은행", "유저", senior);
-        payment = new Payment(-1L, mentoringUser, senior, 20000, "a", "a", "a", LocalDateTime.now(), null, Status.DONE);
+        payment = new Payment(-1L, mentoringUser, senior, 20000, "a", "a", "a", LocalDateTime.now(), null, PaymentStatus.DONE);
         mentoring = new Mentoring(-1L, mentoringUser, senior, payment, salary, "asd", "asd", "1201,1202,1203", 30, WAITING, LocalDateTime.now(), LocalDateTime.now());
     }
 
@@ -236,8 +236,8 @@ class MentoringManageUseTypeTest {
                 .willReturn(mentoring);
         mentoringManageUseCase.updateRefuse(user, mentoringId, request);
 
-        verify(refuseSaveService)
-                .save(any());
+        verify(mentoringSaveService)
+                .saveRefuse(any());
         verify(paymentManageUseCase)
                 .refundPayBySenior(senior, payment.getOrderId());
         verify(mentoringUpdateService)

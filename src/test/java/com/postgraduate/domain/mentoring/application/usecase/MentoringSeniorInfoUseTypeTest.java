@@ -10,8 +10,8 @@ import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
 import com.postgraduate.domain.mentoring.exception.MentoringNotFoundException;
 import com.postgraduate.domain.payment.domain.entity.Payment;
-import com.postgraduate.domain.payment.domain.entity.constant.Status;
-import com.postgraduate.domain.salary.domain.entity.Salary;
+import com.postgraduate.domain.payment.domain.entity.constant.PaymentStatus;
+import com.postgraduate.domain.senior.salary.domain.entity.Salary;
 import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
@@ -29,7 +29,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.WAITING;
+import static com.postgraduate.domain.mentoring.domain.entity.constant.MentoringStatus.WAITING;
 import static com.postgraduate.domain.senior.domain.entity.constant.Status.APPROVE;
 import static com.postgraduate.domain.user.user.domain.entity.constant.Role.SENIOR;
 import static com.postgraduate.domain.user.user.domain.entity.constant.Role.USER;
@@ -75,7 +75,7 @@ class MentoringSeniorInfoUseTypeTest {
                 APPROVE, 1, 1, info, profile,
                 LocalDateTime.now(), LocalDateTime.now());
         salary = new Salary(-1L, FALSE, senior, 10000, LocalDate.now(), LocalDateTime.now(), null);
-        payment = new Payment(-1L, mentoringUser, senior, 20000, "a", "a", "a", LocalDateTime.now(), null, Status.DONE);
+        payment = new Payment(-1L, mentoringUser, senior, 20000, "a", "a", "a", LocalDateTime.now(), null, PaymentStatus.DONE);
         mentoring = new Mentoring(-1L, mentoringUser, senior, payment, salary, "asd", "asd", "1201,1202,1203", 30, WAITING, LocalDateTime.now(), LocalDateTime.now());
     }
 
@@ -158,9 +158,9 @@ class MentoringSeniorInfoUseTypeTest {
         Senior senior = mock(Senior.class);
         Salary salary = mock(Salary.class);
 
-        Payment payment1 = new Payment(1l, user, senior, 10000, "1", "1", "a", LocalDateTime.now(), LocalDateTime.now(), Status.DONE);
-        Payment payment2 = new Payment(2l, user, senior, 10000, "1", "1", "a", LocalDateTime.now(), LocalDateTime.now(), Status.DONE);
-        Payment payment3 = new Payment(3l, user, senior, 10000, "1", "1", "a", LocalDateTime.now(), LocalDateTime.now(), Status.DONE);
+        Payment payment1 = new Payment(1l, user, senior, 10000, "1", "1", "a", LocalDateTime.now(), LocalDateTime.now(), PaymentStatus.DONE);
+        Payment payment2 = new Payment(2l, user, senior, 10000, "1", "1", "a", LocalDateTime.now(), LocalDateTime.now(), PaymentStatus.DONE);
+        Payment payment3 = new Payment(3l, user, senior, 10000, "1", "1", "a", LocalDateTime.now(), LocalDateTime.now(), PaymentStatus.DONE);
 
         Mentoring mentoring1 = new Mentoring(1L, user, senior, payment1, salary, "A", "b", "2024-03-02-18-18", 40, WAITING, LocalDateTime.now(), LocalDateTime.now());
         Mentoring mentoring2 = new Mentoring(2L, user, senior, payment2, salary, "A", "b", "2024-02-02-18-18", 40, WAITING, LocalDateTime.now(), LocalDateTime.now());

@@ -17,9 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Optional;
 
-import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.*;
-import static java.util.Optional.of;
-import static java.util.Optional.ofNullable;
+import static com.postgraduate.domain.mentoring.domain.entity.constant.MentoringStatus.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
