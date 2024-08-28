@@ -5,9 +5,9 @@ import com.postgraduate.global.auth.login.application.dto.req.SeniorSignUpReques
 import com.postgraduate.global.auth.login.application.dto.req.SignUpRequest;
 import com.postgraduate.global.auth.login.application.dto.req.UserChangeRequest;
 import com.postgraduate.global.auth.login.util.ProfileUtils;
-import com.postgraduate.domain.senior.salary.application.mapper.SalaryMapper;
-import com.postgraduate.domain.senior.salary.domain.entity.Salary;
-import com.postgraduate.domain.senior.salary.domain.service.SalarySaveService;
+import com.postgraduate.domain.salary.application.mapper.SalaryMapper;
+import com.postgraduate.domain.salary.domain.entity.Salary;
+import com.postgraduate.domain.salary.domain.service.SalarySaveService;
 import com.postgraduate.domain.senior.application.mapper.SeniorMapper;
 import com.postgraduate.domain.senior.application.utils.SeniorUtils;
 import com.postgraduate.domain.senior.domain.entity.Senior;
@@ -30,9 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Random;
 
-import static com.postgraduate.domain.senior.salary.util.SalaryUtil.getSalaryDate;
-import static com.postgraduate.domain.senior.application.mapper.SeniorMapper.mapToSenior;
-import static com.postgraduate.domain.user.user.application.mapper.UserMapper.mapToUser;
+import static com.postgraduate.domain.salary.util.SalaryUtil.getSalaryDate;
 
 @Transactional
 @Service

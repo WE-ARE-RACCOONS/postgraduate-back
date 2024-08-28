@@ -8,7 +8,7 @@ import com.postgraduate.domain.user.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import static com.postgraduate.domain.payment.domain.entity.constant.PaymentStatus.DONE;
+import static com.postgraduate.domain.payment.domain.entity.constant.Status.DONE;
 
 @Service
 @RequiredArgsConstructor
