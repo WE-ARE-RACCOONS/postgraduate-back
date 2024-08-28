@@ -1,7 +1,6 @@
 package com.postgraduate.domain.mentoring.application.usecase;
 
-import com.postgraduate.domain.senior.account.domain.entity.Account;
-import com.postgraduate.domain.senior.account.domain.service.AccountGetService;
+import com.postgraduate.domain.senior.domain.entity.Account;
 import com.postgraduate.domain.mentoring.application.dto.req.MentoringApplyRequest;
 import com.postgraduate.domain.mentoring.application.dto.res.ApplyingResponse;
 import com.postgraduate.domain.mentoring.application.mapper.MentoringMapper;
@@ -12,6 +11,7 @@ import com.postgraduate.domain.mentoring.exception.MentoringDateException;
 import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.payment.domain.service.PaymentGetService;
 import com.postgraduate.domain.senior.domain.entity.Senior;
+import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.domain.senior.domain.service.SeniorUpdateService;
 import com.postgraduate.domain.user.user.domain.entity.User;
 import com.postgraduate.global.bizppurio.application.usecase.BizppurioJuniorMessage;
@@ -28,9 +28,9 @@ import java.util.Optional;
 public class MentoringApplyingUseCase {
     private final PaymentGetService paymentGetService;
     private final SeniorUpdateService seniorUpdateService;
+    private final SeniorGetService seniorGetService;
     private final MentoringGetService mentoringGetService;
     private final MentoringSaveService mentoringSaveService;
-    private final AccountGetService accountGetService;
     private final MentoringMapper mentoringMapper;
     private final BizppurioSeniorMessage bizppurioSeniorMessage;
     private final BizppurioJuniorMessage bizppurioJuniorMessage;
@@ -45,7 +45,7 @@ public class MentoringApplyingUseCase {
         Mentoring mentoring = mentoringMapper.mapToMentoring(user, senior, payment, request);
         mentoringSaveService.saveMentoring(mentoring);
         seniorUpdateService.plusMentoring(senior);
-        Optional<Account> account = accountGetService.bySenior(senior);
+        Optional<Account> account = Optional.ofNullable(senior.getAccount());
         sendMessage(user, senior);
         return new ApplyingResponse(account.isPresent());
     }

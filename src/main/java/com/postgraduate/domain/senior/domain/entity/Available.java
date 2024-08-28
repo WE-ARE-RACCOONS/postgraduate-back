@@ -1,6 +1,5 @@
-package com.postgraduate.domain.senior.available.domain.entity;
+package com.postgraduate.domain.senior.domain.entity;
 
-import com.postgraduate.domain.senior.domain.entity.Senior;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

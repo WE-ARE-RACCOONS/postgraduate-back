@@ -1,8 +1,7 @@
 package com.postgraduate.domain.mentoring.domain.service;
 
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
-import com.postgraduate.domain.mentoring.domain.entity.constant.MentoringStatus;
-import com.postgraduate.domain.senior.salary.domain.entity.Salary;
+import com.postgraduate.domain.salary.domain.entity.Salary;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,11 +10,6 @@ import static com.postgraduate.domain.mentoring.domain.entity.constant.Mentoring
 @Service
 @RequiredArgsConstructor
 public class MentoringUpdateService {
-
-    public void updateStatus(Mentoring mentoring, MentoringStatus mentoringStatus) {
-        mentoring.updateStatus(mentoringStatus);
-    }
-
     public void updateRefuse(Mentoring mentoring) {
         mentoring.updateStatus(REFUSE);
     }

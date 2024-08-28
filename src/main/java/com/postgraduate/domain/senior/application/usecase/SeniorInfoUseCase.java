@@ -1,10 +1,8 @@
 package com.postgraduate.domain.senior.application.usecase;
 
-import com.postgraduate.domain.senior.available.application.dto.res.AvailableTimeResponse;
-import com.postgraduate.domain.senior.available.application.dto.res.AvailableTimesResponse;
-import com.postgraduate.domain.senior.available.application.mapper.AvailableMapper;
-import com.postgraduate.domain.senior.available.domain.entity.Available;
-import com.postgraduate.domain.senior.available.domain.service.AvailableGetService;
+import com.postgraduate.domain.senior.application.dto.res.AvailableTimeResponse;
+import com.postgraduate.domain.senior.application.dto.res.AvailableTimesResponse;
+import com.postgraduate.domain.senior.domain.entity.Available;
 import com.postgraduate.domain.senior.application.dto.res.*;
 import com.postgraduate.domain.senior.application.mapper.SeniorMapper;
 import com.postgraduate.domain.senior.domain.entity.Senior;
@@ -27,7 +25,6 @@ import static com.postgraduate.domain.user.user.domain.entity.constant.Role.SENI
 public class SeniorInfoUseCase {
     private final SeniorGetService seniorGetService;
     private final SeniorUpdateService seniorUpdateService;
-    private final AvailableGetService availableGetService;
 
     public SeniorDetailResponse getSeniorDetail(User user, Long seniorId) {
         if (user != null && user.getRole() == SENIOR)
@@ -45,17 +42,17 @@ public class SeniorInfoUseCase {
     private SeniorDetailResponse getResponse(Long seniorId, boolean isMine) {
         Senior senior = seniorGetService.bySeniorId(seniorId);
         seniorUpdateService.updateHit(senior);
-        List<Available> availables = availableGetService.bySenior(senior);
+        List<Available> availables = senior.getAvailables();
         List<AvailableTimeResponse> times = availables.stream()
-                .map(AvailableMapper::mapToAvailableTimes)
+                .map(SeniorMapper::mapToAvailableTimes)
                 .toList();
         return mapToSeniorDetail(senior, times, isMine);
     }
 
     private SeniorDetailResponse getResponseMine(Senior senior, boolean isMine) {
-        List<Available> availables = availableGetService.byMine(senior);
+        List<Available> availables = senior.getAvailables();
         List<AvailableTimeResponse> times = availables.stream()
-                .map(AvailableMapper::mapToAvailableTimes)
+                .map(SeniorMapper::mapToAvailableTimes)
                 .toList();
         return mapToSeniorDetail(senior, times, isMine);
     }
@@ -89,9 +86,9 @@ public class SeniorInfoUseCase {
     @Transactional(readOnly = true)
     public AvailableTimesResponse getSeniorTimes(Long seniorId) {
         Senior senior = seniorGetService.bySeniorId(seniorId);
-        List<Available> availables = availableGetService.bySenior(senior);
+        List<Available> availables = senior.getAvailables();
         List<AvailableTimeResponse> times = availables.stream()
-                .map(AvailableMapper::mapToAvailableTimes)
+                .map(SeniorMapper::mapToAvailableTimes)
                 .toList();
         return new AvailableTimesResponse(senior.getUser().getNickName(), times);
     }

@@ -8,7 +8,7 @@ import com.postgraduate.domain.mentoring.application.dto.res.SeniorMentoringDeta
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.entity.Refuse;
 import com.postgraduate.domain.payment.domain.entity.Payment;
-import com.postgraduate.domain.senior.salary.domain.entity.Salary;
+import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.user.user.application.utils.UserUtils;

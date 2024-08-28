@@ -1,4 +1,4 @@
-package com.postgraduate.domain.senior.available.exception;
+package com.postgraduate.domain.senior.exception;
 
 import com.postgraduate.global.exception.ApplicationException;
 

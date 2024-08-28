@@ -24,13 +24,16 @@ public enum SeniorResponseMessage {
     GET_USER_CHECK("후배 변경 가능 여부 확인에 성공하였습니다"),
 
     NOT_FOUND_SENIOR("등록된 멘토가 없습니다."),
-    NOT_FOUND_ACCOUNT("계좌가 없습니다."),
     INVALID_KEYWORD("키워드가 잘못되었습니다."),
     NOT_WAITING_STATUS("승인대기 상태의 선배가 아닙니다."),
     EMPTY_TIME("가능 시간이 비었습니다."),
     INVALID_DAY("잘못된 요일입니다."),
     NOT_FOUND_PROFILE("등록한 프로필이 없습니다."),
-    ;
+
+    GET_ACCOUNT_INFO("계좌 정보 조회에 성공하였습니다"),
+    GET_ACCOUNT_LIST_INFO("계좌 리스트 조회에 성공하였습니다."),
+
+    NOT_FOUND_ACCOUNT("계좌를 찾을 수 없습니다.");
 
     private final String message;
 }

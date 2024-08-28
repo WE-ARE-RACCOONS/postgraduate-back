@@ -2,7 +2,7 @@ package com.postgraduate.domain.mentoring.domain.entity;
 
 import com.postgraduate.domain.mentoring.domain.entity.constant.MentoringStatus;
 import com.postgraduate.domain.payment.domain.entity.Payment;
-import com.postgraduate.domain.senior.salary.domain.entity.Salary;
+import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.user.user.domain.entity.User;
 import jakarta.persistence.*;
@@ -61,7 +61,7 @@ public class Mentoring {
 
     @Enumerated(EnumType.STRING)
     @Builder.Default
-    private MentoringStatus mentoringStatus = WAITING;
+    private MentoringStatus status = WAITING;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -69,8 +69,11 @@ public class Mentoring {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
+    @OneToOne(mappedBy = "mentoring")
+    private Refuse refuse;
+
     public void updateStatus(MentoringStatus mentoringStatus) {
-        this.mentoringStatus = mentoringStatus;
+        this.status = mentoringStatus;
     }
 
     public void updateSalary(Salary salary) {

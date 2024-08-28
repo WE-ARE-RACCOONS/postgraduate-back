@@ -1,5 +1,6 @@
 package com.postgraduate.domain.senior.domain.service;
 
+import com.postgraduate.domain.senior.application.dto.req.SeniorMyPageUserAccountRequest;
 import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
@@ -35,5 +36,8 @@ public class SeniorUpdateService {
 
     public void updateHit(Senior senior) {
         senior.updateHit();
+    }
+    public void updateAccount(Senior senior, SeniorMyPageUserAccountRequest request, String accountNumber) {
+        senior.updateAccount(request, accountNumber);
     }
 }

@@ -1,4 +1,4 @@
-package com.postgraduate.domain.senior.salary.application.dto;
+package com.postgraduate.domain.salary.application.dto;
 
 import com.postgraduate.domain.senior.domain.entity.Senior;
 

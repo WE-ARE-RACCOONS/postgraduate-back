@@ -1,6 +1,5 @@
 package com.postgraduate.domain.mentoring.domain.entity;
 
-import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.entity.constant.ReviewStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -32,7 +31,7 @@ public class Review {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     @Builder.Default
-    private ReviewStatus reviewStatus = ReviewStatus.REJECT;
+    private ReviewStatus status = ReviewStatus.REJECT;
 
     @CreationTimestamp
     private LocalDate createdAt;

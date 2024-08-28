@@ -1,15 +1,11 @@
 package com.postgraduate.domain.senior.application.mapper;
 
-import com.postgraduate.domain.senior.account.domain.entity.Account;
+import com.postgraduate.domain.senior.application.dto.req.*;
+import com.postgraduate.domain.senior.domain.entity.*;
 import com.postgraduate.global.auth.login.application.dto.req.SeniorChangeRequest;
 import com.postgraduate.global.auth.login.application.dto.req.SeniorSignUpRequest;
-import com.postgraduate.domain.senior.available.application.dto.res.AvailableTimeResponse;
-import com.postgraduate.domain.senior.application.dto.req.SeniorMyPageProfileRequest;
-import com.postgraduate.domain.senior.application.dto.req.SeniorProfileRequest;
+import com.postgraduate.domain.senior.application.dto.res.AvailableTimeResponse;
 import com.postgraduate.domain.senior.application.dto.res.*;
-import com.postgraduate.domain.senior.domain.entity.Info;
-import com.postgraduate.domain.senior.domain.entity.Profile;
-import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.entity.constant.Field;
 import com.postgraduate.domain.senior.domain.entity.constant.Postgradu;
 import com.postgraduate.domain.senior.domain.entity.constant.Status;
@@ -237,5 +233,36 @@ public class SeniorMapper {
         return new SeniorSearchResponse(senior.getSeniorId(), senior.getStatus().equals(APPROVE),user.getProfile(), user.getNickName(),
                 info.getPostgradu(), info.getMajor(), info.getLab(), info.getProfessor(),
                 keyword);
+    }
+
+    public static Available mapToAvailable(Senior senior, AvailableCreateRequest createRequest) {
+        return Available.builder()
+                .senior(senior)
+                .day(createRequest.day())
+                .startTime(createRequest.startTime())
+                .endTime(createRequest.endTime())
+                .build();
+    }
+
+    public static AvailableTimeResponse mapToAvailableTimes(Available available) {
+        return new AvailableTimeResponse(available.getDay(), available.getStartTime(), available.getEndTime());
+    }
+
+    public static Account mapToAccount(Senior senior, SeniorAccountRequest accountRequest, String accountNumber) {
+        return Account.builder()
+                .senior(senior)
+                .accountNumber(accountNumber)
+                .accountHolder(accountRequest.accountHolder())
+                .bank(accountRequest.bank())
+                .build();
+    }
+
+    public static Account mapToAccount(Senior senior, SeniorMyPageUserAccountRequest myPageUserAccountRequest, String accountNumber) {
+        return Account.builder()
+                .senior(senior)
+                .accountNumber(accountNumber)
+                .accountHolder(myPageUserAccountRequest.accountHolder())
+                .bank(myPageUserAccountRequest.bank())
+                .build();
     }
 }

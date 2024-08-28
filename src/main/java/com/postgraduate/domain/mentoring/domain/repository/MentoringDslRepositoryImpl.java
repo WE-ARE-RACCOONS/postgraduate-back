@@ -18,7 +18,7 @@ import static com.postgraduate.domain.mentoring.domain.entity.QMentoring.mentori
 import static com.postgraduate.domain.mentoring.domain.entity.constant.MentoringStatus.EXPECTED;
 import static com.postgraduate.domain.mentoring.domain.entity.constant.MentoringStatus.WAITING;
 import static com.postgraduate.domain.payment.domain.entity.QPayment.payment;
-import static com.postgraduate.domain.salary.domain.entity.QSalary.salary;
+import static com.postgraduate.domain.senior.domain.entity.QSalary.salary;
 import static com.postgraduate.domain.senior.domain.entity.QSenior.senior;
 import static com.postgraduate.domain.user.user.domain.entity.QUser.user;
 

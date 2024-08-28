@@ -1,11 +1,12 @@
 package com.postgraduate.domain.senior.domain.repository;
 
-import com.postgraduate.domain.senior.domain.entity.Senior;
+import com.postgraduate.domain.senior.domain.entity.*;
 import com.postgraduate.domain.user.user.domain.entity.User;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -19,6 +20,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static com.postgraduate.domain.senior.domain.entity.QAccount.account;
+import static com.postgraduate.domain.senior.domain.entity.QAvailable.available;
 import static com.postgraduate.domain.senior.domain.entity.QSenior.senior;
 import static com.postgraduate.domain.user.user.domain.entity.QUser.user;
 import static com.querydsl.core.types.Order.ASC;
@@ -32,6 +35,7 @@ import static java.util.Optional.ofNullable;
 @Slf4j
 public class SeniorDslRepositoryImpl implements SeniorDslRepository{
     private final JPAQueryFactory queryFactory;
+    private final EntityManager entityManager;
     private static final String ALL = "all";
     private static final String ETC = "others";
 
@@ -218,5 +222,36 @@ public class SeniorDslRepositoryImpl implements SeniorDslRepository{
                         senior.user.isDelete.isFalse()
                 )
                 .fetchOne());
+    }
+
+    @Override
+    public List<Available> findAllAvailableBySenior(Senior senior) {
+        return queryFactory.selectFrom(available)
+                .distinct()
+                .where(available.senior.eq(senior))
+                .fetch();
+    }
+
+    @Override
+    public void deleteAvailableBySenior(Senior senior) {
+        queryFactory.delete(available)
+                .where(available.senior.eq(senior))
+                .execute();
+    }
+
+    @Override
+    public void saveAvailable(Available available) {
+        entityManager.persist(available);
+    }
+
+    @Override
+    public void saveAccount(Account account) {
+        entityManager.persist(account);
+    }
+
+    @Override
+    public void deleteAccount(Senior senior) {
+        queryFactory.delete(account)
+                .where(account.senior.eq(senior));
     }
 }

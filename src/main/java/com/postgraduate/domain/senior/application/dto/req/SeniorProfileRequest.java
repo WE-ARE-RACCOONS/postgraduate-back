@@ -1,6 +1,5 @@
 package com.postgraduate.domain.senior.application.dto.req;
 
-import com.postgraduate.domain.senior.available.application.dto.req.AvailableCreateRequest;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 

@@ -1,7 +1,6 @@
-package com.postgraduate.domain.senior.account.domain.entity;
+package com.postgraduate.domain.senior.domain.entity;
 
 import com.postgraduate.domain.senior.application.dto.req.SeniorMyPageUserAccountRequest;
-import com.postgraduate.domain.senior.domain.entity.Senior;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,18 +1,15 @@
 package com.postgraduate.domain.senior.application.usecase;
 
-import com.postgraduate.domain.senior.account.domain.entity.Account;
-import com.postgraduate.domain.senior.account.domain.service.AccountGetService;
-import com.postgraduate.domain.senior.account.domain.service.AccountSaveService;
-import com.postgraduate.domain.senior.account.domain.service.AccountUpdateService;
-import com.postgraduate.domain.senior.available.application.dto.req.AvailableCreateRequest;
-import com.postgraduate.domain.senior.available.domain.entity.Available;
-import com.postgraduate.domain.senior.available.domain.service.AvailableDeleteService;
-import com.postgraduate.domain.senior.available.domain.service.AvailableSaveService;
-import com.postgraduate.domain.senior.salary.application.mapper.SalaryMapper;
-import com.postgraduate.domain.senior.salary.domain.entity.Salary;
-import com.postgraduate.domain.senior.salary.domain.entity.SalaryAccount;
-import com.postgraduate.domain.senior.salary.domain.service.SalaryGetService;
-import com.postgraduate.domain.senior.salary.domain.service.SalaryUpdateService;
+import com.postgraduate.domain.senior.domain.entity.Account;
+import com.postgraduate.domain.senior.application.dto.req.AvailableCreateRequest;
+import com.postgraduate.domain.senior.domain.entity.Available;
+import com.postgraduate.domain.senior.domain.service.SeniorDeleteService;
+import com.postgraduate.domain.senior.domain.service.SeniorSaveService;
+import com.postgraduate.domain.salary.application.mapper.SalaryMapper;
+import com.postgraduate.domain.salary.domain.entity.Salary;
+import com.postgraduate.domain.salary.domain.entity.SalaryAccount;
+import com.postgraduate.domain.salary.domain.service.SalaryGetService;
+import com.postgraduate.domain.salary.domain.service.SalaryUpdateService;
 import com.postgraduate.domain.senior.application.dto.req.*;
 import com.postgraduate.domain.senior.application.dto.res.SeniorProfileUpdateResponse;
 import com.postgraduate.domain.senior.application.utils.SeniorUtils;
@@ -34,10 +31,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-import static com.postgraduate.domain.senior.account.application.mapper.AccountMapper.mapToAccount;
-import static com.postgraduate.domain.senior.available.application.util.AvailableUtil.sortAvailable;
-import static com.postgraduate.domain.senior.application.mapper.SeniorMapper.mapToInfo;
-import static com.postgraduate.domain.senior.application.mapper.SeniorMapper.mapToProfile;
+import static com.postgraduate.domain.senior.application.mapper.SeniorMapper.*;
+import static com.postgraduate.domain.senior.application.utils.AvailableUtil.sortAvailable;
 
 @Service
 @Transactional
@@ -46,11 +41,8 @@ public class SeniorManageUseCase {
     private final UserUpdateService userUpdateService;
     private final SeniorUpdateService seniorUpdateService;
     private final SeniorGetService seniorGetService;
-    private final AvailableSaveService availableSaveService;
-    private final AvailableDeleteService availableDeleteService;
-    private final AccountGetService accountGetService;
-    private final AccountSaveService accountSaveService;
-    private final AccountUpdateService accountUpdateService;
+    private final SeniorSaveService seniorSaveService;
+    private final SeniorDeleteService seniorDeleteService;
     private final SalaryGetService salaryGetService;
     private final SalaryUpdateService salaryUpdateService;
     private final SalaryMapper salaryMapper;
@@ -70,9 +62,9 @@ public class SeniorManageUseCase {
         Profile profile = mapToProfile(profileRequest);
         seniorUpdateService.signUpSeniorProfile(senior, profile);
         List<AvailableCreateRequest> availableCreateRequests = profileRequest.times();
-        availableDeleteService.delete(senior);
+        seniorDeleteService.deleteAvailable(senior);
         List<Available> sortedAvailable = sortAvailable(availableCreateRequests, senior);
-        sortedAvailable.forEach(availableSaveService::save);
+        seniorSaveService.saveAllAvailable(senior, sortedAvailable);
         return new SeniorProfileUpdateResponse(senior.getSeniorId());
     }
 
@@ -80,7 +72,7 @@ public class SeniorManageUseCase {
         Senior senior = seniorGetService.byUser(user);
         String accountNumber = encryptorUtils.encryptData(accountRequest.accountNumber());
         Account account = mapToAccount(senior, accountRequest, accountNumber);
-        accountSaveService.save(account);
+        seniorSaveService.saveAccount(account);
         updateSalaryAccount(senior, account);
     }
 
@@ -90,10 +82,10 @@ public class SeniorManageUseCase {
         Profile profile = mapToProfile(myPageProfileRequest);
         Info info = mapToInfo(senior, myPageProfileRequest);
         seniorUpdateService.updateMyPageProfile(senior, info, profile);
-        availableDeleteService.delete(senior);
+        seniorDeleteService.deleteAvailable(senior);
         List<AvailableCreateRequest> availableCreateRequests = myPageProfileRequest.times();
         List<Available> sortedAvailable = sortAvailable(availableCreateRequests, senior);
-        sortedAvailable.forEach(availableSaveService::save);
+        seniorSaveService.saveAllAvailable(senior, sortedAvailable);
         return new SeniorProfileUpdateResponse(senior.getSeniorId());
     }
 
@@ -103,7 +95,7 @@ public class SeniorManageUseCase {
         user = senior.getUser();
         userUpdateService.updateSeniorUserAccount(user, myPageUserAccountRequest);
 
-        Optional<Account> optionalAccount = accountGetService.bySenior(senior);
+        Optional<Account> optionalAccount = Optional.ofNullable(senior.getAccount());
         if (optionalAccount.isEmpty()) {
             updateSeniorMyPageUserAccountNoneAccount(senior, myPageUserAccountRequest);
             return;
@@ -112,7 +104,7 @@ public class SeniorManageUseCase {
             throw new NoneAccountException();
         Account account = optionalAccount.get();
         String accountNumber = encryptorUtils.encryptData(myPageUserAccountRequest.accountNumber());
-        accountUpdateService.updateAccount(account, myPageUserAccountRequest, accountNumber);
+        seniorUpdateService.updateAccount(senior, myPageUserAccountRequest, accountNumber);
         updateSalaryAccount(senior, account);
     }
 
@@ -122,7 +114,7 @@ public class SeniorManageUseCase {
         }
         String accountNumber = encryptorUtils.encryptData(myPageUserAccountRequest.accountNumber());
         Account account = mapToAccount(senior, myPageUserAccountRequest, accountNumber);
-        accountSaveService.save(account);
+        seniorSaveService.saveAccount(account);
         updateSalaryAccount(senior, account);
     }
 

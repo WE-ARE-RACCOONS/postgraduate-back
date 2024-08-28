@@ -1,8 +1,8 @@
-package com.postgraduate.domain.senior.available.application.util;
+package com.postgraduate.domain.senior.application.utils;
 
-import com.postgraduate.domain.senior.available.application.dto.req.AvailableCreateRequest;
-import com.postgraduate.domain.senior.available.domain.entity.Available;
-import com.postgraduate.domain.senior.available.exception.DayAvailableException;
+import com.postgraduate.domain.senior.application.dto.req.AvailableCreateRequest;
+import com.postgraduate.domain.senior.domain.entity.Available;
+import com.postgraduate.domain.senior.exception.DayAvailableException;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import lombok.AllArgsConstructor;
 
@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
-import static com.postgraduate.domain.senior.available.application.mapper.AvailableMapper.mapToAvailable;
+import static com.postgraduate.domain.senior.application.mapper.SeniorMapper.*;
 
 public class AvailableUtil {
     public static List<Available> sortAvailable(List<AvailableCreateRequest> availableCreateRequests, Senior senior) {

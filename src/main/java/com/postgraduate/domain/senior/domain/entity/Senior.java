@@ -1,5 +1,6 @@
 package com.postgraduate.domain.senior.domain.entity;
 
+import com.postgraduate.domain.senior.application.dto.req.SeniorMyPageUserAccountRequest;
 import com.postgraduate.domain.senior.domain.entity.constant.Status;
 import com.postgraduate.domain.user.user.domain.entity.User;
 import jakarta.persistence.*;
@@ -12,6 +13,8 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.postgraduate.domain.senior.domain.entity.constant.Status.WAITING;
 
@@ -64,6 +67,21 @@ public class Senior {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    @OneToMany(mappedBy = "senior")
+    private List<Available> availables = new ArrayList<>();
+
+    @OneToOne(mappedBy = "senior")
+    private Account account;
+
+    public void updateAccount(SeniorMyPageUserAccountRequest myPageUserAccountRequest, String accountNumber) {
+        account.updateMyPageUserAccount(myPageUserAccountRequest, accountNumber);
+    }
+
+    public void addAvailable(List<Available> availables) {
+        this.availables.clear();
+        this.availables.addAll(availables);
+    }
 
     public void updateProfile(Profile profile) {
         this.profile = profile;

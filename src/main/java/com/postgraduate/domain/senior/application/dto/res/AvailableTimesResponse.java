@@ -1,4 +1,4 @@
-package com.postgraduate.domain.senior.available.application.dto.res;
+package com.postgraduate.domain.senior.application.dto.res;
 
 import java.util.List;
 

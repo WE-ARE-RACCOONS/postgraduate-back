@@ -1,4 +1,4 @@
-package com.postgraduate.domain.senior.available.exception;
+package com.postgraduate.domain.senior.exception;
 
 import com.postgraduate.domain.senior.presentation.constant.SeniorResponseCode;
 import com.postgraduate.domain.senior.presentation.constant.SeniorResponseMessage;
