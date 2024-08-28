@@ -1,17 +1,12 @@
 package com.postgraduate.domain.senior.application.usecase;
 
-import com.postgraduate.domain.senior.account.domain.entity.Account;
-import com.postgraduate.domain.senior.account.domain.service.AccountGetService;
-import com.postgraduate.domain.senior.account.domain.service.AccountSaveService;
-import com.postgraduate.domain.senior.account.domain.service.AccountUpdateService;
-import com.postgraduate.domain.senior.available.application.dto.req.AvailableCreateRequest;
-import com.postgraduate.domain.senior.available.domain.entity.Available;
-import com.postgraduate.domain.senior.available.domain.service.AvailableDeleteService;
-import com.postgraduate.domain.senior.available.domain.service.AvailableSaveService;
-import com.postgraduate.domain.senior.salary.application.mapper.SalaryMapper;
-import com.postgraduate.domain.senior.salary.domain.entity.Salary;
-import com.postgraduate.domain.senior.salary.domain.service.SalaryGetService;
-import com.postgraduate.domain.senior.salary.domain.service.SalaryUpdateService;
+import com.postgraduate.domain.senior.domain.entity.Account;
+import com.postgraduate.domain.senior.application.dto.req.AvailableCreateRequest;
+import com.postgraduate.domain.senior.domain.service.SeniorSaveService;
+import com.postgraduate.domain.salary.application.mapper.SalaryMapper;
+import com.postgraduate.domain.salary.domain.entity.Salary;
+import com.postgraduate.domain.salary.domain.service.SalaryGetService;
+import com.postgraduate.domain.salary.domain.service.SalaryUpdateService;
 import com.postgraduate.domain.senior.application.dto.req.*;
 import com.postgraduate.domain.senior.application.dto.res.SeniorProfileUpdateResponse;
 import com.postgraduate.domain.senior.application.utils.SeniorUtils;
@@ -21,10 +16,10 @@ import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.domain.senior.domain.service.SeniorUpdateService;
 import com.postgraduate.domain.senior.exception.KeywordException;
-import com.postgraduate.domain.user.user.application.utils.UserUtils;
-import com.postgraduate.domain.user.user.domain.entity.User;
-import com.postgraduate.domain.user.user.domain.service.UserUpdateService;
-import com.postgraduate.domain.user.user.exception.PhoneNumberException;
+import com.postgraduate.domain.user.application.utils.UserUtils;
+import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.user.domain.service.UserUpdateService;
+import com.postgraduate.domain.user.exception.PhoneNumberException;
 import com.postgraduate.global.config.security.util.EncryptorUtils;
 import com.postgraduate.global.slack.SlackCertificationMessage;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,11 +31,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static com.postgraduate.domain.senior.domain.entity.constant.Status.APPROVE;
-import static com.postgraduate.domain.user.user.domain.entity.constant.Role.SENIOR;
+import static com.postgraduate.domain.user.domain.entity.constant.Role.SENIOR;
 import static java.lang.Boolean.TRUE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -55,10 +51,6 @@ class SeniorManageUseTypeTest {
     @Mock
     private SeniorGetService seniorGetService;
     @Mock
-    private AvailableSaveService availableSaveService;
-    @Mock
-    private AvailableDeleteService availableDeleteService;
-    @Mock
     private AccountGetService accountGetService;
     @Mock
     private AccountSaveService accountSaveService;
@@ -68,6 +60,8 @@ class SeniorManageUseTypeTest {
     private SalaryGetService salaryGetService;
     @Mock
     private SalaryUpdateService salaryUpdateService;
+    @Mock
+    private SeniorSaveService seniorSaveService;
     @Mock
     private SalaryMapper salaryMapper;
     @Mock
@@ -95,7 +89,7 @@ class SeniorManageUseTypeTest {
                 1, SENIOR, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE, TRUE);
         senior = new Senior(1L, user, "a",
                 APPROVE, 1, 1, info, profile,
-                LocalDateTime.now(), LocalDateTime.now());
+                LocalDateTime.now(), LocalDateTime.now(), new ArrayList<>(), new ArrayList<>(), null);
     }
 
     @Test
@@ -128,8 +122,8 @@ class SeniorManageUseTypeTest {
 
         verify(seniorUpdateService, times(1))
                 .signUpSeniorProfile(eq(senior), any(Profile.class));
-        verify(availableSaveService, times(availableCreateRequests.size()))
-                .save(any(Available.class));
+        verify(seniorSaveService, times(availableCreateRequests.size()))
+                .saveAllAvailable(any(), any());
     }
 
     @Test
@@ -197,8 +191,6 @@ class SeniorManageUseTypeTest {
 
         verify(seniorUpdateService, times(1))
                 .updateMyPageProfile(any(Senior.class), any(Info.class), any(Profile.class));
-        verify(availableDeleteService, times(1))
-                .delete(senior);
         assertThat(response.seniorId())
                 .isEqualTo(senior.getSeniorId());
     }

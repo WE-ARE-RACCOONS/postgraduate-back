@@ -12,15 +12,13 @@ import com.postgraduate.domain.senior.application.mapper.SeniorMapper;
 import com.postgraduate.domain.senior.application.utils.SeniorUtils;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorSaveService;
-import com.postgraduate.domain.user.user.application.mapper.UserMapper;
-import com.postgraduate.domain.user.user.application.utils.UserUtils;
-import com.postgraduate.domain.user.user.domain.entity.User;
-import com.postgraduate.domain.user.user.domain.service.UserGetService;
-import com.postgraduate.domain.user.user.domain.service.UserSaveService;
-import com.postgraduate.domain.user.user.domain.service.UserUpdateService;
-import com.postgraduate.domain.user.wish.application.mapper.WishMapper;
-import com.postgraduate.domain.user.wish.domain.entity.Wish;
-import com.postgraduate.domain.user.wish.domain.service.WishSaveService;
+import com.postgraduate.domain.user.application.mapper.UserMapper;
+import com.postgraduate.domain.user.application.utils.UserUtils;
+import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.user.domain.service.UserGetService;
+import com.postgraduate.domain.user.domain.service.UserSaveService;
+import com.postgraduate.domain.user.domain.service.UserUpdateService;
+import com.postgraduate.domain.user.domain.entity.Wish;
 import com.postgraduate.global.bizppurio.application.usecase.BizppurioJuniorMessage;
 import com.postgraduate.global.bizppurio.application.usecase.BizppurioSeniorMessage;
 import com.postgraduate.global.slack.SlackSignUpMessage;
@@ -41,7 +39,6 @@ public class SignUpUseCase {
     private final UserSaveService userSaveService;
     private final UserUpdateService userUpdateService;
     private final UserGetService userGetService;
-    private final WishSaveService wishSaveService;
     private final SeniorSaveService seniorSaveService;
     private final SalaryMapper salaryMapper;
     private final SlackSignUpMessage slackSignUpMessage;
@@ -54,9 +51,8 @@ public class SignUpUseCase {
     public User userSignUp(SignUpRequest request) {
         userUtils.checkPhoneNumber(request.phoneNumber());
         User user = UserMapper.mapToUser(request, profileUtils.juniorProfile(rd.nextInt(5)));
-        Wish wish = WishMapper.mapToWish(user, request);
-        wishSaveService.save(wish);
-        userSaveService.save(user);
+        Wish wish = UserMapper.mapToWish(user, request);
+        userSaveService.saveJunior(user,wish);
         if (request.matchingReceive())
             bizppurioJuniorMessage.matchingWaiting(user);
         slackSignUpMessage.sendJuniorSignUp(user, wish);
@@ -67,7 +63,7 @@ public class SignUpUseCase {
         seniorUtils.checkKeyword(request.keyword());
         userUtils.checkPhoneNumber(request.phoneNumber());
         User user = UserMapper.mapToUser(request, profileUtils.seniorProfile(rd.nextInt(5)));
-        userSaveService.save(user);
+        userSaveService.saveSenior(user);
         Senior senior = SeniorMapper.mapToSenior(user, request);
         return seniorSignUpFin(senior);
     }
@@ -79,8 +75,8 @@ public class SignUpUseCase {
     }
 
     public void changeUser(User user, UserChangeRequest changeRequest) {
-        Wish wish = WishMapper.mapToWish(user, changeRequest);
-        wishSaveService.save(wish);
+        Wish wish = UserMapper.mapToWish(user, changeRequest);
+        userSaveService.changeJunior(wish);
         if (changeRequest.matchingReceive())
             bizppurioJuniorMessage.matchingWaiting(user);
         slackSignUpMessage.sendJuniorSignUp(user, wish);

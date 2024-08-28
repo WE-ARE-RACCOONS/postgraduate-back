@@ -1,10 +1,9 @@
 package com.postgraduate.domain.salary.domain.service;
 
-import com.postgraduate.domain.senior.salary.domain.entity.Salary;
-import com.postgraduate.domain.senior.salary.domain.repository.SalaryRepository;
-import com.postgraduate.domain.senior.salary.domain.service.SalaryGetService;
-import com.postgraduate.domain.senior.salary.exception.SalaryNotFoundException;
-import com.postgraduate.domain.senior.salary.util.SalaryUtil;
+import com.postgraduate.domain.salary.domain.entity.Salary;
+import com.postgraduate.domain.salary.domain.repository.SalaryRepository;
+import com.postgraduate.domain.salary.exception.SalaryNotFoundException;
+import com.postgraduate.domain.salary.util.SalaryUtil;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

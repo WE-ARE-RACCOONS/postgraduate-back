@@ -1,15 +1,15 @@
 package com.postgraduate.domain.senior.presentation;
 
-import com.postgraduate.domain.senior.available.application.dto.req.AvailableCreateRequest;
-import com.postgraduate.domain.senior.available.application.dto.res.AvailableTimeResponse;
-import com.postgraduate.domain.senior.available.application.dto.res.AvailableTimesResponse;
-import com.postgraduate.domain.senior.available.domain.entity.Available;
+import com.postgraduate.domain.senior.application.dto.req.AvailableCreateRequest;
+import com.postgraduate.domain.senior.application.dto.res.AvailableTimeResponse;
+import com.postgraduate.domain.senior.application.dto.res.AvailableTimesResponse;
+import com.postgraduate.domain.senior.domain.entity.Available;
 import com.postgraduate.domain.senior.application.dto.req.*;
 import com.postgraduate.domain.senior.application.dto.res.*;
 import com.postgraduate.domain.senior.domain.entity.Info;
 import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
-import com.postgraduate.domain.user.user.domain.entity.User;
+import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.support.ControllerTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

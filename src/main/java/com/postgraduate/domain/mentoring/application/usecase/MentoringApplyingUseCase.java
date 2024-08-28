@@ -13,7 +13,7 @@ import com.postgraduate.domain.payment.domain.service.PaymentGetService;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.domain.senior.domain.service.SeniorUpdateService;
-import com.postgraduate.domain.user.user.domain.entity.User;
+import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.global.bizppurio.application.usecase.BizppurioJuniorMessage;
 import com.postgraduate.global.bizppurio.application.usecase.BizppurioSeniorMessage;
 import lombok.RequiredArgsConstructor;

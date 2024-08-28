@@ -8,7 +8,7 @@ import com.postgraduate.domain.senior.application.mapper.SeniorMapper;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.domain.senior.domain.service.SeniorUpdateService;
-import com.postgraduate.domain.user.user.domain.entity.User;
+import com.postgraduate.domain.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static com.postgraduate.domain.senior.application.mapper.SeniorMapper.*;
-import static com.postgraduate.domain.user.user.domain.entity.constant.Role.SENIOR;
+import static com.postgraduate.domain.user.domain.entity.constant.Role.SENIOR;
 
 @Service
 @Transactional

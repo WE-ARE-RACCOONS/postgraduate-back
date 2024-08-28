@@ -11,7 +11,7 @@ import java.util.List;
 
 import static com.postgraduate.domain.salary.domain.entity.QSalary.salary;
 import static com.postgraduate.domain.senior.domain.entity.QSenior.senior;
-import static com.postgraduate.domain.user.user.domain.entity.QUser.user;
+import static com.postgraduate.domain.user.domain.entity.QUser.user;
 
 @Repository
 @RequiredArgsConstructor

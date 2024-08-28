@@ -1,8 +1,8 @@
 package com.postgraduate.admin.domain.service;
 
-import com.postgraduate.admin.application.dto.res.SeniorInfoQuery;
 import com.postgraduate.admin.domain.repository.AdminSeniorRepository;
-import com.postgraduate.domain.senior.salary.util.SalaryUtil;
+import com.postgraduate.domain.salary.domain.entity.Salary;
+import com.postgraduate.domain.salary.util.SalaryUtil;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.exception.NoneSeniorException;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ import static com.postgraduate.domain.senior.domain.entity.constant.Status.*;
 public class AdminSeniorService {
     private final AdminSeniorRepository adminSeniorRepository;
 
-    public List<SeniorInfoQuery> allSeniors() {
+    public List<Salary> allSeniors() {
         LocalDate salaryDate = SalaryUtil.getSalaryDate();
         return adminSeniorRepository.allSeniorInfo(salaryDate);
     }

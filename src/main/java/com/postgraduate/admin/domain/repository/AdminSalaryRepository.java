@@ -1,6 +1,6 @@
 package com.postgraduate.admin.domain.repository;
 
-import com.postgraduate.domain.senior.salary.domain.entity.Salary;
+import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -11,7 +11,7 @@ import java.util.Optional;
 
 import static com.postgraduate.domain.salary.domain.entity.QSalary.salary;
 import static com.postgraduate.domain.senior.domain.entity.QSenior.senior;
-import static com.postgraduate.domain.user.user.domain.entity.QUser.user;
+import static com.postgraduate.domain.user.domain.entity.QUser.user;
 
 @RequiredArgsConstructor
 @Repository

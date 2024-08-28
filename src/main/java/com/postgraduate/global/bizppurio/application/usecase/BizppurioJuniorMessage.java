@@ -1,7 +1,7 @@
 package com.postgraduate.global.bizppurio.application.usecase;
 
 import com.postgraduate.domain.senior.domain.entity.Senior;
-import com.postgraduate.domain.user.user.domain.entity.User;
+import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.global.bizppurio.application.dto.req.JuniorMatchingFailRequest;
 import com.postgraduate.global.bizppurio.application.dto.req.JuniorMatchingSuccessRequest;
 import com.postgraduate.global.bizppurio.application.mapper.BizppurioMapper;

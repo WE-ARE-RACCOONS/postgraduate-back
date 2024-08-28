@@ -9,7 +9,7 @@ import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.payment.application.usecase.PaymentManageUseCase;
 import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.senior.domain.entity.Senior;
-import com.postgraduate.domain.user.user.domain.entity.User;
+import com.postgraduate.domain.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,7 +55,7 @@ public class AdminMentoringUseCase {
         Mentoring mentoring = adminMentoringService.updateCancelWithMentoringId(mentoringId);
         Payment payment = mentoring.getPayment();
         paymentManageUseCase.refundPayByAdmin(user, payment.getPaymentId());
-        if (mentoring.getMentoringStatus() == DONE)
+        if (mentoring.getStatus() == DONE)
             adminSalaryService.minusTotalAmount(mentoring);
     }
 }

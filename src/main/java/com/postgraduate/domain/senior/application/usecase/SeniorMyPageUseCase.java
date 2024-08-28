@@ -8,9 +8,7 @@ import com.postgraduate.domain.senior.application.dto.res.*;
 import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
-import com.postgraduate.domain.user.user.domain.entity.User;
-import com.postgraduate.domain.user.wish.domain.entity.Wish;
-import com.postgraduate.domain.user.wish.domain.service.WishGetService;
+import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.global.config.security.util.EncryptorUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,7 +28,6 @@ import static java.util.Optional.ofNullable;
 public class SeniorMyPageUseCase {
     private final SeniorGetService seniorGetService;
     private final EncryptorUtils encryptorUtils;
-    private final WishGetService wishGetService;
 
     public SeniorMyPageResponse getSeniorMyPage(User user) {
         Senior senior = seniorGetService.byUser(user);
@@ -61,8 +58,7 @@ public class SeniorMyPageUseCase {
     }
 
     public SeniorPossibleResponse checkUser(User user) {
-        Optional<Wish> wish = wishGetService.byUser(user);
-        if (wish.isEmpty())
+        if (!user.isJunior())
             return new SeniorPossibleResponse(FALSE, user.getSocialId());
         return new SeniorPossibleResponse(TRUE, user.getSocialId());
     }

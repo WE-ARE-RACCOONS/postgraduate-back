@@ -1,8 +1,7 @@
 package com.postgraduate.domain.senior.application.usecase;
 
-import com.postgraduate.domain.senior.available.application.dto.res.AvailableTimesResponse;
-import com.postgraduate.domain.senior.available.domain.entity.Available;
-import com.postgraduate.domain.senior.available.domain.service.AvailableGetService;
+import com.postgraduate.domain.senior.application.dto.res.AvailableTimesResponse;
+import com.postgraduate.domain.senior.domain.entity.Available;
 import com.postgraduate.domain.senior.application.dto.res.AllSeniorSearchResponse;
 import com.postgraduate.domain.senior.application.dto.res.SeniorDetailResponse;
 import com.postgraduate.domain.senior.application.dto.res.SeniorProfileResponse;
@@ -11,7 +10,7 @@ import com.postgraduate.domain.senior.domain.entity.Profile;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.domain.service.SeniorGetService;
 import com.postgraduate.domain.senior.domain.service.SeniorUpdateService;
-import com.postgraduate.domain.user.user.domain.entity.User;
+import com.postgraduate.domain.user.domain.entity.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,7 +25,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.postgraduate.domain.senior.domain.entity.constant.Status.APPROVE;
-import static com.postgraduate.domain.user.user.domain.entity.constant.Role.USER;
+import static com.postgraduate.domain.user.domain.entity.constant.Role.USER;
 import static java.lang.Boolean.TRUE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -40,8 +39,6 @@ class SeniorInfoUseTypeTest {
     private SeniorGetService seniorGetService;
     @Mock
     private SeniorUpdateService seniorUpdateService;
-    @Mock
-    private AvailableGetService availableGetService;
     @InjectMocks
     private SeniorInfoUseCase seniorInfoUseCase;
 

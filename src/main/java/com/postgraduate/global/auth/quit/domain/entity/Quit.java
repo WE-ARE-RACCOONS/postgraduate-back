@@ -1,6 +1,6 @@
 package com.postgraduate.global.auth.quit.domain.entity;
 
-import com.postgraduate.domain.user.user.domain.entity.constant.Role;
+import com.postgraduate.domain.user.domain.entity.constant.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -2,11 +2,10 @@ package com.postgraduate.global.auth.login.application.usecase.jwt;
 
 import com.postgraduate.global.auth.login.application.dto.res.JwtTokenResponse;
 import com.postgraduate.domain.senior.exception.NoneSeniorException;
-import com.postgraduate.domain.user.user.domain.entity.User;
-import com.postgraduate.domain.user.user.domain.entity.constant.Role;
-import com.postgraduate.domain.user.user.exception.DeletedUserException;
-import com.postgraduate.domain.user.user.exception.UserNotFoundException;
-import com.postgraduate.domain.user.wish.domain.service.WishGetService;
+import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.user.domain.entity.constant.Role;
+import com.postgraduate.domain.user.exception.DeletedUserException;
+import com.postgraduate.domain.user.exception.UserNotFoundException;
 import com.postgraduate.global.config.security.jwt.util.JwtUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.postgraduate.domain.user.user.domain.entity.constant.Role.*;
+import static com.postgraduate.domain.user.domain.entity.constant.Role.*;
 
 @RequiredArgsConstructor
 @Service
@@ -23,7 +22,6 @@ import static com.postgraduate.domain.user.user.domain.entity.constant.Role.*;
 @Transactional(readOnly = true)
 public class JwtUseCase {
     private final JwtUtils jwtUtils;
-    private final WishGetService wishGetService;
     @Value("${jwt.refreshExpiration}")
     private int refreshExpiration;
     @Value("${jwt.accessExpiration}")
@@ -61,7 +59,7 @@ public class JwtUseCase {
     }
 
     private JwtTokenResponse userToken(User user) {
-        if (wishGetService.byUser(user).isEmpty())
+        if (!user.isJunior())
             throw new UserNotFoundException();
         return generateToken(user, USER);
     }

@@ -1,10 +1,10 @@
 package com.postgraduate.admin.domain.service;
 
 import com.postgraduate.admin.domain.repository.AdminUserRepository;
-import com.postgraduate.domain.user.user.domain.entity.User;
-import com.postgraduate.domain.user.user.exception.UserNotFoundException;
-import com.postgraduate.domain.user.wish.domain.entity.Wish;
-import com.postgraduate.domain.user.wish.exception.WishNotFoundException;
+import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.user.exception.UserNotFoundException;
+import com.postgraduate.domain.user.domain.entity.Wish;
+import com.postgraduate.domain.user.exception.WishNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,15 +19,10 @@ public class AdminUserService {
         return adminUserRepository.findAllJunior();
     }
 
-    public Wish wishByUserId(long userId) {
-        return adminUserRepository.findWishByUserId(userId)
-                .orElseThrow(WishNotFoundException::new);
-    }
-
     public void updateWishDone(Long wishId) {
-        Wish wish = adminUserRepository.findWishByWishId(wishId)
+        User user = adminUserRepository.findUserByWishId(wishId)
                         .orElseThrow(WishNotFoundException::new);
-        wish.updateDone();
+        user.updateWishDone();
     }
 
     public User userByUserId(Long userId) {

@@ -1,7 +1,7 @@
 package com.postgraduate.global.auth.login.application.mapper;
 
 import com.postgraduate.global.auth.login.application.dto.res.AuthUserResponse;
-import com.postgraduate.domain.user.user.domain.entity.User;
+import com.postgraduate.domain.user.domain.entity.User;
 
 public class AuthMapper {
     private AuthMapper() {

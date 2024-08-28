@@ -4,7 +4,7 @@ import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.entity.Refuse;
 import com.postgraduate.domain.mentoring.domain.entity.constant.MentoringStatus;
 import com.postgraduate.domain.senior.domain.entity.Senior;
-import com.postgraduate.domain.user.user.domain.entity.User;
+import com.postgraduate.domain.user.domain.entity.User;
 
 import java.util.List;
 import java.util.Optional;

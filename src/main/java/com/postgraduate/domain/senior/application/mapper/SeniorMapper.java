@@ -9,7 +9,7 @@ import com.postgraduate.domain.senior.application.dto.res.*;
 import com.postgraduate.domain.senior.domain.entity.constant.Field;
 import com.postgraduate.domain.senior.domain.entity.constant.Postgradu;
 import com.postgraduate.domain.senior.domain.entity.constant.Status;
-import com.postgraduate.domain.user.user.domain.entity.User;
+import com.postgraduate.domain.user.domain.entity.User;
 
 import java.util.Arrays;
 import java.util.List;

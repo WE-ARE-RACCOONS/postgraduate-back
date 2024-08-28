@@ -1,9 +1,9 @@
 package com.postgraduate.global.auth.quit.application.usecase;
 
 import com.postgraduate.domain.senior.domain.service.SeniorDeleteService;
-import com.postgraduate.domain.user.user.domain.entity.User;
-import com.postgraduate.domain.user.user.domain.service.UserDeleteService;
-import com.postgraduate.domain.user.user.domain.service.UserGetService;
+import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.user.domain.service.UserDeleteService;
+import com.postgraduate.domain.user.domain.service.UserGetService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;

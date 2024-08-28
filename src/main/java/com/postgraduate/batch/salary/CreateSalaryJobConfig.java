@@ -2,6 +2,7 @@ package com.postgraduate.batch.salary;
 
 import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.salary.domain.service.SalaryGetService;
+import com.postgraduate.domain.user.domain.entity.QUser;
 import com.postgraduate.global.slack.SlackSalaryMessage;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPAExpressions;
@@ -26,7 +27,7 @@ import static com.postgraduate.domain.salary.domain.entity.QSalary.salary;
 import static com.postgraduate.domain.senior.domain.entity.QAccount.account;
 import static com.postgraduate.domain.salary.util.SalaryUtil.getSalaryDate;
 import static com.postgraduate.domain.senior.domain.entity.QSenior.senior;
-import static com.postgraduate.domain.user.user.domain.entity.QUser.user;
+import static com.postgraduate.domain.user.domain.entity.QUser.user;
 
 @Configuration
 @Slf4j

@@ -9,7 +9,7 @@ import com.postgraduate.admin.domain.service.AdminPaymentService;
 import com.postgraduate.admin.domain.service.AdminSalaryService;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.payment.application.usecase.PaymentManageUseCase;
-import com.postgraduate.domain.user.user.domain.entity.User;
+import com.postgraduate.domain.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,7 +50,7 @@ public class AdminPaymentUseCase {
         paymentManageUseCase.refundPayByAdmin(user, paymentId);
         try {
             Mentoring mentoring = adminMentoringService.updateCancelWithPaymentId(paymentId);
-            if (mentoring.getMentoringStatus() == DONE)
+            if (mentoring.getStatus() == DONE)
                 adminSalaryService.minusTotalAmount(mentoring);
         } catch (Exception ex) {
             // todo: 환불 이후 예외 발생시 처리

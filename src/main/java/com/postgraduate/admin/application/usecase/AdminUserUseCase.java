@@ -6,8 +6,8 @@ import com.postgraduate.admin.application.dto.res.UserInfo;
 import com.postgraduate.admin.application.dto.res.WishResponse;
 import com.postgraduate.admin.application.mapper.AdminMapper;
 import com.postgraduate.admin.domain.service.AdminUserService;
-import com.postgraduate.domain.user.user.domain.entity.User;
-import com.postgraduate.domain.user.wish.domain.entity.Wish;
+import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.user.domain.entity.Wish;
 import com.postgraduate.global.bizppurio.application.dto.req.JuniorMatchingSuccessRequest;
 import com.postgraduate.global.bizppurio.application.usecase.BizppurioJuniorMessage;
 import lombok.RequiredArgsConstructor;
@@ -39,8 +39,8 @@ public class AdminUserUseCase {
 
     @Transactional(readOnly = true)
     public WishResponse wishInfo(Long userId) {
-        Wish wish = adminUserService.wishByUserId(userId);
-        return adminMapper.mapToWishResponse(wish);
+        User user = adminUserService.userByUserId(userId);
+        return adminMapper.mapToWishResponse(user.getWish());
     }
 
     public void wishDone(Long wishId) {

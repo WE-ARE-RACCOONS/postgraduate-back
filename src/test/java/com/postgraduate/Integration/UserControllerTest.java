@@ -1,9 +1,9 @@
 package com.postgraduate.Integration;
 
-import com.postgraduate.domain.user.user.application.dto.req.UserInfoRequest;
-import com.postgraduate.domain.user.user.domain.entity.User;
-import com.postgraduate.domain.user.user.domain.entity.constant.Role;
-import com.postgraduate.domain.user.user.presentation.constant.UserResponseCode;
+import com.postgraduate.domain.user.application.dto.req.UserInfoRequest;
+import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.user.domain.entity.constant.Role;
+import com.postgraduate.domain.user.presentation.constant.UserResponseCode;
 import com.postgraduate.support.IntegrationTest;
 import com.postgraduate.support.Resource;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,9 +15,8 @@ import org.springframework.http.MediaType;
 
 import java.io.IOException;
 
-import static com.postgraduate.domain.user.user.presentation.constant.UserResponseCode.USER_FIND;
-import static com.postgraduate.domain.user.user.presentation.constant.UserResponseCode.USER_UPDATE;
-import static com.postgraduate.domain.user.user.presentation.constant.UserResponseMessage.*;
+import static com.postgraduate.domain.user.presentation.constant.UserResponseCode.USER_FIND;
+import static com.postgraduate.domain.user.presentation.constant.UserResponseCode.USER_UPDATE;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;

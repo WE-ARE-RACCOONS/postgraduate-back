@@ -2,9 +2,9 @@ package com.postgraduate.admin.application.usecase;
 
 import com.postgraduate.admin.application.dto.res.CertificationDetailsResponse;
 import com.postgraduate.admin.application.dto.res.SeniorInfo;
-import com.postgraduate.admin.application.dto.res.SeniorInfoQuery;
 import com.postgraduate.admin.application.mapper.AdminMapper;
 import com.postgraduate.admin.domain.service.AdminSeniorService;
+import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.senior.domain.entity.Senior;
 import com.postgraduate.domain.senior.exception.SeniorCertificationException;
 import com.postgraduate.global.bizppurio.application.usecase.BizppurioSeniorMessage;
@@ -26,7 +26,7 @@ public class AdminSeniorUseCase {
 
     @Transactional(readOnly = true)
     public List<SeniorInfo> allSenior() {
-        List<SeniorInfoQuery> salaries = adminSeniorService.allSeniors();
+        List<Salary> salaries = adminSeniorService.allSeniors();
         return salaries.stream()
                 .map(adminMapper::mapToSeniorInfo)
                 .toList();

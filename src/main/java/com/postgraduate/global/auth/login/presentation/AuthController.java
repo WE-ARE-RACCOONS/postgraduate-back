@@ -1,6 +1,5 @@
 package com.postgraduate.global.auth.login.presentation;
 
-import com.postgraduate.domain.auth.login.application.dto.req.*;
 import com.postgraduate.global.auth.login.application.dto.res.AuthResponse;
 import com.postgraduate.global.auth.login.application.dto.res.AuthUserResponse;
 import com.postgraduate.global.auth.login.application.dto.res.JwtTokenResponse;
@@ -10,8 +9,8 @@ import com.postgraduate.global.auth.login.application.usecase.oauth.SignUpUseCas
 import com.postgraduate.global.auth.login.application.usecase.jwt.JwtUseCase;
 import com.postgraduate.global.auth.login.application.usecase.oauth.SignInUseCase;
 import com.postgraduate.global.auth.login.presentation.constant.Provider;
-import com.postgraduate.domain.user.user.application.usecase.UserManageUseCase;
-import com.postgraduate.domain.user.user.domain.entity.User;
+import com.postgraduate.domain.user.application.usecase.UserManageUseCase;
+import com.postgraduate.domain.user.domain.entity.User;
 import com.postgraduate.global.auth.login.application.dto.req.*;
 import com.postgraduate.global.auth.login.presentation.constant.AuthResponseCode;
 import com.postgraduate.global.auth.login.presentation.constant.AuthResponseMessage;

@@ -11,7 +11,7 @@ import java.util.Optional;
 import static com.postgraduate.domain.mentoring.domain.entity.QMentoring.mentoring;
 import static com.postgraduate.domain.payment.domain.entity.QPayment.payment;
 import static com.postgraduate.domain.senior.domain.entity.QSenior.senior;
-import static com.postgraduate.domain.user.user.domain.entity.QUser.user;
+import static com.postgraduate.domain.user.domain.entity.QUser.user;
 import static java.util.Optional.ofNullable;
 
 @Repository

@@ -4,7 +4,7 @@ import com.postgraduate.domain.mentoring.domain.entity.constant.MentoringStatus;
 import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.senior.domain.entity.Senior;
-import com.postgraduate.domain.user.user.domain.entity.User;
+import com.postgraduate.domain.user.domain.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
