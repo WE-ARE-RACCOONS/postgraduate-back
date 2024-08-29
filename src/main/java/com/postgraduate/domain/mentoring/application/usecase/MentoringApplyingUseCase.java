@@ -1,6 +1,6 @@
 package com.postgraduate.domain.mentoring.application.usecase;
 
-import com.postgraduate.domain.senior.domain.entity.Account;
+import com.postgraduate.domain.member.senior.domain.entity.Account;
 import com.postgraduate.domain.mentoring.application.dto.req.MentoringApplyRequest;
 import com.postgraduate.domain.mentoring.application.dto.res.ApplyingResponse;
 import com.postgraduate.domain.mentoring.application.mapper.MentoringMapper;
@@ -10,10 +10,10 @@ import com.postgraduate.domain.mentoring.domain.service.MentoringSaveService;
 import com.postgraduate.domain.mentoring.exception.MentoringDateException;
 import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.payment.domain.service.PaymentGetService;
-import com.postgraduate.domain.senior.domain.entity.Senior;
-import com.postgraduate.domain.senior.domain.service.SeniorGetService;
-import com.postgraduate.domain.senior.domain.service.SeniorUpdateService;
-import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.member.senior.domain.entity.Senior;
+import com.postgraduate.domain.member.senior.domain.service.SeniorGetService;
+import com.postgraduate.domain.member.senior.domain.service.SeniorUpdateService;
+import com.postgraduate.domain.member.user.domain.entity.User;
 import com.postgraduate.global.bizppurio.application.usecase.BizppurioJuniorMessage;
 import com.postgraduate.global.bizppurio.application.usecase.BizppurioSeniorMessage;
 import lombok.RequiredArgsConstructor;

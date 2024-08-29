@@ -2,11 +2,11 @@ package com.postgraduate.global.auth.quit.application.utils;
 
 import com.postgraduate.domain.mentoring.domain.repository.MentoringRepository;
 import com.postgraduate.domain.salary.domain.repository.SalaryRepository;
-import com.postgraduate.domain.senior.domain.entity.Senior;
-import com.postgraduate.domain.user.domain.entity.User;
-import com.postgraduate.domain.user.exception.IncompleteJuniorMentoringException;
-import com.postgraduate.domain.user.exception.IncompleteSalaryException;
-import com.postgraduate.domain.user.exception.IncompleteSeniorMentoringException;
+import com.postgraduate.domain.member.senior.domain.entity.Senior;
+import com.postgraduate.domain.member.user.domain.entity.User;
+import com.postgraduate.domain.member.user.exception.IncompleteJuniorMentoringException;
+import com.postgraduate.domain.member.user.exception.IncompleteSalaryException;
+import com.postgraduate.domain.member.user.exception.IncompleteSeniorMentoringException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

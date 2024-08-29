@@ -3,15 +3,15 @@ package com.postgraduate.admin.domain.service;
 import com.postgraduate.admin.domain.repository.AdminSeniorRepository;
 import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.salary.util.SalaryUtil;
-import com.postgraduate.domain.senior.domain.entity.Senior;
-import com.postgraduate.domain.senior.exception.NoneSeniorException;
+import com.postgraduate.domain.member.senior.domain.entity.Senior;
+import com.postgraduate.domain.member.senior.exception.NoneSeniorException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
 
-import static com.postgraduate.domain.senior.domain.entity.constant.Status.*;
+import static com.postgraduate.domain.member.senior.domain.entity.constant.Status.*;
 
 @Service
 @RequiredArgsConstructor

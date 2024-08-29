@@ -1,8 +1,8 @@
 package com.postgraduate.global.slack;
 
 import com.postgraduate.domain.payment.domain.entity.Payment;
-import com.postgraduate.domain.senior.domain.entity.Senior;
-import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.member.senior.domain.entity.Senior;
+import com.postgraduate.domain.member.user.domain.entity.User;
 import com.slack.api.Slack;
 import com.slack.api.model.Attachment;
 import com.slack.api.webhook.Payload;

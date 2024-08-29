@@ -1,6 +1,6 @@
 package com.postgraduate.global.config.security.jwt.auth;
 
-import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.member.user.domain.entity.User;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;

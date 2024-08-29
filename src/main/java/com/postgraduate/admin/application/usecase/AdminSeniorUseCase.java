@@ -5,8 +5,8 @@ import com.postgraduate.admin.application.dto.res.SeniorInfo;
 import com.postgraduate.admin.application.mapper.AdminMapper;
 import com.postgraduate.admin.domain.service.AdminSeniorService;
 import com.postgraduate.domain.salary.domain.entity.Salary;
-import com.postgraduate.domain.senior.domain.entity.Senior;
-import com.postgraduate.domain.senior.exception.SeniorCertificationException;
+import com.postgraduate.domain.member.senior.domain.entity.Senior;
+import com.postgraduate.domain.member.senior.exception.SeniorCertificationException;
 import com.postgraduate.global.bizppurio.application.usecase.BizppurioSeniorMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.postgraduate.domain.senior.domain.entity.constant.Status.WAITING;
+import static com.postgraduate.domain.member.senior.domain.entity.constant.Status.WAITING;
 
 @Service
 @Transactional

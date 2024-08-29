@@ -1,11 +1,11 @@
 package com.postgraduate.global.auth.login.application.usecase.jwt;
 
 import com.postgraduate.global.auth.login.application.dto.res.JwtTokenResponse;
-import com.postgraduate.domain.senior.exception.NoneSeniorException;
-import com.postgraduate.domain.user.domain.entity.User;
-import com.postgraduate.domain.user.domain.entity.constant.Role;
-import com.postgraduate.domain.user.exception.DeletedUserException;
-import com.postgraduate.domain.user.exception.UserNotFoundException;
+import com.postgraduate.domain.member.senior.exception.NoneSeniorException;
+import com.postgraduate.domain.member.user.domain.entity.User;
+import com.postgraduate.domain.member.user.domain.entity.constant.Role;
+import com.postgraduate.domain.member.user.exception.DeletedUserException;
+import com.postgraduate.domain.member.user.exception.UserNotFoundException;
 import com.postgraduate.global.config.security.jwt.util.JwtUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.postgraduate.domain.user.domain.entity.constant.Role.*;
+import static com.postgraduate.domain.member.user.domain.entity.constant.Role.*;
 
 @RequiredArgsConstructor
 @Service

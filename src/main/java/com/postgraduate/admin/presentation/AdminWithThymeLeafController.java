@@ -6,7 +6,7 @@ import com.postgraduate.admin.application.dto.res.*;
 import com.postgraduate.admin.application.usecase.*;
 import com.postgraduate.global.auth.login.application.dto.res.JwtTokenResponse;
 import com.postgraduate.global.auth.login.application.usecase.jwt.JwtUseCase;
-import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.member.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;

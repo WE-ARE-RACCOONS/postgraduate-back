@@ -1,6 +1,6 @@
 package com.postgraduate.global.bizppurio.application.mapper;
 
-import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.member.user.domain.entity.User;
 import com.postgraduate.global.bizppurio.application.dto.req.CommonRequest;
 import com.postgraduate.global.bizppurio.application.dto.req.ContentRequest;
 import com.postgraduate.global.bizppurio.application.dto.req.JuniorMatchingFailRequest;

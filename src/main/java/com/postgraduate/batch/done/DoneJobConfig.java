@@ -17,9 +17,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
+import static com.postgraduate.domain.member.senior.domain.entity.QSenior.senior;
 import static com.postgraduate.domain.mentoring.domain.entity.QMentoring.mentoring;
 import static com.postgraduate.domain.payment.domain.entity.QPayment.payment;
-import static com.postgraduate.domain.senior.domain.entity.QSenior.senior;
 
 @Configuration
 @RequiredArgsConstructor

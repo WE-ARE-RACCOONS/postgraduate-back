@@ -1,9 +1,9 @@
 package com.postgraduate.global.config.security.jwt.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.postgraduate.domain.user.domain.entity.User;
-import com.postgraduate.domain.user.domain.entity.constant.Role;
-import com.postgraduate.domain.user.exception.UserNotFoundException;
+import com.postgraduate.domain.member.user.domain.entity.User;
+import com.postgraduate.domain.member.user.domain.entity.constant.Role;
+import com.postgraduate.domain.member.user.exception.UserNotFoundException;
 import com.postgraduate.global.config.redis.RedisRepository;
 import com.postgraduate.global.config.security.jwt.auth.AuthDetails;
 import com.postgraduate.global.config.security.jwt.auth.AuthDetailsService;

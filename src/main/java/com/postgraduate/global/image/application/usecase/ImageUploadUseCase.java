@@ -2,7 +2,7 @@ package com.postgraduate.global.image.application.usecase;
 
 import com.postgraduate.global.auth.login.util.ProfileUtils;
 import com.postgraduate.global.image.application.dto.res.ImageUrlResponse;
-import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.member.user.domain.entity.User;
 import com.postgraduate.global.config.s3.S3UploadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

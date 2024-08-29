@@ -1,15 +1,14 @@
 package com.postgraduate.Integration;
 
-import com.postgraduate.domain.senior.domain.entity.Account;
-import com.postgraduate.domain.senior.application.dto.req.AvailableCreateRequest;
-import com.postgraduate.domain.senior.domain.entity.Available;
+import com.postgraduate.domain.member.senior.application.dto.req.*;
+import com.postgraduate.domain.member.senior.domain.entity.Account;
+import com.postgraduate.domain.member.senior.domain.entity.Available;
 import com.postgraduate.domain.salary.domain.entity.Salary;
-import com.postgraduate.domain.senior.application.dto.req.*;
-import com.postgraduate.domain.senior.domain.entity.Senior;
-import com.postgraduate.domain.senior.presentation.constant.SeniorResponseCode;
-import com.postgraduate.domain.senior.presentation.constant.SeniorResponseMessage;
-import com.postgraduate.domain.user.domain.entity.User;
-import com.postgraduate.domain.user.domain.entity.constant.Role;
+import com.postgraduate.domain.member.senior.domain.entity.Senior;
+import com.postgraduate.domain.member.senior.presentation.constant.SeniorResponseCode;
+import com.postgraduate.domain.member.senior.presentation.constant.SeniorResponseMessage;
+import com.postgraduate.domain.member.user.domain.entity.User;
+import com.postgraduate.domain.member.user.domain.entity.constant.Role;
 import com.postgraduate.global.constant.ErrorCode;
 import com.postgraduate.support.IntegrationTest;
 import com.postgraduate.support.Resource;
@@ -26,8 +25,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseCode.*;
-import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseMessage.*;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static org.mockito.ArgumentMatchers.any;

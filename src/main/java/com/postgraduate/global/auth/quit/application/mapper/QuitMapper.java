@@ -4,7 +4,7 @@ import com.postgraduate.global.auth.login.application.dto.req.SignOutRequest;
 import com.postgraduate.global.auth.quit.domain.entity.Quit;
 import com.postgraduate.global.auth.quit.domain.entity.constant.QuitReason;
 import com.postgraduate.global.auth.quit.domain.entity.Quit.QuitBuilder;
-import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.member.user.domain.entity.User;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 

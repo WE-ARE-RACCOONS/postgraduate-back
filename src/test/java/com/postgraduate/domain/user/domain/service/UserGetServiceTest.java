@@ -1,8 +1,9 @@
 package com.postgraduate.domain.user.domain.service;
 
-import com.postgraduate.domain.user.domain.entity.User;
-import com.postgraduate.domain.user.domain.repository.UserRepository;
-import com.postgraduate.domain.user.exception.UserNotFoundException;
+import com.postgraduate.domain.member.user.domain.entity.User;
+import com.postgraduate.domain.member.user.domain.repository.UserRepository;
+import com.postgraduate.domain.member.user.domain.service.UserGetService;
+import com.postgraduate.domain.member.user.exception.UserNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,7 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import static com.postgraduate.domain.user.domain.entity.constant.Role.USER;
+import static com.postgraduate.domain.member.user.domain.entity.constant.Role.USER;
 import static java.lang.Boolean.TRUE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

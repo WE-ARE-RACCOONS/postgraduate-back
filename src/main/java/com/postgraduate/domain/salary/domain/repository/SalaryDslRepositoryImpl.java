@@ -1,7 +1,8 @@
 package com.postgraduate.domain.salary.domain.repository;
 
+import com.postgraduate.domain.member.user.domain.entity.QUser;
 import com.postgraduate.domain.salary.domain.entity.Salary;
-import com.postgraduate.domain.senior.domain.entity.Senior;
+import com.postgraduate.domain.member.senior.domain.entity.Senior;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -9,9 +10,9 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 import java.util.List;
 
+import static com.postgraduate.domain.member.senior.domain.entity.QSenior.senior;
+import static com.postgraduate.domain.member.user.domain.entity.QUser.user;
 import static com.postgraduate.domain.salary.domain.entity.QSalary.salary;
-import static com.postgraduate.domain.senior.domain.entity.QSenior.senior;
-import static com.postgraduate.domain.user.domain.entity.QUser.user;
 
 @Repository
 @RequiredArgsConstructor

@@ -1,7 +1,7 @@
 package com.postgraduate.admin.domain.repository;
 
-import com.postgraduate.domain.user.domain.entity.User;
-import com.postgraduate.domain.user.domain.entity.Wish;
+import com.postgraduate.domain.member.user.domain.entity.User;
+import com.postgraduate.domain.member.user.domain.entity.Wish;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
-import static com.postgraduate.domain.user.domain.entity.QUser.user;
+import static com.postgraduate.domain.member.user.domain.entity.QUser.user;
 
 @RequiredArgsConstructor
 @Repository

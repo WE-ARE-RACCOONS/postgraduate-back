@@ -5,7 +5,7 @@ import com.postgraduate.global.image.application.dto.res.PreSignedUrlResponse;
 import com.postgraduate.global.image.application.dto.res.ImageUrlResponse;
 import com.postgraduate.global.image.application.usecase.ImageUploadUseCase;
 import com.postgraduate.global.image.application.usecase.PreSignedUseCase;
-import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.member.user.domain.entity.User;
 import com.postgraduate.global.dto.ResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

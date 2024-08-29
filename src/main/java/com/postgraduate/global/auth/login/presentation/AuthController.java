@@ -9,8 +9,8 @@ import com.postgraduate.global.auth.login.application.usecase.oauth.SignUpUseCas
 import com.postgraduate.global.auth.login.application.usecase.jwt.JwtUseCase;
 import com.postgraduate.global.auth.login.application.usecase.oauth.SignInUseCase;
 import com.postgraduate.global.auth.login.presentation.constant.Provider;
-import com.postgraduate.domain.user.application.usecase.UserManageUseCase;
-import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.member.user.application.usecase.UserManageUseCase;
+import com.postgraduate.domain.member.user.domain.entity.User;
 import com.postgraduate.global.auth.login.application.dto.req.*;
 import com.postgraduate.global.auth.login.presentation.constant.AuthResponseCode;
 import com.postgraduate.global.auth.login.presentation.constant.AuthResponseMessage;
@@ -24,8 +24,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseCode.SENIOR_CREATE;
-import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseMessage.CREATE_SENIOR;
+import static com.postgraduate.domain.member.senior.presentation.constant.SeniorResponseCode.SENIOR_CREATE;
+import static com.postgraduate.domain.member.senior.presentation.constant.SeniorResponseMessage.CREATE_SENIOR;
 import static com.postgraduate.global.dto.ResponseDto.create;
 
 @RestController

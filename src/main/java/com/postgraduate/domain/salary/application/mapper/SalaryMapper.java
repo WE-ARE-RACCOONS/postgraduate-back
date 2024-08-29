@@ -1,13 +1,13 @@
 package com.postgraduate.domain.salary.application.mapper;
 
 import com.postgraduate.domain.salary.application.dto.SalaryDetails;
-import com.postgraduate.domain.senior.domain.entity.Account;
+import com.postgraduate.domain.member.senior.domain.entity.Account;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.salary.domain.entity.SalaryAccount;
-import com.postgraduate.domain.senior.domain.entity.Senior;
-import com.postgraduate.domain.user.application.utils.UserUtils;
-import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.member.senior.domain.entity.Senior;
+import com.postgraduate.domain.member.user.application.utils.UserUtils;
+import com.postgraduate.domain.member.user.domain.entity.User;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

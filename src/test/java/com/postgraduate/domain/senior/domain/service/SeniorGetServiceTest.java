@@ -1,9 +1,10 @@
 package com.postgraduate.domain.senior.domain.service;
 
-import com.postgraduate.domain.senior.domain.entity.Senior;
-import com.postgraduate.domain.senior.domain.repository.SeniorRepository;
-import com.postgraduate.domain.senior.exception.NoneSeniorException;
-import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.member.senior.domain.entity.Senior;
+import com.postgraduate.domain.member.senior.domain.repository.SeniorRepository;
+import com.postgraduate.domain.member.senior.domain.service.SeniorGetService;
+import com.postgraduate.domain.member.senior.exception.NoneSeniorException;
+import com.postgraduate.domain.member.user.domain.entity.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -1,6 +1,6 @@
 package com.postgraduate.global.auth.login.application.dto.res;
 
-import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.member.user.domain.entity.User;
 
 public record AuthUserResponse(User user, Long socialId, Boolean isDelete) implements AuthResponse{
     public AuthUserResponse(Long socialId) {

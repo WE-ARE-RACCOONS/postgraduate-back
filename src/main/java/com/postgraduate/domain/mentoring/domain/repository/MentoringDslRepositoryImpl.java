@@ -1,11 +1,11 @@
 package com.postgraduate.domain.mentoring.domain.repository;
 
+import com.postgraduate.domain.member.user.domain.entity.QUser;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.entity.Refuse;
 import com.postgraduate.domain.mentoring.domain.entity.constant.MentoringStatus;
-import com.postgraduate.domain.senior.domain.entity.Senior;
-import com.postgraduate.domain.user.domain.entity.QUser;
-import com.postgraduate.domain.user.domain.entity.User;
+import com.postgraduate.domain.member.senior.domain.entity.Senior;
+import com.postgraduate.domain.member.user.domain.entity.User;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -14,13 +14,13 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
+import static com.postgraduate.domain.member.senior.domain.entity.QSenior.senior;
+import static com.postgraduate.domain.member.user.domain.entity.QUser.user;
 import static com.postgraduate.domain.mentoring.domain.entity.QMentoring.mentoring;
 import static com.postgraduate.domain.mentoring.domain.entity.constant.MentoringStatus.EXPECTED;
 import static com.postgraduate.domain.mentoring.domain.entity.constant.MentoringStatus.WAITING;
 import static com.postgraduate.domain.payment.domain.entity.QPayment.payment;
 import static com.postgraduate.domain.salary.domain.entity.QSalary.salary;
-import static com.postgraduate.domain.senior.domain.entity.QSenior.senior;
-import static com.postgraduate.domain.user.domain.entity.QUser.user;
 
 @RequiredArgsConstructor
 @Repository
