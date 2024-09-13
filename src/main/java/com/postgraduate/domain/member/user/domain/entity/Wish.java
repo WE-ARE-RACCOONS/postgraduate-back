@@ -31,7 +31,7 @@ public class Wish {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    public void updateDone() {
+    protected void updateDone() {
         this.status = Status.MATCHED;
     }
 }

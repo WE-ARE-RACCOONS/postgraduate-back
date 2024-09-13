@@ -29,7 +29,7 @@ public class Account {
     @OneToOne(fetch = FetchType.LAZY)
     private Senior senior;
 
-    public void updateMyPageUserAccount(SeniorMyPageUserAccountRequest myPageUserAccountRequest, String accountNumber) {
+    protected void updateMyPageUserAccount(SeniorMyPageUserAccountRequest myPageUserAccountRequest, String accountNumber) {
         this.accountNumber = accountNumber;
         this.bank = myPageUserAccountRequest.bank();
         this.accountHolder = myPageUserAccountRequest.accountHolder();
