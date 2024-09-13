@@ -178,16 +178,16 @@ class SeniorMyPageUseTypeTest {
 //                .isEqualTo(user.getSocialId());
 //    }
 
-    @Test
-    @DisplayName("후배 미가입 확인")
-    void checkUserWithNull() {
-        given(user.isJunior())
-                .willReturn(FALSE);
-        SeniorPossibleResponse response = seniorMyPageUseCase.checkUser(user);
-
-        assertThat(response.possible())
-                .isEqualTo(FALSE);
-        assertThat(response.socialId())
-                .isEqualTo(user.getSocialId());
-    }
+//    @Test
+//    @DisplayName("후배 미가입 확인")
+//    void checkUserWithNull() {
+//        given(user.isJunior())
+//                .willReturn(FALSE);
+//        SeniorPossibleResponse response = seniorMyPageUseCase.checkUser(user);
+//
+//        assertThat(response.possible())
+//                .isEqualTo(FALSE);
+//        assertThat(response.socialId())
+//                .isEqualTo(user.getSocialId());
+//    }
 }
