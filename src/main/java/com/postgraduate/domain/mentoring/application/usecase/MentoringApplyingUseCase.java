@@ -11,7 +11,6 @@ import com.postgraduate.domain.mentoring.exception.MentoringDateException;
 import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.payment.domain.service.PaymentGetService;
 import com.postgraduate.domain.member.senior.domain.entity.Senior;
-import com.postgraduate.domain.member.senior.domain.service.SeniorGetService;
 import com.postgraduate.domain.member.senior.domain.service.SeniorUpdateService;
 import com.postgraduate.domain.member.user.domain.entity.User;
 import com.postgraduate.global.bizppurio.application.usecase.BizppurioJuniorMessage;
@@ -28,7 +27,6 @@ import java.util.Optional;
 public class MentoringApplyingUseCase {
     private final PaymentGetService paymentGetService;
     private final SeniorUpdateService seniorUpdateService;
-    private final SeniorGetService seniorGetService;
     private final MentoringGetService mentoringGetService;
     private final MentoringSaveService mentoringSaveService;
     private final MentoringMapper mentoringMapper;
