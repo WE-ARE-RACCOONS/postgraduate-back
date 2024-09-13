@@ -8,6 +8,7 @@ import com.postgraduate.domain.member.senior.domain.entity.Senior;
 import com.postgraduate.domain.member.senior.domain.entity.constant.Status;
 import com.postgraduate.domain.member.senior.domain.service.SeniorUpdateService;
 import com.postgraduate.domain.member.user.domain.entity.User;
+import com.postgraduate.domain.member.user.domain.entity.Wish;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,11 +30,11 @@ class SeniorUpdateServiceTest {
     @InjectMocks
     private SeniorUpdateService seniorUpdateService;
 
-    private User user = new User(1L, 2L, "a", "b", "c", "d", 0, SENIOR, FALSE, now(), now(), TRUE, TRUE);
+    private User user = new User(1L, 2L, "a", "b", "c", "d", 0, SENIOR, FALSE, now(), now(), TRUE, TRUE, new Wish());
     private Senior senior;
     @BeforeEach
     void setting() {
-        senior = new Senior(1L, user, "a", Status.WAITING, 1, 100, new Info(), new Profile(), now(), now());
+        senior = new Senior(1L, user, "a", Status.WAITING, 1, 100, new Info(), new Profile(), now(), now(), null, null);
     }
 
     @Test

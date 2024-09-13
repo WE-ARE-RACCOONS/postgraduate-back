@@ -6,10 +6,10 @@ import com.postgraduate.domain.mentoring.application.dto.req.MentoringDateReques
 import com.postgraduate.domain.mentoring.application.dto.res.*;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.application.dto.req.MentoringRefuseRequest;
-import com.postgraduate.domain.senior.domain.entity.Info;
-import com.postgraduate.domain.senior.domain.entity.Profile;
-import com.postgraduate.domain.senior.domain.entity.Senior;
-import com.postgraduate.domain.user.user.domain.entity.User;
+import com.postgraduate.domain.member.senior.domain.entity.Info;
+import com.postgraduate.domain.member.senior.domain.entity.Profile;
+import com.postgraduate.domain.member.senior.domain.entity.Senior;
+import com.postgraduate.domain.member.user.domain.entity.User;
 import com.postgraduate.support.ControllerTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

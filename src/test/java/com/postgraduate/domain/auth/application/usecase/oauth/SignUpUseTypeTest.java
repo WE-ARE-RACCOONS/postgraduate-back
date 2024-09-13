@@ -1,5 +1,7 @@
 package com.postgraduate.domain.auth.application.usecase.oauth;
 
+import com.postgraduate.domain.member.senior.domain.entity.Available;
+import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.global.auth.login.application.dto.req.SeniorChangeRequest;
 import com.postgraduate.global.auth.login.application.dto.req.SeniorSignUpRequest;
 import com.postgraduate.global.auth.login.application.dto.req.SignUpRequest;
@@ -33,6 +35,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static com.postgraduate.domain.member.senior.domain.entity.constant.Status.APPROVE;
 import static com.postgraduate.domain.member.user.domain.entity.constant.Role.SENIOR;
@@ -54,8 +57,6 @@ class SignUpUseTypeTest {
     private UserUpdateService userUpdateService;
     @Mock
     private UserGetService userGetService;
-    @Mock
-    private WishSaveService wishSaveService;
     @Mock
     private BizppurioSeniorMessage bizppurioSeniorMessage;
     @Mock
@@ -85,15 +86,19 @@ class SignUpUseTypeTest {
 
     @BeforeEach
     void setting() {
+        Available available1 = mock(Available.class);
+        Available available2 = mock(Available.class);
+        Available available3 = mock(Available.class);
+        List<Available> availables = List.of(available1, available2, available3);
         info = new Info("a", "a", "a", "a", "a", "a", TRUE, TRUE, "a", "chatLink", 30);
         profile = new Profile("a", "a", "a");
         user = new User(1L, 1234L, "a",
                 "a", "123", "a",
-                1, USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), FALSE, TRUE);
-        wish = new Wish(1L, "major", "field", TRUE, user, Status.WAITING);
+                1, USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE, TRUE, null);
+        wish = new Wish(1L, "major", "field", true, user, Status.WAITING);
         senior = new Senior(1L, user, "a",
-                APPROVE,1, 1, info, profile,
-                LocalDateTime.now(), LocalDateTime.now());
+                APPROVE, 1, 1, info, profile,
+                LocalDateTime.now(), LocalDateTime.now(), availables, null);
     }
 
     @Test
@@ -106,10 +111,6 @@ class SignUpUseTypeTest {
 
         assertThat(saveUser.getRole())
                 .isEqualTo(USER);
-        verify(wishSaveService, times(1))
-                .save(any(Wish.class));
-        verify(userSaveService, times(1))
-                .save(any(User.class));
     }
 
     @Test
@@ -137,7 +138,7 @@ class SignUpUseTypeTest {
         assertThat(saveUser.getRole())
                 .isEqualTo(SENIOR);
         verify(userSaveService, times(1))
-                .save(any(User.class));
+                .saveSenior(any(User.class));
         verify(seniorSaveService, times(1))
                 .saveSenior(any(Senior.class));
     }

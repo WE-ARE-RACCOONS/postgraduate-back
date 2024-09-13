@@ -2,7 +2,8 @@ package com.postgraduate.domain.senior.application.usecase;
 
 import com.postgraduate.domain.member.senior.application.dto.req.*;
 import com.postgraduate.domain.member.senior.application.usecase.SeniorManageUseCase;
-import com.postgraduate.domain.member.senior.domain.entity.Account;
+import com.postgraduate.domain.member.senior.domain.entity.*;
+import com.postgraduate.domain.member.senior.domain.service.SeniorDeleteService;
 import com.postgraduate.domain.member.senior.domain.service.SeniorSaveService;
 import com.postgraduate.domain.salary.application.mapper.SalaryMapper;
 import com.postgraduate.domain.salary.domain.entity.Salary;
@@ -10,9 +11,6 @@ import com.postgraduate.domain.salary.domain.service.SalaryGetService;
 import com.postgraduate.domain.salary.domain.service.SalaryUpdateService;
 import com.postgraduate.domain.member.senior.application.dto.res.SeniorProfileUpdateResponse;
 import com.postgraduate.domain.member.senior.application.utils.SeniorUtils;
-import com.postgraduate.domain.member.senior.domain.entity.Info;
-import com.postgraduate.domain.member.senior.domain.entity.Profile;
-import com.postgraduate.domain.member.senior.domain.entity.Senior;
 import com.postgraduate.domain.member.senior.domain.service.SeniorGetService;
 import com.postgraduate.domain.member.senior.domain.service.SeniorUpdateService;
 import com.postgraduate.domain.member.senior.exception.KeywordException;
@@ -37,6 +35,7 @@ import java.util.Optional;
 
 import static com.postgraduate.domain.member.senior.domain.entity.constant.Status.APPROVE;
 import static com.postgraduate.domain.member.user.domain.entity.constant.Role.SENIOR;
+import static com.postgraduate.domain.member.user.domain.entity.constant.Role.USER;
 import static java.lang.Boolean.TRUE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -51,13 +50,9 @@ class SeniorManageUseTypeTest {
     @Mock
     private SeniorGetService seniorGetService;
     @Mock
-    private AccountGetService accountGetService;
-    @Mock
-    private AccountSaveService accountSaveService;
-    @Mock
-    private AccountUpdateService accountUpdateService;
-    @Mock
     private SalaryGetService salaryGetService;
+    @Mock
+    private SeniorDeleteService seniorDeleteService;
     @Mock
     private SalaryUpdateService salaryUpdateService;
     @Mock
@@ -82,14 +77,18 @@ class SeniorManageUseTypeTest {
 
     @BeforeEach
     void setting() {
+        Available available1 = mock(Available.class);
+        Available available2 = mock(Available.class);
+        Available available3 = mock(Available.class);
+        List<Available> availables = List.of(available1, available2, available3);
         info = new Info("a", "a", "a", "a", "a", "a", TRUE, TRUE, "a", "chatLink", 30);
         profile = new Profile("a", "a", "a");
         user = new User(1L, 1234L, "a",
                 "a", "123", "a",
-                1, SENIOR, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE, TRUE);
+                1, USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE, TRUE, null);
         senior = new Senior(1L, user, "a",
                 APPROVE, 1, 1, info, profile,
-                LocalDateTime.now(), LocalDateTime.now(), new ArrayList<>(), new ArrayList<>(), null);
+                LocalDateTime.now(), LocalDateTime.now(), availables, null);
     }
 
     @Test
@@ -122,7 +121,7 @@ class SeniorManageUseTypeTest {
 
         verify(seniorUpdateService, times(1))
                 .signUpSeniorProfile(eq(senior), any(Profile.class));
-        verify(seniorSaveService, times(availableCreateRequests.size()))
+        verify(seniorSaveService, times(1))
                 .saveAllAvailable(any(), any());
     }
 
@@ -134,8 +133,6 @@ class SeniorManageUseTypeTest {
 
         given(seniorGetService.byUserWithAll(user))
                 .willReturn(senior);
-        given(accountGetService.bySenior(senior))
-                .willReturn(Optional.ofNullable(null));
         given(encryptorUtils.encryptData(request.accountNumber()))
                 .willReturn("encrypt");
         given(salaryGetService.allBySeniorAndAccountIsNull(senior))
@@ -145,8 +142,6 @@ class SeniorManageUseTypeTest {
 
         verify(userUpdateService)
                 .updateSeniorUserAccount(user, request);
-        verify(accountSaveService)
-                .save(any(Account.class));
     }
 
     @Test
@@ -157,9 +152,6 @@ class SeniorManageUseTypeTest {
                 .willReturn(senior);
 
         seniorManageUseCase.saveAccount(user, request);
-
-        verify(accountSaveService, times(1))
-                .save(any(Account.class));
     }
 
     @Test
@@ -203,8 +195,6 @@ class SeniorManageUseTypeTest {
 
         given(seniorGetService.byUserWithAll(user))
                 .willReturn(senior);
-        given(accountGetService.bySenior(senior))
-                .willReturn(Optional.of(mock(Account.class)));
         given(encryptorUtils.encryptData(request.accountNumber()))
                 .willReturn("encrypt");
         given(salaryGetService.allBySeniorAndAccountIsNull(senior))
@@ -214,8 +204,6 @@ class SeniorManageUseTypeTest {
 
         verify(userUpdateService)
                 .updateSeniorUserAccount(user, request);
-        verify(accountUpdateService)
-                .updateAccount(any(Account.class), eq(request), eq("encrypt"));
     }
 
     @Test

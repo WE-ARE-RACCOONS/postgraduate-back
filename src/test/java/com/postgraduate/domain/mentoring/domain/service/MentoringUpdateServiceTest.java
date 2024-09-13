@@ -2,9 +2,9 @@ package com.postgraduate.domain.mentoring.domain.service;
 
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.payment.domain.entity.Payment;
-import com.postgraduate.domain.senior.salary.domain.entity.Salary;
-import com.postgraduate.domain.senior.domain.entity.Senior;
-import com.postgraduate.domain.user.user.domain.entity.User;
+import com.postgraduate.domain.salary.domain.entity.Salary;
+import com.postgraduate.domain.member.senior.domain.entity.Senior;
+import com.postgraduate.domain.member.user.domain.entity.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,14 +35,14 @@ class MentoringUpdateServiceTest {
         salary = mock(Salary.class);
 
         mentoring = new Mentoring(1L, user, senior, payment, null, "a", "a", "a", 1
-        , WAITING, LocalDateTime.now(), LocalDateTime.now());
+        , WAITING, LocalDateTime.now(), LocalDateTime.now(), null);
     }
 
     @Test
     @DisplayName("DONE으로 변경")
     void updateStatusDone() {
         mentoringUpdateService.updateDone(mentoring, salary);
-        assertThat(mentoring.getMentoringStatus())
+        assertThat(mentoring.getStatus())
                 .isEqualTo(DONE);
     }
 
@@ -50,7 +50,7 @@ class MentoringUpdateServiceTest {
     @DisplayName("CANCEL 변경")
     void updateStatusCancel() {
         mentoringUpdateService.updateCancel(mentoring);
-        assertThat(mentoring.getMentoringStatus())
+        assertThat(mentoring.getStatus())
                 .isEqualTo(CANCEL);
     }
 
@@ -58,7 +58,7 @@ class MentoringUpdateServiceTest {
     @DisplayName("EXPECTED 변경")
     void updateStatusExpected() {
         mentoringUpdateService.updateExpected(mentoring, "update");
-        assertThat(mentoring.getMentoringStatus())
+        assertThat(mentoring.getStatus())
                 .isEqualTo(EXPECTED);
         assertThat(mentoring.getDate())
                 .isEqualTo("update");
@@ -68,7 +68,7 @@ class MentoringUpdateServiceTest {
     @DisplayName("REFUSE 변경")
     void updateStatusRefuse() {
         mentoringUpdateService.updateRefuse(mentoring);
-        assertThat(mentoring.getMentoringStatus())
+        assertThat(mentoring.getStatus())
                 .isEqualTo(REFUSE);
     }
 }

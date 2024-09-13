@@ -30,7 +30,7 @@ class UserMyPageUseTypeTest {
     void setting() {
         user = new User(1L, 1234L, "a",
                 "a", "123", "a",
-                1, USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE, TRUE);
+                1, USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE, TRUE, null);
     }
 
     @Test
@@ -73,7 +73,7 @@ class UserMyPageUseTypeTest {
     void checkSeniorWithSenior() {
         user = new User(1L, 1234L, "a",
                 "a", "123", "a",
-                1, SENIOR, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE, TRUE);
+                1, SENIOR, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE, TRUE, null);
 
         UserPossibleResponse checkSenior = userMyPageUseCase.checkSenior(user);
 

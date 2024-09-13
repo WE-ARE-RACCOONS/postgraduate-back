@@ -18,6 +18,8 @@ import org.springframework.security.test.context.support.WithMockUser;
 
 import java.util.List;
 
+import static com.postgraduate.domain.member.senior.presentation.constant.SeniorResponseCode.*;
+import static com.postgraduate.domain.member.senior.presentation.constant.SeniorResponseMessage.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;

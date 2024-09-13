@@ -4,7 +4,7 @@ import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.salary.domain.repository.SalaryRepository;
 import com.postgraduate.domain.salary.exception.SalaryNotFoundException;
 import com.postgraduate.domain.salary.util.SalaryUtil;
-import com.postgraduate.domain.senior.domain.entity.Senior;
+import com.postgraduate.domain.member.senior.domain.entity.Senior;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -1,10 +1,10 @@
 package com.postgraduate.domain.salary.presentation;
 
-import com.postgraduate.domain.senior.salary.application.dto.SalaryDetails;
-import com.postgraduate.domain.senior.salary.application.dto.res.SalaryDetailsResponse;
-import com.postgraduate.domain.senior.salary.application.dto.res.SalaryInfoResponse;
-import com.postgraduate.domain.senior.salary.domain.entity.Salary;
-import com.postgraduate.domain.user.user.domain.entity.User;
+import com.postgraduate.domain.salary.application.dto.SalaryDetails;
+import com.postgraduate.domain.salary.application.dto.res.SalaryDetailsResponse;
+import com.postgraduate.domain.salary.application.dto.res.SalaryInfoResponse;
+import com.postgraduate.domain.salary.domain.entity.Salary;
+import com.postgraduate.domain.member.user.domain.entity.User;
 import com.postgraduate.support.ControllerTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,9 +14,9 @@ import org.springframework.security.test.context.support.WithMockUser;
 import java.time.LocalDate;
 import java.util.List;
 
-import static com.postgraduate.domain.senior.salary.presentation.constant.SalaryResponseCode.SALARY_FIND;
-import static com.postgraduate.domain.senior.salary.presentation.constant.SalaryResponseMessage.GET_SALARY_INFO;
-import static com.postgraduate.domain.senior.salary.presentation.constant.SalaryResponseMessage.GET_SALARY_LIST_INFO;
+import static com.postgraduate.domain.salary.presentation.constant.SalaryResponseCode.SALARY_FIND;
+import static com.postgraduate.domain.salary.presentation.constant.SalaryResponseMessage.GET_SALARY_INFO;
+import static com.postgraduate.domain.salary.presentation.constant.SalaryResponseMessage.GET_SALARY_LIST_INFO;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.mock;

@@ -2,11 +2,10 @@ package com.postgraduate.domain.auth.application.usecase.jwt;
 
 import com.postgraduate.global.auth.login.application.dto.res.JwtTokenResponse;
 import com.postgraduate.global.auth.login.application.usecase.jwt.JwtUseCase;
-import com.postgraduate.domain.user.user.domain.entity.User;
-import com.postgraduate.domain.user.user.exception.DeletedUserException;
-import com.postgraduate.domain.user.user.exception.UserNotFoundException;
-import com.postgraduate.domain.user.wish.domain.entity.Wish;
-import com.postgraduate.domain.user.wish.domain.service.WishGetService;
+import com.postgraduate.domain.member.user.domain.entity.User;
+import com.postgraduate.domain.member.user.exception.DeletedUserException;
+import com.postgraduate.domain.member.user.exception.UserNotFoundException;
+import com.postgraduate.domain.member.user.domain.entity.Wish;
 import com.postgraduate.global.config.security.jwt.exception.InvalidRefreshTokenException;
 import com.postgraduate.global.config.security.jwt.exception.NoneRefreshTokenException;
 import com.postgraduate.global.config.security.jwt.util.JwtUtils;
@@ -22,8 +21,8 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import static com.postgraduate.domain.user.user.domain.entity.constant.Role.SENIOR;
-import static com.postgraduate.domain.user.user.domain.entity.constant.Role.USER;
+import static com.postgraduate.domain.member.user.domain.entity.constant.Role.SENIOR;
+import static com.postgraduate.domain.member.user.domain.entity.constant.Role.USER;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.time.LocalDate.now;
@@ -36,8 +35,6 @@ import static org.mockito.BDDMockito.*;
 class JwtUseTypeTest {
     @Mock
     private JwtUtils jwtUtils;
-    @Mock
-    private WishGetService wishGetService;
     @InjectMocks
     private JwtUseCase jwtUseCase;
 
@@ -47,7 +44,7 @@ class JwtUseTypeTest {
     void setting() {
         user = new User(1L, 1L, "a",
                 "a", "123", "a",
-                1, USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), FALSE, FALSE);
+                1, USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), FALSE, FALSE, new Wish());
     }
 
     @Test
@@ -57,8 +54,6 @@ class JwtUseTypeTest {
                 .willReturn("accessToken");
         given(jwtUtils.generateRefreshToken(user.getUserId(), user.getRole()))
                 .willReturn("refreshToken");
-        given(wishGetService.byUser(user))
-                .willReturn(Optional.of(mock(Wish.class)));
 
         JwtTokenResponse jwtTokenResponse = jwtUseCase.signIn(user);
 
@@ -75,7 +70,7 @@ class JwtUseTypeTest {
     void signInWithSenior() {
         user = new User(1L, 1L, "a",
                 "a", "123", "a",
-                1, SENIOR, TRUE, LocalDateTime.now(), LocalDateTime.now(), FALSE, FALSE);
+                1, SENIOR, TRUE, LocalDateTime.now(), LocalDateTime.now(), FALSE, FALSE, null);
         given(jwtUtils.generateAccessToken(user.getUserId(), user.getRole()))
                 .willReturn("accessToken");
         given(jwtUtils.generateRefreshToken(user.getUserId(), user.getRole()))
@@ -105,7 +100,7 @@ class JwtUseTypeTest {
     void signInWithUserDelete() {
         user = new User(1L, 1L, "a",
                 "a", "123", "a",
-                1, USER, TRUE, LocalDateTime.now(), LocalDateTime.now().minusDays(20), TRUE, TRUE);
+                1, USER, TRUE, LocalDateTime.now(), LocalDateTime.now().minusDays(20), TRUE, TRUE, null);
 
         assertThatThrownBy(() -> jwtUseCase.signIn(user))
                 .isInstanceOf(UserNotFoundException.class);
@@ -116,7 +111,7 @@ class JwtUseTypeTest {
     void signInWithSeniorDelete() {
         user = new User(1L, 1L, "a",
                 "a", "123", "a",
-                1, SENIOR, TRUE, LocalDateTime.now(), LocalDateTime.now().minusDays(20), TRUE, TRUE);
+                1, SENIOR, TRUE, LocalDateTime.now(), LocalDateTime.now().minusDays(20), TRUE, TRUE, null);
 
         assertThatThrownBy(() -> jwtUseCase.signIn(user))
                 .isInstanceOf(DeletedUserException.class);
@@ -130,8 +125,6 @@ class JwtUseTypeTest {
                 .willReturn("accessToken");
         given(jwtUtils.generateRefreshToken(user.getUserId(), user.getRole()))
                 .willReturn("refreshToken");
-        given(wishGetService.byUser(user))
-                .willReturn(Optional.of(mock(Wish.class)));
         given(jwtUtils.checkPast(user.getUserId(), request))
                 .willReturn(USER.toString());
 
