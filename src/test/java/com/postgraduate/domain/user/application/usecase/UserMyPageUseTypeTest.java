@@ -1,10 +1,10 @@
 package com.postgraduate.domain.user.application.usecase;
 
-import com.postgraduate.domain.user.user.application.dto.res.UserInfoResponse;
-import com.postgraduate.domain.user.user.application.dto.res.UserMyPageResponse;
-import com.postgraduate.domain.user.user.application.dto.res.UserPossibleResponse;
-import com.postgraduate.domain.user.user.application.usecase.UserMyPageUseCase;
-import com.postgraduate.domain.user.user.domain.entity.User;
+import com.postgraduate.domain.member.user.application.dto.res.UserInfoResponse;
+import com.postgraduate.domain.member.user.application.dto.res.UserMyPageResponse;
+import com.postgraduate.domain.member.user.application.dto.res.UserPossibleResponse;
+import com.postgraduate.domain.member.user.application.usecase.UserMyPageUseCase;
+import com.postgraduate.domain.member.user.domain.entity.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,8 +14,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 
-import static com.postgraduate.domain.user.user.domain.entity.constant.Role.SENIOR;
-import static com.postgraduate.domain.user.user.domain.entity.constant.Role.USER;
+import static com.postgraduate.domain.member.user.domain.entity.constant.Role.SENIOR;
+import static com.postgraduate.domain.member.user.domain.entity.constant.Role.USER;
 import static java.lang.Boolean.TRUE;
 import static java.time.LocalDate.now;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -30,7 +30,7 @@ class UserMyPageUseTypeTest {
     void setting() {
         user = new User(1L, 1234L, "a",
                 "a", "123", "a",
-                1, USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE, TRUE);
+                1, USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE, TRUE, null);
     }
 
     @Test
@@ -73,7 +73,7 @@ class UserMyPageUseTypeTest {
     void checkSeniorWithSenior() {
         user = new User(1L, 1234L, "a",
                 "a", "123", "a",
-                1, SENIOR, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE, TRUE);
+                1, SENIOR, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE, TRUE, null);
 
         UserPossibleResponse checkSenior = userMyPageUseCase.checkSenior(user);
 

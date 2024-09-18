@@ -1,26 +1,28 @@
 package com.postgraduate.domain.auth.application.usecase.oauth;
 
-import com.postgraduate.domain.auth.application.dto.req.SeniorChangeRequest;
-import com.postgraduate.domain.auth.application.dto.req.SeniorSignUpRequest;
-import com.postgraduate.domain.auth.application.dto.req.SignUpRequest;
-import com.postgraduate.domain.auth.util.ProfileUtils;
+import com.postgraduate.domain.member.senior.domain.entity.Available;
+import com.postgraduate.domain.salary.domain.entity.Salary;
+import com.postgraduate.global.auth.login.application.dto.req.SeniorChangeRequest;
+import com.postgraduate.global.auth.login.application.dto.req.SeniorSignUpRequest;
+import com.postgraduate.global.auth.login.application.dto.req.SignUpRequest;
+import com.postgraduate.global.auth.login.application.usecase.oauth.SignUpUseCase;
+import com.postgraduate.global.auth.login.util.ProfileUtils;
 import com.postgraduate.domain.salary.application.mapper.SalaryMapper;
 import com.postgraduate.domain.salary.domain.service.SalarySaveService;
-import com.postgraduate.domain.senior.application.utils.SeniorUtils;
-import com.postgraduate.domain.senior.domain.entity.Info;
-import com.postgraduate.domain.senior.domain.entity.Profile;
-import com.postgraduate.domain.senior.domain.entity.Senior;
-import com.postgraduate.domain.senior.domain.service.SeniorSaveService;
-import com.postgraduate.domain.senior.exception.KeywordException;
-import com.postgraduate.domain.user.user.application.utils.UserUtils;
-import com.postgraduate.domain.user.user.domain.entity.User;
-import com.postgraduate.domain.user.user.domain.service.UserGetService;
-import com.postgraduate.domain.user.user.domain.service.UserSaveService;
-import com.postgraduate.domain.user.user.domain.service.UserUpdateService;
-import com.postgraduate.domain.user.user.exception.PhoneNumberException;
-import com.postgraduate.domain.wish.domain.entity.Wish;
-import com.postgraduate.domain.wish.domain.entity.constant.Status;
-import com.postgraduate.domain.wish.domain.service.WishSaveService;
+import com.postgraduate.domain.member.senior.application.utils.SeniorUtils;
+import com.postgraduate.domain.member.senior.domain.entity.Info;
+import com.postgraduate.domain.member.senior.domain.entity.Profile;
+import com.postgraduate.domain.member.senior.domain.entity.Senior;
+import com.postgraduate.domain.member.senior.domain.service.SeniorSaveService;
+import com.postgraduate.domain.member.senior.exception.KeywordException;
+import com.postgraduate.domain.member.user.application.utils.UserUtils;
+import com.postgraduate.domain.member.user.domain.entity.User;
+import com.postgraduate.domain.member.user.domain.service.UserGetService;
+import com.postgraduate.domain.member.user.domain.service.UserSaveService;
+import com.postgraduate.domain.member.user.domain.service.UserUpdateService;
+import com.postgraduate.domain.member.user.exception.PhoneNumberException;
+import com.postgraduate.domain.member.user.domain.entity.Wish;
+import com.postgraduate.domain.member.user.domain.entity.constant.Status;
 import com.postgraduate.global.bizppurio.application.usecase.BizppurioJuniorMessage;
 import com.postgraduate.global.bizppurio.application.usecase.BizppurioSeniorMessage;
 import com.postgraduate.global.slack.SlackSignUpMessage;
@@ -33,10 +35,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
-import static com.postgraduate.domain.senior.domain.entity.constant.Status.APPROVE;
-import static com.postgraduate.domain.user.user.domain.entity.constant.Role.SENIOR;
-import static com.postgraduate.domain.user.user.domain.entity.constant.Role.USER;
+import static com.postgraduate.domain.member.senior.domain.entity.constant.Status.APPROVE;
+import static com.postgraduate.domain.member.user.domain.entity.constant.Role.SENIOR;
+import static com.postgraduate.domain.member.user.domain.entity.constant.Role.USER;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -54,8 +57,6 @@ class SignUpUseTypeTest {
     private UserUpdateService userUpdateService;
     @Mock
     private UserGetService userGetService;
-    @Mock
-    private WishSaveService wishSaveService;
     @Mock
     private BizppurioSeniorMessage bizppurioSeniorMessage;
     @Mock
@@ -85,15 +86,19 @@ class SignUpUseTypeTest {
 
     @BeforeEach
     void setting() {
+        Available available1 = mock(Available.class);
+        Available available2 = mock(Available.class);
+        Available available3 = mock(Available.class);
+        List<Available> availables = List.of(available1, available2, available3);
         info = new Info("a", "a", "a", "a", "a", "a", TRUE, TRUE, "a", "chatLink", 30);
         profile = new Profile("a", "a", "a");
         user = new User(1L, 1234L, "a",
                 "a", "123", "a",
-                1, USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), FALSE, TRUE);
-        wish = new Wish(1L, "major", "field", TRUE, user, Status.WAITING);
+                1, USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE, TRUE, null);
+        wish = new Wish(1L, "major", "field", true, user, Status.WAITING);
         senior = new Senior(1L, user, "a",
-                APPROVE,1, 1, info, profile,
-                LocalDateTime.now(), LocalDateTime.now());
+                APPROVE, 1, 1, info, profile,
+                LocalDateTime.now(), LocalDateTime.now(), availables, null);
     }
 
     @Test
@@ -106,10 +111,6 @@ class SignUpUseTypeTest {
 
         assertThat(saveUser.getRole())
                 .isEqualTo(USER);
-        verify(wishSaveService, times(1))
-                .save(any(Wish.class));
-        verify(userSaveService, times(1))
-                .save(any(User.class));
     }
 
     @Test
@@ -137,7 +138,7 @@ class SignUpUseTypeTest {
         assertThat(saveUser.getRole())
                 .isEqualTo(SENIOR);
         verify(userSaveService, times(1))
-                .save(any(User.class));
+                .saveSenior(any(User.class));
         verify(seniorSaveService, times(1))
                 .saveSenior(any(Senior.class));
     }

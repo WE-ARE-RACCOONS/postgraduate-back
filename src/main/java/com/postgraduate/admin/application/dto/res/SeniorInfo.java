@@ -1,6 +1,6 @@
 package com.postgraduate.admin.application.dto.res;
 
-import com.postgraduate.domain.senior.domain.entity.constant.Status;
+import com.postgraduate.domain.member.senior.domain.entity.constant.Status;
 
 public record SeniorInfo(
         Long seniorId,

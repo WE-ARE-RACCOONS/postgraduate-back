@@ -2,8 +2,8 @@ package com.postgraduate.global.config.s3;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.postgraduate.domain.image.exception.DeleteException;
-import com.postgraduate.domain.image.exception.UploadException;
+import com.postgraduate.global.image.exception.DeleteException;
+import com.postgraduate.global.image.exception.UploadException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

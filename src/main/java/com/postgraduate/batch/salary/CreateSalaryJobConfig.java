@@ -22,11 +22,11 @@ import org.springframework.transaction.PlatformTransactionManager;
 import java.time.LocalDate;
 import java.util.List;
 
-import static com.postgraduate.domain.account.domain.entity.QAccount.account;
+import static com.postgraduate.domain.member.senior.domain.entity.QAccount.account;
+import static com.postgraduate.domain.member.senior.domain.entity.QSenior.senior;
+import static com.postgraduate.domain.member.user.domain.entity.QUser.user;
 import static com.postgraduate.domain.salary.domain.entity.QSalary.salary;
 import static com.postgraduate.domain.salary.util.SalaryUtil.getSalaryDate;
-import static com.postgraduate.domain.senior.domain.entity.QSenior.senior;
-import static com.postgraduate.domain.user.user.domain.entity.QUser.user;
 
 @Configuration
 @Slf4j

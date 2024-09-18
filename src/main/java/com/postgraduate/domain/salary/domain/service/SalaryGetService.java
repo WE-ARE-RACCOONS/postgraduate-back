@@ -1,10 +1,10 @@
 package com.postgraduate.domain.salary.domain.service;
 
-import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.salary.domain.repository.SalaryRepository;
 import com.postgraduate.domain.salary.exception.SalaryNotFoundException;
+import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.salary.util.SalaryUtil;
-import com.postgraduate.domain.senior.domain.entity.Senior;
+import com.postgraduate.domain.member.senior.domain.entity.Senior;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

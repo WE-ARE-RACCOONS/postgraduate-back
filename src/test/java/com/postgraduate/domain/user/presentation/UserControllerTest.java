@@ -1,14 +1,14 @@
 package com.postgraduate.domain.user.presentation;
 
 import com.postgraduate.support.ControllerTest;
-import com.postgraduate.domain.user.user.application.dto.req.UserInfoRequest;
-import com.postgraduate.domain.user.user.application.dto.res.UserInfoResponse;
-import com.postgraduate.domain.user.user.application.dto.res.UserMyPageResponse;
-import com.postgraduate.domain.user.user.application.dto.res.UserPossibleResponse;
-import com.postgraduate.domain.user.user.domain.entity.User;
-import com.postgraduate.domain.user.user.exception.PhoneNumberException;
-import com.postgraduate.domain.user.user.presentation.constant.UserResponseCode;
-import com.postgraduate.domain.user.user.presentation.constant.UserResponseMessage;
+import com.postgraduate.domain.member.user.application.dto.req.UserInfoRequest;
+import com.postgraduate.domain.member.user.application.dto.res.UserInfoResponse;
+import com.postgraduate.domain.member.user.application.dto.res.UserMyPageResponse;
+import com.postgraduate.domain.member.user.application.dto.res.UserPossibleResponse;
+import com.postgraduate.domain.member.user.domain.entity.User;
+import com.postgraduate.domain.member.user.exception.PhoneNumberException;
+import com.postgraduate.domain.member.user.presentation.constant.UserResponseCode;
+import com.postgraduate.domain.member.user.presentation.constant.UserResponseMessage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -17,9 +17,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 
-import static com.postgraduate.domain.user.user.presentation.constant.UserResponseCode.USER_FIND;
-import static com.postgraduate.domain.user.user.presentation.constant.UserResponseCode.USER_UPDATE;
-import static com.postgraduate.domain.user.user.presentation.constant.UserResponseMessage.*;
+import static com.postgraduate.domain.member.user.presentation.constant.UserResponseCode.*;
+import static com.postgraduate.domain.member.user.presentation.constant.UserResponseMessage.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.*;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;

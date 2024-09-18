@@ -1,7 +1,7 @@
 package com.postgraduate.domain.user.application.utils;
 
-import com.postgraduate.domain.user.user.application.utils.UserUtils;
-import com.postgraduate.domain.user.user.exception.PhoneNumberException;
+import com.postgraduate.domain.member.user.application.utils.UserUtils;
+import com.postgraduate.domain.member.user.exception.PhoneNumberException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;

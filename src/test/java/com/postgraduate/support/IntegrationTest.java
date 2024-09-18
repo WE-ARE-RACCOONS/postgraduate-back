@@ -1,15 +1,12 @@
 package com.postgraduate.support;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.postgraduate.domain.account.domain.repository.AccountRepository;
-import com.postgraduate.domain.auth.application.usecase.oauth.kakao.KakaoAccessTokenUseCase;
-import com.postgraduate.domain.available.domain.repository.AvailableRepository;
+import com.postgraduate.global.auth.login.application.usecase.oauth.kakao.KakaoAccessTokenUseCase;
 import com.postgraduate.domain.mentoring.domain.repository.MentoringRepository;
 import com.postgraduate.domain.payment.domain.repository.PaymentRepository;
 import com.postgraduate.domain.salary.domain.repository.SalaryRepository;
-import com.postgraduate.domain.senior.domain.repository.SeniorRepository;
-import com.postgraduate.domain.user.user.domain.repository.UserRepository;
-import com.postgraduate.domain.wish.domain.repository.WishRepository;
+import com.postgraduate.domain.member.senior.domain.repository.SeniorRepository;
+import com.postgraduate.domain.member.user.domain.repository.UserRepository;
 import com.postgraduate.global.aop.lock.DistributeLockAspect;
 import com.postgraduate.global.config.redis.RedisRepository;
 import com.postgraduate.global.config.security.jwt.util.JwtUtils;
@@ -52,8 +49,6 @@ public class IntegrationTest {
     protected KakaoAccessTokenUseCase kakaoAccessTokenUseCase;
     @Autowired
     protected UserRepository userRepository;
-    @Autowired
-    protected WishRepository wishRepository;
     @MockBean
     protected RedisRepository redisRepository;
     @MockBean
@@ -64,10 +59,6 @@ public class IntegrationTest {
     protected MentoringRepository mentoringRepository;
     @Autowired
     protected SalaryRepository salaryRepository;
-    @Autowired
-    protected AccountRepository accountRepository;
-    @Autowired
-    protected AvailableRepository availableRepository;
     @Autowired
     protected PaymentRepository paymentRepository;
     @MockBean

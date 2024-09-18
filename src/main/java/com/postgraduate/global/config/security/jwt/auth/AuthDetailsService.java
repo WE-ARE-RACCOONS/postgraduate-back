@@ -1,8 +1,8 @@
 package com.postgraduate.global.config.security.jwt.auth;
 
-import com.postgraduate.domain.user.user.exception.UserNotFoundException;
-import com.postgraduate.domain.user.user.domain.entity.User;
-import com.postgraduate.domain.user.user.domain.repository.UserRepository;
+import com.postgraduate.domain.member.user.exception.UserNotFoundException;
+import com.postgraduate.domain.member.user.domain.entity.User;
+import com.postgraduate.domain.member.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;

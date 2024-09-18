@@ -2,15 +2,17 @@ package com.postgraduate.domain.mentoring.application.mapper;
 
 import com.postgraduate.domain.mentoring.application.dto.*;
 import com.postgraduate.domain.mentoring.application.dto.req.MentoringApplyRequest;
+import com.postgraduate.domain.mentoring.application.dto.req.MentoringRefuseRequest;
 import com.postgraduate.domain.mentoring.application.dto.res.AppliedMentoringDetailResponse;
 import com.postgraduate.domain.mentoring.application.dto.res.SeniorMentoringDetailResponse;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
+import com.postgraduate.domain.mentoring.domain.entity.Refuse;
 import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.salary.domain.entity.Salary;
-import com.postgraduate.domain.senior.domain.entity.Info;
-import com.postgraduate.domain.senior.domain.entity.Senior;
-import com.postgraduate.domain.user.user.application.utils.UserUtils;
-import com.postgraduate.domain.user.user.domain.entity.User;
+import com.postgraduate.domain.member.senior.domain.entity.Info;
+import com.postgraduate.domain.member.senior.domain.entity.Senior;
+import com.postgraduate.domain.member.user.application.utils.UserUtils;
+import com.postgraduate.domain.member.user.domain.entity.User;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -20,6 +22,21 @@ import org.springframework.stereotype.Component;
 public class MentoringMapper {
 
     private final UserUtils userUtils;
+    private static final String AUTO_CANCEL = "자동취소";
+
+    public Refuse mapToRefuse(Mentoring mentoring, MentoringRefuseRequest request) {
+        return Refuse.builder()
+                .mentoring(mentoring)
+                .reason(request.reason())
+                .build();
+    }
+
+    public Refuse mapToRefuse(Mentoring mentoring) {
+        return Refuse.builder()
+                .mentoring(mentoring)
+                .reason(AUTO_CANCEL)
+                .build();
+    }
 
     public ExpectedMentoringInfo mapToExpectedInfo(Mentoring mentoring) {
         Senior senior = mentoring.getSenior();

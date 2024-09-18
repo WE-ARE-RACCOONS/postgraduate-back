@@ -10,9 +10,9 @@ import com.postgraduate.domain.salary.application.mapper.SalaryMapper;
 import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.salary.domain.entity.SalaryAccount;
 import com.postgraduate.domain.salary.domain.service.SalaryGetService;
-import com.postgraduate.domain.senior.domain.entity.Senior;
-import com.postgraduate.domain.senior.domain.service.SeniorGetService;
-import com.postgraduate.domain.user.user.domain.entity.User;
+import com.postgraduate.domain.member.senior.domain.entity.Senior;
+import com.postgraduate.domain.member.senior.domain.service.SeniorGetService;
+import com.postgraduate.domain.member.user.domain.entity.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,7 +25,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.DONE;
+import static com.postgraduate.domain.mentoring.domain.entity.constant.MentoringStatus.DONE;
 import static com.postgraduate.domain.salary.util.SalaryUtil.getSalaryDate;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
@@ -88,15 +88,15 @@ class CreateSalaryUseTypeTest {
         Mentoring mentoring1 = new Mentoring(1L, user, senior, payment1, salary
                 , "a", "b", "c"
                 , 40,  DONE
-                , LocalDateTime.now(), LocalDateTime.now());
+                , LocalDateTime.now(), LocalDateTime.now(), null);
         Mentoring mentoring2 = new Mentoring(2L, user, senior, payment2, salary
                 , "a", "b", "c"
                 , 40,  DONE
-                , LocalDateTime.now(), LocalDateTime.now());
+                , LocalDateTime.now(), LocalDateTime.now(), null);
         Mentoring mentoring3 = new Mentoring(3L, user, senior, payment3, salary
                 , "a", "b", "c"
                 , 40,  DONE
-                , LocalDateTime.now(), LocalDateTime.now());
+                , LocalDateTime.now(), LocalDateTime.now(), null);
         List<Mentoring> mentorings = List.of(mentoring1, mentoring2, mentoring3);
 
         given(seniorGetService.byUser(user))
@@ -122,15 +122,15 @@ class CreateSalaryUseTypeTest {
         Mentoring mentoring1 = new Mentoring(1L, user, senior, payment1, salary
                 , "a", "b", "c"
                 , 40,  DONE
-                , LocalDateTime.now(), LocalDateTime.now());
+                , LocalDateTime.now(), LocalDateTime.now(), null);
         Mentoring mentoring2 = new Mentoring(2L, user, senior, payment2, salary
                 , "a", "b", "c"
                 , 40,  DONE
-                , LocalDateTime.now(), LocalDateTime.now());
+                , LocalDateTime.now(), LocalDateTime.now(), null);
         Mentoring mentoring3 = new Mentoring(3L, user, senior, payment3, salary
                 , "a", "b", "c"
                 , 40,  DONE
-                , LocalDateTime.now(), LocalDateTime.now());
+                , LocalDateTime.now(), LocalDateTime.now(), null);
         List<Mentoring> mentorings = List.of(mentoring1, mentoring2, mentoring3);
 
         given(seniorGetService.byUser(user))

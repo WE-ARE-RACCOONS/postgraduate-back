@@ -1,7 +1,7 @@
 package com.postgraduate.domain.senior.application.utils;
 
-import com.postgraduate.domain.senior.exception.KeywordException;
-import org.assertj.core.api.Assertions;
+import com.postgraduate.domain.member.senior.application.utils.SeniorUtils;
+import com.postgraduate.domain.member.senior.exception.KeywordException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
