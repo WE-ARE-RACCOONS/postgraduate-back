@@ -123,7 +123,18 @@ public class User {
                 this.isDelete
                         &&
                         this.updatedAt.isBefore(
-                                now().minusMonths(3)
+                                now().minusDays(15)
+                                        .atStartOfDay()
+                        )
+        );
+    }
+
+    public boolean isHardDelete() {
+        return (
+                this.isDelete
+                        &&
+                        this.updatedAt.isBefore(
+                                now().minusDays(30)
                                         .atStartOfDay()
                         )
         );
