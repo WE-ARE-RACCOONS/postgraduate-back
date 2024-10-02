@@ -123,7 +123,7 @@ public class User {
                 this.isDelete
                         &&
                         this.updatedAt.isBefore(
-                                now().minusMonths(3)
+                                now().minusDays(30)
                                         .atStartOfDay()
                         )
         );
