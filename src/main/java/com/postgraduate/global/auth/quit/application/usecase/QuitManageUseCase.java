@@ -23,7 +23,7 @@ public class QuitManageUseCase {
     public void updateRealDelete() {
         userGetService.byDelete()
                 .stream()
-                .filter(User::isRealDelete)
+                .filter(User::isHardDelete)
                 .forEach(
                         user -> {
                             if (user.isSenior()) {
