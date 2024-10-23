@@ -52,7 +52,7 @@ public class SignUpUseCase {
         userUtils.checkPhoneNumber(request.phoneNumber());
         User user = UserMapper.mapToUser(request, profileUtils.juniorProfile(rd.nextInt(5)));
         Wish wish = UserMapper.mapToWish(user, request);
-        userSaveService.saveJunior(user,wish);
+        userSaveService.saveJunior(user, wish);
         if (request.matchingReceive())
             bizppurioJuniorMessage.matchingWaiting(user);
         slackSignUpMessage.sendJuniorSignUp(user, wish);
@@ -76,7 +76,7 @@ public class SignUpUseCase {
 
     public void changeUser(User user, UserChangeRequest changeRequest) {
         Wish wish = UserMapper.mapToWish(user, changeRequest);
-        userSaveService.changeJunior(wish);
+        userSaveService.changeJunior(user, wish);
         if (changeRequest.matchingReceive())
             bizppurioJuniorMessage.matchingWaiting(user);
         slackSignUpMessage.sendJuniorSignUp(user, wish);
