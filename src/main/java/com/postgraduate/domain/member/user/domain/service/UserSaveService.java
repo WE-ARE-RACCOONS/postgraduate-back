@@ -16,10 +16,12 @@ public class UserSaveService {
     }
 
     public void saveJunior(User user, Wish wish) {
+        user.addWish(wish);
         userRepository.saveJunior(user, wish);
     }
 
-    public void changeJunior(Wish wish) {
+    public void changeJunior(User user, Wish wish) {
+        user.addWish(wish);
         userRepository.changeJunior(wish);
     }
 }
