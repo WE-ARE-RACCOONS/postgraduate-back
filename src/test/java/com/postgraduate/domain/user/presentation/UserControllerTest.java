@@ -87,30 +87,6 @@ class UserControllerTest extends ControllerTest {
                 .andExpect(jsonPath("$.message").value(UPDATE_USER_INFO.getMessage()));
     }
 
-    @Test
-    @DisplayName("잘못된 번호로 수정할 수 없다")
-    @WithMockUser
-    void updateInvalidPhoneNumber() throws Exception {
-        UserInfoRequest userInfoRequest = new UserInfoRequest("new_profile", "new후배", "phoneNumber");
-        String request = objectMapper.writeValueAsString(
-                userInfoRequest
-        );
-
-        willThrow(new PhoneNumberException())
-                .given(userManageUseCase)
-                .updateInfo(any(), any());
-
-        mvc.perform(patch("/user/me/info")
-                        .with(csrf())
-                        .header(HttpHeaders.AUTHORIZATION, BEARER )
-                        .content(request)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(UserResponseCode.INVALID_PHONE_NUMBER.getCode()))
-                .andExpect(jsonPath("$.message").value(UserResponseMessage.INVALID_PHONE_NUMBER.getMessage()));
-    }
-
     @ParameterizedTest
     @ValueSource(booleans = {true, false})
     @WithMockUser

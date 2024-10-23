@@ -3,6 +3,7 @@ package com.postgraduate.global.exception;
 import com.postgraduate.global.constant.ErrorCode;
 import com.postgraduate.global.dto.ErrorResponse;
 import com.postgraduate.global.dto.ResponseDto;
+import com.postgraduate.global.slack.SlackErrorMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import static com.postgraduate.global.dto.ResponseDto.create;
 @RequiredArgsConstructor
 public class GlobalExceptionHandler {
     private static final String LOG_FORMAT = "Code : {}, Message : {}";
+    private final SlackErrorMessage slackErrorMessage;
 
     @ExceptionHandler(ApplicationException.class)
     public ResponseEntity<ResponseDto<ErrorResponse>> handleApplicationException(ApplicationException ex) {
@@ -34,6 +36,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ResponseDto<ErrorResponse>> handleInternalServerException(Exception ex) {
         log.error(LOG_FORMAT, "500", ex.getStackTrace());
         log.error("errorMessage : {}", ex.getMessage());
+        slackErrorMessage.sendSlackServerError(ex);
         return ResponseEntity.internalServerError().build();
     }
 }

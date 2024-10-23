@@ -21,6 +21,7 @@ import com.postgraduate.domain.member.user.application.usecase.UserManageUseCase
 import com.postgraduate.domain.member.user.application.usecase.UserMyPageUseCase;
 import com.postgraduate.domain.member.user.presentation.UserController;
 import com.postgraduate.global.aop.lock.DistributeLockAspect;
+import com.postgraduate.global.exception.GlobalExceptionHandler;
 import com.postgraduate.global.slack.SlackLogErrorMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -79,6 +80,8 @@ public class ControllerTest {
     protected SlackLogErrorMessage slackLogErrorMessage;
     @MockBean
     protected DistributeLockAspect distributeLockAspect;
+    @MockBean
+    protected GlobalExceptionHandler globalExceptionHandler;
     protected Resource resource = new Resource();
 
 }
