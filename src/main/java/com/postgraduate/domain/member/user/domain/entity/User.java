@@ -72,6 +72,10 @@ public class User {
     @OneToOne(mappedBy = "user")
     private Wish wish;
 
+    public void addWish(Wish wish) {
+        this.wish = wish;
+    }
+
     public void updateWishDone() {
         this.wish.updateDone();
     }
