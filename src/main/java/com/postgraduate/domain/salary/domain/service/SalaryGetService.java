@@ -42,4 +42,10 @@ public class SalaryGetService {
         log.info("salaryDate : {}", salaryDate);
         return salaryRepository.findAllLastSalary(salaryDate);
     }
+
+    public List<Salary> findAllNext() {
+        LocalDate salaryDate = SalaryUtil.getSalaryDate()
+                .plusDays(7);
+        return salaryRepository.findAllBySalaryDate(salaryDate);
+    }
 }
