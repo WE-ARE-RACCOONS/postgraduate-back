@@ -13,4 +13,11 @@ public class SlackUtils {
                 .valueShortEnough(false)
                 .build();
     }
+
+    public static Field generateSlackField(String title) {
+        return Field.builder()
+                .title(title)
+                .valueShortEnough(false)
+                .build();
+    }
 }

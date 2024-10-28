@@ -42,7 +42,7 @@
         <td><button th:paymentId="${paymentInfo.paymentId()}"
                     th:onclick="goToPost('정말 환불하겠습니까??', '/adminServer/payment/refund/' + this.getAttribute('paymentId'))">
             환불/취소</button></td>
-        <td th:text="${paymentInfo.mentoringStatus()}">mentoringStatus</td>
+        <td th:text="${paymentInfo.status()}">mentoringStatus</td>
     </tr>
     </tbody>
 </table>

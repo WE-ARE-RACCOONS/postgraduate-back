@@ -51,6 +51,19 @@ public class SlackErrorMessage {
         }
     }
 
+    public void sendSlackSalaryError() {
+        try {
+            slackClient.send(logWebHookUrl, Payload.builder()
+                    .text("정산 자동 생성 에러 발생!! 백엔드팀 확인 요망!!")
+                    .attachments(
+                            List.of(generateSalaryErrorSlackAttachment())
+                    )
+                    .build());
+        } catch (IOException e) {
+            log.error("slack 전송 오류");
+        }
+    }
+
     public void sendSlackBizppurioError(String phoneNumber) {
         try {
             slackClient.send(logWebHookUrl, Payload.builder()
@@ -99,6 +112,18 @@ public class SlackErrorMessage {
                 ))
                 .build();
     }
+
+    private Attachment generateSalaryErrorSlackAttachment() {
+        String requestTime = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:SS").format(LocalDateTime.now());
+        return Attachment.builder()
+                .color("ff0000")
+                .title(requestTime + "에 발생한 에러 로그")
+                .fields(List.of(
+                        generateSlackField("정산 자동 생성 실패")
+                ))
+                .build();
+    }
+
     private Attachment generateBizppurioErrorSlackAttachment(String phoneNumber) {
         String requestTime = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:SS").format(LocalDateTime.now());
         return Attachment.builder()

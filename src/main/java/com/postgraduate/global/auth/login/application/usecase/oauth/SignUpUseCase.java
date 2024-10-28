@@ -50,7 +50,7 @@ public class SignUpUseCase {
 
     public User userSignUp(SignUpRequest request) {
         userUtils.checkPhoneNumber(request.phoneNumber());
-        User user = UserMapper.mapToUser(request, profileUtils.juniorProfile(rd.nextInt(5)));
+        User user = UserMapper.mapToUser(request, profileUtils.juniorProfile());
         Wish wish = UserMapper.mapToWish(user, request);
         userSaveService.saveJunior(user, wish);
         if (request.matchingReceive())
