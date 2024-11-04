@@ -68,6 +68,7 @@ public class JobSchedulerConfig {
         JobParameters jobParameters = new JobParametersBuilder()
                 .addLocalDateTime("date", LocalDateTime.now())
                 .toJobParameters();
+        jobLauncher.run(salaryJobWithAdmin, jobParameters);
         checkSalaryJobSuccess(jobParameters);
     }
 
@@ -84,6 +85,7 @@ public class JobSchedulerConfig {
                 break;
             }
             jobLauncher.run(salaryJobWithAdmin, jobParameters);
+            retries++;
         }
         if (!success) {
             slackErrorMessage.sendSlackSalaryError();
