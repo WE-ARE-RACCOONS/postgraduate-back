@@ -68,6 +68,7 @@ public class JobSchedulerConfig {
         JobParameters jobParameters = new JobParametersBuilder()
                 .addLocalDateTime("date", LocalDateTime.now())
                 .toJobParameters();
+        jobLauncher.run(salaryJobWithAdmin, jobParameters);
         checkSalaryJobSuccess(jobParameters);
     }
 
@@ -83,7 +84,14 @@ public class JobSchedulerConfig {
                 success = true;
                 break;
             }
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt(); //스레드 상태 복원
+                log.error("Thread Interrupt 발생");
+            }
             jobLauncher.run(salaryJobWithAdmin, jobParameters);
+            retries++;
         }
         if (!success) {
             slackErrorMessage.sendSlackSalaryError();
