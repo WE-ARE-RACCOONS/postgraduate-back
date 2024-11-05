@@ -101,8 +101,10 @@ public class PaymentManageUseCase {
     }
 
     public void refundPayByAdmin(User user, Long paymentId) {
-        if (user.getRole() != ADMIN)
-            throw new RefundFailException("NOT ADMIN");
+        if (user.getRole() != ADMIN) {
+            log.error("Refund Fail : NOT ADMIN");
+            throw new RefundFailException();
+        }
         Payment payment = paymentGetService.byId(paymentId);
         log.info("환불 진행 paymentId : {}", paymentId);
         refundPay(payment);
@@ -154,9 +156,14 @@ public class PaymentManageUseCase {
                         .retrieve()
                         .bodyToMono(RefundResponse.class)
                         .block())
-                .orElseThrow(() -> new RefundFailException("NPE"));
-        if (!refundResponse.PCD_PAY_RST().equals(SUCCESS.getName()))
-            throw new RefundFailException(refundResponse.PCD_PAY_CODE());
+                .orElseThrow(() -> {
+                    log.error("RefundFail : NPE");
+                    throw new RefundFailException();
+                });
+        if (!refundResponse.PCD_PAY_RST().equals(SUCCESS.getName())) {
+            log.error("Refund fail : {}", refundResponse.PCD_PAY_CODE());
+            throw new RefundFailException();
+        }
     }
 
     private Map<String, String> getRefundRequestBody(CertificationResponse response, Payment payment) {

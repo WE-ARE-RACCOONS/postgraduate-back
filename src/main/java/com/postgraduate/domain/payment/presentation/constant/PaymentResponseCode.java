@@ -12,7 +12,8 @@ public enum PaymentResponseCode {
     PAYMENT_DELETE("PM203"),
 
     PAYMENT_NOT_FOUND("EX600"),
-    PAYMENT_FAIL("EX601");
+    PAYMENT_FAIL("EX601"),
+    REFUND_FAIL("EX602");
 
     private final String code;
 }
