@@ -1,12 +1,14 @@
 package com.postgraduate.domain.senior.domain.service;
 
-import com.postgraduate.domain.available.application.dto.req.AvailableCreateRequest;
-import com.postgraduate.domain.senior.application.dto.req.SeniorMyPageProfileRequest;
-import com.postgraduate.domain.senior.domain.entity.Info;
-import com.postgraduate.domain.senior.domain.entity.Profile;
-import com.postgraduate.domain.senior.domain.entity.Senior;
-import com.postgraduate.domain.senior.domain.entity.constant.Status;
-import com.postgraduate.domain.user.user.domain.entity.User;
+import com.postgraduate.domain.member.senior.application.dto.req.AvailableCreateRequest;
+import com.postgraduate.domain.member.senior.application.dto.req.SeniorMyPageProfileRequest;
+import com.postgraduate.domain.member.senior.domain.entity.Info;
+import com.postgraduate.domain.member.senior.domain.entity.Profile;
+import com.postgraduate.domain.member.senior.domain.entity.Senior;
+import com.postgraduate.domain.member.senior.domain.entity.constant.Status;
+import com.postgraduate.domain.member.senior.domain.service.SeniorUpdateService;
+import com.postgraduate.domain.member.user.domain.entity.User;
+import com.postgraduate.domain.member.user.domain.entity.Wish;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,10 +16,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static com.postgraduate.domain.senior.application.mapper.SeniorMapper.mapToInfo;
-import static com.postgraduate.domain.senior.application.mapper.SeniorMapper.mapToProfile;
-import static com.postgraduate.domain.senior.domain.entity.constant.Status.APPROVE;
-import static com.postgraduate.domain.user.user.domain.entity.constant.Role.SENIOR;
+import static com.postgraduate.domain.member.senior.application.mapper.SeniorMapper.mapToInfo;
+import static com.postgraduate.domain.member.senior.application.mapper.SeniorMapper.mapToProfile;
+import static com.postgraduate.domain.member.user.domain.entity.constant.Role.SENIOR;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.time.LocalDateTime.now;
@@ -29,11 +30,11 @@ class SeniorUpdateServiceTest {
     @InjectMocks
     private SeniorUpdateService seniorUpdateService;
 
-    private User user = new User(1L, 2L, "a", "b", "c", "d", 0, SENIOR, FALSE, now(), now(), TRUE);
+    private User user = new User(1L, 2L, "a", "b", "c", "d", 0, SENIOR, FALSE, now(), now(), TRUE, TRUE, new Wish());
     private Senior senior;
     @BeforeEach
     void setting() {
-        senior = new Senior(1L, user, "a", Status.WAITING, 1, 100, new Info(), new Profile(), now(), now());
+        senior = new Senior(1L, user, "a", Status.WAITING, 1, 100, new Info(), new Profile(), now(), now(), null, null);
     }
 
     @Test

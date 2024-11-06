@@ -1,9 +1,10 @@
 package com.postgraduate.domain.image.application.usecase;
 
-import com.postgraduate.domain.auth.util.ProfileUtils;
-import com.postgraduate.domain.image.application.dto.res.ImageUrlResponse;
-import com.postgraduate.domain.user.user.domain.entity.User;
+import com.postgraduate.global.auth.login.util.ProfileUtils;
+import com.postgraduate.global.image.application.dto.res.ImageUrlResponse;
+import com.postgraduate.domain.member.user.domain.entity.User;
 import com.postgraduate.global.config.s3.S3UploadService;
+import com.postgraduate.global.image.application.usecase.ImageUploadUseCase;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,7 +16,7 @@ import org.springframework.mock.web.MockMultipartFile;
 
 import java.time.LocalDateTime;
 
-import static com.postgraduate.domain.user.user.domain.entity.constant.Role.USER;
+import static com.postgraduate.domain.member.user.domain.entity.constant.Role.USER;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static org.mockito.BDDMockito.*;
@@ -46,7 +47,7 @@ class ImageUploadUseTypeTest {
     void uploadProfile() {
         User user = new User(-1L, -1234L, "abc.com", "abc"
                 , " 123123", "abcab", 0
-                , USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), FALSE);
+                , USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), FALSE, TRUE, null);
 
         MockMultipartFile mockMultipartFile = new MockMultipartFile("profile", new byte[]{});
         given(s3UploadService.saveProfileFile(mockMultipartFile))

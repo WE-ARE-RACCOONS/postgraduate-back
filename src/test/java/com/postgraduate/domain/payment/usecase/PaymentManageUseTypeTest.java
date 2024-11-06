@@ -5,12 +5,12 @@ import com.postgraduate.domain.payment.application.usecase.PaymentManageUseCase;
 import com.postgraduate.domain.payment.domain.service.PaymentGetService;
 import com.postgraduate.domain.payment.domain.service.PaymentSaveService;
 import com.postgraduate.domain.payment.domain.service.PaymentUpdateService;
-import com.postgraduate.domain.senior.domain.entity.Info;
-import com.postgraduate.domain.senior.domain.entity.Profile;
-import com.postgraduate.domain.senior.domain.entity.Senior;
-import com.postgraduate.domain.senior.domain.service.SeniorGetService;
-import com.postgraduate.domain.user.user.domain.entity.User;
-import com.postgraduate.domain.user.user.domain.service.UserGetService;
+import com.postgraduate.domain.member.senior.domain.entity.Info;
+import com.postgraduate.domain.member.senior.domain.entity.Profile;
+import com.postgraduate.domain.member.senior.domain.entity.Senior;
+import com.postgraduate.domain.member.senior.domain.service.SeniorGetService;
+import com.postgraduate.domain.member.user.domain.entity.User;
+import com.postgraduate.domain.member.user.domain.service.UserGetService;
 import com.postgraduate.global.slack.SlackPaymentMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -23,9 +23,9 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.time.LocalDateTime;
 
-import static com.postgraduate.domain.senior.domain.entity.constant.Status.APPROVE;
-import static com.postgraduate.domain.user.user.domain.entity.constant.Role.SENIOR;
-import static com.postgraduate.domain.user.user.domain.entity.constant.Role.USER;
+import static com.postgraduate.domain.member.senior.domain.entity.constant.Status.APPROVE;
+import static com.postgraduate.domain.member.user.domain.entity.constant.Role.SENIOR;
+import static com.postgraduate.domain.member.user.domain.entity.constant.Role.USER;
 import static java.lang.Boolean.TRUE;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -63,13 +63,13 @@ class PaymentManageUseTypeTest {
         profile = new Profile("a", "a", "a");
         user = new User(-1L, 1234L, "a",
                 "a", "123", "a",
-                0, SENIOR, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE);
+                0, SENIOR, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE, TRUE, null);
         mentoringUser = new User(-2L, 12345L, "a",
                 "a", "123", "a",
-                0, USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE);
+                0, USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE, TRUE, null);
         senior = new Senior(-1L, user, "a",
                 APPROVE, 1,1, info, profile,
-                LocalDateTime.now(), LocalDateTime.now());
+                LocalDateTime.now(), LocalDateTime.now(), null, null);
     }
 
     @Test

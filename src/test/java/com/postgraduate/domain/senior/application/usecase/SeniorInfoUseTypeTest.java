@@ -1,17 +1,18 @@
 package com.postgraduate.domain.senior.application.usecase;
 
-import com.postgraduate.domain.available.application.dto.res.AvailableTimesResponse;
-import com.postgraduate.domain.available.domain.entity.Available;
-import com.postgraduate.domain.available.domain.service.AvailableGetService;
-import com.postgraduate.domain.senior.application.dto.res.AllSeniorSearchResponse;
-import com.postgraduate.domain.senior.application.dto.res.SeniorDetailResponse;
-import com.postgraduate.domain.senior.application.dto.res.SeniorProfileResponse;
-import com.postgraduate.domain.senior.domain.entity.Info;
-import com.postgraduate.domain.senior.domain.entity.Profile;
-import com.postgraduate.domain.senior.domain.entity.Senior;
-import com.postgraduate.domain.senior.domain.service.SeniorGetService;
-import com.postgraduate.domain.senior.domain.service.SeniorUpdateService;
-import com.postgraduate.domain.user.user.domain.entity.User;
+import com.postgraduate.domain.member.senior.application.dto.res.AvailableTimesResponse;
+import com.postgraduate.domain.member.senior.application.usecase.SeniorInfoUseCase;
+import com.postgraduate.domain.member.senior.domain.entity.Available;
+import com.postgraduate.domain.member.senior.application.dto.res.AllSeniorSearchResponse;
+import com.postgraduate.domain.member.senior.application.dto.res.SeniorDetailResponse;
+import com.postgraduate.domain.member.senior.application.dto.res.SeniorProfileResponse;
+import com.postgraduate.domain.member.senior.domain.entity.Info;
+import com.postgraduate.domain.member.senior.domain.entity.Profile;
+import com.postgraduate.domain.member.senior.domain.entity.Senior;
+import com.postgraduate.domain.member.senior.domain.service.SeniorGetService;
+import com.postgraduate.domain.member.senior.domain.service.SeniorUpdateService;
+import com.postgraduate.domain.member.user.domain.entity.User;
+import com.postgraduate.domain.member.user.domain.entity.Wish;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,8 +26,8 @@ import org.springframework.data.domain.PageImpl;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.postgraduate.domain.senior.domain.entity.constant.Status.APPROVE;
-import static com.postgraduate.domain.user.user.domain.entity.constant.Role.USER;
+import static com.postgraduate.domain.member.senior.domain.entity.constant.Status.APPROVE;
+import static com.postgraduate.domain.member.user.domain.entity.constant.Role.USER;
 import static java.lang.Boolean.TRUE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -40,8 +41,6 @@ class SeniorInfoUseTypeTest {
     private SeniorGetService seniorGetService;
     @Mock
     private SeniorUpdateService seniorUpdateService;
-    @Mock
-    private AvailableGetService availableGetService;
     @InjectMocks
     private SeniorInfoUseCase seniorInfoUseCase;
 
@@ -50,20 +49,25 @@ class SeniorInfoUseTypeTest {
     private Senior senior;
     private Info info;
     private Profile profile;
+    private List<Available> availables;
 
     @BeforeEach
     void setting() {
+        Available available1 = new Available(1L, "월", "12:00", "18:00", senior);
+        Available available2 = new Available(2L, "화", "12:00", "18:00", senior);
+        Available available3 = new Available(3L, "수", "12:00", "18:00", senior);
+        availables = List.of(available1, available2, available3);
         info = new Info("a", "a", "a", "a", "a", "a", TRUE, TRUE, "a", "chatLink", 30);
         profile = new Profile("a", "a", "a");
         user = new User(1L, 1234L, "a",
                 "a", "123", "a",
-                1, USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE);
+                1, USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE, TRUE, null);
         originUser = new User(2L, 12345L, "a",
                 "a", "12345", "a",
-                1, USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE);
+                1, USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE, TRUE, new Wish());
         senior = new Senior(1L, user, "a",
                 APPROVE, 1, 1, info, profile,
-                LocalDateTime.now(), LocalDateTime.now());
+                LocalDateTime.now(), LocalDateTime.now(), availables, null);
     }
 
     @Test
@@ -76,8 +80,6 @@ class SeniorInfoUseTypeTest {
 
         given(seniorGetService.bySeniorId(any()))
                 .willReturn(senior);
-        given(availableGetService.bySenior(senior))
-                .willReturn(availables);
 
         SeniorDetailResponse seniorDetail = seniorInfoUseCase.getSeniorDetail(user, senior.getSeniorId());
 
@@ -93,7 +95,7 @@ class SeniorInfoUseTypeTest {
     void getSearchSeniorWithNull() {
         Senior otherSenior = new Senior(-2L, user, "a",
                 APPROVE, 1, 1, info, profile,
-                LocalDateTime.now(), LocalDateTime.now());
+                LocalDateTime.now(), LocalDateTime.now(), null, null);
         List<Senior> seniors = List.of(senior, otherSenior);
         Page<Senior> seniorPage = new PageImpl<>(seniors);
 
@@ -111,7 +113,7 @@ class SeniorInfoUseTypeTest {
     void getSearchSeniorWithPage() {
         Senior senior1 = new Senior(1L, user, "a",
                 APPROVE, 1, 1, info, profile,
-                LocalDateTime.now(), LocalDateTime.now());
+                LocalDateTime.now(), LocalDateTime.now(), null, null);
         List<Senior> seniors = List.of(senior, senior1);
         Page<Senior> seniorPage = new PageImpl<>(seniors);
 
@@ -129,7 +131,7 @@ class SeniorInfoUseTypeTest {
     void getFieldSeniorWithNull() {
         Senior senior1 = new Senior(1L, user, "a",
                 APPROVE, 1, 1,info, profile,
-                LocalDateTime.now(), LocalDateTime.now());
+                LocalDateTime.now(), LocalDateTime.now(), null, null);
         List<Senior> seniors = List.of(senior, senior1);
         Page<Senior> seniorPage = new PageImpl<>(seniors);
 
@@ -147,7 +149,7 @@ class SeniorInfoUseTypeTest {
     void getFieldSeniorWithPage() {
         Senior senior1 = new Senior(1L, user, "a",
                 APPROVE, 1, 1, info, profile,
-                LocalDateTime.now(), LocalDateTime.now());
+                LocalDateTime.now(), LocalDateTime.now(), null, null);
         List<Senior> seniors = List.of(senior, senior1);
         Page<Senior> seniorPage = new PageImpl<>(seniors);
 
@@ -187,15 +189,8 @@ class SeniorInfoUseTypeTest {
     @Test
     @DisplayName("선배 가능 시간 조회")
     void getSeniorTimes() {
-        Available available1 = new Available(1L, "월", "12:00", "18:00", senior);
-        Available available2 = new Available(2L, "화", "12:00", "18:00", senior);
-        Available available3 = new Available(3L, "수", "12:00", "18:00", senior);
-        List<Available> availables = List.of(available1, available2, available3);
-
         given(seniorGetService.bySeniorId(senior.getSeniorId()))
                 .willReturn(senior);
-        given(availableGetService.bySenior(senior))
-                .willReturn(availables);
 
         AvailableTimesResponse seniorTimes = seniorInfoUseCase.getSeniorTimes(senior.getSeniorId());
 

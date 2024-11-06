@@ -1,10 +1,10 @@
 package com.postgraduate.domain.auth.presentation;
 
-import com.postgraduate.domain.auth.application.dto.req.*;
-import com.postgraduate.domain.auth.application.dto.res.AuthUserResponse;
-import com.postgraduate.domain.auth.application.dto.res.JwtTokenResponse;
-import com.postgraduate.domain.auth.presentation.constant.Provider;
-import com.postgraduate.domain.user.user.domain.entity.User;
+import com.postgraduate.global.auth.login.application.dto.req.*;
+import com.postgraduate.global.auth.login.application.dto.res.AuthUserResponse;
+import com.postgraduate.global.auth.login.application.dto.res.JwtTokenResponse;
+import com.postgraduate.global.auth.login.presentation.constant.Provider;
+import com.postgraduate.domain.member.user.domain.entity.User;
 import com.postgraduate.support.ControllerTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,11 +12,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 
-import static com.postgraduate.domain.auth.presentation.constant.AuthResponseCode.*;
-import static com.postgraduate.domain.auth.presentation.constant.AuthResponseMessage.*;
-import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseCode.SENIOR_CREATE;
-import static com.postgraduate.domain.senior.presentation.constant.SeniorResponseMessage.CREATE_SENIOR;
-import static com.postgraduate.domain.user.user.domain.entity.constant.Role.USER;
+import static com.postgraduate.domain.member.senior.presentation.constant.SeniorResponseCode.*;
+import static com.postgraduate.domain.member.senior.presentation.constant.SeniorResponseMessage.*;
+import static com.postgraduate.domain.member.user.domain.entity.constant.Role.USER;
+import static com.postgraduate.global.auth.login.presentation.constant.AuthResponseCode.*;
+import static com.postgraduate.global.auth.login.presentation.constant.AuthResponseMessage.*;
+import static java.lang.Boolean.TRUE;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
@@ -37,7 +38,7 @@ class AuthControllerTest extends ControllerTest {
         CodeRequest codeRequest = new CodeRequest("code");
         String request = objectMapper.writeValueAsString(codeRequest);
         AuthUserResponse response = new AuthUserResponse(user, user.getSocialId());
-        JwtTokenResponse tokenResponse = new JwtTokenResponse("access", 10, "refresh", 10, USER);
+        JwtTokenResponse tokenResponse = new JwtTokenResponse("access", 10, "refresh", 10, USER, TRUE);
         given(selectOauth.selectSignIn(Provider.KAKAO))
                 .willReturn(kakaoSignInUseCase);
         given(kakaoSignInUseCase.getUser(codeRequest))
@@ -91,7 +92,7 @@ class AuthControllerTest extends ControllerTest {
         SignUpRequest signUpRequest = new SignUpRequest(user.getSocialId(), user.getPhoneNumber(), user.getNickName(),
                 user.getMarketingReceive(), "major", "field", true);
         String request = objectMapper.writeValueAsString(signUpRequest);
-        JwtTokenResponse tokenResponse = new JwtTokenResponse("access", 10, "refresh", 10, USER);
+        JwtTokenResponse tokenResponse = new JwtTokenResponse("access", 10, "refresh", 10, USER, TRUE);
 
         given(signUpUseCase.userSignUp(signUpRequest))
                 .willReturn(user);
@@ -117,7 +118,7 @@ class AuthControllerTest extends ControllerTest {
     @WithMockUser
     @DisplayName("대학원생이 대학생으로 변경한다.")
     void changeUserToken() throws Exception {
-        JwtTokenResponse tokenResponse = new JwtTokenResponse("access", 10, "refresh", 10, USER);
+        JwtTokenResponse tokenResponse = new JwtTokenResponse("access", 10, "refresh", 10, USER, TRUE);
 
         given(jwtUseCase.changeUser(any()))
                 .willReturn(tokenResponse);
@@ -142,7 +143,7 @@ class AuthControllerTest extends ControllerTest {
         String request = objectMapper.writeValueAsString(
                 new UserChangeRequest("major", "field", true)
         );
-        JwtTokenResponse tokenResponse = new JwtTokenResponse("access", 10, "refresh", 10, USER);
+        JwtTokenResponse tokenResponse = new JwtTokenResponse("access", 10, "refresh", 10, USER, TRUE);
 
         willDoNothing().given(signUpUseCase)
                 .changeUser(any(), any());
@@ -174,7 +175,7 @@ class AuthControllerTest extends ControllerTest {
                         true, "전공", "서울대학교", "교수", "연구실",
                         "AI", "키워드", "chatLink")
         );
-        JwtTokenResponse tokenResponse = new JwtTokenResponse("access", 10, "refresh", 10, USER);
+        JwtTokenResponse tokenResponse = new JwtTokenResponse("access", 10, "refresh", 10, USER, TRUE);
 
         given(signUpUseCase.seniorSignUp(any()))
                 .willReturn(user);
@@ -204,7 +205,7 @@ class AuthControllerTest extends ControllerTest {
                 new SeniorChangeRequest("major", "field", "교수", "연구실",
                         "AI", "키워드", "chatLink")
         );
-        JwtTokenResponse tokenResponse = new JwtTokenResponse("access", 10, "refresh", 10, USER);
+        JwtTokenResponse tokenResponse = new JwtTokenResponse("access", 10, "refresh", 10, USER, TRUE);
 
         given(signUpUseCase.changeSenior(any(), any()))
                 .willReturn(user);
@@ -230,7 +231,7 @@ class AuthControllerTest extends ControllerTest {
     @WithMockUser
     @DisplayName("대학생이 대학원생으로 변경한다.")
     void changeSeniorToken() throws Exception {
-        JwtTokenResponse tokenResponse = new JwtTokenResponse("access", 10, "refresh", 10, USER);
+        JwtTokenResponse tokenResponse = new JwtTokenResponse("access", 10, "refresh", 10, USER, TRUE);
 
         given(jwtUseCase.changeSenior(any()))
                 .willReturn(tokenResponse);
@@ -252,7 +253,7 @@ class AuthControllerTest extends ControllerTest {
     @WithMockUser
     @DisplayName("토큰을 재발급한다.")
     void refresh() throws Exception {
-        JwtTokenResponse tokenResponse = new JwtTokenResponse("access", 10, "refresh", 10, USER);
+        JwtTokenResponse tokenResponse = new JwtTokenResponse("access", 10, "refresh", 10, USER, TRUE);
 
         given(jwtUseCase.regenerateToken(any(), any()))
                 .willReturn(tokenResponse);

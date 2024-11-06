@@ -1,0 +1,1 @@
+ALTER TABLE quit MODIFY reason varchar(255);

@@ -8,9 +8,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+import static com.postgraduate.domain.member.user.domain.entity.QUser.user;
 import static com.postgraduate.domain.mentoring.domain.entity.QMentoring.mentoring;
 import static com.postgraduate.domain.payment.domain.entity.QPayment.payment;
-import static com.postgraduate.domain.user.user.domain.entity.QUser.user;
 import static java.util.Optional.ofNullable;
 
 @RequiredArgsConstructor
@@ -22,7 +22,7 @@ public class AdminPaymentRepository {
         List<Tuple> fetch = queryFactory.select(payment, mentoring)
                 .from(payment)
                 .distinct()
-                .leftJoin(payment.user, user)
+            .leftJoin(payment.user, user)
                 .fetchJoin()
                 .leftJoin(mentoring)
                 .on(mentoring.payment.eq(payment))

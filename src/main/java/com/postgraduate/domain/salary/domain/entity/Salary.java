@@ -1,6 +1,6 @@
 package com.postgraduate.domain.salary.domain.entity;
 
-import com.postgraduate.domain.senior.domain.entity.Senior;
+import com.postgraduate.domain.member.senior.domain.entity.Senior;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,27 +1,18 @@
 package com.postgraduate.domain.salary.domain.repository;
 
-import com.postgraduate.domain.salary.application.dto.SeniorSalary;
+import com.postgraduate.domain.member.user.domain.entity.QUser;
 import com.postgraduate.domain.salary.domain.entity.Salary;
-import com.postgraduate.domain.senior.domain.entity.Senior;
-import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.impl.JPAQuery;
+import com.postgraduate.domain.member.senior.domain.entity.Senior;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
 import java.util.List;
 
-import static com.postgraduate.domain.account.domain.entity.QAccount.account;
+import static com.postgraduate.domain.member.senior.domain.entity.QSenior.senior;
+import static com.postgraduate.domain.member.user.domain.entity.QUser.user;
 import static com.postgraduate.domain.salary.domain.entity.QSalary.salary;
-import static com.postgraduate.domain.senior.domain.entity.QSenior.senior;
-import static com.postgraduate.domain.user.user.domain.entity.QUser.user;
-import static com.querydsl.core.types.Projections.constructor;
-import static java.lang.Boolean.FALSE;
 
 @Repository
 @RequiredArgsConstructor

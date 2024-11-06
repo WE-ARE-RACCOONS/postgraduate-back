@@ -1,5 +1,8 @@
 package com.postgraduate.batch.scheduler;
 
+import com.postgraduate.domain.member.senior.domain.service.SeniorGetService;
+import com.postgraduate.domain.salary.domain.service.SalaryGetService;
+import com.postgraduate.global.slack.SlackErrorMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
@@ -20,6 +23,8 @@ import java.time.LocalDateTime;
 @Slf4j
 @RequiredArgsConstructor
 public class JobSchedulerConfig {
+    private static final int MAX_RETRIES = 5;
+
     private final JobLauncher jobLauncher;
     @Qualifier("cancelJob")
     private final Job cancelJob;
@@ -29,6 +34,10 @@ public class JobSchedulerConfig {
     private final Job salaryJob;
     @Qualifier("salaryJobWithAdmin")
     private final Job salaryJobWithAdmin;
+
+    private final SeniorGetService seniorGetService;
+    private final SalaryGetService salaryGetService;
+    private final SlackErrorMessage slackErrorMessage;
 
     @Scheduled(cron = "0 59 23 * * *", zone = "Asia/Seoul")
     public void launchCancelJob() throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
@@ -52,6 +61,7 @@ public class JobSchedulerConfig {
                 .addLocalDateTime("date", LocalDateTime.now())
                 .toJobParameters();
         jobLauncher.run(salaryJob, jobParameters);
+        checkSalaryJobSuccess(jobParameters);
     }
 
     public void launchSalaryJobWithAdmin() throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
@@ -59,5 +69,32 @@ public class JobSchedulerConfig {
                 .addLocalDateTime("date", LocalDateTime.now())
                 .toJobParameters();
         jobLauncher.run(salaryJobWithAdmin, jobParameters);
+        checkSalaryJobSuccess(jobParameters);
+    }
+
+    private void checkSalaryJobSuccess(JobParameters jobParameters) throws JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException, JobParametersInvalidException {
+        int retries = 0;
+        boolean success = false;
+        int seniorSize = seniorGetService.allSeniorId()
+                .size();
+        while (retries < MAX_RETRIES){
+            int salarySize = salaryGetService.findAllNext()
+                    .size();
+            if (salarySize == seniorSize) {
+                success = true;
+                break;
+            }
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt(); //스레드 상태 복원
+                log.error("Thread Interrupt 발생");
+            }
+            jobLauncher.run(salaryJobWithAdmin, jobParameters);
+            retries++;
+        }
+        if (!success) {
+            slackErrorMessage.sendSlackSalaryError();
+        }
     }
 }

@@ -8,16 +8,15 @@ import com.postgraduate.admin.domain.service.AdminMentoringService;
 import com.postgraduate.admin.domain.service.AdminPaymentService;
 import com.postgraduate.admin.domain.service.AdminSalaryService;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
-import com.postgraduate.domain.mentoring.domain.entity.constant.Status;
 import com.postgraduate.domain.payment.application.usecase.PaymentManageUseCase;
-import com.postgraduate.domain.user.user.domain.entity.User;
+import com.postgraduate.domain.member.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.DONE;
+import static com.postgraduate.domain.mentoring.domain.entity.constant.MentoringStatus.DONE;
 
 @Service
 @Transactional

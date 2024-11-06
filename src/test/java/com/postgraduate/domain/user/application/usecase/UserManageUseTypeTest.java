@@ -1,12 +1,12 @@
 package com.postgraduate.domain.user.application.usecase;
 
-import com.postgraduate.domain.user.user.application.dto.req.UserInfoRequest;
-import com.postgraduate.domain.user.user.application.usecase.UserManageUseCase;
-import com.postgraduate.domain.user.user.application.utils.UserUtils;
-import com.postgraduate.domain.user.user.domain.entity.User;
-import com.postgraduate.domain.user.user.domain.service.UserGetService;
-import com.postgraduate.domain.user.user.domain.service.UserUpdateService;
-import com.postgraduate.domain.user.user.exception.PhoneNumberException;
+import com.postgraduate.domain.member.user.application.dto.req.UserInfoRequest;
+import com.postgraduate.domain.member.user.application.usecase.UserManageUseCase;
+import com.postgraduate.domain.member.user.application.utils.UserUtils;
+import com.postgraduate.domain.member.user.domain.entity.User;
+import com.postgraduate.domain.member.user.domain.service.UserGetService;
+import com.postgraduate.domain.member.user.domain.service.UserUpdateService;
+import com.postgraduate.domain.member.user.exception.PhoneNumberException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

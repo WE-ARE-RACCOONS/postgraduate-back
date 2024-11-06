@@ -10,10 +10,10 @@ import com.postgraduate.domain.payment.domain.service.PaymentSaveService;
 import com.postgraduate.domain.payment.domain.service.PaymentUpdateService;
 import com.postgraduate.domain.payment.exception.CertificationFailException;
 import com.postgraduate.domain.payment.exception.RefundFailException;
-import com.postgraduate.domain.senior.domain.entity.Senior;
-import com.postgraduate.domain.senior.domain.service.SeniorGetService;
-import com.postgraduate.domain.user.user.domain.entity.User;
-import com.postgraduate.domain.user.user.domain.service.UserGetService;
+import com.postgraduate.domain.member.senior.domain.entity.Senior;
+import com.postgraduate.domain.member.senior.domain.service.SeniorGetService;
+import com.postgraduate.domain.member.user.domain.entity.User;
+import com.postgraduate.domain.member.user.domain.service.UserGetService;
 import com.postgraduate.global.slack.SlackPaymentMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +30,7 @@ import java.util.Optional;
 
 import static com.postgraduate.domain.payment.application.usecase.constant.PaymentParameter.*;
 import static com.postgraduate.domain.payment.presentation.constant.PaymentResponseMessage.FAIL_PAYMENT;
-import static com.postgraduate.domain.user.user.domain.entity.constant.Role.ADMIN;
+import static com.postgraduate.domain.member.user.domain.entity.constant.Role.ADMIN;
 import static org.springframework.http.CacheControl.noCache;
 
 @Service
@@ -101,8 +101,10 @@ public class PaymentManageUseCase {
     }
 
     public void refundPayByAdmin(User user, Long paymentId) {
-        if (user.getRole() != ADMIN)
-            throw new RefundFailException("NOT ADMIN");
+        if (user.getRole() != ADMIN) {
+            log.error("Refund Fail : NOT ADMIN");
+            throw new RefundFailException();
+        }
         Payment payment = paymentGetService.byId(paymentId);
         log.info("환불 진행 paymentId : {}", paymentId);
         refundPay(payment);
@@ -154,9 +156,14 @@ public class PaymentManageUseCase {
                         .retrieve()
                         .bodyToMono(RefundResponse.class)
                         .block())
-                .orElseThrow(() -> new RefundFailException("NPE"));
-        if (!refundResponse.PCD_PAY_RST().equals(SUCCESS.getName()))
-            throw new RefundFailException(refundResponse.PCD_PAY_CODE());
+                .orElseThrow(() -> {
+                    log.error("RefundFail : NPE");
+                    throw new RefundFailException();
+                });
+        if (!refundResponse.PCD_PAY_RST().equals(SUCCESS.getName())) {
+            log.error("Refund fail : {}", refundResponse.PCD_PAY_CODE());
+            throw new RefundFailException();
+        }
     }
 
     private Map<String, String> getRefundRequestBody(CertificationResponse response, Payment payment) {

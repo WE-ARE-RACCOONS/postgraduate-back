@@ -6,24 +6,17 @@ import com.postgraduate.admin.application.dto.res.MentoringInfo;
 import com.postgraduate.admin.application.mapper.AdminMapper;
 import com.postgraduate.admin.domain.service.*;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
-import com.postgraduate.domain.mentoring.domain.service.MentoringGetService;
-import com.postgraduate.domain.mentoring.domain.service.MentoringUpdateService;
 import com.postgraduate.domain.payment.application.usecase.PaymentManageUseCase;
 import com.postgraduate.domain.payment.domain.entity.Payment;
-import com.postgraduate.domain.salary.domain.entity.Salary;
-import com.postgraduate.domain.salary.domain.service.SalaryGetService;
-import com.postgraduate.domain.salary.domain.service.SalaryUpdateService;
-import com.postgraduate.domain.senior.domain.entity.Senior;
-import com.postgraduate.domain.senior.domain.service.SeniorGetService;
-import com.postgraduate.domain.user.user.domain.entity.User;
-import com.postgraduate.domain.user.user.domain.service.UserGetService;
+import com.postgraduate.domain.member.senior.domain.entity.Senior;
+import com.postgraduate.domain.member.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.postgraduate.domain.mentoring.domain.entity.constant.Status.DONE;
+import static com.postgraduate.domain.mentoring.domain.entity.constant.MentoringStatus.DONE;
 
 @Service
 @Transactional

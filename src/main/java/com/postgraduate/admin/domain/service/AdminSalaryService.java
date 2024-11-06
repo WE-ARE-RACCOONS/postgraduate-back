@@ -5,7 +5,7 @@ import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.salary.exception.SalaryNotFoundException;
 import com.postgraduate.domain.salary.util.SalaryUtil;
-import com.postgraduate.domain.senior.domain.entity.Senior;
+import com.postgraduate.domain.member.senior.domain.entity.Senior;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

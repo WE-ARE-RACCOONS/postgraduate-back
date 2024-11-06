@@ -1,12 +1,12 @@
 package com.postgraduate.admin.application.dto.res;
 
-import com.postgraduate.domain.mentoring.domain.entity.constant.Status;
+import com.postgraduate.domain.mentoring.domain.entity.constant.MentoringStatus;
 
 import java.time.LocalDateTime;
 
 public record MentoringInfo(
         Long mentoringId,
-        Status status,
+        MentoringStatus mentoringStatus,
         String nickName,
         String phoneNumber,
         LocalDateTime createdAt,

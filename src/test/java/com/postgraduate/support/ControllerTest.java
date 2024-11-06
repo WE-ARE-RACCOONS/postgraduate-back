@@ -1,31 +1,33 @@
 package com.postgraduate.support;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.postgraduate.domain.auth.application.usecase.jwt.JwtUseCase;
-import com.postgraduate.domain.auth.application.usecase.oauth.SelectOauth;
-import com.postgraduate.domain.auth.application.usecase.oauth.SignUpUseCase;
-import com.postgraduate.domain.auth.application.usecase.oauth.kakao.KakaoSignInUseCase;
-import com.postgraduate.domain.auth.presentation.AuthController;
+import com.postgraduate.global.auth.login.application.usecase.jwt.JwtUseCase;
+import com.postgraduate.global.auth.login.application.usecase.oauth.SelectOauth;
+import com.postgraduate.global.auth.login.application.usecase.oauth.SignUpUseCase;
+import com.postgraduate.global.auth.login.application.usecase.oauth.kakao.KakaoSignInUseCase;
+import com.postgraduate.global.auth.login.presentation.AuthController;
 import com.postgraduate.domain.mentoring.application.usecase.MentoringManageUseCase;
 import com.postgraduate.domain.mentoring.application.usecase.MentoringSeniorInfoUseCase;
 import com.postgraduate.domain.mentoring.application.usecase.MentoringUserInfoUseCase;
 import com.postgraduate.domain.mentoring.presentation.MentoringController;
 import com.postgraduate.domain.salary.application.usecase.SalaryInfoUseCase;
 import com.postgraduate.domain.salary.presentation.SalaryController;
-import com.postgraduate.domain.senior.application.usecase.SeniorInfoUseCase;
-import com.postgraduate.domain.senior.application.usecase.SeniorManageUseCase;
-import com.postgraduate.domain.senior.application.usecase.SeniorMyPageUseCase;
-import com.postgraduate.domain.senior.presentation.SeniorController;
-import com.postgraduate.domain.user.quit.application.usecase.QuitManageUseCase;
-import com.postgraduate.domain.user.user.application.usecase.UserManageUseCase;
-import com.postgraduate.domain.user.user.application.usecase.UserMyPageUseCase;
-import com.postgraduate.domain.user.user.presentation.UserController;
+import com.postgraduate.domain.member.senior.application.usecase.SeniorInfoUseCase;
+import com.postgraduate.domain.member.senior.application.usecase.SeniorManageUseCase;
+import com.postgraduate.domain.member.senior.application.usecase.SeniorMyPageUseCase;
+import com.postgraduate.domain.member.senior.presentation.SeniorController;
+import com.postgraduate.global.auth.quit.application.usecase.QuitManageUseCase;
+import com.postgraduate.domain.member.user.application.usecase.UserManageUseCase;
+import com.postgraduate.domain.member.user.application.usecase.UserMyPageUseCase;
+import com.postgraduate.domain.member.user.presentation.UserController;
 import com.postgraduate.global.aop.lock.DistributeLockAspect;
+import com.postgraduate.global.exception.GlobalExceptionHandler;
 import com.postgraduate.global.slack.SlackLogErrorMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -37,6 +39,7 @@ import org.springframework.web.context.WebApplicationContext;
         AuthController.class
 })
 @AutoConfigureMockMvc
+@ActiveProfiles("test")
 public class ControllerTest {
 
     @Autowired
@@ -77,6 +80,8 @@ public class ControllerTest {
     protected SlackLogErrorMessage slackLogErrorMessage;
     @MockBean
     protected DistributeLockAspect distributeLockAspect;
+    @MockBean
+    protected GlobalExceptionHandler globalExceptionHandler;
     protected Resource resource = new Resource();
 
 }

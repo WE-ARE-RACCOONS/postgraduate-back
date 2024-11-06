@@ -9,9 +9,9 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import static com.postgraduate.domain.member.senior.domain.entity.QSenior.senior;
+import static com.postgraduate.domain.member.user.domain.entity.QUser.user;
 import static com.postgraduate.domain.salary.domain.entity.QSalary.salary;
-import static com.postgraduate.domain.senior.domain.entity.QSenior.senior;
-import static com.postgraduate.domain.user.user.domain.entity.QUser.user;
 
 @RequiredArgsConstructor
 @Repository
