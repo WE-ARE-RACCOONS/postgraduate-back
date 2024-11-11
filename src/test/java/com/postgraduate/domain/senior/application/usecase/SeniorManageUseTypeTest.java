@@ -85,7 +85,7 @@ class SeniorManageUseTypeTest {
         profile = new Profile("a", "a", "a");
         user = new User(1L, 1234L, "a",
                 "a", "123", "a",
-                1, USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE, TRUE, null);
+                1, USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE, TRUE);
         senior = new Senior(1L, user, "a",
                 APPROVE, 1, 1, info, profile,
                 LocalDateTime.now(), LocalDateTime.now(), availables, null);
@@ -152,6 +152,9 @@ class SeniorManageUseTypeTest {
                 .willReturn(senior);
 
         seniorManageUseCase.saveAccount(user, request);
+
+        verify(seniorSaveService)
+                .saveAccount(any());
     }
 
     @Test

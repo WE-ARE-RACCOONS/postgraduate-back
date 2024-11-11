@@ -30,7 +30,7 @@ class SeniorUpdateServiceTest {
     @InjectMocks
     private SeniorUpdateService seniorUpdateService;
 
-    private User user = new User(1L, 2L, "a", "b", "c", "d", 0, SENIOR, FALSE, now(), now(), TRUE, TRUE, new Wish());
+    private User user = new User(1L, 2L, "a", "b", "c", "d", 0, SENIOR, FALSE, now(), now(), TRUE, TRUE);
     private Senior senior;
     @BeforeEach
     void setting() {

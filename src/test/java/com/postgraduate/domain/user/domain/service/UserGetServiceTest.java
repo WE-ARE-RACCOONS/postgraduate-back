@@ -33,7 +33,7 @@ class UserGetServiceTest {
     void setting() {
         user = new User(-1l, -1l, "a",
                 "a", "123", "a",
-                1, USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE, TRUE, null);
+                1, USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE, TRUE);
     }
 
     @Test

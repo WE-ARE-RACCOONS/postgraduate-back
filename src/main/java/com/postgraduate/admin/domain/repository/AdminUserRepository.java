@@ -1,7 +1,7 @@
 package com.postgraduate.admin.domain.repository;
 
 import com.postgraduate.domain.member.user.domain.entity.User;
-import com.postgraduate.domain.member.user.domain.entity.Wish;
+import com.postgraduate.domain.member.user.domain.entity.constant.Role;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -16,17 +16,10 @@ import static com.postgraduate.domain.member.user.domain.entity.QUser.user;
 public class AdminUserRepository {
     private final JPAQueryFactory queryFactory;
 
-    public List<Wish> findAllJunior() {
-        return queryFactory.select(user.wish)
-                .from(user)
-                .where(user.wish.isNotNull())
+    public List<User> findAllJunior() {
+        return queryFactory.selectFrom(user)
+                .where(user.role.eq(Role.USER))
                 .fetch();
-    }
-
-    public Optional<User> findUserByWishId(Long wishId) {
-        return Optional.ofNullable(queryFactory.selectFrom(user)
-                .where(user.wish.wishId.eq(wishId))
-                .fetchOne());
     }
 
     public Optional<User> findUserByUserId(Long userId) {

@@ -138,36 +138,6 @@ class AuthControllerTest extends ControllerTest {
 
     @Test
     @WithMockUser
-    @DisplayName("선배가 후배로 추가 가입합니다.")
-    void changeUser() throws Exception {
-        String request = objectMapper.writeValueAsString(
-                new UserChangeRequest("major", "field", true)
-        );
-        JwtTokenResponse tokenResponse = new JwtTokenResponse("access", 10, "refresh", 10, USER, TRUE);
-
-        willDoNothing().given(signUpUseCase)
-                .changeUser(any(), any());
-        given(jwtUseCase.changeUser(any()))
-                .willReturn(tokenResponse);
-
-        mvc.perform(post("/auth/user/change")
-                        .header(HttpHeaders.AUTHORIZATION, BEARER)
-                        .with(csrf())
-                        .content(request)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(AUTH_CREATE.getCode()))
-                .andExpect(jsonPath("$.message").value(SUCCESS_AUTH.getMessage()))
-                .andExpect(jsonPath("$.data.accessToken").value(tokenResponse.accessToken()))
-                .andExpect(jsonPath("$.data.accessExpiration").value(tokenResponse.accessExpiration()))
-                .andExpect(jsonPath("$.data.refreshToken").value(tokenResponse.refreshToken()))
-                .andExpect(jsonPath("$.data.refreshExpiration").value(tokenResponse.refreshExpiration()))
-                .andExpect(jsonPath("$.data.role").value(tokenResponse.role().toString()));
-    }
-
-    @Test
-    @WithMockUser
     @DisplayName("선배가 회원가입한다.")
     void singUpSenior() throws Exception {
         String request = objectMapper.writeValueAsString(

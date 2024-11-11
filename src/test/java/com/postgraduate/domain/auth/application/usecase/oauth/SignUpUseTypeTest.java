@@ -94,7 +94,7 @@ class SignUpUseTypeTest {
         profile = new Profile("a", "a", "a");
         user = new User(1L, 1234L, "a",
                 "a", "123", "a",
-                1, USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE, TRUE, null);
+                1, USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE, TRUE);
         wish = new Wish(1L, "major", "field", true, user, Status.WAITING);
         senior = new Senior(1L, user, "a",
                 APPROVE, 1, 1, info, profile,
@@ -138,7 +138,7 @@ class SignUpUseTypeTest {
         assertThat(saveUser.getRole())
                 .isEqualTo(SENIOR);
         verify(userSaveService, times(1))
-                .saveSenior(any(User.class));
+                .save(any(User.class));
         verify(seniorSaveService, times(1))
                 .saveSenior(any(Senior.class));
     }

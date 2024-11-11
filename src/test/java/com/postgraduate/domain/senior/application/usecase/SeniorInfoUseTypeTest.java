@@ -61,10 +61,10 @@ class SeniorInfoUseTypeTest {
         profile = new Profile("a", "a", "a");
         user = new User(1L, 1234L, "a",
                 "a", "123", "a",
-                1, USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE, TRUE, null);
+                1, USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE, TRUE);
         originUser = new User(2L, 12345L, "a",
                 "a", "12345", "a",
-                1, USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE, TRUE, new Wish());
+                1, USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE, TRUE);
         senior = new Senior(1L, user, "a",
                 APPROVE, 1, 1, info, profile,
                 LocalDateTime.now(), LocalDateTime.now(), availables, null);

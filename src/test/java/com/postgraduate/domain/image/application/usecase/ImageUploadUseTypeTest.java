@@ -47,7 +47,7 @@ class ImageUploadUseTypeTest {
     void uploadProfile() {
         User user = new User(-1L, -1234L, "abc.com", "abc"
                 , " 123123", "abcab", 0
-                , USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), FALSE, TRUE, null);
+                , USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), FALSE, TRUE);
 
         MockMultipartFile mockMultipartFile = new MockMultipartFile("profile", new byte[]{});
         given(s3UploadService.saveProfileFile(mockMultipartFile))
