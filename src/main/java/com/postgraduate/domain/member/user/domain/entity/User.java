@@ -69,21 +69,6 @@ public class User {
     @Builder.Default
     private boolean isDelete = false;
 
-    @OneToOne(mappedBy = "user")
-    private Wish wish;
-
-    public void addWish(Wish wish) {
-        this.wish = wish;
-    }
-
-    public void updateWishDone() {
-        this.wish.updateDone();
-    }
-
-    public boolean isJunior() {
-        return this.wish != null;
-    }
-
     public void updateRole(Role role) {
         this.role = role;
     }

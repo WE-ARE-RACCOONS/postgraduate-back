@@ -8,7 +8,6 @@ import com.postgraduate.domain.member.user.domain.entity.Wish;
 import com.postgraduate.global.auth.login.application.dto.req.SeniorSignUpRequest;
 import com.postgraduate.global.auth.login.application.dto.req.SignUpRequest;
 import com.postgraduate.domain.member.user.domain.entity.User;
-import com.postgraduate.global.auth.login.application.dto.req.UserChangeRequest;
 
 public class UserMapper {
 
@@ -53,17 +52,6 @@ public class UserMapper {
     }
 
     public static Wish mapToWish(User user, SignUpRequest request) {
-        Status matchingStatus = request.matchingReceive() ? Status.WAITING : Status.REJECTED;
-        return Wish.builder()
-                .user(user)
-                .major(request.major())
-                .field(request.field())
-                .matchingReceive(request.matchingReceive())
-                .status(matchingStatus)
-                .build();
-    }
-
-    public static Wish mapToWish(User user, UserChangeRequest request) {
         Status matchingStatus = request.matchingReceive() ? Status.WAITING : Status.REJECTED;
         return Wish.builder()
                 .user(user)

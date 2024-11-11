@@ -16,7 +16,7 @@ public class UserUtils {
 
     @PostConstruct
     public void init() {
-        archiveUser = new User(-100L, -100L, null, "알수없음", "탈퇴한회원", profile, 0, null, false, null, null, false, false, null);
+        archiveUser = new User(-100L, -100L, null, "알수없음", "탈퇴한회원", profile, 0, null, false, null, null, false, false);
     }
 
     public User getArchiveUser() {
