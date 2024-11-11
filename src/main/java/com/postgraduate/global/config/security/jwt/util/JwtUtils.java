@@ -93,36 +93,7 @@ public class JwtUtils {
         return refreshToken;
     }
 
-    /**
-     * 중복 요청 임시 해결용 함수
-     */
-    public String checkPast(Long id, HttpServletRequest request) {
-        String redisToken = redisRepository.getValues(REFRESH.toString() + id)
-                .orElseThrow(NoneRefreshTokenException::new);
-
-        String refreshToken = request.getHeader(AUTHORIZATION).split(" ")[1];
-        String pastToken = redisRepository.getValues(PAST_REFRESH.toString() + id)
-                .orElse(null);
-        if (pastToken != null && pastToken.equals(refreshToken)) {
-            return getClaim(refreshToken);
-        }
-
-        return checkRedis(refreshToken, redisToken, id);
-    }
-
-    private String checkRedis(String refreshToken, String redisToken, Long id) {
-        if (!redisToken.equals(refreshToken))
-            throw new InvalidRefreshTokenException();
-        redisRepository.setValues(PAST_REFRESH.toString() + id, redisToken, Duration.ofSeconds(3));
-        return getClaim(refreshToken);
-    }
-
-    private String getClaim(String refreshToken) {
-        Claims claims = parseClaims(refreshToken);
-        return claims.get(ROLE).toString();
-    }
-
-    public String originCheckRedis(Long id, HttpServletRequest request) {
+    public String checkRedis(Long id, HttpServletRequest request) {
         String refreshToken = request.getHeader(AUTHORIZATION).split(" ")[1];
         String redisToken = redisRepository.getValues(REFRESH.toString() + id)
                 .orElseThrow(NoneRefreshTokenException::new);
