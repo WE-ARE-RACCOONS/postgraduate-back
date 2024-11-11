@@ -38,7 +38,7 @@ public class AdminUserUseCase {
 
     @Transactional(readOnly = true)
     public WishResponse wishInfo(Long userId) {
-        return adminMapper.mapToWishResponse(null); //todo : 수정 필요
+        return null; //todo : wish 변경에 따른 수정 필요
     }
 
     public void wishDone(Long wishId) {

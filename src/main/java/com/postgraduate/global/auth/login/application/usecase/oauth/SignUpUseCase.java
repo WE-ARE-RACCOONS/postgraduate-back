@@ -17,7 +17,6 @@ import com.postgraduate.domain.member.user.domain.entity.User;
 import com.postgraduate.domain.member.user.domain.service.UserGetService;
 import com.postgraduate.domain.member.user.domain.service.UserSaveService;
 import com.postgraduate.domain.member.user.domain.service.UserUpdateService;
-import com.postgraduate.domain.member.user.domain.entity.Wish;
 import com.postgraduate.global.bizppurio.application.usecase.BizppurioJuniorMessage;
 import com.postgraduate.global.bizppurio.application.usecase.BizppurioSeniorMessage;
 import com.postgraduate.global.slack.SlackSignUpMessage;
@@ -50,11 +49,10 @@ public class SignUpUseCase {
     public User userSignUp(SignUpRequest request) {
         userUtils.checkPhoneNumber(request.phoneNumber());
         User user = UserMapper.mapToUser(request, profileUtils.juniorProfile());
-        Wish wish = UserMapper.mapToWish(user, request);
         userSaveService.save(user);
         if (request.matchingReceive())
             bizppurioJuniorMessage.matchingWaiting(user);
-        slackSignUpMessage.sendJuniorSignUp(user, wish);
+        slackSignUpMessage.sendJuniorSignUp(user);
         return user;
     }
 

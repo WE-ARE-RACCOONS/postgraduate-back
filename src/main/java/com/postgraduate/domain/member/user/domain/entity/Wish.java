@@ -24,9 +24,6 @@ public class Wish {
     @Column(nullable = false)
     private Boolean matchingReceive;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    private User user;
-
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Status status;
