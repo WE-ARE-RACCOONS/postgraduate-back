@@ -1,11 +1,10 @@
 package com.postgraduate.global.auth.login.application.usecase.jwt;
 
-import com.postgraduate.global.auth.login.application.dto.res.JwtTokenResponse;
 import com.postgraduate.domain.member.senior.exception.NoneSeniorException;
 import com.postgraduate.domain.member.user.domain.entity.User;
 import com.postgraduate.domain.member.user.domain.entity.constant.Role;
 import com.postgraduate.domain.member.user.exception.DeletedUserException;
-import com.postgraduate.domain.member.user.exception.UserNotFoundException;
+import com.postgraduate.global.auth.login.application.dto.res.JwtTokenResponse;
 import com.postgraduate.global.config.security.jwt.util.JwtUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +39,7 @@ public class JwtUseCase {
     }
 
     public JwtTokenResponse regenerateToken(User user, HttpServletRequest request) {
-        String role = jwtUtils.checkPast(user.getUserId(), request);
+        String role = jwtUtils.checkRedis(user.getUserId(), request);
         if (role.equals(SENIOR.toString()))
             return seniorToken(user);
         if (role.equals(ADMIN.toString()))
@@ -59,8 +58,6 @@ public class JwtUseCase {
     }
 
     private JwtTokenResponse userToken(User user) {
-        if (!user.isJunior())
-            throw new UserNotFoundException();
         return generateToken(user, USER);
     }
 

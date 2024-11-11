@@ -3,7 +3,6 @@ package com.postgraduate.global.auth.login.application.usecase.oauth;
 import com.postgraduate.global.auth.login.application.dto.req.SeniorChangeRequest;
 import com.postgraduate.global.auth.login.application.dto.req.SeniorSignUpRequest;
 import com.postgraduate.global.auth.login.application.dto.req.SignUpRequest;
-import com.postgraduate.global.auth.login.application.dto.req.UserChangeRequest;
 import com.postgraduate.global.auth.login.util.ProfileUtils;
 import com.postgraduate.domain.salary.application.mapper.SalaryMapper;
 import com.postgraduate.domain.salary.domain.entity.Salary;
@@ -52,7 +51,7 @@ public class SignUpUseCase {
         userUtils.checkPhoneNumber(request.phoneNumber());
         User user = UserMapper.mapToUser(request, profileUtils.juniorProfile());
         Wish wish = UserMapper.mapToWish(user, request);
-        userSaveService.saveJunior(user, wish);
+        userSaveService.save(user);
         if (request.matchingReceive())
             bizppurioJuniorMessage.matchingWaiting(user);
         slackSignUpMessage.sendJuniorSignUp(user, wish);
@@ -63,7 +62,7 @@ public class SignUpUseCase {
         seniorUtils.checkKeyword(request.keyword());
         userUtils.checkPhoneNumber(request.phoneNumber());
         User user = UserMapper.mapToUser(request, profileUtils.seniorProfile(rd.nextInt(5)));
-        userSaveService.saveSenior(user);
+        userSaveService.save(user);
         Senior senior = SeniorMapper.mapToSenior(user, request);
         return seniorSignUpFin(senior);
     }
@@ -72,14 +71,6 @@ public class SignUpUseCase {
         seniorUtils.checkKeyword(changeRequest.keyword());
         Senior senior = SeniorMapper.mapToSenior(user, changeRequest);
         return changeSeniorFin(senior, user);
-    }
-
-    public void changeUser(User user, UserChangeRequest changeRequest) {
-        Wish wish = UserMapper.mapToWish(user, changeRequest);
-        userSaveService.changeJunior(user, wish);
-        if (changeRequest.matchingReceive())
-            bizppurioJuniorMessage.matchingWaiting(user);
-        slackSignUpMessage.sendJuniorSignUp(user, wish);
     }
 
     private User seniorSignUpFin(Senior senior) {

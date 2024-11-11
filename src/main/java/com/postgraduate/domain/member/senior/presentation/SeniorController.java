@@ -137,11 +137,4 @@ public class SeniorController {
         AllSeniorSearchResponse searchSenior = seniorInfoUseCase.getFieldSenior(field, postgradu, page);
         return ResponseEntity.ok(create(SeniorResponseCode.SENIOR_FIND.getCode(), SeniorResponseMessage.GET_SENIOR_LIST_INFO.getMessage(), searchSenior));
     }
-
-    @GetMapping("/me/role")
-    @Operation(summary = "후배 전환시 가능 여부 확인 | 토큰 필요", description = "true-가능, false-불가능")
-    public ResponseEntity<ResponseDto<SeniorPossibleResponse>> checkRole(@AuthenticationPrincipal User user) {
-        SeniorPossibleResponse possibleResponse = seniorMyPageUseCase.checkUser(user);
-        return ResponseEntity.ok(create(SeniorResponseCode.SENIOR_FIND.getCode(), SeniorResponseMessage.GET_USER_CHECK.getMessage(), possibleResponse));
-    }
 }

@@ -55,10 +55,4 @@ public class SeniorMyPageUseCase {
         String accountNumber = encryptorUtils.decryptData(account.getAccountNumber());
         return mapToMyPageUserAccount(senior, account, accountNumber);
     }
-
-    public SeniorPossibleResponse checkUser(User user) {
-        if (!user.isJunior())
-            return new SeniorPossibleResponse(FALSE, user.getSocialId());
-        return new SeniorPossibleResponse(TRUE, user.getSocialId());
-    }
 }
