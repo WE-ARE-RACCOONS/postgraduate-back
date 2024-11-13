@@ -11,10 +11,4 @@ import static com.postgraduate.domain.member.user.domain.entity.QWish.wish;
 @RequiredArgsConstructor
 public class UserDslRepositoryImpl implements UserDslRepository{
     private final JPAQueryFactory queryFactory;
-
-    @Override
-    public void deleteWish(User user) {
-        queryFactory.delete(wish)
-                .where(wish.user.eq(user));
-    }
 }

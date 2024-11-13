@@ -4,8 +4,6 @@ import com.postgraduate.global.auth.login.application.dto.res.JwtTokenResponse;
 import com.postgraduate.global.auth.login.application.usecase.jwt.JwtUseCase;
 import com.postgraduate.domain.member.user.domain.entity.User;
 import com.postgraduate.domain.member.user.exception.DeletedUserException;
-import com.postgraduate.domain.member.user.exception.UserNotFoundException;
-import com.postgraduate.domain.member.user.domain.entity.Wish;
 import com.postgraduate.global.config.security.jwt.exception.InvalidRefreshTokenException;
 import com.postgraduate.global.config.security.jwt.exception.NoneRefreshTokenException;
 import com.postgraduate.global.config.security.jwt.util.JwtUtils;
@@ -19,7 +17,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 import static com.postgraduate.domain.member.user.domain.entity.constant.Role.SENIOR;
 import static com.postgraduate.domain.member.user.domain.entity.constant.Role.USER;

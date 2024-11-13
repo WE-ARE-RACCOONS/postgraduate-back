@@ -8,7 +8,6 @@ import com.postgraduate.domain.member.senior.domain.entity.Senior;
 import com.postgraduate.domain.member.senior.domain.entity.constant.Status;
 import com.postgraduate.domain.member.senior.domain.service.SeniorUpdateService;
 import com.postgraduate.domain.member.user.domain.entity.User;
-import com.postgraduate.domain.member.user.domain.entity.Wish;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

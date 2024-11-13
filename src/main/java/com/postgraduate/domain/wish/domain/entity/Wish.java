@@ -1,4 +1,4 @@
-package com.postgraduate.domain.member.user.domain.entity;
+package com.postgraduate.domain.wish.domain.entity;
 
 import com.postgraduate.domain.member.user.domain.entity.constant.Status;
 import jakarta.persistence.*;

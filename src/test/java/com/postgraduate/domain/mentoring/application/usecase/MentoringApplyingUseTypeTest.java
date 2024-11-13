@@ -1,7 +1,6 @@
 package com.postgraduate.domain.mentoring.application.usecase;
 
 import com.postgraduate.domain.member.senior.domain.entity.Account;
-import com.postgraduate.domain.member.user.domain.entity.Wish;
 import com.postgraduate.domain.mentoring.application.dto.req.MentoringApplyRequest;
 import com.postgraduate.domain.mentoring.application.dto.res.ApplyingResponse;
 import com.postgraduate.domain.mentoring.application.mapper.MentoringMapper;
@@ -31,7 +30,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 import static com.postgraduate.domain.member.senior.domain.entity.constant.Status.APPROVE;
 import static com.postgraduate.domain.member.user.domain.entity.constant.Role.SENIOR;

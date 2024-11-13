@@ -26,8 +26,6 @@ public class UserDeleteService {
         paymentRepository.findAllByUser(user)
                 .stream()
                 .forEach(Payment::updateUserDelete);
-        log.info("wish 삭제");
-        userRepository.deleteWish(user);
         log.info("user 삭제");
         userRepository.delete(user);
         // mentoring 에서 user null로 변경

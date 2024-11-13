@@ -1,7 +1,6 @@
 package com.postgraduate.domain.auth.application.usecase.oauth;
 
 import com.postgraduate.domain.member.senior.domain.entity.Available;
-import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.global.auth.login.application.dto.req.SeniorChangeRequest;
 import com.postgraduate.global.auth.login.application.dto.req.SeniorSignUpRequest;
 import com.postgraduate.global.auth.login.application.dto.req.SignUpRequest;
@@ -21,7 +20,7 @@ import com.postgraduate.domain.member.user.domain.service.UserGetService;
 import com.postgraduate.domain.member.user.domain.service.UserSaveService;
 import com.postgraduate.domain.member.user.domain.service.UserUpdateService;
 import com.postgraduate.domain.member.user.exception.PhoneNumberException;
-import com.postgraduate.domain.member.user.domain.entity.Wish;
+import com.postgraduate.domain.wish.domain.entity.Wish;
 import com.postgraduate.domain.member.user.domain.entity.constant.Status;
 import com.postgraduate.global.bizppurio.application.usecase.BizppurioJuniorMessage;
 import com.postgraduate.global.bizppurio.application.usecase.BizppurioSeniorMessage;
@@ -40,7 +39,6 @@ import java.util.List;
 import static com.postgraduate.domain.member.senior.domain.entity.constant.Status.APPROVE;
 import static com.postgraduate.domain.member.user.domain.entity.constant.Role.SENIOR;
 import static com.postgraduate.domain.member.user.domain.entity.constant.Role.USER;
-import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -95,7 +93,7 @@ class SignUpUseTypeTest {
         user = new User(1L, 1234L, "a",
                 "a", "123", "a",
                 1, USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), TRUE, TRUE);
-        wish = new Wish(1L, "major", "field", true, user, Status.WAITING);
+        wish = new Wish(1L, "major", "field", true, Status.WAITING);
         senior = new Senior(1L, user, "a",
                 APPROVE, 1, 1, info, profile,
                 LocalDateTime.now(), LocalDateTime.now(), availables, null);

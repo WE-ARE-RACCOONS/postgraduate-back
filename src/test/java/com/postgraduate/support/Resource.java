@@ -12,7 +12,7 @@ import com.postgraduate.domain.member.senior.domain.entity.Info;
 import com.postgraduate.domain.member.senior.domain.entity.Profile;
 import com.postgraduate.domain.member.senior.domain.entity.Senior;
 import com.postgraduate.domain.member.user.domain.entity.User;
-import com.postgraduate.domain.member.user.domain.entity.Wish;
+import com.postgraduate.domain.wish.domain.entity.Wish;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -27,7 +27,7 @@ import static java.time.LocalDateTime.now;
 
 public class Resource {
     private User user = new User(-1L, -1L, "mail", "후배", "011", "profile", 0, USER, true, now(), now(), false, false);
-    private Wish wish = new Wish(-1L, "major", "field", true, user, com.postgraduate.domain.member.user.domain.entity.constant.Status.WAITING);
+    private Wish wish = new Wish(-1L, "major", "field", true, com.postgraduate.domain.member.user.domain.entity.constant.Status.WAITING);
     private User otherUser = new User(-3L, -3L, "mail", "다른후배", "011", "profile", 0, USER, true, now(), now(), false, false);
     private User userOfSenior = new User(-2L, -2L, "mail", "선배", "012", "profile", 0, SENIOR, true, now(), now(), false, false);
     private Info info = new Info("major", "서울대학교", "교수님", "키워드1,키워드2", "랩실", "인공지능", false, false, "인공지능,키워드1,키워드2", "chatLink", 30);

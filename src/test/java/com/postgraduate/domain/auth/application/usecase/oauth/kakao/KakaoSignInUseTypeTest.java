@@ -1,6 +1,5 @@
 package com.postgraduate.domain.auth.application.usecase.oauth.kakao;
 
-import com.postgraduate.domain.member.user.domain.entity.Wish;
 import com.postgraduate.global.auth.login.application.dto.req.CodeRequest;
 import com.postgraduate.global.auth.login.application.dto.res.AuthUserResponse;
 import com.postgraduate.global.auth.login.application.dto.res.KakaoUserInfoResponse;

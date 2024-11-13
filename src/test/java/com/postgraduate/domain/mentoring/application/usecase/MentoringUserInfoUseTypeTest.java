@@ -1,6 +1,5 @@
 package com.postgraduate.domain.mentoring.application.usecase;
 
-import com.postgraduate.domain.member.user.domain.entity.Wish;
 import com.postgraduate.domain.mentoring.application.dto.DoneMentoringInfo;
 import com.postgraduate.domain.mentoring.application.dto.res.AppliedMentoringDetailResponse;
 import com.postgraduate.domain.mentoring.application.dto.res.DoneMentoringResponse;
