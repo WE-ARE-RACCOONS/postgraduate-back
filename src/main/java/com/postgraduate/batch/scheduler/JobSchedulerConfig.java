@@ -61,7 +61,7 @@ public class JobSchedulerConfig {
                 .addLocalDateTime("date", LocalDateTime.now())
                 .toJobParameters();
         jobLauncher.run(salaryJob, jobParameters);
-        checkSalaryJobSuccess(jobParameters);
+        checkSalaryJobSuccess();
     }
 
     public void launchSalaryJobWithAdmin() throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
@@ -69,10 +69,10 @@ public class JobSchedulerConfig {
                 .addLocalDateTime("date", LocalDateTime.now())
                 .toJobParameters();
         jobLauncher.run(salaryJobWithAdmin, jobParameters);
-        checkSalaryJobSuccess(jobParameters);
+        checkSalaryJobSuccess();
     }
 
-    private void checkSalaryJobSuccess(JobParameters jobParameters) throws JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException, JobParametersInvalidException {
+    private void checkSalaryJobSuccess() throws JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException, JobParametersInvalidException {
         int retries = 0;
         boolean success = false;
         int seniorSize = seniorGetService.allSeniorId()
@@ -90,6 +90,9 @@ public class JobSchedulerConfig {
                 Thread.currentThread().interrupt(); //스레드 상태 복원
                 log.error("Thread Interrupt 발생");
             }
+            JobParameters jobParameters = new JobParametersBuilder()
+                    .addLocalDateTime("date", LocalDateTime.now())
+                    .toJobParameters();
             jobLauncher.run(salaryJobWithAdmin, jobParameters);
             retries++;
         }
