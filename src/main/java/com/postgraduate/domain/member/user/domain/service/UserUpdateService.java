@@ -2,7 +2,7 @@ package com.postgraduate.domain.member.user.domain.service;
 
 import com.postgraduate.domain.member.senior.application.dto.req.SeniorMyPageUserAccountRequest;
 import com.postgraduate.domain.member.user.application.dto.req.UserInfoRequest;
-import com.postgraduate.domain.member.user.domain.entity.constant.Role;
+import com.postgraduate.domain.member.user.domain.entity.MemberRole;
 import com.postgraduate.global.auth.login.util.ProfileUtils;
 import com.postgraduate.domain.member.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
@@ -16,10 +16,14 @@ public class UserUpdateService {
         user.updateDelete();
     }
 
-    public void userToSeniorRole(User user, int num) {
+    public void addJuniorRole(User user, MemberRole memberRole) {
+        user.updateRole(memberRole);
+    }
+
+    public void addSeniorRole(User user, int num, MemberRole memberRole) {
         if (user.isDefaultProfile(profileUtils.allProfiles()))
             user.updateProfile(profileUtils.seniorProfile(num));
-        user.updateRole(Role.SENIOR);
+        user.updateRole(memberRole);
     }
 
     public void updateInfo(User user, UserInfoRequest userInfoRequest) {

@@ -97,6 +97,7 @@ public class AuthController {
     @PostMapping("/user/token")
     @Operation(summary = "후배로 변경 | 토큰 필요", description = "후배로 변경 가능한 경우 후배 토큰 발급")
     public ResponseEntity<ResponseDto<JwtTokenResponse>> changeUserToken(@AuthenticationPrincipal User user) {
+        signUpUseCase.changeUser(user);
         JwtTokenResponse jwtToken = jwtUseCase.changeUser(user);
         return ResponseEntity.ok(create(AuthResponseCode.AUTH_CREATE.getCode(), AuthResponseMessage.SUCCESS_AUTH.getMessage(), jwtToken));
     }

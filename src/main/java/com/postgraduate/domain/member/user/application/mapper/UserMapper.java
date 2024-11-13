@@ -2,6 +2,7 @@ package com.postgraduate.domain.member.user.application.mapper;
 
 import com.postgraduate.domain.member.user.application.dto.res.UserInfoResponse;
 import com.postgraduate.domain.member.user.application.dto.res.UserMyPageResponse;
+import com.postgraduate.domain.member.user.domain.entity.MemberRole;
 import com.postgraduate.domain.member.user.domain.entity.constant.Role;
 import com.postgraduate.global.auth.login.application.dto.req.SeniorSignUpRequest;
 import com.postgraduate.global.auth.login.application.dto.req.SignUpRequest;
@@ -45,7 +46,13 @@ public class UserMapper {
                 .phoneNumber(request.phoneNumber())
                 .marketingReceive(request.marketingReceive())
                 .profile(profile)
-                .role(Role.SENIOR)
+                .build();
+    }
+
+    public static MemberRole mapToRole(Role role, User user) {
+        return MemberRole.builder()
+                .role(role)
+                .user(user)
                 .build();
     }
 }

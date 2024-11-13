@@ -1,5 +1,7 @@
 package com.postgraduate.global.auth.login.application.usecase.oauth;
 
+import com.postgraduate.domain.member.user.domain.entity.MemberRole;
+import com.postgraduate.domain.member.user.domain.entity.constant.Role;
 import com.postgraduate.global.auth.login.application.dto.req.SeniorChangeRequest;
 import com.postgraduate.global.auth.login.application.dto.req.SeniorSignUpRequest;
 import com.postgraduate.global.auth.login.application.dto.req.SignUpRequest;
@@ -26,6 +28,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Random;
 
+import static com.postgraduate.domain.member.user.application.mapper.UserMapper.mapToRole;
+import static com.postgraduate.domain.member.user.domain.entity.constant.Role.SENIOR;
+import static com.postgraduate.domain.member.user.domain.entity.constant.Role.USER;
 import static com.postgraduate.domain.salary.util.SalaryUtil.getSalaryDate;
 
 @Transactional
@@ -49,18 +54,27 @@ public class SignUpUseCase {
     public User userSignUp(SignUpRequest request) {
         userUtils.checkPhoneNumber(request.phoneNumber());
         User user = UserMapper.mapToUser(request, profileUtils.juniorProfile());
-        userSaveService.save(user);
+        MemberRole memberRole = mapToRole(USER, user);
+        userSaveService.save(user, memberRole);
         if (request.matchingReceive())
             bizppurioJuniorMessage.matchingWaiting(user);
         slackSignUpMessage.sendJuniorSignUp(user);
         return user;
     }
 
+    public void changeUser(User user) {
+        if (user.isJunior())
+            return;
+        MemberRole memberRole = mapToRole(USER, user);
+        userUpdateService.addJuniorRole(user, memberRole);
+    }
+
     public User seniorSignUp(SeniorSignUpRequest request) {
         seniorUtils.checkKeyword(request.keyword());
         userUtils.checkPhoneNumber(request.phoneNumber());
         User user = UserMapper.mapToUser(request, profileUtils.seniorProfile(rd.nextInt(5)));
-        userSaveService.save(user);
+        MemberRole memberRole = mapToRole(SENIOR, user);
+        userSaveService.save(user, memberRole);
         Senior senior = SeniorMapper.mapToSenior(user, request);
         return seniorSignUpFin(senior);
     }
@@ -85,7 +99,8 @@ public class SignUpUseCase {
     private User changeSeniorFin(Senior senior, User user) {
         seniorSaveService.saveSenior(senior);
         user = userGetService.byUserId(user.getUserId());
-        userUpdateService.userToSeniorRole(user, rd.nextInt(5));
+        MemberRole memberRole = mapToRole(SENIOR, user);
+        userUpdateService.addSeniorRole(user, rd.nextInt(5), memberRole);
         Salary salary = salaryMapper.mapToSalary(senior, getSalaryDate());
         Salary nextSalary = salaryMapper.mapToSalary(senior, getSalaryDate().plusDays(7));
         salarySaveService.save(salary);

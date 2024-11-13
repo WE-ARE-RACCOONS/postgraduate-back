@@ -4,6 +4,7 @@ import com.postgraduate.domain.member.senior.exception.NoneSeniorException;
 import com.postgraduate.domain.member.user.domain.entity.User;
 import com.postgraduate.domain.member.user.domain.entity.constant.Role;
 import com.postgraduate.domain.member.user.exception.DeletedUserException;
+import com.postgraduate.domain.member.user.exception.UserNotFoundException;
 import com.postgraduate.global.auth.login.application.dto.res.JwtTokenResponse;
 import com.postgraduate.global.config.security.jwt.util.JwtUtils;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,9 +28,9 @@ public class JwtUseCase {
     private int accessExpiration;
 
     public JwtTokenResponse signIn(User user) {
-        if (user.getRole() == SENIOR)
+        if (user.isSenior())
             return seniorToken(user);
-        if (user.getRole() == ADMIN)
+        if (user.isAdmin())
             return adminToken(user);
         return userToken(user);
     }
@@ -48,11 +49,13 @@ public class JwtUseCase {
     }
 
     public JwtTokenResponse changeUser(User user) {
+        if (!user.isJunior())
+            throw new UserNotFoundException();
         return userToken(user);
     }
 
     public JwtTokenResponse changeSenior(User user) {
-        if (!SENIOR.equals(user.getRole()))
+        if (!user.isSenior())
             throw new NoneSeniorException();
         return seniorToken(user);
     }
