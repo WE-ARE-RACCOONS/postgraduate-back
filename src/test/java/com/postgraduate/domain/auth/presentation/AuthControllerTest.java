@@ -90,7 +90,7 @@ class AuthControllerTest extends ControllerTest {
     @DisplayName("대학생이 회원가입 한다.")
     void signUpUser() throws Exception {
         SignUpRequest signUpRequest = new SignUpRequest(user.getSocialId(), user.getPhoneNumber(), user.getNickName(),
-                user.getMarketingReceive(), "major", "field", true);
+                user.getMarketingReceive());
         String request = objectMapper.writeValueAsString(signUpRequest);
         JwtTokenResponse tokenResponse = new JwtTokenResponse("access", 10, "refresh", 10, USER, TRUE);
 
