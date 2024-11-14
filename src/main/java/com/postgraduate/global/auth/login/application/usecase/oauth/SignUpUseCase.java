@@ -1,7 +1,6 @@
 package com.postgraduate.global.auth.login.application.usecase.oauth;
 
 import com.postgraduate.domain.member.user.domain.entity.MemberRole;
-import com.postgraduate.domain.member.user.domain.entity.constant.Role;
 import com.postgraduate.global.auth.login.application.dto.req.SeniorChangeRequest;
 import com.postgraduate.global.auth.login.application.dto.req.SeniorSignUpRequest;
 import com.postgraduate.global.auth.login.application.dto.req.SignUpRequest;
