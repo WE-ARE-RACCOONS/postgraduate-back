@@ -35,8 +35,8 @@ public class BizppurioJuniorMessage {
         bizppurioSend.sendMessageWithExceptionHandling(() -> mapper.mapToJuniorFinish(user));
     }
 
-    public void matchingWaiting(User user) {
-        bizppurioSend.sendMessageWithExceptionHandling(() -> mapper.mapToJuniorMatchingWaiting(user));
+    public void matchingWaiting(String phoneNumber) {
+        bizppurioSend.sendMessageWithExceptionHandling(() -> mapper.mapToJuniorMatchingWaiting(phoneNumber));
     }
 
     public void matchingFail(JuniorMatchingFailRequest request) {

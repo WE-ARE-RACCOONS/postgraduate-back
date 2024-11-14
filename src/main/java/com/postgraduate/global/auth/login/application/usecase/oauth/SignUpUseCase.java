@@ -18,7 +18,6 @@ import com.postgraduate.domain.member.user.domain.entity.User;
 import com.postgraduate.domain.member.user.domain.service.UserGetService;
 import com.postgraduate.domain.member.user.domain.service.UserSaveService;
 import com.postgraduate.domain.member.user.domain.service.UserUpdateService;
-import com.postgraduate.global.bizppurio.application.usecase.BizppurioJuniorMessage;
 import com.postgraduate.global.bizppurio.application.usecase.BizppurioSeniorMessage;
 import com.postgraduate.global.slack.SlackSignUpMessage;
 import lombok.RequiredArgsConstructor;
@@ -47,7 +46,6 @@ public class SignUpUseCase {
     private final UserUtils userUtils;
     private final SeniorUtils seniorUtils;
     private final BizppurioSeniorMessage bizppurioSeniorMessage;
-    private final BizppurioJuniorMessage bizppurioJuniorMessage;
     private Random rd = new Random();
 
     public User userSignUp(SignUpRequest request) {
@@ -55,8 +53,6 @@ public class SignUpUseCase {
         User user = UserMapper.mapToUser(request, profileUtils.juniorProfile());
         MemberRole memberRole = mapToRole(USER, user);
         userSaveService.save(user, memberRole);
-        if (request.matchingReceive())
-            bizppurioJuniorMessage.matchingWaiting(user);
         slackSignUpMessage.sendJuniorSignUp(user);
         return user;
     }
