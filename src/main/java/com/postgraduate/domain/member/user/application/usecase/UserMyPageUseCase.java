@@ -5,7 +5,6 @@ import com.postgraduate.domain.member.user.application.dto.res.UserInfoResponse;
 import com.postgraduate.domain.member.user.application.dto.res.UserPossibleResponse;
 import com.postgraduate.domain.member.user.application.mapper.UserMapper;
 import com.postgraduate.domain.member.user.domain.entity.User;
-import com.postgraduate.domain.member.user.domain.entity.constant.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,8 +20,7 @@ public class UserMyPageUseCase {
     }
 
     public UserPossibleResponse checkSenior(User user) {
-        Role role = user.getRole();
-        if (role.equals(Role.SENIOR))
+        if (user.isSenior())
             return new UserPossibleResponse(true, user.getSocialId());
         return new UserPossibleResponse(false, user.getSocialId());
     }

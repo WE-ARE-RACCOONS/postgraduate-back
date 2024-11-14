@@ -1,5 +1,6 @@
 package com.postgraduate.global.auth.quit.application.mapper;
 
+import com.postgraduate.domain.member.user.domain.entity.constant.Role;
 import com.postgraduate.global.auth.login.application.dto.req.SignOutRequest;
 import com.postgraduate.global.auth.quit.domain.entity.Quit;
 import com.postgraduate.global.auth.quit.domain.entity.constant.QuitReason;
@@ -18,8 +19,11 @@ public class QuitMapper {
     }
 
     private static QuitBuilder getBuilder(User user, SignOutRequest request) {
-        return Quit.builder()
-                .role(user.getRole())
+        QuitBuilder quit = Quit.builder()
                 .reason(request.reason().getReason());
+        if (user.isSenior()) {
+            return quit.role(Role.SENIOR);
+        }
+        return quit.role(Role.USER);
     }
 }

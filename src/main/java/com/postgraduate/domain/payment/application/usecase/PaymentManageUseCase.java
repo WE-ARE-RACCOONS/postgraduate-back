@@ -101,7 +101,7 @@ public class PaymentManageUseCase {
     }
 
     public void refundPayByAdmin(User user, Long paymentId) {
-        if (user.getRole() != ADMIN) {
+        if (!user.isAdmin()) {
             log.error("Refund Fail : NOT ADMIN");
             throw new RefundFailException();
         }

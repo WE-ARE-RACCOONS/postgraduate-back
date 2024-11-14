@@ -1,7 +1,6 @@
 package com.postgraduate.admin.domain.repository;
 
 import com.postgraduate.domain.member.user.domain.entity.User;
-import com.postgraduate.domain.member.user.domain.entity.constant.Role;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -18,7 +17,7 @@ public class AdminUserRepository {
 
     public List<User> findAllJunior() {
         return queryFactory.selectFrom(user)
-                .where(user.role.eq(Role.USER))
+//                .where(user.role.eq(Role.USER))
                 .fetch();
     }
 

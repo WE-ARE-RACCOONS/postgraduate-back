@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static com.postgraduate.domain.member.senior.application.mapper.SeniorMapper.*;
-import static com.postgraduate.domain.member.user.domain.entity.constant.Role.SENIOR;
 
 @Service
 @Transactional
@@ -25,7 +24,7 @@ public class SeniorInfoUseCase {
     private final SeniorUpdateService seniorUpdateService;
 
     public SeniorDetailResponse getSeniorDetail(User user, Long seniorId) {
-        if (user != null && user.getRole() == SENIOR)
+        if (user != null && user.isSenior())
             return checkIsMine(user, seniorId);
         return getResponse(seniorId, false);
     }

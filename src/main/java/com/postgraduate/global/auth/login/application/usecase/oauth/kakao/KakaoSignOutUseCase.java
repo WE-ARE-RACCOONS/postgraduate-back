@@ -10,7 +10,6 @@ import com.postgraduate.global.auth.quit.application.utils.QuitUtils;
 import com.postgraduate.global.auth.quit.domain.entity.Quit;
 import com.postgraduate.global.auth.quit.domain.service.QuitSaveService;
 import com.postgraduate.domain.member.user.domain.entity.User;
-import com.postgraduate.domain.member.user.domain.entity.constant.Role;
 import com.postgraduate.domain.member.user.domain.service.UserGetService;
 import com.postgraduate.domain.member.user.domain.service.UserUpdateService;
 import com.postgraduate.domain.member.user.exception.DeletedUserException;
@@ -90,7 +89,7 @@ public class KakaoSignOutUseCase implements SignOutUseCase {
     private void checkDeleteCondition(User user) {
         if (user.isDelete())
             throw new DeletedUserException();
-        if (user.getRole().equals(Role.SENIOR)) {
+        if (user.isSenior()) {
             Senior senior = seniorGetService.byUser(user);
             quitUtils.checkDeleteCondition(senior);
             return;
