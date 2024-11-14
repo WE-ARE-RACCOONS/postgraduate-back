@@ -47,7 +47,8 @@ public class User {
     @Column(nullable = false)
     private int point;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @Builder.Default
     private List<MemberRole> roles = new ArrayList<>();
 
     @Column(nullable = false)
