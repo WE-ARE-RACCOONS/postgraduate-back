@@ -17,16 +17,25 @@ public class Wish {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long wishId;
 
-    private String major;
-
+    @Column(nullable = false)
     private String field;
 
     @Column(nullable = false)
-    private Boolean matchingReceive;
+    private String postgradu;
+
+    @Column(nullable = false)
+    private String professor;
+
+    @Column(nullable = false)
+    private String lab;
+
+    @Column(nullable = false)
+    private String phoneNumber;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private Status status;
+    @Builder.Default
+    private Status status = Status.WAITING;
 
     protected void updateDone() {
         this.status = Status.MATCHED;
