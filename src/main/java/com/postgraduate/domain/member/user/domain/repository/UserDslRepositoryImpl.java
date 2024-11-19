@@ -1,11 +1,8 @@
 package com.postgraduate.domain.member.user.domain.repository;
 
-import com.postgraduate.domain.member.user.domain.entity.User;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-
-import static com.postgraduate.domain.member.user.domain.entity.QWish.wish;
 
 @Repository
 @RequiredArgsConstructor
