@@ -15,6 +15,7 @@ import com.postgraduate.domain.member.user.domain.entity.User;
 import com.postgraduate.domain.wish.domain.entity.Wish;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.postgraduate.domain.mentoring.domain.entity.constant.MentoringStatus.EXPECTED;
@@ -26,10 +27,10 @@ import static com.postgraduate.domain.member.user.domain.entity.constant.Role.US
 import static java.time.LocalDateTime.now;
 
 public class Resource {
-    private User user = new User(-1L, -1L, "mail", "후배", "011", "profile", 0, USER, true, now(), now(), false, false);
-    private Wish wish = new Wish(-1L, "major", "field", true, com.postgraduate.domain.member.user.domain.entity.constant.Status.WAITING);
-    private User otherUser = new User(-3L, -3L, "mail", "다른후배", "011", "profile", 0, USER, true, now(), now(), false, false);
-    private User userOfSenior = new User(-2L, -2L, "mail", "선배", "012", "profile", 0, SENIOR, true, now(), now(), false, false);
+    private User user = new User(-1L, -1L, "mail", "후배", "011", "profile", 0, new ArrayList<>(), true, now(), now(), false, false);
+    private Wish wish = new Wish(-1L, "major", "field", "professor", "lab", "123", com.postgraduate.domain.member.user.domain.entity.constant.Status.WAITING);
+    private User otherUser = new User(-3L, -3L, "mail", "다른후배", "011", "profile", 0, new ArrayList<>(), true, now(), now(), false, false);
+    private User userOfSenior = new User(-2L, -2L, "mail", "선배", "012", "profile", 0, new ArrayList<>(), true, now(), now(), false, false);
     private Info info = new Info("major", "서울대학교", "교수님", "키워드1,키워드2", "랩실", "인공지능", false, false, "인공지능,키워드1,키워드2", "chatLink", 30);
     private Profile profile = new Profile("저는요", "한줄소개", "대상");
     private Senior senior = new Senior(-1L, userOfSenior, "certification", Status.WAITING, 0, 0, info, profile, now(), now(), null, null);
