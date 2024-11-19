@@ -10,6 +10,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Collections;
 
+import static com.postgraduate.domain.member.user.domain.entity.constant.Role.*;
+
 @Getter
 @RequiredArgsConstructor
 public class AuthDetails implements UserDetails {
@@ -17,7 +19,11 @@ public class AuthDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singletonList(new SimpleGrantedAuthority(user.getRole().name()));
+        if (user.isAdmin())
+            return Collections.singletonList(new SimpleGrantedAuthority(ADMIN.name()));
+        if (user.isSenior())
+            return Collections.singletonList(new SimpleGrantedAuthority(SENIOR.name()));
+        return Collections.singletonList(new SimpleGrantedAuthority(USER.name()));
     }
 
     @Override

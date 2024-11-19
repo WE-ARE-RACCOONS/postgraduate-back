@@ -258,19 +258,19 @@ public class BizppurioMapper {
         return createCommonRequest(messageBody, request.phoneNumber());
     }
 
-    public CommonRequest mapToJuniorMatchingWaiting(User user) {
+    public CommonRequest mapToJuniorMatchingWaiting(String phoneNumber) {
         String message = (
-                "안녕하세요, " + user.getNickName() + "님.\n" +
+                "안녕하세요, " + "회원님.\n" +
                         "\n" +
                         "김선배와 함께 해주셔서 감사드립니다.\n" +
                         "\n" +
-                        user.getNickName() + "님이 신청한 선배를 저희 김선배에서 찾고 있어요 !\n" +
+                        "회원님이 신청한 선배를 저희 김선배에서 찾고 있어요 !\n" +
                         "\n" +
                         "신청해주신 선배를 찾는데에는 3~7일 정도 소요되어요 \uD83D\uDE0A"
         );
 
         Message messageBody = new TextMessage(message, senderKey, juniorMatchingWaiting);
-        return createCommonRequest(messageBody, user.getPhoneNumber());
+        return createCommonRequest(messageBody, phoneNumber);
     }
 
     private CommonRequest createCommonRequest(Message messageBody, String phoneNumber) {

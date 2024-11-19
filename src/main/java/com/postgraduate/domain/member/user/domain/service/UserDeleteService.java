@@ -1,5 +1,6 @@
 package com.postgraduate.domain.member.user.domain.service;
 
+import com.postgraduate.domain.member.user.domain.repository.MemberRoleRepository;
 import com.postgraduate.domain.member.user.domain.repository.UserRepository;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.mentoring.domain.repository.MentoringRepository;
@@ -17,6 +18,7 @@ public class UserDeleteService {
     private final UserRepository userRepository;
     private final MentoringRepository mentoringRepository;
     private final PaymentRepository paymentRepository;
+    private final MemberRoleRepository memberRoleRepository;
 
     public void deleteUser(User user) {
         mentoringRepository.findAllByUser(user)
@@ -26,9 +28,8 @@ public class UserDeleteService {
         paymentRepository.findAllByUser(user)
                 .stream()
                 .forEach(Payment::updateUserDelete);
-        log.info("wish 삭제");
-        userRepository.deleteWish(user);
         log.info("user 삭제");
+        user.getRoles().forEach(memberRoleRepository::delete);
         userRepository.delete(user);
         // mentoring 에서 user null로 변경
     }

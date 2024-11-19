@@ -3,8 +3,6 @@ package com.postgraduate.global.slack;
 import com.postgraduate.domain.member.senior.domain.entity.Info;
 import com.postgraduate.domain.member.senior.domain.entity.Senior;
 import com.postgraduate.domain.member.user.domain.entity.User;
-import com.postgraduate.domain.member.user.domain.entity.Wish;
-import com.postgraduate.domain.member.user.domain.entity.constant.Status;
 import com.slack.api.Slack;
 import com.slack.api.model.Attachment;
 import com.slack.api.webhook.Payload;
@@ -17,7 +15,6 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.postgraduate.domain.member.user.domain.entity.constant.Status.REJECTED;
 import static com.postgraduate.global.slack.SlackUtils.generateSlackField;
 
 @Component
@@ -31,12 +28,12 @@ public class SlackSignUpMessage {
     @Value("${slack.senior_url}")
     private String seniorUrl;
 
-    public void sendJuniorSignUp(User user, Wish wish) {
+    public void sendJuniorSignUp(User user) {
         try {
             slackClient.send(juniorUrl, Payload.builder()
                     .text("후배가 가입했습니다!")
                     .attachments(
-                            List.of(generateJuniorSignUpAttachment(user, wish))
+                            List.of(generateJuniorSignUpAttachment(user))
                     )
                     .build());
         } catch (IOException e) {
@@ -57,10 +54,8 @@ public class SlackSignUpMessage {
         }
     }
 
-    private Attachment generateJuniorSignUpAttachment(User user, Wish wish) {
+    private Attachment generateJuniorSignUpAttachment(User user) {
         LocalDateTime createdAt = user.getCreatedAt();
-        Status status = wish.getStatus();
-        String wantMatching = status == REJECTED ? "X" : "O";
         return Attachment.builder()
                 .color("2FC4B2")
                 .title("가입한 후배 정보")
@@ -71,9 +66,7 @@ public class SlackSignUpMessage {
                                 + createdAt.getHour() + "시 "
                                 + createdAt.getMinute() + "분 "
                                 + createdAt.getSecond() + "초", null),
-                        generateSlackField("후배 닉네임 : " + user.getNickName(), null),
-                        generateSlackField("후배 매칭희망 여부 : " + wantMatching, null),
-                        generateSlackField("후배 매칭희망 전공, 분야 : " + (wish.getMajor() + " " + wish.getField()), null)
+                        generateSlackField("후배 닉네임 : " + user.getNickName(), null)
                 ))
                 .build();
     }

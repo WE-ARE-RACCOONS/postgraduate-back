@@ -2,7 +2,8 @@ package com.postgraduate.domain.member.user.domain.service;
 
 import com.postgraduate.domain.member.senior.application.dto.req.SeniorMyPageUserAccountRequest;
 import com.postgraduate.domain.member.user.application.dto.req.UserInfoRequest;
-import com.postgraduate.domain.member.user.domain.entity.constant.Role;
+import com.postgraduate.domain.member.user.domain.entity.MemberRole;
+import com.postgraduate.domain.member.user.domain.repository.MemberRoleRepository;
 import com.postgraduate.global.auth.login.util.ProfileUtils;
 import com.postgraduate.domain.member.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
@@ -12,14 +13,21 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserUpdateService {
     private final ProfileUtils profileUtils;
+    private final MemberRoleRepository memberRoleRepository;
     public void updateDelete(User user) {
         user.updateDelete();
     }
 
-    public void userToSeniorRole(User user, int num) {
+    public void addJuniorRole(User user, MemberRole memberRole) {
+        memberRoleRepository.save(memberRole);
+        user.updateRole(memberRole);
+    }
+
+    public void addSeniorRole(User user, int num, MemberRole memberRole) {
         if (user.isDefaultProfile(profileUtils.allProfiles()))
             user.updateProfile(profileUtils.seniorProfile(num));
-        user.updateRole(Role.SENIOR);
+        memberRoleRepository.save(memberRole);
+        user.updateRole(memberRole);
     }
 
     public void updateInfo(User user, UserInfoRequest userInfoRequest) {

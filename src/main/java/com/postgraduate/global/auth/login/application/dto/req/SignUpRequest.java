@@ -12,9 +12,6 @@ public record SignUpRequest(
         @NotBlank
         @Size(max = 6, message = "6글자까지 입력 가능합니다.")
         String nickName,
-        boolean marketingReceive,
-        String major,
-        String field,
-        boolean matchingReceive
+        boolean marketingReceive
 ) {
 }

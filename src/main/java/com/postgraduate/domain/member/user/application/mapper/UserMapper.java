@@ -2,13 +2,11 @@ package com.postgraduate.domain.member.user.application.mapper;
 
 import com.postgraduate.domain.member.user.application.dto.res.UserInfoResponse;
 import com.postgraduate.domain.member.user.application.dto.res.UserMyPageResponse;
+import com.postgraduate.domain.member.user.domain.entity.MemberRole;
 import com.postgraduate.domain.member.user.domain.entity.constant.Role;
-import com.postgraduate.domain.member.user.domain.entity.constant.Status;
-import com.postgraduate.domain.member.user.domain.entity.Wish;
 import com.postgraduate.global.auth.login.application.dto.req.SeniorSignUpRequest;
 import com.postgraduate.global.auth.login.application.dto.req.SignUpRequest;
 import com.postgraduate.domain.member.user.domain.entity.User;
-import com.postgraduate.global.auth.login.application.dto.req.UserChangeRequest;
 
 public class UserMapper {
 
@@ -48,29 +46,13 @@ public class UserMapper {
                 .phoneNumber(request.phoneNumber())
                 .marketingReceive(request.marketingReceive())
                 .profile(profile)
-                .role(Role.SENIOR)
                 .build();
     }
 
-    public static Wish mapToWish(User user, SignUpRequest request) {
-        Status matchingStatus = request.matchingReceive() ? Status.WAITING : Status.REJECTED;
-        return Wish.builder()
+    public static MemberRole mapToRole(Role role, User user) {
+        return MemberRole.builder()
+                .role(role)
                 .user(user)
-                .major(request.major())
-                .field(request.field())
-                .matchingReceive(request.matchingReceive())
-                .status(matchingStatus)
-                .build();
-    }
-
-    public static Wish mapToWish(User user, UserChangeRequest request) {
-        Status matchingStatus = request.matchingReceive() ? Status.WAITING : Status.REJECTED;
-        return Wish.builder()
-                .user(user)
-                .major(request.major())
-                .field(request.field())
-                .matchingReceive(request.matchingReceive())
-                .status(matchingStatus)
                 .build();
     }
 }

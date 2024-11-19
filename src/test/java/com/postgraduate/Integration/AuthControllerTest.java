@@ -4,7 +4,7 @@
 //import com.postgraduate.global.auth.login.application.dto.res.KakaoUserInfoResponse;
 //import com.postgraduate.domain.member.senior.domain.entity.Senior;
 //import com.postgraduate.domain.member.user.domain.entity.User;
-//import com.postgraduate.domain.member.user.domain.entity.Wish;
+//import com.postgraduate.domain.wish.domain.entity.Wish;
 //import com.postgraduate.support.IntegrationTest;
 //import com.postgraduate.support.Resource;
 //import org.junit.jupiter.api.BeforeEach;

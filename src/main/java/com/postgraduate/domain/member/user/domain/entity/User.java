@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.time.LocalDate.now;
@@ -46,10 +47,9 @@ public class User {
     @Column(nullable = false)
     private int point;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     @Builder.Default
-    private Role role = Role.USER;
+    private List<MemberRole> roles = new ArrayList<>();
 
     @Column(nullable = false)
     private Boolean marketingReceive;
@@ -69,23 +69,29 @@ public class User {
     @Builder.Default
     private boolean isDelete = false;
 
-    @OneToOne(mappedBy = "user")
-    private Wish wish;
-
-    public void addWish(Wish wish) {
-        this.wish = wish;
-    }
-
-    public void updateWishDone() {
-        this.wish.updateDone();
-    }
-
     public boolean isJunior() {
-        return this.wish != null;
+        return roles.stream()
+                .map(MemberRole::getRole)
+                .toList()
+                .contains(Role.USER);
     }
 
-    public void updateRole(Role role) {
-        this.role = role;
+    public boolean isSenior() {
+        return roles.stream()
+                .map(MemberRole::getRole)
+                .toList()
+                .contains(Role.SENIOR);
+    }
+
+    public boolean isAdmin() {
+        return roles.stream()
+                .map(MemberRole::getRole)
+                .toList()
+                .contains(Role.ADMIN);
+    }
+
+    public void updateRole(MemberRole memberRole) {
+        roles.add(memberRole);
     }
 
     public void updateInfo(String profile, String nickName, String phoneNumber) {
@@ -142,9 +148,5 @@ public class User {
                                         .atStartOfDay()
                         )
         );
-    }
-
-    public boolean isSenior() {
-        return this.role.equals(Role.SENIOR);
     }
 }

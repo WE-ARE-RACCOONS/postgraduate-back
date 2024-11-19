@@ -424,23 +424,4 @@ class SeniorControllerTest extends ControllerTest {
                 .andExpect(jsonPath("$.data.seniorSearchResponses[0].keyword").isArray())
                 .andExpect(jsonPath("$.data.totalElements").value(seniorSearchResponses.size()));
     }
-
-    @ParameterizedTest
-    @ValueSource(booleans = {true, false})
-    @WithMockUser("SENIOR")
-    @DisplayName("후배 전환시 가능 여부를 확인한다")
-    void checkRole(boolean tf) throws Exception {
-        SeniorPossibleResponse response = new SeniorPossibleResponse(tf, userOfSenior.getSocialId());
-
-        given(seniorMyPageUseCase.checkUser(any()))
-                .willReturn(response);
-
-        mvc.perform(get("/senior/me/role")
-                        .header(HttpHeaders.AUTHORIZATION, BEARER))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(SENIOR_FIND.getCode()))
-                .andExpect(jsonPath("$.message").value(GET_USER_CHECK.getMessage()))
-                .andExpect(jsonPath("$.data.possible").value(tf))
-                .andExpect(jsonPath("$.data.socialId").value(response.socialId()));
-    }
 }

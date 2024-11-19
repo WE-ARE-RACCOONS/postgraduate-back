@@ -97,15 +97,7 @@ public class AuthController {
     @PostMapping("/user/token")
     @Operation(summary = "후배로 변경 | 토큰 필요", description = "후배로 변경 가능한 경우 후배 토큰 발급")
     public ResponseEntity<ResponseDto<JwtTokenResponse>> changeUserToken(@AuthenticationPrincipal User user) {
-        JwtTokenResponse jwtToken = jwtUseCase.changeUser(user);
-        return ResponseEntity.ok(create(AuthResponseCode.AUTH_CREATE.getCode(), AuthResponseMessage.SUCCESS_AUTH.getMessage(), jwtToken));
-    }
-
-    @PostMapping("/user/change")
-    @Operation(summary = "후배로 추가 가입 | 토큰 필요", description = "대학원생 대학생으로 변경 추가 가입")
-    public ResponseEntity<ResponseDto<JwtTokenResponse>> changeUser(@AuthenticationPrincipal User user,
-                                                                    @RequestBody @Valid UserChangeRequest changeRequest) {
-        signUpUseCase.changeUser(user, changeRequest);
+        signUpUseCase.changeUser(user);
         JwtTokenResponse jwtToken = jwtUseCase.changeUser(user);
         return ResponseEntity.ok(create(AuthResponseCode.AUTH_CREATE.getCode(), AuthResponseMessage.SUCCESS_AUTH.getMessage(), jwtToken));
     }

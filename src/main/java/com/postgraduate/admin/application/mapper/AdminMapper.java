@@ -1,6 +1,7 @@
 package com.postgraduate.admin.application.mapper;
 
 import com.postgraduate.admin.application.dto.res.*;
+import com.postgraduate.domain.member.user.domain.entity.constant.Status;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.salary.domain.entity.Salary;
@@ -9,8 +10,6 @@ import com.postgraduate.domain.member.senior.domain.entity.Info;
 import com.postgraduate.domain.member.senior.domain.entity.Senior;
 import com.postgraduate.domain.member.user.application.utils.UserUtils;
 import com.postgraduate.domain.member.user.domain.entity.User;
-import com.postgraduate.domain.member.user.domain.entity.constant.Role;
-import com.postgraduate.domain.member.user.domain.entity.Wish;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,19 +41,17 @@ public class AdminMapper {
         );
     }
 
-    public UserInfo mapToUserInfo(Wish wish) {
-        User user = wish.getUser();
-        Boolean isSenior = user.getRole() == Role.SENIOR;
+    public UserInfo mapToUserInfo(User user) {
         return new UserInfo(
                 user.getUserId(),
                 user.getNickName(),
                 user.getPhoneNumber(),
                 user.getCreatedAt(),
                 user.getMarketingReceive(),
-                wish.getMatchingReceive(),
-                wish.getWishId(),
-                wish.getStatus(),
-                isSenior
+                false,
+                1L, // todo : wish 삭제에 따른 변경 필요
+                Status.MATCHED,
+                false
         );
     }
     
@@ -69,7 +66,7 @@ public class AdminMapper {
                 senior.getStatus(),
                 salary.getTotalAmount(),
                 user.getMarketingReceive(),
-                user.isJunior()
+                false //todo : wish 삭제에 따른 선배에서 후배 판단 조건 삭제 or 수정 필요
         );
     }
 
@@ -241,18 +238,5 @@ public class AdminMapper {
                 payment.getPay(),
                 SHORT.getCharge()
         );
-    }
-
-    public WishResponse mapToWishResponse(Wish wish) {
-        User user = wish.getUser();
-        return new WishResponse(
-                wish.getWishId(),
-                user.getNickName(),
-                user.getPhoneNumber(),
-                user.getCreatedAt(),
-                user.getMarketingReceive(),
-                wish.getMatchingReceive(),
-                wish.getMajor(),
-                wish.getField());
     }
 }

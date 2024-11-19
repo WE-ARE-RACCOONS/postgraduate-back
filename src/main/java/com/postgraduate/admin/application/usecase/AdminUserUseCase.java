@@ -7,7 +7,6 @@ import com.postgraduate.admin.application.dto.res.WishResponse;
 import com.postgraduate.admin.application.mapper.AdminMapper;
 import com.postgraduate.admin.domain.service.AdminUserService;
 import com.postgraduate.domain.member.user.domain.entity.User;
-import com.postgraduate.domain.member.user.domain.entity.Wish;
 import com.postgraduate.global.bizppurio.application.dto.req.JuniorMatchingSuccessRequest;
 import com.postgraduate.global.bizppurio.application.usecase.BizppurioJuniorMessage;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +30,7 @@ public class AdminUserUseCase {
 
     @Transactional(readOnly = true)
     public List<UserInfo> userInfos() {
-        List<Wish> all = adminUserService.allJunior();
+        List<User> all = adminUserService.allJunior();
         return all.stream()
                 .map(adminMapper::mapToUserInfo)
                 .toList();
@@ -39,8 +38,7 @@ public class AdminUserUseCase {
 
     @Transactional(readOnly = true)
     public WishResponse wishInfo(Long userId) {
-        User user = adminUserService.userByUserId(userId);
-        return adminMapper.mapToWishResponse(user.getWish());
+        return null; //todo : wish 변경에 따른 수정 필요
     }
 
     public void wishDone(Long wishId) {

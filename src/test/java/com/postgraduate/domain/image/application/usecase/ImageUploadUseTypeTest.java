@@ -15,6 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockMultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 import static com.postgraduate.domain.member.user.domain.entity.constant.Role.USER;
 import static java.lang.Boolean.FALSE;
@@ -47,7 +48,7 @@ class ImageUploadUseTypeTest {
     void uploadProfile() {
         User user = new User(-1L, -1234L, "abc.com", "abc"
                 , " 123123", "abcab", 0
-                , USER, TRUE, LocalDateTime.now(), LocalDateTime.now(), FALSE, TRUE, null);
+                , new ArrayList<>(), TRUE, LocalDateTime.now(), LocalDateTime.now(), FALSE, TRUE);
 
         MockMultipartFile mockMultipartFile = new MockMultipartFile("profile", new byte[]{});
         given(s3UploadService.saveProfileFile(mockMultipartFile))
