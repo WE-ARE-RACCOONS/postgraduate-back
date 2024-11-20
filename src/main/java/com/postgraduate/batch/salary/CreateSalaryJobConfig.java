@@ -84,28 +84,28 @@ public class CreateSalaryJobConfig {
 
     @Bean
     public QueryDslZeroPagingItemReader<CreateSalary> salaryReader() {
-        LocalDate date = getSalaryDate().plusDays(7);
-        log.info("not in date : {}", date);
-        return new QueryDslZeroPagingItemReader<>(entityManagerFactory, CHUNK_SIZE, queryFactory ->
-                queryFactory.select(Projections.constructor(CreateSalary.class,
-                                senior.seniorId,
-                                account.accountId,
-                                account.bank,
-                                account.accountNumber,
-                                account.accountHolder))
-                        .distinct()
-                        .from(senior)
-                        .join(user)
-                        .on(senior.user.eq(user))
-                        .leftJoin(account)
-                        .on(account.senior.eq(senior))
-                        .where(senior.seniorId.notIn(
-                                        JPAExpressions
-                                                .select(salary.senior.seniorId)
-                                                .from(salary)
-                                                .where(salary.salaryDate.eq(date))
-                                ))
-                        .orderBy(senior.seniorId.desc())
-        );
+        return new QueryDslZeroPagingItemReader<>(entityManagerFactory, CHUNK_SIZE, queryFactory -> {
+            LocalDate date = getSalaryDate().plusDays(7);
+            log.info("not in date : {}", date);
+            return queryFactory.select(Projections.constructor(CreateSalary.class,
+                            senior.seniorId,
+                            account.accountId,
+                            account.bank,
+                            account.accountNumber,
+                            account.accountHolder))
+                    .distinct()
+                    .from(senior)
+                    .join(user)
+                    .on(senior.user.eq(user))
+                    .leftJoin(account)
+                    .on(account.senior.eq(senior))
+                    .where(senior.seniorId.notIn(
+                            JPAExpressions
+                                    .select(salary.senior.seniorId)
+                                    .from(salary)
+                                    .where(salary.salaryDate.eq(date))
+                    ))
+                    .orderBy(senior.seniorId.desc());
+        });
     }
 }
