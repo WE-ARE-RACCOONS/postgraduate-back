@@ -28,7 +28,7 @@ import static java.time.LocalDateTime.now;
 
 public class Resource {
     private User user = new User(-1L, -1L, "mail", "후배", "011", "profile", 0, new ArrayList<>(), true, now(), now(), false, false);
-    private Wish wish = new Wish(-1L, "major", "field", "professor", "lab", "123", com.postgraduate.domain.member.user.domain.entity.constant.Status.WAITING);
+    private Wish wish = new Wish(-1L, "major", "field", "professor", "lab", "123", com.postgraduate.domain.member.user.domain.entity.constant.Status.WAITING, now(), now());
     private User otherUser = new User(-3L, -3L, "mail", "다른후배", "011", "profile", 0, new ArrayList<>(), true, now(), now(), false, false);
     private User userOfSenior = new User(-2L, -2L, "mail", "선배", "012", "profile", 0, new ArrayList<>(), true, now(), now(), false, false);
     private Info info = new Info("major", "서울대학교", "교수님", "키워드1,키워드2", "랩실", "인공지능", false, false, "인공지능,키워드1,키워드2", "chatLink", 30);
