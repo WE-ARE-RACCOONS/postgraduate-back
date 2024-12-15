@@ -28,10 +28,10 @@ public class JwtUseCase {
     private int accessExpiration;
 
     public JwtTokenResponse signIn(User user) {
-        if (user.isSenior())
-            return seniorToken(user);
         if (user.isAdmin())
             return adminToken(user);
+        if (user.isSenior())
+            return seniorToken(user);
         return userToken(user);
     }
 
