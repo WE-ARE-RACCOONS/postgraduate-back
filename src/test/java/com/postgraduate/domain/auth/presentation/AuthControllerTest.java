@@ -179,7 +179,7 @@ class AuthControllerTest extends ControllerTest {
 
         given(signUpUseCase.changeSenior(any(), any()))
                 .willReturn(user);
-        given(jwtUseCase.changeSenior(user, any()))
+        given(jwtUseCase.changeSenior(any(), any()))
                 .willReturn(tokenResponse);
 
         mvc.perform(post("/auth/senior/change")
