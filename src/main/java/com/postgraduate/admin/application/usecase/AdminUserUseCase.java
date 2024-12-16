@@ -2,8 +2,7 @@ package com.postgraduate.admin.application.usecase;
 
 import com.postgraduate.admin.application.dto.req.Login;
 import com.postgraduate.admin.application.dto.req.SendMessageRequest;
-import com.postgraduate.admin.application.dto.res.UserInfo;
-import com.postgraduate.admin.application.dto.res.WishResponse;
+import com.postgraduate.admin.application.dto.res.UserInfos;
 import com.postgraduate.admin.application.mapper.AdminMapper;
 import com.postgraduate.admin.domain.service.AdminUserService;
 import com.postgraduate.domain.member.user.domain.entity.User;
@@ -29,20 +28,11 @@ public class AdminUserUseCase {
     }
 
     @Transactional(readOnly = true)
-    public List<UserInfo> userInfos() {
+    public UserInfos userInfos() {
         List<User> all = adminUserService.allJunior();
-        return all.stream()
+        return new UserInfos(all.stream()
                 .map(adminMapper::mapToUserInfo)
-                .toList();
-    }
-
-    @Transactional(readOnly = true)
-    public WishResponse wishInfo(Long userId) {
-        return null; //todo : wish 변경에 따른 수정 필요
-    }
-
-    public void wishDone(Long wishId) {
-        adminUserService.updateWishDone(wishId);
+                .toList());
     }
 
     public void sendMatchingMessage(SendMessageRequest request) {

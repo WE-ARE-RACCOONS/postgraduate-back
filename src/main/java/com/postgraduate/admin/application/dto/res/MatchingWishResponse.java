@@ -1,15 +1,16 @@
 package com.postgraduate.admin.application.dto.res;
 
+
 import java.time.LocalDateTime;
 
-public record WishResponse(
+public record MatchingWishResponse(
         Long wishId,
-        String nickName,
+        String field,
+        String postgradu,
+        String professor,
+        String lab,
         String phoneNumber,
         LocalDateTime createAt,
-        Boolean marketingReceive,
-        Boolean matchingReceive,
-        String major,
-        String field
+        LocalDateTime updatedAt
 ) {
 }

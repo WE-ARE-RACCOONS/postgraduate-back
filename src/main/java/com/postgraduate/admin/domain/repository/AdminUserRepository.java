@@ -17,7 +17,7 @@ public class AdminUserRepository {
 
     public List<User> findAllJunior() {
         return queryFactory.selectFrom(user)
-//                .where(user.role.eq(Role.USER))
+//                .where(user.role.eq(Role.USER)) todo : 후배 조회 처리 필요
                 .fetch();
     }
 

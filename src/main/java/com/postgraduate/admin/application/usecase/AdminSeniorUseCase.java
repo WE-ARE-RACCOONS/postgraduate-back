@@ -1,7 +1,7 @@
 package com.postgraduate.admin.application.usecase;
 
 import com.postgraduate.admin.application.dto.res.CertificationDetailsResponse;
-import com.postgraduate.admin.application.dto.res.SeniorInfo;
+import com.postgraduate.admin.application.dto.res.SeniorInfos;
 import com.postgraduate.admin.application.mapper.AdminMapper;
 import com.postgraduate.admin.domain.service.AdminSeniorService;
 import com.postgraduate.domain.salary.domain.entity.Salary;
@@ -25,11 +25,11 @@ public class AdminSeniorUseCase {
     private final AdminMapper adminMapper;
 
     @Transactional(readOnly = true)
-    public List<SeniorInfo> allSenior() {
+    public SeniorInfos allSenior() {
         List<Salary> salaries = adminSeniorService.allSeniors();
-        return salaries.stream()
+        return new SeniorInfos(salaries.stream()
                 .map(adminMapper::mapToSeniorInfo)
-                .toList();
+                .toList());
     }
 
     @Transactional(readOnly = true)

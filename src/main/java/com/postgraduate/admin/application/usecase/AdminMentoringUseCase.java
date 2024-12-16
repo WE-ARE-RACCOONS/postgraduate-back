@@ -1,7 +1,7 @@
 package com.postgraduate.admin.application.usecase;
 
 import com.postgraduate.admin.application.dto.res.MentoringManageResponse;
-import com.postgraduate.admin.application.dto.res.UserMentoringInfo;
+import com.postgraduate.admin.application.dto.res.UserInfoBasic;
 import com.postgraduate.admin.application.dto.res.MentoringInfo;
 import com.postgraduate.admin.application.mapper.AdminMapper;
 import com.postgraduate.admin.domain.service.*;
@@ -36,8 +36,8 @@ public class AdminMentoringUseCase {
         List<MentoringInfo> mentoringInfos = mentorings.stream()
                 .map(adminMapper::mapToMentoringInfoWithSenior)
                 .toList();
-        UserMentoringInfo seniorInfo = adminMapper.mapToUserMentoringInfo(senior);
-        return new MentoringManageResponse(mentoringInfos, seniorInfo);
+        UserInfoBasic seniorInfo = adminMapper.mapToUserMentoringInfo(senior);
+        return new MentoringManageResponse(seniorInfo, mentoringInfos);
     }
 
     @Transactional(readOnly = true)
@@ -47,8 +47,8 @@ public class AdminMentoringUseCase {
         List<MentoringInfo> mentoringInfos = mentorings.stream()
                 .map(adminMapper::mapToMentoringInfoWithUser)
                 .toList();
-        UserMentoringInfo userInfo = adminMapper.mapToUserMentoringInfo(user);
-        return new MentoringManageResponse(mentoringInfos, userInfo);
+        UserInfoBasic userInfo = adminMapper.mapToUserMentoringInfo(user);
+        return new MentoringManageResponse(userInfo, mentoringInfos);
     }
 
     public void refundMentoring(User user, Long mentoringId) {

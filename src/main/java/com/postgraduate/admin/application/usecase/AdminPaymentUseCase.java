@@ -1,7 +1,7 @@
 package com.postgraduate.admin.application.usecase;
 
 import com.postgraduate.admin.application.dto.res.MentoringWithPaymentResponse;
-import com.postgraduate.admin.application.dto.res.PaymentInfo;
+import com.postgraduate.admin.application.dto.res.PaymentInfos;
 import com.postgraduate.admin.application.dto.res.PaymentWithMentoringQuery;
 import com.postgraduate.admin.application.mapper.AdminMapper;
 import com.postgraduate.admin.domain.service.AdminMentoringService;
@@ -29,15 +29,15 @@ public class AdminPaymentUseCase {
     private final AdminMapper adminMapper;
 
     @Transactional(readOnly = true)
-    public List<PaymentInfo> paymentInfos() {
+    public PaymentInfos paymentInfos() {
         List<PaymentWithMentoringQuery> all = adminPaymentService.allPayments();
-        return all.stream()
+        return new PaymentInfos(all.stream()
                 .map(pm -> {
                     if (pm.mentoring().isEmpty())
                         return adminMapper.mapToPaymentInfo(pm.payment());
                     return adminMapper.mapToPaymentInfo(pm.payment(), pm.mentoring().get());
                 })
-                .toList();
+                .toList());
     }
 
     @Transactional(readOnly = true)

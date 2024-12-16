@@ -17,10 +17,6 @@ public class AdminUserService {
         return adminUserRepository.findAllJunior();
     }
 
-    public void updateWishDone(Long wishId) {
-         //todo : wish삭제에 따른 수정 필요
-    }
-
     public User userByUserId(Long userId) {
         return adminUserRepository.findUserByUserId(userId)
                 .orElseThrow(UserNotFoundException::new);
