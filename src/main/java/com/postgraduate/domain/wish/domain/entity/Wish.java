@@ -1,6 +1,6 @@
 package com.postgraduate.domain.wish.domain.entity;
 
-import com.postgraduate.domain.member.user.domain.entity.constant.Status;
+import com.postgraduate.domain.wish.domain.entity.constant.Status;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -48,7 +48,7 @@ public class Wish {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    protected void updateDone() {
+    public void updateDone() {
         this.status = Status.MATCHED;
     }
 }

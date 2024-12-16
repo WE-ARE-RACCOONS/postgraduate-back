@@ -1,7 +1,7 @@
 package com.postgraduate.admin.application.usecase;
 
 import com.postgraduate.admin.application.dto.res.MentoringWithPaymentResponse;
-import com.postgraduate.admin.application.dto.res.PaymentInfo;
+import com.postgraduate.admin.application.dto.res.PaymentInfos;
 import com.postgraduate.admin.application.dto.res.PaymentWithMentoringQuery;
 import com.postgraduate.admin.application.mapper.AdminMapper;
 import com.postgraduate.admin.domain.service.AdminMentoringService;
@@ -11,10 +11,9 @@ import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.payment.application.usecase.PaymentManageUseCase;
 import com.postgraduate.domain.member.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 import static com.postgraduate.domain.mentoring.domain.entity.constant.MentoringStatus.DONE;
 
@@ -29,15 +28,15 @@ public class AdminPaymentUseCase {
     private final AdminMapper adminMapper;
 
     @Transactional(readOnly = true)
-    public List<PaymentInfo> paymentInfos() {
-        List<PaymentWithMentoringQuery> all = adminPaymentService.allPayments();
-        return all.stream()
+    public PaymentInfos paymentInfos(Integer page) {
+        Page<PaymentWithMentoringQuery> all = adminPaymentService.allPayments(page);
+        return new PaymentInfos(all.stream()
                 .map(pm -> {
                     if (pm.mentoring().isEmpty())
                         return adminMapper.mapToPaymentInfo(pm.payment());
                     return adminMapper.mapToPaymentInfo(pm.payment(), pm.mentoring().get());
                 })
-                .toList();
+                .toList());
     }
 
     @Transactional(readOnly = true)

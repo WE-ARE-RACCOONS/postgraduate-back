@@ -1,7 +1,7 @@
 package com.postgraduate.admin.application.mapper;
 
 import com.postgraduate.admin.application.dto.res.*;
-import com.postgraduate.domain.member.user.domain.entity.constant.Status;
+import com.postgraduate.domain.member.user.domain.entity.MemberRole;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.salary.domain.entity.Salary;
@@ -10,6 +10,7 @@ import com.postgraduate.domain.member.senior.domain.entity.Info;
 import com.postgraduate.domain.member.senior.domain.entity.Senior;
 import com.postgraduate.domain.member.user.application.utils.UserUtils;
 import com.postgraduate.domain.member.user.domain.entity.User;
+import com.postgraduate.domain.wish.domain.entity.Wish;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,20 +42,18 @@ public class AdminMapper {
         );
     }
 
-    public UserInfo mapToUserInfo(User user) {
+    public UserInfo mapToUserInfo(MemberRole memberRole) {
+        User user = memberRole.getUser();
         return new UserInfo(
                 user.getUserId(),
                 user.getNickName(),
                 user.getPhoneNumber(),
                 user.getCreatedAt(),
                 user.getMarketingReceive(),
-                false,
-                1L, // todo : wish 삭제에 따른 변경 필요
-                Status.MATCHED,
-                false
+                user.isSenior()
         );
     }
-    
+
 
     public SeniorInfo mapToSeniorInfo(Salary salary) {
         Senior senior = salary.getSenior();
@@ -66,7 +65,7 @@ public class AdminMapper {
                 senior.getStatus(),
                 salary.getTotalAmount(),
                 user.getMarketingReceive(),
-                false //todo : wish 삭제에 따른 선배에서 후배 판단 조건 삭제 or 수정 필요
+                user.isJunior()
         );
     }
 
@@ -99,16 +98,16 @@ public class AdminMapper {
     }
 
 
-    public UserMentoringInfo mapToUserMentoringInfo(User user) {
-        return new UserMentoringInfo(
+    public UserInfoBasic mapToUserMentoringInfo(User user) {
+        return new UserInfoBasic(
                 user.getNickName(),
                 user.getPhoneNumber()
         );
     }
 
-    public UserMentoringInfo mapToUserMentoringInfo(Senior senior) {
+    public UserInfoBasic mapToUserMentoringInfo(Senior senior) {
         User user = senior.getUser();
-        return new UserMentoringInfo(
+        return new UserInfoBasic(
                 user.getNickName(),
                 user.getPhoneNumber()
         );
@@ -140,10 +139,10 @@ public class AdminMapper {
         return getPaymentInfo(payment, null, user);
     }
 
-    public SalaryInfoWithOutId mapToSalaryResponse(Senior senior, String accountNumber, Salary salary) {
+    public SalaryInfo mapToSalaryResponse(Senior senior, String accountNumber, Salary salary) {
         User user = senior.getUser();
         SalaryAccount account = salary.getAccount();
-        return new SalaryInfoWithOutId(
+        return new SalaryInfo(
                 user.getNickName(),
                 user.getPhoneNumber(),
                 salary.getTotalAmount(),
@@ -154,19 +153,9 @@ public class AdminMapper {
         );
     }
 
-    public SalaryInfoWithOutId mapToSalaryResponse(Senior senior, Salary salary) {
-        User user = senior.getUser();
-        return new SalaryInfoWithOutId (
-                user.getNickName(),
-                user.getPhoneNumber(),
-                salary.getTotalAmount(),
-                salary.getSalaryDoneDate()
-        );
-    }
-
-    public SalaryInfoWithOutId mapToSalaryResponse(Salary salary) {
+    public SalaryInfo mapToSalaryResponse(Salary salary) {
         User user = userUtils.getArchiveUser();
-        return new SalaryInfoWithOutId (
+        return new SalaryInfo(
                 user.getNickName(),
                 user.getPhoneNumber(),
                 salary.getTotalAmount(),
@@ -237,6 +226,31 @@ public class AdminMapper {
                 mentoring.getTerm(),
                 payment.getPay(),
                 SHORT.getCharge()
+        );
+    }
+
+    public WaitingWishResponse mapToWaitingWish(Wish wish) {
+        return new WaitingWishResponse(
+                wish.getWishId(),
+                wish.getField(),
+                wish.getPostgradu(),
+                wish.getProfessor(),
+                wish.getLab(),
+                wish.getPhoneNumber(),
+                wish.getCreatedAt()
+        );
+    }
+
+    public MatchingWishResponse mapToMatchedWish(Wish wish) {
+        return new MatchingWishResponse(
+                wish.getWishId(),
+                wish.getField(),
+                wish.getPostgradu(),
+                wish.getProfessor(),
+                wish.getLab(),
+                wish.getPhoneNumber(),
+                wish.getCreatedAt(),
+                wish.getUpdatedAt()
         );
     }
 }

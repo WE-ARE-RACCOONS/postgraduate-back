@@ -69,7 +69,7 @@ public class Senior {
     @OneToMany(mappedBy = "senior")
     private List<Available> availables = new ArrayList<>();
 
-    @OneToOne(mappedBy = "senior")
+    @OneToOne(mappedBy = "senior") //todo : OneToOne 을 ManyToOne, OneToMany 로 변경하기 (양방향을 사용해야 하는 환경이라면?)
     private Account account;
 
     public void updateAccount(SeniorMyPageUserAccountRequest myPageUserAccountRequest, String accountNumber) {

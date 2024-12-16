@@ -1,7 +1,5 @@
 package com.postgraduate.admin.application.dto.res;
 
-import com.postgraduate.domain.member.user.domain.entity.constant.Status;
-
 import java.time.LocalDateTime;
 
 public record UserInfo(
@@ -9,9 +7,6 @@ public record UserInfo(
         String nickName,
         String phoneNumber,
         LocalDateTime createdAt,
-        Boolean marketingReceive,
-        Boolean matchingReceive,
-        Long wishId,
-        Status matchingStatus,
+        Boolean marketinRgeceive,
         Boolean isSenior
 ) { }

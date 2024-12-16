@@ -21,7 +21,7 @@
 //import com.postgraduate.domain.member.user.domain.service.UserUpdateService;
 //import com.postgraduate.domain.member.user.exception.PhoneNumberException;
 //import com.postgraduate.domain.wish.domain.entity.Wish;
-//import com.postgraduate.domain.member.user.domain.entity.constant.Status;
+//import com.postgraduate.domain.wish.domain.entity.constant.Status;
 //import com.postgraduate.global.bizppurio.application.usecase.BizppurioJuniorMessage;
 //import com.postgraduate.global.bizppurio.application.usecase.BizppurioSeniorMessage;
 //import com.postgraduate.global.slack.SlackSignUpMessage;

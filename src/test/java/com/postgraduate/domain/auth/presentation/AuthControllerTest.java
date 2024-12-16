@@ -43,7 +43,7 @@ class AuthControllerTest extends ControllerTest {
                 .willReturn(kakaoSignInUseCase);
         given(kakaoSignInUseCase.getUser(codeRequest))
                 .willReturn(response);
-        given(jwtUseCase.signIn(any()))
+        given(jwtUseCase.signIn(any(), any()))
                 .willReturn(tokenResponse);
 
         mvc.perform(post("/auth/login/KAKAO")
@@ -96,7 +96,7 @@ class AuthControllerTest extends ControllerTest {
 
         given(signUpUseCase.userSignUp(signUpRequest))
                 .willReturn(user);
-        given(jwtUseCase.signIn(user))
+        given(jwtUseCase.signIn(any(), any()))
                 .willReturn(tokenResponse);
 
         mvc.perform(post("/auth/user/signup")
@@ -120,7 +120,7 @@ class AuthControllerTest extends ControllerTest {
     void changeUserToken() throws Exception {
         JwtTokenResponse tokenResponse = new JwtTokenResponse("access", 10, "refresh", 10, USER, TRUE);
 
-        given(jwtUseCase.changeUser(any()))
+        given(jwtUseCase.changeUser(any(), any()))
                 .willReturn(tokenResponse);
 
         mvc.perform(post("/auth/user/token")
@@ -149,7 +149,7 @@ class AuthControllerTest extends ControllerTest {
 
         given(signUpUseCase.seniorSignUp(any()))
                 .willReturn(user);
-        given(jwtUseCase.signIn(user))
+        given(jwtUseCase.signIn(any(), any()))
                 .willReturn(tokenResponse);
 
         mvc.perform(post("/auth/senior/signup")
@@ -179,7 +179,7 @@ class AuthControllerTest extends ControllerTest {
 
         given(signUpUseCase.changeSenior(any(), any()))
                 .willReturn(user);
-        given(jwtUseCase.changeSenior(user))
+        given(jwtUseCase.changeSenior(any(), any()))
                 .willReturn(tokenResponse);
 
         mvc.perform(post("/auth/senior/change")
@@ -203,7 +203,7 @@ class AuthControllerTest extends ControllerTest {
     void changeSeniorToken() throws Exception {
         JwtTokenResponse tokenResponse = new JwtTokenResponse("access", 10, "refresh", 10, USER, TRUE);
 
-        given(jwtUseCase.changeSenior(any()))
+        given(jwtUseCase.changeSenior(any(), any()))
                 .willReturn(tokenResponse);
 
         mvc.perform(post("/auth/senior/token")
@@ -225,7 +225,7 @@ class AuthControllerTest extends ControllerTest {
     void refresh() throws Exception {
         JwtTokenResponse tokenResponse = new JwtTokenResponse("access", 10, "refresh", 10, USER, TRUE);
 
-        given(jwtUseCase.regenerateToken(any(), any()))
+        given(jwtUseCase.regenerateToken(any(), any(), any()))
                 .willReturn(tokenResponse);
 
         mvc.perform(post("/auth/refresh")
@@ -246,7 +246,7 @@ class AuthControllerTest extends ControllerTest {
     @DisplayName("로그아웃한다.")
     void logout() throws Exception {
         willDoNothing().given(jwtUseCase)
-                        .logout(any());
+                        .logout(any(), any());
 
         mvc.perform(post("/auth/logout")
                         .header(HttpHeaders.AUTHORIZATION, BEARER)

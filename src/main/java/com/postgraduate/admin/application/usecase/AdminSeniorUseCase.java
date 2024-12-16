@@ -1,7 +1,7 @@
 package com.postgraduate.admin.application.usecase;
 
 import com.postgraduate.admin.application.dto.res.CertificationDetailsResponse;
-import com.postgraduate.admin.application.dto.res.SeniorInfo;
+import com.postgraduate.admin.application.dto.res.SeniorInfos;
 import com.postgraduate.admin.application.mapper.AdminMapper;
 import com.postgraduate.admin.domain.service.AdminSeniorService;
 import com.postgraduate.domain.salary.domain.entity.Salary;
@@ -9,10 +9,10 @@ import com.postgraduate.domain.member.senior.domain.entity.Senior;
 import com.postgraduate.domain.member.senior.exception.SeniorCertificationException;
 import com.postgraduate.global.bizppurio.application.usecase.BizppurioSeniorMessage;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 
 import static com.postgraduate.domain.member.senior.domain.entity.constant.Status.WAITING;
 
@@ -25,11 +25,11 @@ public class AdminSeniorUseCase {
     private final AdminMapper adminMapper;
 
     @Transactional(readOnly = true)
-    public List<SeniorInfo> allSenior() {
-        List<Salary> salaries = adminSeniorService.allSeniors();
-        return salaries.stream()
+    public SeniorInfos allSenior(Integer page) {
+        Page<Salary> salaries = adminSeniorService.allSeniors(page);
+        return new SeniorInfos(salaries.stream()
                 .map(adminMapper::mapToSeniorInfo)
-                .toList();
+                .toList());
     }
 
     @Transactional(readOnly = true)
