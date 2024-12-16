@@ -20,16 +20,16 @@ public class AdminWishUseCase {
     private final BizppurioJuniorMessage bizppurioJuniorMessage;
 
     @Transactional(readOnly = true)
-    public WaitingWishResponses waitingWish() {
-        return new WaitingWishResponses(adminWishService.findAllWaiting()
+    public WaitingWishResponses waitingWish(Integer page) {
+        return new WaitingWishResponses(adminWishService.findAllWaiting(page)
                 .stream()
                 .map(adminMapper::mapToWaitingWish)
                 .toList());
     }
 
     @Transactional(readOnly = true)
-    public MatchingWishResponses matchingWish() {
-        return new MatchingWishResponses(adminWishService.findAllMatching()
+    public MatchingWishResponses matchingWish(Integer page) {
+        return new MatchingWishResponses(adminWishService.findAllMatching(page)
                 .stream()
                 .map(adminMapper::mapToMatchedWish)
                 .toList());

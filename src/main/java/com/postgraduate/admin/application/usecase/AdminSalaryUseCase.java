@@ -8,10 +8,9 @@ import com.postgraduate.domain.salary.domain.entity.Salary;
 import com.postgraduate.domain.salary.domain.entity.SalaryAccount;
 import com.postgraduate.global.config.security.util.EncryptorUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @Transactional
@@ -22,8 +21,8 @@ public class AdminSalaryUseCase {
     private final AdminMapper adminMapper;
 
     @Transactional(readOnly = true)
-    public SalaryInfos salaryInfos() {
-        List<Salary> all = adminSalaryService.findAllDoneSalary();
+    public SalaryInfos salaryInfos(Integer page) {
+        Page<Salary> all = adminSalaryService.findAllDoneSalary(page);
         return new SalaryInfos(all.stream()
                 .map(salary -> {
                     if (salary.getAccount() == null)
@@ -40,8 +39,8 @@ public class AdminSalaryUseCase {
     }
 
     @Transactional(readOnly = true)
-    public UnsettledSalaryInfos unSettledSalaryInfo() {
-        List<Salary> salaries = adminSalaryService.findAllByNotDone();
+    public UnsettledSalaryInfos unSettledSalaryInfo(Integer page) {
+        Page<Salary> salaries = adminSalaryService.findAllByNotDone(page);
         return new UnsettledSalaryInfos(salaries.stream()
                 .map(salary -> {
                     SalaryAccount account = salary.getAccount();

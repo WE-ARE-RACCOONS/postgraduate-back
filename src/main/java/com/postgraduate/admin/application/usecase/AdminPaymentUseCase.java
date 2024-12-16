@@ -11,10 +11,9 @@ import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.payment.application.usecase.PaymentManageUseCase;
 import com.postgraduate.domain.member.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 import static com.postgraduate.domain.mentoring.domain.entity.constant.MentoringStatus.DONE;
 
@@ -29,8 +28,8 @@ public class AdminPaymentUseCase {
     private final AdminMapper adminMapper;
 
     @Transactional(readOnly = true)
-    public PaymentInfos paymentInfos() {
-        List<PaymentWithMentoringQuery> all = adminPaymentService.allPayments();
+    public PaymentInfos paymentInfos(Integer page) {
+        Page<PaymentWithMentoringQuery> all = adminPaymentService.allPayments(page);
         return new PaymentInfos(all.stream()
                 .map(pm -> {
                     if (pm.mentoring().isEmpty())

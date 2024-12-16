@@ -9,10 +9,10 @@ import com.postgraduate.domain.member.senior.domain.entity.Senior;
 import com.postgraduate.domain.member.senior.exception.SeniorCertificationException;
 import com.postgraduate.global.bizppurio.application.usecase.BizppurioSeniorMessage;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 
 import static com.postgraduate.domain.member.senior.domain.entity.constant.Status.WAITING;
 
@@ -25,8 +25,8 @@ public class AdminSeniorUseCase {
     private final AdminMapper adminMapper;
 
     @Transactional(readOnly = true)
-    public SeniorInfos allSenior() {
-        List<Salary> salaries = adminSeniorService.allSeniors();
+    public SeniorInfos allSenior(Integer page) {
+        Page<Salary> salaries = adminSeniorService.allSeniors(page);
         return new SeniorInfos(salaries.stream()
                 .map(adminMapper::mapToSeniorInfo)
                 .toList());

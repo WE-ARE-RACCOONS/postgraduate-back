@@ -1,6 +1,7 @@
 package com.postgraduate.admin.application.mapper;
 
 import com.postgraduate.admin.application.dto.res.*;
+import com.postgraduate.domain.member.user.domain.entity.MemberRole;
 import com.postgraduate.domain.mentoring.domain.entity.Mentoring;
 import com.postgraduate.domain.payment.domain.entity.Payment;
 import com.postgraduate.domain.salary.domain.entity.Salary;
@@ -41,7 +42,8 @@ public class AdminMapper {
         );
     }
 
-    public UserInfo mapToUserInfo(User user) {
+    public UserInfo mapToUserInfo(MemberRole memberRole) {
+        User user = memberRole.getUser();
         return new UserInfo(
                 user.getUserId(),
                 user.getNickName(),

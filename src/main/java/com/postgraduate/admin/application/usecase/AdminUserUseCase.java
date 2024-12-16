@@ -1,24 +1,20 @@
 package com.postgraduate.admin.application.usecase;
 
 import com.postgraduate.admin.application.dto.req.Login;
-import com.postgraduate.admin.application.dto.req.SendMessageRequest;
 import com.postgraduate.admin.application.dto.res.UserInfos;
 import com.postgraduate.admin.application.mapper.AdminMapper;
 import com.postgraduate.admin.domain.service.AdminUserService;
+import com.postgraduate.domain.member.user.domain.entity.MemberRole;
 import com.postgraduate.domain.member.user.domain.entity.User;
-import com.postgraduate.global.bizppurio.application.dto.req.JuniorMatchingSuccessRequest;
-import com.postgraduate.global.bizppurio.application.usecase.BizppurioJuniorMessage;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class AdminUserUseCase {
-    private final BizppurioJuniorMessage bizppurioJuniorMessage;
     private final AdminUserService adminUserService;
     private final AdminMapper adminMapper;
 
@@ -28,16 +24,10 @@ public class AdminUserUseCase {
     }
 
     @Transactional(readOnly = true)
-    public UserInfos userInfos() {
-        List<User> all = adminUserService.allJunior();
+    public UserInfos userInfos(Integer page) {
+        Page<MemberRole> all = adminUserService.allJunior(page);
         return new UserInfos(all.stream()
                 .map(adminMapper::mapToUserInfo)
                 .toList());
-    }
-
-    public void sendMatchingMessage(SendMessageRequest request) {
-        bizppurioJuniorMessage.matchingSuccess(new JuniorMatchingSuccessRequest(
-                request.phoneNumber(), request.nickName(), request.postgraduate(), request.major())
-        );
     }
 }

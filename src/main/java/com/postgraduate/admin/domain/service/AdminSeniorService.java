@@ -6,10 +6,12 @@ import com.postgraduate.domain.salary.util.SalaryUtil;
 import com.postgraduate.domain.member.senior.domain.entity.Senior;
 import com.postgraduate.domain.member.senior.exception.NoneSeniorException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.List;
 
 import static com.postgraduate.domain.member.senior.domain.entity.constant.Status.*;
 
@@ -17,10 +19,14 @@ import static com.postgraduate.domain.member.senior.domain.entity.constant.Statu
 @RequiredArgsConstructor
 public class AdminSeniorService {
     private final AdminSeniorRepository adminSeniorRepository;
+    private static final int SENIOR_PAGE_SIZE = 20;
 
-    public List<Salary> allSeniors() {
+    public Page<Salary> allSeniors(Integer page) {
+        if (page == null)
+            page = 1;
         LocalDate salaryDate = SalaryUtil.getSalaryDate();
-        return adminSeniorRepository.allSeniorInfo(salaryDate);
+        Pageable pageable = PageRequest.of(page-1, SENIOR_PAGE_SIZE);
+        return adminSeniorRepository.allSeniorInfo(salaryDate, pageable);
     }
 
     public Senior bySeniorId(Long seniorId) {

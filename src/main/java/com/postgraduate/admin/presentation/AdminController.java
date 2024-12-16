@@ -24,12 +24,10 @@ public class AdminController {
     private final AdminWishUseCase adminWishUseCase;
     private final AdminBatchUseCase adminBatchUseCase;
 
-// todo : 관리자페이지용 로그인이 필요한지 고민 필요
-
     @GetMapping("/senior")
     @Operation(summary = "대학원생에 대한 정보 노출", description = "닉네임, 전화번호, 인증여부, 총 정산금액, 마케팅동의 여부, 후배 여부")
-    public ResponseEntity<ResponseDto<SeniorInfos>> seniorInfo() {
-        SeniorInfos seniorInfos = adminSeniorUseCase.allSenior();
+    public ResponseEntity<ResponseDto<SeniorInfos>> seniorInfo(@RequestParam(required = false) Integer page) {
+        SeniorInfos seniorInfos = adminSeniorUseCase.allSenior(page);
         return ResponseEntity.ok(ResponseDto.create("","", seniorInfos));
     }
 
@@ -74,15 +72,15 @@ public class AdminController {
 
     @GetMapping("/salary") //정산 관리
     @Operation(summary = "정산완료 확인", description = "정산별 닉네임, 핸드폰번호, 총금액, 예금주, 은행, 계좌번호, 완료일")
-    public ResponseEntity<ResponseDto<SalaryInfos>> salaryInfo() {
-        SalaryInfos salaryInfos = adminSalaryUseCase.salaryInfos();
+    public ResponseEntity<ResponseDto<SalaryInfos>> salaryInfo(@RequestParam(required = false) Integer page) {
+        SalaryInfos salaryInfos = adminSalaryUseCase.salaryInfos(page);
         return ResponseEntity.ok(ResponseDto.create("","",salaryInfos));
     }
 
     @GetMapping("/salary/unsettled") //미정산건 관리
     @Operation(summary = "정산미완료 확인", description = "정산별 닉네임, 핸드폰번호, 총금액, 예금주, 은행, 계좌번호, 정산예정일")
-    public ResponseEntity<ResponseDto<UnsettledSalaryInfos>> unsettledSalaryInfo() {
-        UnsettledSalaryInfos unSettledSalaryInfos = adminSalaryUseCase.unSettledSalaryInfo();
+    public ResponseEntity<ResponseDto<UnsettledSalaryInfos>> unsettledSalaryInfo(@RequestParam(required = false) Integer page) {
+        UnsettledSalaryInfos unSettledSalaryInfos = adminSalaryUseCase.unSettledSalaryInfo(page);
         return ResponseEntity.ok(ResponseDto.create("","", unSettledSalaryInfos));
     }
 
@@ -97,13 +95,14 @@ public class AdminController {
 
     @GetMapping("/junior")
     @Operation(summary = "후배 정보 확인", description = "후배별 닉네임, 핸드폰번호, 가입일, 마케팅 동의 여부, 선배 여부")
-    public ResponseEntity<ResponseDto<UserInfos>> userInfo() {
-        UserInfos userInfos = adminUserUseCase.userInfos();
+    public ResponseEntity<ResponseDto<UserInfos>> userInfo(@RequestParam(required = false) Integer page) {
+        UserInfos userInfos = adminUserUseCase.userInfos(page);
         return ResponseEntity.ok(ResponseDto.create("","", userInfos));
     }
 
     @GetMapping("/junior/mentoring/{userId}")
-    @Operation(summary = "후배 멘토링 정보 확인", description = "닉네임, 핸드폰번호 (기본정보), 신청한 멘토링 리스트(멘토링 진행 상태, 선배 닉네임, 선배 핸드폰번호, 신청일시, 멘토링 진행 일시")    public ResponseEntity<ResponseDto<MentoringManageResponse>> userMentoring(@PathVariable Long userId) {
+    @Operation(summary = "후배 멘토링 정보 확인", description = "닉네임, 핸드폰번호 (기본정보), 신청한 멘토링 리스트(멘토링 진행 상태, 선배 닉네임, 선배 핸드폰번호, 신청일시, 멘토링 진행 일시")
+    public ResponseEntity<ResponseDto<MentoringManageResponse>> userMentoring(@PathVariable Long userId) {
         MentoringManageResponse mentoringInfos = adminMentoringUseCase.userMentoringInfos(userId);
         return ResponseEntity.ok(ResponseDto.create("","", mentoringInfos));
     }
@@ -112,8 +111,8 @@ public class AdminController {
 
     @GetMapping("/payment")
     @Operation(summary = "결제 정보 확인", description = "멘토링ID, 후배 닉네임, 핸드폰번호, 결제일, 금액, 결제상태")
-    public ResponseEntity<ResponseDto<PaymentInfos>> paymentInfo() {
-        PaymentInfos paymentInfos = adminPaymentUseCase.paymentInfos();
+    public ResponseEntity<ResponseDto<PaymentInfos>> paymentInfo(@RequestParam(required = false) Integer page) {
+        PaymentInfos paymentInfos = adminPaymentUseCase.paymentInfos(page);
         return ResponseEntity.ok(ResponseDto.create("","",paymentInfos));
     }
 
@@ -135,15 +134,15 @@ public class AdminController {
 
     @GetMapping("/wish/waiting")
     @Operation(summary = "대기중 신청서 확인", description = "분야, 대학원, 교수, 랩실, 핸드폰번호, 신청일")
-    public ResponseEntity<ResponseDto<WaitingWishResponses>> waitingWish() {
-        WaitingWishResponses waitingWishResponses = adminWishUseCase.waitingWish();
+    public ResponseEntity<ResponseDto<WaitingWishResponses>> waitingWish(@RequestParam(required = false) Integer page) {
+        WaitingWishResponses waitingWishResponses = adminWishUseCase.waitingWish(page);
         return ResponseEntity.ok(ResponseDto.create("","", waitingWishResponses));
     }
 
     @GetMapping("/wish/matching")
     @Operation(summary = "완료된 신청서 확인", description = "분야, 대학원, 교수, 랩실, 핸드폰번호, 신청일, 완료일")
-    public ResponseEntity<ResponseDto<MatchingWishResponses>> matching() {
-        MatchingWishResponses matchingWishResponses = adminWishUseCase.matchingWish();
+    public ResponseEntity<ResponseDto<MatchingWishResponses>> matching(@RequestParam(required = false) Integer page) {
+        MatchingWishResponses matchingWishResponses = adminWishUseCase.matchingWish(page);
         return ResponseEntity.ok(ResponseDto.create("","", matchingWishResponses));
     }
 
