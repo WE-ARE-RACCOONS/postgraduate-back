@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AdminPaymentService {
     private final AdminPaymentRepository adminPaymentRepository;
-    private static final int PAYMENT_PAGE_SIZE = 20;
+    private static final int PAYMENT_PAGE_SIZE = 10;
 
     public Page<PaymentWithMentoringQuery> allPayments(Integer page) {
         if (page == null)
