@@ -20,7 +20,7 @@ import java.time.LocalDate;
 @Slf4j
 public class AdminSalaryService {
     private final AdminSalaryRepository adminSalaryRepository;
-    private static final int SALARY_PAGE_SIZE = 20;
+    private static final int SALARY_PAGE_SIZE = 10;
     public Page<Salary> findAllDoneSalary(Integer page) {
         if (page == null)
             page = 1;

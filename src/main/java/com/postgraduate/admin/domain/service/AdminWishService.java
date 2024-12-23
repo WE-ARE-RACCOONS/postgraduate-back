@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AdminWishService {
     private final AdminWishRepository adminWishRepository;
-    private static final int WISH_PAGE_SIZE = 20;
+    private static final int WISH_PAGE_SIZE = 10;
     public Page<Wish> findAllWaiting(Integer page) {
         if (page == null)
             page = 1;

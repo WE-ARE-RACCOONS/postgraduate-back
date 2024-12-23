@@ -19,7 +19,7 @@ import static com.postgraduate.domain.member.senior.domain.entity.constant.Statu
 @RequiredArgsConstructor
 public class AdminSeniorService {
     private final AdminSeniorRepository adminSeniorRepository;
-    private static final int SENIOR_PAGE_SIZE = 20;
+    private static final int SENIOR_PAGE_SIZE = 10;
 
     public Page<Salary> allSeniors(Integer page) {
         if (page == null)

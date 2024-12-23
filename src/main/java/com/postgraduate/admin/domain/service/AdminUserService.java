@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AdminUserService {
     private final AdminUserRepository adminUserRepository;
-    private static final int JUNIOR_PAGE_SIZE = 20;
+    private static final int JUNIOR_PAGE_SIZE = 10;
     public Page<MemberRole> allJunior(Integer page) {
         if (page == null)
             page = 1;
