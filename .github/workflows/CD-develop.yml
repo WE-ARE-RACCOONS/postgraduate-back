@@ -70,8 +70,5 @@ jobs:
           key: ${{ secrets.PRIVATE_KEY }}
           envs: GITHUB_SHA
           script: |
-            docker-compose -f /home/ec2-user/config/docker-compose.yml down
-            docker-compose -f /home/ec2-user/config/docker-compose.yml pull
-            docker-compose -f /home/ec2-user/config/docker-compose.yml up -d --force-recreate --build
-
-            
+            docker-compose -f /home/ec2-user/config/docker-compose.kimseonbae.yml down
+            docker-compose -f /home/ec2-user/config/docker-compose.yml up -d
