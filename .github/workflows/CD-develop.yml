@@ -71,4 +71,4 @@ jobs:
           envs: GITHUB_SHA
           script: |
             docker-compose -f /home/ec2-user/config/docker-compose.kimseonbae.yml down
-            docker-compose -f /home/ec2-user/config/docker-compose.yml up -d
+            docker-compose -f /home/ec2-user/config/docker-compose.kimseonbae.yml up -d
