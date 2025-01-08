@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     env :
       working-directory: ./
-      APPLICATION: ${{ secrets.APPLICATION }}
+      APPLICATION: ${{ secrets.APPLICATION_DEV }}
 
     steps:
     - uses: actions/checkout@v2
