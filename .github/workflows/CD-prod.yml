@@ -59,8 +59,8 @@ jobs:
 
       - name: Build and Push Docker image
         run: |
-          docker build -t ywj9811/yedu:latest .
-          docker push ywj9811/yedu:latest
+          docker build -t ywj9811/kimseonbae:latest .
+          docker push ywj9811/kimseonbae:latest
 
       - name: Wait for Docker image to be pushed
         run: sleep 10s
